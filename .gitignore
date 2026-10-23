@@ -1,0 +1,18 @@
+# Logs
+*.log
+
+# Umgebungsvariablen und Geheimnisse — nie versionieren
+.env
+.env.*
+
+# Lokale Werkzeug- und Agenteneinstellungen
+.claude/
+CLAUDE.local.md
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+Thumbs.db
+.DS_Store
