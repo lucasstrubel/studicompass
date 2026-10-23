@@ -1,0 +1,14 @@
+# Projektweite Codex-Einstellungen für StudiCompass (versioniert).
+# Codex lädt diese Datei nur, wenn das Projekt vertraut ist
+# ([projects."<pfad>"] trust_level = "trusted" in ~/.codex/config.toml).
+# Persönliche Vorgaben (Modell, Aufwand, Windows-Sandbox) bleiben in ~/.codex/config.toml;
+# die Regeln selbst stehen in AGENTS.md.
+
+# Codex schreibt nur im eigenen Arbeitsverzeichnis und fragt vor allem anderen nach
+# (AGENTS.md: Codex ändert nur Dateien im eigenen Worktree und committet nicht).
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+
+[sandbox_workspace_write]
+# Kein Netzwerk in der Sandbox; was deshalb nicht prüfbar ist, wird als offen gemeldet.
+network_access = false

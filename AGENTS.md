@@ -43,6 +43,18 @@ Logs, Secrets (`.env`) und echte Nutzerdaten nie einchecken.
 Zwei Coding-Agenten arbeiten im Auftrag von Lucas Strubel an diesem Repository: Claude Code
 und Codex. Beide halten sich an dieses Dokument.
 
+Projektweite, versionierte Einstellungen der Agenten:
+
+| Pfad | Agent | Inhalt |
+|------|-------|--------|
+| `.claude/settings.json` | Claude Code | geteilte Berechtigungen (persönliche in `.claude/settings.local.json`, nicht versioniert) |
+| `.claude/commands/` | Claude Code | `/codex-review` (Codex prüft), `/codex-aufgabe` (Auftrag an Codex) |
+| `.codex/config.toml` | Codex | Sandbox und Freigaben; wirkt nur in vertrauten Projekten |
+| `.agents/skills/` | Codex | `auftrag-umsetzen` (Gegenstück zu `/codex-aufgabe`), `zweig-pruefen` (Gegenstück zu `/codex-review`) |
+
+Persönliche Vorgaben (Modell, Aufwand, Windows-Sandbox) gehören in die Benutzerkonfiguration,
+nicht ins Repository.
+
 - **Eine Arbeitskopie, ein Schreiber.** Claude Code arbeitet im Haupt-Checkout. Codex arbeitet
   in einem eigenen Git-Worktree auf einem Zweig `codex/<thema>`. Kein Agent ändert Dateien in
   der Arbeitskopie des anderen oder setzt dessen Zweig zurück. Die Codex-Sandbox darf nicht in

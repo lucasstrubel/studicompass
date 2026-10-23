@@ -5,8 +5,8 @@
 .env
 .env.*
 
-# Lokale Werkzeug- und Agenteneinstellungen
-.claude/
+# Persönliche Agenteneinstellungen (die geteilten unter .claude/, .codex/, .agents/ sind versioniert)
+.claude/settings.local.json
 CLAUDE.local.md
 
 # IDE
