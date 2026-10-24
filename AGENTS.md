@@ -1,79 +1,85 @@
-# AGENTS.md
+# AGENTS.md – Anweisungen für Codex
 
-Gemeinsame Arbeitsregeln für alle, die in diesem Repository arbeiten — Menschen und
-Coding-Agenten (Claude Code, Codex). Claude Code liest sie über `CLAUDE.md`, das diese
-Datei einbindet; Codex liest sie direkt. Änderungen an den Regeln gehören hierher, nicht
-in `CLAUDE.md`.
+Du arbeitest in diesem Repo in zwei Rollen:
+1. **Reviewer** der Änderungen eines Tasks bzw. einer Phase, die Lucas dir zur Prüfung gibt.
+2. **Ausführender** kleiner, klar abgegrenzter Aufgaben, die Claude Code dir per Brief delegiert.
 
-## Projekt
+Claude Code ist der Hauptentwickler. Bei Konflikten entscheidet Lucas.
+Du wirst über das Claude-Code-Plugin `codex` aufgerufen: als Review (`/codex:review`, `/codex:adversarial-review`) oder als delegierte Aufgabe (Subagent `codex:codex-rescue`).
+Ohne Plugin startet Claude Code dich direkt über die CLI: als Review (`codex review`, Skill `zweig-pruefen`) oder mit einem Auftrag in einem eigenen Git-Worktree auf `codex/<task-id>` (Skill `auftrag-umsetzen`). Die Regeln hier gelten in beiden Fällen.
+**Lies vor jeder Aufgabe `CLAUDE.md`** – die gemeinsamen Projektregeln (Architektur, UI-Regeln, Definition of Done) gelten auch für dich.
+Fachliche Wahrheit: `docs/KONZEPT.md` (vor allem §10 Regeln und Testorakel, §12 Tokens, §14 Glossar). Inhalte: `docs/INHALTE.md`.
+**Prüf-Gate** ist `npm run check` (typecheck, lint, test, build; Befehle in `CLAUDE.md`).
 
-**StudiCompass** — Projekt von Lucas Strubel. Zweck, Zielgruppe und Umfang sind noch
-festzulegen und werden hier ergänzt, sobald sie feststehen. README, CHANGELOG, Commits und
-die gesamte Dokumentation sind auf **Deutsch**.
+---
 
-## Build & Run
+## Rolle 1: Review
 
-Noch festzulegen. Sobald der Stack steht, hier Kompilieren, Tests (gesamt, einzeln) und
-Start eintragen — und das **Prüf-Gate**: den einen Befehl, der vor jedem Pull Request grün
-sein muss und den auch die CI ausführt. Bis dahin gilt als Prüf-Gate: Änderungen sind
-nachvollziehbar beschrieben und manuell geprüft.
+### Ablauf
+1. Task-ID und Akzeptanzkriterien im PR bzw. in `docs/ROADMAP.md` lesen.
+2. Diff gegen die Checkliste prüfen (Reihenfolge = Priorität). Nur Befunde, die am Code nachvollziehbar sind; Vermutungen als solche kennzeichnen.
+3. Ergebnis im Format unten als Antwort ausgeben. Reviews laufen read-only; Claude Code speichert die Zusammenfassung unter `docs/reviews/<task-id>.md`.
+4. Im Review-Modus **keinen Code ändern**.
 
-## Architektur
+### Checkliste
+1. **Fachliche Korrektheit:** Stimmen Berechnungen und Regeln mit KONZEPT §10.3 überein? Stimmen die Testorakel-Werte aus §10.4 (z. B. 48 ECTS Ist, 72 statt 78 nach Abmeldung von Statistik, Praxissemester SS 2028, Abschluss SS 2029; bei Marketing keine Verschiebung)?
+2. **Scope:** nur, was der Task verlangt; keine zusätzlichen Features, keine ungefragten Abhängigkeiten.
+3. **Architektur:** Schichtregeln aus CLAUDE.md (Domain ohne React; UI ohne direkten Zugriff auf `src/data`; Zeit nur über `DEMO_NOW`; Simulation mit Snapshot).
+4. **Typsicherheit und Zustände:** kein `any`, keine ungeprüften Casts; Lade-, Leer- und Fehlerzustände vorhanden.
+5. **Barrierearmut:** semantisches HTML, Labels für Icon-Buttons, sichtbarer Fokus, Tastaturbedienung, Status nie nur über Farbe, Kontraste laut Tokens.
+6. **Design-Konsistenz:** nur Tokens, keine Hex-Werte in Komponenten; vorhandene Komponenten aus `src/components` wiederverwendet; Terrakotta nicht als Statusfarbe.
+7. **Texte:** Deutsch, Du-Ansprache, Begriffe laut Glossar (Quelle ≠ Kanal), kein Lorem Ipsum, keine Platzhalter, Quelle bei jeder Regelaussage, Label „Beispiel“ bei ungeprüften Regeln.
+8. **Tests:** neue Domänenlogik ist getestet; Tests prüfen Verhalten, nicht Implementierungsdetails.
+9. **Sicherheit und Datenschutz:** keine Secrets, keine externen Requests, keine Login- oder Passwortfelder, keine echten personenbezogenen Daten, keine Tracker; keine eingecheckten Datenbanken, Logs oder Dateien aus `docs/referenzen/`.
+10. **Wartbarkeit:** verständliche Namen, keine toten Exporte, keine auskommentierten Blöcke.
 
-Noch festzulegen (Pakete/Module, Verantwortlichkeiten, wichtige Muster, fachliche
-Invarianten, Persistenz).
+### Ausgabeformat
+```
+# Review <task-id> – <Kurztitel>
+Urteil: Freigabe | Freigabe nach Fixes | Überarbeiten
 
-## Codestil
+| # | Schwere | Datei:Zeile | Befund | Vorschlag |
+|---|---------|-------------|--------|-----------|
+| 1 | Blocker | src/domain/projection.ts:42 | … | … |
 
-Bestehenden Stil übernehmen; Regeln für Einrückung, Benennung und Formatter werden mit dem
-Stack festgelegt. Dateien als UTF-8 mit den Zeilenenden aus `.gitattributes` (LF,
-Windows-Skripte CRLF).
+Positiv: (höchstens 3 Punkte)
+Offene Fragen an Lucas: (falls vorhanden)
+```
 
-## Commits und Pull Requests
+Schweregrade
+- **Blocker:** falsches Ergebnis, Absturz, Verstoß gegen eine Regel aus CLAUDE.md
+- **Major:** Akzeptanzkriterium nicht erfüllt, A11y-Verstoß, fehlender Lade-/Leer-/Fehlerzustand
+- **Minor:** Konsistenz, Lesbarkeit
+- **Nit:** Geschmacksfrage
 
-Commit-Nachrichten kurz und deutsch, bei Bedarf mit Präfix (`Build:`, `Oberflaeche:`,
-`Dokumentation:`); Änderungen thematisch bündeln. Jede Änderung läuft über einen Zweig und
-einen Pull Request auf GitHub; gemergt wird erst bei grüner CI. Pull Requests beschreiben
-Verhaltensänderungen und Prüfergebnisse; bei Oberflächenänderungen Screenshots aus
-Demodaten. Vor dem Pull Request das Prüf-Gate aus *Build & Run* ausführen. Datenbanken,
-Logs, Secrets (`.env`) und echte Nutzerdaten nie einchecken.
+---
 
-## Zusammenarbeit von Claude Code und Codex
+## Rolle 2: Delegierte Aufgaben
 
-Zwei Coding-Agenten arbeiten im Auftrag von Lucas Strubel an diesem Repository: Claude Code
-und Codex. Beide halten sich an dieses Dokument.
+### Regeln
+- Claude Code hat den passenden Branch bereits ausgecheckt. Ändere nur die Dateien, die der Brief erlaubt, und führe keine Git-Befehle aus, die Branches wechseln, Commits erzeugen oder pushen – das übernimmt Claude Code. Im eigenen Worktree (CLI) arbeitest du nur dort und änderst nichts außerhalb.
+- Keine neuen Abhängigkeiten; keine Änderungen an `src/domain`, `src/store`, `src/styles`, der Layout-Shell oder der Konfiguration – außer der Brief erlaubt es ausdrücklich.
+- Vor der Rückgabe muss `npm run check` grün sein. Ausnahme: Spezifikationstests vor der Implementierung (P2-07) – dann müssen `typecheck` und `lint` grün sein und die Tests nur an „not implemented“ scheitern.
+- Ist der Brief unklar oder widerspricht er KONZEPT.md: **abbrechen und die Frage zurückmelden**, nicht raten.
+- Spezifikationstests (`src/domain/*.spec.ts`) leitest du nur aus KONZEPT §10.3–§10.5 ab; der Testname nennt Regel bzw. Szenario (z. B. `DR-4: …`, `Szenario A: …`). Entstehen sie vor der Implementierung, schlagen sie zunächst fehl – das ist gewollt. Läuft ein Test gegen eine bestehende Implementierung rot: Test **nicht** anpassen, sondern den Unterschied als Befund melden.
+- Abschlussbericht (auf Deutsch): geänderte Dateien, was erledigt ist, was offen ist, Ergebnis von `npm run check`. Was du nicht ausführen konntest (z. B. ohne Netzwerk in der Sandbox, GUI-Tests), steht dort als **offen**, nie als bestanden.
 
-Projektweite, versionierte Einstellungen der Agenten:
+### Brief-Vorlage (`.agents/briefs/<task-id>.md`)
+```
+# Brief <task-id>: <Titel>
+Ziel: <1–2 Sätze>
+Kontext: <Abschnitte aus KONZEPT.md / INHALTE.md, relevante Dateien>
+Erlaubte Dateien: <Liste>
+Nicht anfassen: <Liste>
+Akzeptanzkriterien:
+- [ ] …
+Prüfung: <wie das Ergebnis geprüft wird>
+Nicht-Ziele: <was ausdrücklich nicht gemacht wird>
+```
 
-| Pfad | Agent | Inhalt |
-|------|-------|--------|
-| `.claude/settings.json` | Claude Code | geteilte Berechtigungen (persönliche in `.claude/settings.local.json`, nicht versioniert) |
-| `.claude/commands/` | Claude Code | `/codex-review` (Codex prüft), `/codex-aufgabe` (Auftrag an Codex) |
-| `.codex/config.toml` | Codex | Sandbox und Freigaben; wirkt nur in vertrauten Projekten |
-| `.agents/skills/` | Codex | `auftrag-umsetzen` (Gegenstück zu `/codex-aufgabe`), `zweig-pruefen` (Gegenstück zu `/codex-review`) |
-
-Persönliche Vorgaben (Modell, Aufwand, Windows-Sandbox) gehören in die Benutzerkonfiguration,
-nicht ins Repository.
-
-- **Eine Arbeitskopie, ein Schreiber.** Claude Code arbeitet im Haupt-Checkout. Codex arbeitet
-  in einem eigenen Git-Worktree auf einem Zweig `codex/<thema>`. Kein Agent ändert Dateien in
-  der Arbeitskopie des anderen oder setzt dessen Zweig zurück. Die Codex-Sandbox darf nicht in
-  das gemeinsame `.git`-Verzeichnis schreiben: Claude Code legt den Zweig im Codex-Worktree an
-  und committet dort nach dem Review; Codex ändert nur Dateien und committet nicht.
-- **Nie direkt auf `main`.** Jede Änderung: Zweig → Pull Request → grüne CI → Merge.
-  Pushes, Merges, Tags und Releases, Secrets und Repository-Einstellungen nur mit
-  ausdrücklicher Freigabe von Lucas. Gepusht wird ausschließlich zum GitHub-Remote
-  `origin`; weitere lokale Regeln stehen in nicht versionierten Dateien und gelten genauso.
-- **Gegenseitige Prüfung.** Jede Änderung prüft vor dem Merge der jeweils andere Agent:
-  Claude Code prüft Codex-Zweige, Codex prüft Claude-Zweige (`codex review --base main`)
-  und kommentiert Pull Requests auf GitHub. Befunde werden vor dem Umsetzen am Code
-  nachgeprüft; verworfene Befunde stehen mit Begründung im Pull Request.
-- **Übergabe.** Ein Auftrag an den anderen Agenten nennt Ziel, betroffene Dateien,
-  Akzeptanzkriterien und erwartete Tests. Der Ergebnisbericht nennt geänderte Dateien, das
-  Ergebnis des Prüf-Gates und offene Punkte. Was nicht ausgeführt werden konnte (z. B.
-  GUI-Tests ohne Bildschirm, Netzwerkzugriff in der Sandbox), wird als offen gemeldet, nie
-  als bestanden.
-- **Gleiche Qualitätsgrenze.** Für beide gilt: Prüf-Gate grün vor dem Pull Request, neue
-  Funktionen mit Tests, Dokumentation nachgezogen.
-- **Unklare Aufträge** nicht mit Annahmen füllen: offene Fragen im Ergebnisbericht stellen
-  statt sie stillschweigend zu entscheiden.
+### Typische delegierbare Aufgaben
+- Spezifikationstests aus KONZEPT §10.3–§10.5 gegen die Funktionssignaturen – bevor die Implementierung existiert (Task P2-07).
+- Dummy-Inhalte aus `docs/INHALTE.md` in `src/data/*` übertragen (Fristen, Postfach, Benachrichtigungen, Assistent-Katalog).
+- A11y-Durchgang über benannte Komponenten.
+- Kleine, isolierte Funktionen oder Komponenten nach Spezifikation (z. B. ICS-Export, EmptyState).
+- Lint- und Typfehler beheben.

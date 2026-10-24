@@ -9,6 +9,9 @@
 .claude/settings.local.json
 CLAUDE.local.md
 
+# Fremde Design-Referenzen — nur lokal, das Repo ist öffentlich
+docs/referenzen/
+
 # IDE
 .idea/
 .vscode/
