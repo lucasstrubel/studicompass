@@ -75,9 +75,9 @@ Reihenfolge: P1-01 → P1-05 → P1-02 → P1-03 → P1-04 → P1-06. P1-05 ist 
 - **AK:** `npm run check` grün; `CLAUDE.md`, `AGENTS.md`, `docs/` und vorhandene Inhalte von `README.md`/`.gitignore` sind erhalten.
 
 ### P1-02 [Claude] Tailwind und shadcn/ui
-- [ ] vorher die aktuelle Anleitung lesen: https://ui.shadcn.com/docs/installation/vite
-- [ ] shadcn nach dieser Anleitung initialisieren (Tailwind CSS v4 über `@tailwindcss/vite`, Alias in `tsconfig.json` und `tsconfig.app.json`)
-- [ ] Komponenten: button, card, badge, dialog, alert-dialog, sheet, tabs, tooltip, popover, progress, separator, select, switch, slider, skeleton, sonner, dropdown-menu, avatar, scroll-area, accordion, toggle-group, chart
+- [x] vorher die aktuelle Anleitung lesen: https://ui.shadcn.com/docs/installation/vite
+- [x] shadcn nach dieser Anleitung initialisieren (Tailwind CSS v4 über `@tailwindcss/vite`, Alias in `tsconfig.json` und `tsconfig.app.json`)
+- [x] Komponenten: button, card, badge, dialog, alert-dialog, sheet, tabs, tooltip, popover, progress, separator, select, switch, slider, skeleton, sonner, dropdown-menu, avatar, scroll-area, accordion, toggle-group, chart
 - Hinweis: `/_ui` braucht schon React Router (im Stack) – nur diese Dev-Route; die Routen aus KONZEPT §7 folgen in P1-04. „Dunkel“ zeigt `/_ui` über einen Container mit der Klasse `dark`; der ThemeProvider folgt in P1-03.
 - **AK:** Entwickler-Route `/_ui` (nur im Dev-Build) zeigt alle Komponenten in hell und dunkel.
 
