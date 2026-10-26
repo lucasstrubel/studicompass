@@ -124,47 +124,52 @@ Reihenfolge: P1-01 → P1-05 → P1-02 → P1-03 → P1-04 → P1-06. P1-05 ist 
 
 ## Phase 2 – Domäne & Daten (Mi 28.10. – Do 29.10.)
 
+**Umsetzungsauftrag von Lucas:** P2-01 bis P2-09 übernimmt Codex selbstständig auf `dev`. Die ursprünglichen Owner unten beschreiben die geplante Arbeitsteilung. Signaturen und Spezifikationstests wurden vor der Implementierung geprüft; Gegencheck durch Claude und visuelle Abnahme am 27.10.2026 erledigt (siehe `docs/reviews/P2.md`). Kein Merge oder Tag ohne Lucas' OK.
+
 ### P2-01 [Claude] Domänentypen und Zeitmodell → `src/domain/types.ts`, `terms.ts`
-- [ ] Typen laut KONZEPT §10.1; Term-Funktionen (`next`, `compare`, `semesterNumber`, `format`, `nextOffering`)
+- [x] Typen laut KONZEPT §10.1; Term-Funktionen (`next`, `compare`, `semesterNumber`, `format`, `nextOffering`)
 - **AK:** Term-Funktionen getestet (u. a. WS 2026 → SS 2027 → WS 2027; Fachsemester 3 = WS 2026/27).
 
 ### P2-02 [Claude] Demo-Konfiguration → `src/config/demo.ts`
-- [ ] `APP_NAME`, `DEMO_NOW = 2027-01-25T19:30:00+01:00`, `LATENCY_MS`, `FLAGS.simulateErrors`
+- [x] `APP_NAME`, `DEMO_NOW = 2027-01-25T19:30:00+01:00`, `LATENCY_MS`, `FLAGS.simulateErrors`
 - Hinweis: `APP_NAME` (P1-01) und `DEMO_NOW` (P1-04) gibt es dann schon; hier kommen `LATENCY_MS` und `FLAGS` dazu.
 
 ### P2-03 [Claude] Kerndaten → `src/data/`
-- [ ] program, modules, exams, rules, offices, student aus INHALTE §1–§4, §7, §8
+- [x] program, modules, exams, rules, offices, student aus INHALTE §1–§4, §7, §8
 - **AK:** typgeprüft; Test: 210 ECTS gesamt, 30 je Fachsemester, 48 ECTS bestanden.
 
 ### P2-04 [Codex] Inhaltsdaten → `src/data/`
-- [ ] deadlines, inbox, notifications, assistant-catalog aus INHALTE §5, §6, §9, §10
+- [x] deadlines, inbox, notifications, assistant-catalog aus INHALTE §5, §6, §9, §10
 - Brief: nur diese Dateien; Typen aus P2-01; keine Logik.
 - **AK:** typgeprüft; Texte wörtlich aus INHALTE.md; Volltexte für übrige Postfach-Einträge im selben Stil.
 
 ### P2-05 [Claude] Services und Store
-- [ ] Service-Interfaces je Kanal (pos, moodle, mail, website) sowie Regelwerk und Assistent; Mock-Implementierungen mit Latenz und optionalem Fehler
-- [ ] Zustand-Store: `hydrate()`, Ladestatus und „zuletzt aktualisiert“ je Kanal; Aktionen `markRead`, `withdrawExam` (simuliert, mit Snapshot), `undo`, `confirmAttend`, `setWhatIf` / `clearWhatIf`, `setTheme`, `setHintTone`, `completeOnboarding`, `resetDemo`; `persist` mit `version`
+- [x] Service-Interfaces je Kanal (pos, moodle, mail, website) sowie Regelwerk und Assistent; Mock-Implementierungen mit Latenz und optionalem Fehler
+- [x] Zustand-Store: `hydrate()`, Ladestatus und „zuletzt aktualisiert“ je Kanal; Aktionen `markRead`, `withdrawExam` (simuliert, mit Snapshot), `undo`, `confirmAttend`, `setWhatIf` / `clearWhatIf`, `setTheme`, `setHintTone`, `completeOnboarding`, `resetDemo`; `persist` mit `version`
 - Hinweis: `setTheme` übernimmt die Theme-Speicherung aus P1-03. Auf den Speicher greifen nur `readStoredTheme`/`writeStoredTheme` (`src/lib/theme.ts`, Schlüssel `THEME_STORAGE_KEY`) und das Init-Skript in `index.html` zu. Der ThemeProvider bezieht `theme`/`setTheme` dann aus dem Store, `useTheme()` bleibt gleich. Vorschlag: Schlüssel behalten und `theme` per `partialize` aus `persist` ausnehmen, damit das Theme Versionssprünge übersteht.
 - **AK:** Ladezustände sichtbar beobachtbar; `FLAGS.simulateErrors` erzeugt Fehlerzustand; `resetDemo` stellt den Ausgangszustand her.
 
-P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch `feat/P2-06-domain`: erst Signaturen, dann schreibt Codex die Tests aus der Spezifikation, dann implementiert Claude Code. So sind die Tests unabhängig von der Implementierung. Gemergt wird nach P2-08; dazwischen ist `npm run check` rot – gewollt.
+P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch (ursprünglich `feat/P2-06-domain`, auf Lucas' Auftrag jetzt `dev`): erst Signaturen, dann Tests aus der Spezifikation, dann Implementierung. Die Tests bleiben ab dem ersten roten Lauf unverändert; die Arbeitsfolge ist in `docs/reviews/P2.md` dokumentiert. Vor der Implementierung ist `npm run check` rot – gewollt. Die ursprüngliche unabhängige Arbeitsteilung ersetzt hier der spätere Gegencheck durch Claude.
 
 ### P2-06 [Claude] Domänen-Signaturen → `progress.ts`, `rules.ts`, `projection.ts`, `decision.ts`, `grades.ts`
-- [ ] typisierte Signaturen mit JSDoc (Regel-IDs) für `earnedEcts`, `targetEcts`, `trafficLight`, `openFoundationModules`, `nextOfferingTerm`, `projectPlan` (§10.5), `compareDecision` (attendPass / attendFail / withdraw), `gradeAverage`; Rumpf wirft `Error('not implemented')`
+- [x] typisierte Signaturen mit JSDoc (Regel-IDs) für `earnedEcts`, `targetEcts`, `trafficLight`, `openFoundationModules`, `nextOfferingTerm`, `projectPlan` (§10.5), `compareDecision` (attendPass / attendFail / withdraw), `gradeAverage`; Rumpf wirft `Error('not implemented')` (vor P2-08 geprüft)
 - **AK:** `npm run typecheck` grün.
 
 ### P2-07 [Codex] Spezifikationstests → `src/domain/*.spec.ts`
 - Brief: Tests ausschließlich aus KONZEPT §10.3–§10.5 gegen die Signaturen ableiten; Testnamen nennen Regel bzw. Szenario.
-- [ ] Szenarien Basis, A, B, C, D
-- [ ] Grenzfälle: Rückstand 6/7/23/24 (DR-3); Angebot BOTH vs. WS (DR-4); Note 4,0 vs. 4,3 (DR-1); Abschneiden 2,46 → 2,4 und 2,49 → 2,4 (DR-9); genau 3 vs. 4 offene Grundstudiums-Prüfungen (DR-7)
+- [x] Szenarien Basis, A, B, C, D
+- [x] Grenzfälle: Rückstand 6/7/23/24 (DR-3); Angebot BOTH vs. WS (DR-4); Note 4,0 vs. 4,3 (DR-1); Abschneiden 2,46 → 2,4 und 2,49 → 2,4 (DR-9); genau 3 vs. 4 offene Grundstudiums-Prüfungen (DR-7)
 - **AK:** Tests kompilieren und scheitern erwartbar an „not implemented“; unklare Fälle sind als Frage gemeldet.
 
 ### P2-08 [Claude] Domänenlogik implementieren
-- [ ] implementieren, bis alle Spezifikationstests grün sind; eigene Unit-Tests (`*.test.ts`) für Hilfsfunktionen
-- [ ] hält ein Spezifikationstest der Spezifikation nicht stand: Rücksprache mit Lucas, dann Test oder KONZEPT.md anpassen
+- [x] implementieren, bis alle Spezifikationstests grün sind; eigene Unit-Tests (`*.test.ts`) für Hilfsfunktionen
+- [x] hält ein Spezifikationstest der Spezifikation nicht stand: Rücksprache mit Lucas, dann Test oder KONZEPT.md anpassen (kein solcher Fall; zusätzlichen DR-8-Randfall mit Lucas geklärt und in §10.5 ergänzt)
 - **AK:** rein funktional; alle Tests grün; liefert für Basis und Szenarien A–D exakt die Werte aus KONZEPT §10.4.
 
 ### P2-09 [Codex] Phasen-Review (`--base m1`, Fokus KONZEPT §10) → `docs/reviews/P2.md`
+
+- [x] Technische Eigenprüfung einschließlich neuer Dateien dokumentiert.
+- [x] Unabhängiger Gegencheck durch Claude und visuelle Abnahme (1440×900, 390×844, hell/dunkel); drei Befunde behoben.
 
 **Gate M2 (Do 29.10., 22:00):** alle Domänentests grün · Testorakel-Werte stimmen · Store lädt alle Daten mit sichtbaren Ladezuständen.
 

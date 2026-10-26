@@ -1,0 +1,82 @@
+import type { Deadline } from "@/domain/types";
+
+// Beispieldaten aus docs/INHALTE.md; fachlich noch nicht verifiziert.
+export const deadlines: Deadline[] = [
+  {
+    id: "d-stat-abm",
+    title: "Abmeldung Statistik",
+    dueAt: "2027-01-26T23:59:00+01:00",
+    type: "Abmeldung",
+    channel: "pos",
+    examId: "e-stat-ws26",
+  },
+  {
+    id: "d-db-abm",
+    title: "Abmeldung Datenbanken",
+    dueAt: "2027-01-28T23:59:00+01:00",
+    type: "Abmeldung",
+    channel: "pos",
+    examId: "e-db-ws26",
+  },
+  {
+    id: "d-mkt-fs5",
+    title: "Abgabe Fallstudie 5 Marketing",
+    dueAt: "2027-01-31T23:59:00+01:00",
+    type: "Abgabe",
+    channel: "moodle",
+    moduleId: "m-mkt",
+  },
+  {
+    id: "d-se1-abm",
+    title: "Abmeldung Software Engineering 1",
+    dueAt: "2027-02-01T23:59:00+01:00",
+    type: "Abmeldung",
+    channel: "pos",
+    examId: "e-se1-ws26",
+  },
+  {
+    id: "d-gpm-abm",
+    title: "Abmeldung Geschäftsprozessmanagement",
+    dueAt: "2027-02-03T23:59:00+01:00",
+    type: "Abmeldung",
+    channel: "pos",
+    examId: "e-gpm-ws26",
+  },
+  {
+    id: "d-mkt-abm",
+    title: "Abmeldung Marketing",
+    dueAt: "2027-02-07T23:59:00+01:00",
+    type: "Abmeldung",
+    channel: "pos",
+    examId: "e-mkt-ws26",
+  },
+  {
+    id: "d-praxis-info",
+    title: "Infoveranstaltung Praxissemester WS 2027/28",
+    dueAt: "2027-02-10T14:00:00+01:00",
+    type: "Termin",
+    channel: "mail",
+  },
+  {
+    id: "d-rueck",
+    title: "Rückmeldung zum SS 2027",
+    dueAt: "2027-02-15",
+    type: "Rückmeldung",
+    channel: "website",
+  },
+  {
+    id: "d-pruef-ss27",
+    title: "Prüfungsanmeldung SS 2027",
+    dueAt: "2027-05-24",
+    type: "Anmeldung",
+    channel: "pos",
+    startsAt: "2027-05-10",
+  },
+  {
+    id: "d-praxis-antrag",
+    title: "Antrag auf Zulassung zum Praxissemester WS 2027/28",
+    dueAt: "2027-05-14",
+    type: "Antrag",
+    channel: "website",
+  },
+];

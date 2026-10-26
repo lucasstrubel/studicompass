@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { DemoDataPanel } from "./DemoDataPanel";
 import {
   CircleCheck,
   CircleHelp,
@@ -313,6 +314,8 @@ export function UiShowcasePage() {
             <ToggleGroupItem value="system">System</ToggleGroupItem>
           </ToggleGroup>
         </header>
+
+        <DemoDataPanel />
 
         <Section name="farben">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
