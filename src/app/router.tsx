@@ -3,6 +3,10 @@ import { NotFoundPage } from "@/app/NotFoundPage";
 import { RootLayout } from "@/app/RootLayout";
 import { AppShell } from "@/components/layout/AppShell";
 import type { RouteHandle } from "@/components/layout/route-handle";
+import {
+  DashboardPreviewPage,
+  DashboardPreviewRightRail,
+} from "@/features/dashboard/DashboardPreviewPage";
 import { OnboardingPage } from "@/features/onboarding/OnboardingPage";
 
 type PageRoute = RouteObject & { handle: RouteHandle };
@@ -17,7 +21,11 @@ function titleOnly(title: string) {
 
 /** Pages inside the app shell (KONZEPT §7). */
 const shellRoutes: PageRoute[] = [
-  { index: true, ...titleOnly("Übersicht") },
+  {
+    index: true,
+    Component: DashboardPreviewPage,
+    handle: { title: "Übersicht", rightRail: DashboardPreviewRightRail },
+  },
   { path: "verlauf", ...titleOnly("Studienverlauf") },
   { path: "module", ...titleOnly("Module & Noten") },
   { path: "module/:moduleId", ...titleOnly("Module & Noten") },

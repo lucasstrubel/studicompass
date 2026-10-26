@@ -108,6 +108,20 @@ Reihenfolge: P1-01 → P1-05 → P1-02 → P1-03 → P1-04 → P1-06. P1-05 ist 
 
 ---
 
+## Designrevision vor Phase 2
+
+### P1-07 [Codex, direkt von Lucas beauftragt] UI nach Referenz 1
+- [x] Eingerückter Desktop-Rahmen, kompakte Karten und lokale Linienillustrationen nach Referenz 1; Referenz 2 nur Farbpalette.
+- [x] Toplinks ab 1280 px, Hamburger-Menü mit Hover-Vorschau (150/250 ms) und Radix-Sheet bei explizitem Öffnen; keine permanente Sidebar oder mobile Tab-Leiste.
+- [x] Gekennzeichnete Dashboard-Designvorschau mit dokumentierten Beispieldaten, Quellen und bestehender Navigation; keine Phase-2-Logik.
+- [x] Hell-/Dunkel-Schalter in der Topbar mit gespeicherter Auswahl (Nachtrag von Lucas).
+- [x] Kontrastrevision im hellen Theme: warme Flächenhierarchie, dunklerer Sekundärtext, kräftige Terrakotta-Karte mit Tinte, klarere Konturen und Fortschrittsbalken.
+- [x] KONZEPT, CLAUDE und Komponentenübersicht nachgezogen.
+- [x] Prüf-Gate und Sichtprüfung bei 1440×900, 834×1112 und 390×844, jeweils hell/dunkel; Screenshots und Prüfergebnis: docs/reviews/P1-07-validation.md.
+- **AK:** kompakte Referenz-1-Komposition, vollständige Navigation per Maus/Touch/Tastatur, keine Überläufe, Fokusführung und Reduced Motion. Funktionales Dashboard bleibt P3-02.
+
+---
+
 ## Phase 2 – Domäne & Daten (Mi 28.10. – Do 29.10.)
 
 ### P2-01 [Claude] Domänentypen und Zeitmodell → `src/domain/types.ts`, `terms.ts`

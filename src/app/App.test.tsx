@@ -10,7 +10,9 @@ describe("App", () => {
     expect(
       screen.getByRole("heading", { level: 1, name: "Übersicht" }),
     ).toBeInTheDocument();
-    expect(screen.getByTestId("sidebar")).toHaveTextContent(APP_NAME);
+    expect(
+      screen.getByRole("button", { name: "Navigation öffnen" }),
+    ).toBeInTheDocument();
     expect(document.title).toBe(`Übersicht · ${APP_NAME}`);
   });
 });
