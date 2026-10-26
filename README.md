@@ -63,6 +63,7 @@ Nie `shadcn add --overwrite` für vorhandene Komponenten: Die Wrapper weichen be
 - `link` in `--accent-strong`
 - Recharts-Fläche mit sichtbarem Fokus
 - sonner ohne next-themes
+- deutsche Beschriftungen: „Schließen“ in Dialog und Sheet; bei sonner der Bereich „Meldungen“ und der Button „Meldung schließen“
 
 ## Design-Tokens und Darstellung
 
@@ -70,12 +71,33 @@ Nie `shadcn add --overwrite` für vorhandene Komponenten: Die Wrapper weichen be
 - **Schrift:** Manrope, lokal über Fontsource; es gibt keine Requests an fremde Server. Größen über die Typo-Klassen aus KONZEPT §12.3: `text-page-title`, `text-section-title`, `text-card-title`, `text-body` (Standard), `text-meta`, `text-figure`. Zahlen mit `tabular-nums`.
 - **Fokus:** Ein Fokusring für alle fokussierbaren Elemente steht zentral in `globals.css`: 2 px `--ring` (= `--accent-strong`), 2 px Abstand. Schneidet ein Elternteil mit `overflow-hidden` ihn ab, kommt er mit `focus-visible:-outline-offset-2` nach innen.
 - **Theme:** Hell, Dunkel oder System, gespeichert im `localStorage` unter `studicompass:theme` (`THEME_STORAGE_KEY` in [`src/config/demo.ts`](src/config/demo.ts)). Ein Inline-Skript in [`index.html`](index.html) setzt die Klasse `dark` an `<html>` vor dem ersten Rendern, damit nichts hell aufblitzt. Danach hält der ThemeProvider sie aktuell, auch wenn sich die Systemeinstellung ändert. Komponenten lesen und setzen das Theme über `useTheme()`. Ab P2-05 übernimmt der Store `setTheme`.
+- **Dunkel ansehen:** Einen Umschalter in der App gibt es erst mit den Einstellungen (S9, P4-05). Bis dahin folgt die App der Systemeinstellung. In Chrome geht es auch ohne: DevTools → ⋮ → More tools → Rendering → „Emulate CSS media feature prefers-color-scheme“. Lokal schaltet zusätzlich `/_ui` um; die Wahl gilt auch für die App-Seiten.
+
+## App-Shell und Navigation
+
+- **Routen:** [`src/app/router.tsx`](src/app/router.tsx), wie in KONZEPT §7.
+  - Jede Route trägt ihren Titel im `handle`. Er erscheint als Überschrift in der Topbar und als Browser-Tab-Titel „‹Titel› · StudiCompass“.
+  - Seiten ohne eigenen Inhalt zeigen bis zu ihrem Task nur den Titel.
+  - Unbekannte Pfade zeigen die 404-Seite. Das Onboarding (`/start`) läuft ohne Shell.
+- **Layout:** [`src/components/layout/`](src/components/layout/), Einträge einmal in `navigation.ts`.
+  - ab 1280 px: Sidebar (Tinte) mit Text
+  - 768–1279 px: Icon-Leiste mit Tooltips
+  - darunter: Tab-Leiste mit „Mehr“-Sheet
+  - Die aktuelle Seite markieren Balken und Fettung, gesteuert über `aria-current`.
+- **Topbar:** Seitentitel, Demo-Chip, Glocke und Profil-Menü.
+  - Der Chip zeigt die feste Demo-Zeit `DEMO_NOW` aus [`src/config/demo.ts`](src/config/demo.ts): Mo, 25.01.2027, 19:30.
+  - Datum und Uhrzeit erscheinen auf jedem Gerät in deutscher Zeit (`DEMO_TIME_ZONE`, Formatierung in [`src/lib/format.ts`](src/lib/format.ts)).
+  - Zähler, Initialen und Benachrichtigungen kommen mit dem Store.
+- **Rechte Spalte:** Eine Seite belegt sie über `handle.rightRail` (Komponente). Ab 1280 px steht sie rechts neben dem Hauptbereich, darunter unter ihm.
+- **Tastatur und Scrollen:**
+  - Der Skip-Link „Zum Inhalt“ ist das erste fokussierbare Element und setzt den Fokus auf `<main>`.
+  - Neue Seiten starten oben (`ScrollRestoration`), Zurück stellt die Position wieder her. Links, die nur Suchparameter ändern, bekommen `preventScrollReset`.
 
 ## Projektstruktur
 
 ```
 src/
-  app/          App-Komponente, Routing, Provider
+  app/          App-Komponente, Routing (Routen, Root-Layout, 404), Provider
   features/     ein Ordner je Bereich (dashboard, planner, modules, decision, …); dev-ui/ = Route /_ui
   components/   ui/ (shadcn), layout/ (App-Shell), common/ (gemeinsame Bausteine)
   domain/       reine Fachlogik in TypeScript, unit-getestet

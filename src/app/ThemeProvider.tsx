@@ -3,7 +3,6 @@ import {
   useLayoutEffect,
   useMemo,
   useState,
-  useSyncExternalStore,
   type ReactNode,
 } from "react";
 import { ThemeContext } from "@/app/theme-context";
@@ -15,16 +14,7 @@ import {
   writeStoredTheme,
   type ThemePreference,
 } from "@/lib/theme";
-
-function subscribeToSystemTheme(onChange: () => void) {
-  const query = window.matchMedia(SYSTEM_DARK_QUERY);
-  query.addEventListener("change", onChange);
-  return () => query.removeEventListener("change", onChange);
-}
-
-function systemPrefersDark() {
-  return window.matchMedia(SYSTEM_DARK_QUERY).matches;
-}
+import { useMediaQuery } from "@/lib/use-media-query";
 
 /**
  * Theme preference System/Hell/Dunkel (US-19). The inline script in index.html has already set the class
@@ -33,10 +23,7 @@ function systemPrefersDark() {
  */
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<ThemePreference>(readStoredTheme);
-  const systemDark = useSyncExternalStore(
-    subscribeToSystemTheme,
-    systemPrefersDark,
-  );
+  const systemDark = useMediaQuery(SYSTEM_DARK_QUERY);
   const resolvedTheme = resolveTheme(theme, systemDark);
 
   useLayoutEffect(() => {

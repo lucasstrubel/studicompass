@@ -89,10 +89,10 @@ Reihenfolge: P1-01 → P1-05 → P1-02 → P1-03 → P1-04 → P1-06. P1-05 ist 
 - **AK:** keine Hex-Werte außerhalb `globals.css`; Kontrastpaare wie in §12.2.
 
 ### P1-04 [Claude] App-Shell und Routing
-- [ ] Routen laut KONZEPT §7 (Seiten zunächst nur mit Seitentitel), 404-Seite, Browser-Tab-Titel je Seite
-- [ ] Sidebar (Tinte) mit aktivem Zustand (Balken + Fettung), Topbar (Titel, Demo-Chip, Glocke, Avatar-Menü), Slot für die rechte Spalte
-- [ ] Tablet: Icon-Sidebar mit Tooltips · Mobil: Tab-Leiste + „Mehr“-Sheet
-- [ ] Skip-Link „Zum Inhalt“; Scroll-Position bei Seitenwechsel zurücksetzen
+- [x] Routen laut KONZEPT §7 (Seiten zunächst nur mit Seitentitel), 404-Seite, Browser-Tab-Titel je Seite
+- [x] Sidebar (Tinte) mit aktivem Zustand (Balken + Fettung), Topbar (Titel, Demo-Chip, Glocke, Avatar-Menü), Slot für die rechte Spalte
+- [x] Tablet: Icon-Sidebar mit Tooltips · Mobil: Tab-Leiste + „Mehr“-Sheet
+- [x] Skip-Link „Zum Inhalt“; Scroll-Position bei Seitenwechsel zurücksetzen
 - Hinweis: Der Demo-Chip braucht `DEMO_NOW` – hier schon in `src/config/demo.ts` anlegen (aus P2-02 vorgezogen). Die Datei bleibt ohne Imports, weil `vite.config.ts` sie lädt.
 - **AK:** Navigation funktioniert bei 390, 834 und 1440 px und per Tastatur.
 

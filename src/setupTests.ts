@@ -18,6 +18,9 @@ class ResizeObserverStub {
 }
 globalThis.ResizeObserver ??= ResizeObserverStub;
 
+// jsdom does not scroll; React Router's ScrollRestoration calls window.scrollTo on every navigation.
+window.scrollTo = () => undefined;
+
 // jsdom has no matchMedia; the ThemeProvider reads prefers-color-scheme. Default: light system theme.
 // Tests that need a dark or changing system theme replace it with vi.spyOn(window, "matchMedia").
 window.matchMedia = (query: string): MediaQueryList => ({
