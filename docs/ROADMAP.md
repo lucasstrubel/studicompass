@@ -82,9 +82,9 @@ Reihenfolge: P1-01 → P1-05 → P1-02 → P1-03 → P1-04 → P1-06. P1-05 ist 
 - **AK:** Entwickler-Route `/_ui` (nur im Dev-Build) zeigt alle Komponenten in hell und dunkel.
 
 ### P1-03 [Claude] Design-Tokens und Theme
-- [ ] Tokens aus KONZEPT §12.2 als CSS-Variablen (hell/dunkel), auf die shadcn-Variablen gemappt, plus eigene (`--accent-strong`, `--accent-soft*`, `--status-*`, `--sidebar-*`)
-- [ ] ThemeProvider (System/Hell/Dunkel, gespeichert); Theme wird vor dem ersten Rendern gesetzt (kein Aufblitzen)
-- [ ] Manrope über Fontsource; Utility für `tabular-nums`
+- [x] Tokens aus KONZEPT §12.2 als CSS-Variablen (hell/dunkel), auf die shadcn-Variablen gemappt, plus eigene (`--accent-strong`, `--accent-soft*`, `--status-*`, `--sidebar-*`)
+- [x] ThemeProvider (System/Hell/Dunkel, gespeichert); Theme wird vor dem ersten Rendern gesetzt (kein Aufblitzen)
+- [x] Manrope über Fontsource; Utility für `tabular-nums`
 - Hinweis: Theme so speichern, dass der Store in P2-05 (`setTheme`) die Speicherung übernehmen kann – kein zweiter Speicherort.
 - **AK:** keine Hex-Werte außerhalb `globals.css`; Kontrastpaare wie in §12.2.
 
@@ -130,7 +130,7 @@ Reihenfolge: P1-01 → P1-05 → P1-02 → P1-03 → P1-04 → P1-06. P1-05 ist 
 ### P2-05 [Claude] Services und Store
 - [ ] Service-Interfaces je Kanal (pos, moodle, mail, website) sowie Regelwerk und Assistent; Mock-Implementierungen mit Latenz und optionalem Fehler
 - [ ] Zustand-Store: `hydrate()`, Ladestatus und „zuletzt aktualisiert“ je Kanal; Aktionen `markRead`, `withdrawExam` (simuliert, mit Snapshot), `undo`, `confirmAttend`, `setWhatIf` / `clearWhatIf`, `setTheme`, `setHintTone`, `completeOnboarding`, `resetDemo`; `persist` mit `version`
-- Hinweis: `setTheme` übernimmt die Theme-Speicherung aus P1-03.
+- Hinweis: `setTheme` übernimmt die Theme-Speicherung aus P1-03. Auf den Speicher greifen nur `readStoredTheme`/`writeStoredTheme` (`src/lib/theme.ts`, Schlüssel `THEME_STORAGE_KEY`) und das Init-Skript in `index.html` zu. Der ThemeProvider bezieht `theme`/`setTheme` dann aus dem Store, `useTheme()` bleibt gleich. Vorschlag: Schlüssel behalten und `theme` per `partialize` aus `persist` ausnehmen, damit das Theme Versionssprünge übersteht.
 - **AK:** Ladezustände sichtbar beobachtbar; `FLAGS.simulateErrors` erzeugt Fehlerzustand; `resetDemo` stellt den Ausgangszustand her.
 
 P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch `feat/P2-06-domain`: erst Signaturen, dann schreibt Codex die Tests aus der Spezifikation, dann implementiert Claude Code. So sind die Tests unabhängig von der Implementierung. Gemergt wird nach P2-08; dazwischen ist `npm run check` rot – gewollt.

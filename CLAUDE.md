@@ -59,7 +59,7 @@ src/
   services/     Interfaces je Kanal und Regelwerk; mock/ mit Latenz und optionalem Fehler
   data/         Dummy-Daten aus docs/INHALTE.md
   store/        Zustand-Store, Selektoren
-  config/       demo.ts (APP_NAME, DEMO_NOW, LATENCY_MS, FLAGS)
+  config/       demo.ts (APP_NAME, DEMO_NOW, LATENCY_MS, FLAGS, THEME_STORAGE_KEY)
   lib/          cn, Formatierung (Datum, Countdown, ECTS, Noten), ics
   styles/       globals.css (Tailwind, Design-Tokens hell/dunkel)
 ```
@@ -72,18 +72,21 @@ Abhängigkeiten nur in diese Richtung: UI → Store/Selektoren → Domain; Store
 - „Jetzt“ ist ausschließlich `DEMO_NOW` – nie `new Date()` oder `Date.now()` in Komponenten oder Domäne.
 - Simulierte Aktionen (z. B. Abmeldung) ändern nur den Store, speichern vorher einen Snapshot (Rückgängig) und sind im UI als Simulation erkennbar.
 - Persistenz über Zustand `persist` mit `version`. Ändern sich Dummy-Daten: Version erhöhen, damit alte Demo-Stände verworfen werden. „Demo zurücksetzen“ in den Einstellungen.
+- Theme: Komponenten lesen und setzen es über `useTheme()`. Gespeichert wird nur über `readStoredTheme`/`writeStoredTheme` in `src/lib/theme.ts`; denselben Schlüssel liest das Init-Skript in `index.html`. Ab P2-05 übernimmt der Store `setTheme`, ohne zweiten Speicherort.
 - Die Werte aus KONZEPT §10.4 sind das Testorakel. Weicht Code davon ab, ist zuerst der Code verdächtig.
 - Tests: `*.test.ts` schreibst du selbst. `src/domain/*.spec.ts` sind Spezifikationstests von Codex, abgeleitet aus KONZEPT §10 – die änderst du nur nach Rücksprache mit Lucas.
 
 ## UI- und Inhaltsregeln
 - UI auf Deutsch mit Du-Ansprache; Code, Bezeichner und Commits auf Englisch; Dokumentation (README, CHANGELOG, `docs/`) auf Deutsch. Begriffe laut Glossar (KONZEPT §14) – insbesondere **Quelle** (Beleg) ≠ **Kanal** (Herkunftssystem).
 - Farben **nur über Tokens** aus `src/styles/globals.css` (Werte: KONZEPT §12.2). Keine Hex-Werte in Komponenten.
-- Terrakotta (`--accent`) ist Markenfarbe, **nie** Statusfarbe und nie Text auf hellem Grund (dort `--accent-strong`). Text auf Terrakotta-Flächen in `--accent-foreground` (Tinte).
+- Terrakotta (`--accent`) ist Markenfarbe, **nie** Statusfarbe und nie Text auf hellem Grund (dort `--accent-strong`). Text auf Terrakotta-Flächen in `--accent-foreground` (Tinte). Neutrale Hover- und Auswahlflächen (Menüs, Listen) sind `bg-muted`, nicht `bg-accent`. Bringt eine neue shadcn-Komponente `bg-accent` als Hover mit, beim Hinzufügen umstellen.
+- Schriftgrößen über die Typo-Klassen aus KONZEPT §12.3 (`text-page-title` … `text-figure`); Zahlen (ECTS, Countdown, Noten) mit `tabular-nums`.
 - Status „Im Plan / Knapp / Kritisch“ immer als Icon + Text + Farbe.
 - Hi-Fi-Regel (VL05): realistische deutsche Texte aus `docs/INHALTE.md`; kein Lorem Ipsum, keine Bildplatzhalter, keine sichtbaren TODOs.
 - Jede Aussage zu Regeln oder Fristen zeigt ihre Quelle (`CitationList`); ungeprüfte Regeln tragen das Label „Beispiel“.
 - Jeder Datenbereich hat Lade-, Leer- und Fehlerzustand.
 - Barrierearm: Kontrast AA, sichtbarer Fokus, Kernflow per Tastatur, semantisches HTML, `aria-label` an Icon-Buttons, `prefers-reduced-motion`.
+- Fokusring zentral aus `globals.css` (`:focus-visible`, 2 px `--ring` = `--accent-strong`, 2 px Abstand): Komponenten zeichnen keinen eigenen Ring und schalten ihn nicht mit `outline-none` ab. Schneidet ein Elternteil mit `overflow-hidden` ihn ab: `focus-visible:-outline-offset-2`.
 - Keine Login- oder Passwortfelder. Keine Nachbildung echter POS- oder Moodle-Oberflächen; Übergaben an Originalsysteme nur als neutraler Hinweis („Im echten Betrieb …“).
 - Beim Folgen-Check sind „Ich trete an“ und „Abmeldung vornehmen“ visuell gleich gewichtet – die App informiert, sie lenkt nicht.
 

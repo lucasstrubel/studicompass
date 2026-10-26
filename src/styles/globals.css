@@ -5,6 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -14,9 +15,8 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
+  --color-sidebar-muted: var(--sidebar-muted);
+  --color-sidebar-active: var(--sidebar-active);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
@@ -25,6 +25,9 @@
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-soft-foreground: var(--accent-soft-foreground);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -37,6 +40,18 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+  --color-status-on-track: var(--status-on-track);
+  --color-status-on-track-foreground: var(--status-on-track-foreground);
+  --color-status-on-track-soft: var(--status-on-track-soft);
+  --color-status-tight: var(--status-tight);
+  --color-status-tight-foreground: var(--status-tight-foreground);
+  --color-status-tight-soft: var(--status-tight-soft);
+  --color-status-critical: var(--status-critical);
+  --color-status-critical-foreground: var(--status-critical-foreground);
+  --color-status-critical-soft: var(--status-critical-soft);
+  --color-status-info: var(--status-info);
+  --color-status-info-foreground: var(--status-info-foreground);
+  --color-status-info-soft: var(--status-info-soft);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -46,73 +61,133 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* KONZEPT §12.3 type scale (text-page-title … text-figure) and §12.6 motion (state changes ease out). */
+@theme {
+  --text-page-title: 1.75rem;
+  --text-page-title--line-height: 2.25rem;
+  --text-page-title--font-weight: 600;
+  --text-section-title: 1.25rem;
+  --text-section-title--line-height: 1.75rem;
+  --text-section-title--font-weight: 600;
+  --text-card-title: 1rem;
+  --text-card-title--line-height: 1.5rem;
+  --text-card-title--font-weight: 600;
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.375rem;
+  --text-meta: 0.8125rem;
+  --text-meta--line-height: 1.125rem;
+  --text-meta--font-weight: 500;
+  --text-figure: 2.5rem;
+  --text-figure--line-height: 2.75rem;
+  --text-figure--font-weight: 700;
+  --default-transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+/*
+ * Colour tokens from KONZEPT §12.2 ("Warm Ink"); src/styles/tokens.test.ts compares them with the tables
+ * there and checks the contrast pairs. The shadcn names are mapped onto these tokens. Both blocks list
+ * every variable, so the aliases also resolve inside a .dark scope below <html>.
+ */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  color-scheme: light;
+  --background: #faf9f5;
+  --foreground: #1a1917;
+  --card: #ffffff;
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: #1a1917;
+  --primary-foreground: #faf9f5;
+  --secondary: var(--muted);
+  --secondary-foreground: var(--foreground);
+  --muted: #f3f1ec;
+  --muted-foreground: #6b6760;
+  /* Terracotta is the brand accent, never a status colour and never text on a light surface. */
+  --accent: #d97757;
+  --accent-foreground: #1a1917;
+  --accent-strong: #b04f2f;
+  --accent-soft: #f7e4dd;
+  --accent-soft-foreground: #9a4128;
+  --destructive: var(--status-critical-foreground);
+  --border: #e6e3dc;
+  --input: #8c887f;
+  --ring: var(--accent-strong);
+  --chart-1: var(--accent);
+  --chart-2: var(--muted-foreground);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: #1a1917;
+  --sidebar-foreground: #d9d6cf;
+  --sidebar-muted: #a4a29b;
+  --sidebar-active: #2b2926;
+  --sidebar-primary: var(--accent);
+  --sidebar-primary-foreground: var(--accent-foreground);
+  --sidebar-accent: var(--sidebar-active);
+  --sidebar-accent-foreground: var(--sidebar-foreground);
+  --sidebar-border: var(--sidebar-active);
+  --sidebar-ring: var(--accent);
+  /* Status: --status-* = surface/icon, -foreground = text, -soft = soft surface; always with icon and text. */
+  --status-on-track: #788c5d;
+  --status-on-track-foreground: #5a6b43;
+  --status-on-track-soft: #eaefe2;
+  --status-tight: #b07a12;
+  --status-tight-foreground: #8a5a00;
+  --status-tight-soft: #fbefd5;
+  --status-critical: #c8443a;
+  --status-critical-foreground: #b3261e;
+  --status-critical-soft: #fbe3e0;
+  --status-info: #8cb2d7;
+  --status-info-foreground: #3b6694;
+  --status-info-soft: #e3ecf6;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  color-scheme: dark;
+  --background: #1a1917;
+  --foreground: #f0eee8;
+  --card: #262422;
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: #f0eee8;
+  --primary-foreground: #1a1917;
+  --secondary: var(--muted);
+  --secondary-foreground: var(--foreground);
+  --muted: #2e2c29;
+  --muted-foreground: #a4a29b;
+  --accent: #d97757;
+  --accent-foreground: #1a1917;
+  --accent-strong: #e8946f;
+  --accent-soft: #3a2a22;
+  --accent-soft-foreground: #f2b49b;
+  --destructive: var(--status-critical-foreground);
+  --border: #3a3733;
+  --input: #827e74;
+  --ring: var(--accent-strong);
+  --chart-1: var(--accent);
+  --chart-2: var(--muted-foreground);
+  --sidebar: #141311;
+  --sidebar-foreground: #d9d6cf;
+  --sidebar-muted: #a4a29b;
+  --sidebar-active: #262422;
+  --sidebar-primary: var(--accent);
+  --sidebar-primary-foreground: var(--accent-foreground);
+  --sidebar-accent: var(--sidebar-active);
+  --sidebar-accent-foreground: var(--sidebar-foreground);
+  --sidebar-border: var(--sidebar-active);
+  --sidebar-ring: var(--accent);
+  /* Dark mode has one colour for text and icon per status. */
+  --status-on-track: var(--status-on-track-foreground);
+  --status-on-track-foreground: #9cb37e;
+  --status-on-track-soft: #2c3324;
+  --status-tight: var(--status-tight-foreground);
+  --status-tight-foreground: #e2b04f;
+  --status-tight-soft: #3a2f17;
+  --status-critical: var(--status-critical-foreground);
+  --status-critical-foreground: #f08a7e;
+  --status-critical-soft: #3d2220;
+  --status-info: var(--status-info-foreground);
+  --status-info-foreground: #8cb2d7;
+  --status-info-soft: #1f2b38;
 }
 
 @layer base {
@@ -120,10 +195,19 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-body text-foreground;
   }
   html {
     @apply font-sans;
+  }
+  /*
+   * KONZEPT §12.4: one focus ring for every focusable element, 2 px --ring (= --accent-strong) with 2 px
+   * offset. Components neither draw their own ring nor switch this one off with outline-none; where an
+   * overflow-hidden parent would clip it, they move it inside (focus-visible:-outline-offset-2).
+   */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
   }
 }
 

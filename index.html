@@ -5,6 +5,23 @@
     <link rel="icon" href="data:," />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>%APP_NAME%</title>
+    <script>
+      // Sets the theme class before the first render, so a dark theme doesn't flash light (ROADMAP P1-03).
+      // Same rule as resolveTheme in src/lib/theme.ts: "light" or "dark" if stored, otherwise the system setting.
+      (function () {
+        var stored = null;
+        try {
+          stored = localStorage.getItem("%THEME_STORAGE_KEY%");
+        } catch (error) {
+          // Storage blocked: follow the system setting.
+        }
+        var dark =
+          stored === "dark" ||
+          (stored !== "light" &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.classList.toggle("dark", dark);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

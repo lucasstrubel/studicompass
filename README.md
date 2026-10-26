@@ -45,9 +45,31 @@ Lokal ist das nicht nötig: `npm run dev` und `npm run preview` liefern für unb
 
 ## Komponenten-Übersicht (nur Entwicklung)
 
-Unter http://localhost:5173/_ui zeigt `npm run dev` alle shadcn/ui-Komponenten, umschaltbar zwischen hell und dunkel. Die Route gibt es nur im Entwicklungsserver: Im Produktions-Build und damit auch auf Vercel fehlt sie.
+Unter http://localhost:5173/_ui zeigt `npm run dev` die Farb-Tokens, die Typografie und alle shadcn/ui-Komponenten. Umschaltbar ist zwischen Hell, Dunkel und System; die Wahl wird wie in der App gespeichert. Die Route gibt es nur im Entwicklungsserver: Im Produktions-Build und damit auch auf Vercel fehlt sie.
 
-Neue shadcn-Komponenten kommen mit `npx shadcn@latest add <name>` nach `src/components/ui/`; danach `npm run format`.
+Neue shadcn-Komponenten kommen mit `npx shadcn@latest add <name>` nach `src/components/ui/`. Danach:
+
+- `npm run format`
+- den Diff von `src/styles/globals.css` prüfen: Die CLI ergänzt dort Variablen. `npm run test` meldet überschriebene Token-Werte.
+- `bg-accent`/`text-accent-foreground` als Hover- oder Auswahlfläche durch `bg-muted`/`text-foreground` ersetzen (`--accent` ist hier Terrakotta)
+- eigene Fokus-Ringe (`focus-visible:ring-…`) und `outline-none` an fokussierbaren Elementen entfernen
+
+Nie `shadcn add --overwrite` für vorhandene Komponenten: Die Wrapper weichen bewusst vom Registry-Stand ab. Abweichungen:
+
+- A11y-Korrekturen aus P1-02 ([docs/reviews/P1-02.md](docs/reviews/P1-02.md))
+- zentraler Fokusring
+- neutrale Hover-Fläche in Menü und Select
+- `destructive` mit 10 % bzw. 15 % Tönung
+- `link` in `--accent-strong`
+- Recharts-Fläche mit sichtbarem Fokus
+- sonner ohne next-themes
+
+## Design-Tokens und Darstellung
+
+- **Farben:** [`src/styles/globals.css`](src/styles/globals.css) enthält die Werte aus KONZEPT §12.2, hell in `:root`, dunkel in `.dark`. Die shadcn-Variablen sind darauf abgebildet. Eigene Tokens gibt es als Tailwind-Klassen, z. B. `text-accent-strong`, `bg-accent-soft`, `bg-status-critical-soft`, `text-status-critical-foreground`. Komponenten verwenden nur Tokens, keine Hex-Werte. [`src/styles/tokens.test.ts`](src/styles/tokens.test.ts) vergleicht die Werte mit den Tabellen in KONZEPT §12.2, rechnet die Kontrastpaare nach und prüft die Quelltexte auf Hex-Werte.
+- **Schrift:** Manrope, lokal über Fontsource; es gibt keine Requests an fremde Server. Größen über die Typo-Klassen aus KONZEPT §12.3: `text-page-title`, `text-section-title`, `text-card-title`, `text-body` (Standard), `text-meta`, `text-figure`. Zahlen mit `tabular-nums`.
+- **Fokus:** Ein Fokusring für alle fokussierbaren Elemente steht zentral in `globals.css`: 2 px `--ring` (= `--accent-strong`), 2 px Abstand. Schneidet ein Elternteil mit `overflow-hidden` ihn ab, kommt er mit `focus-visible:-outline-offset-2` nach innen.
+- **Theme:** Hell, Dunkel oder System, gespeichert im `localStorage` unter `studicompass:theme` (`THEME_STORAGE_KEY` in [`src/config/demo.ts`](src/config/demo.ts)). Ein Inline-Skript in [`index.html`](index.html) setzt die Klasse `dark` an `<html>` vor dem ersten Rendern, damit nichts hell aufblitzt. Danach hält der ThemeProvider sie aktuell, auch wenn sich die Systemeinstellung ändert. Komponenten lesen und setzen das Theme über `useTheme()`. Ab P2-05 übernimmt der Store `setTheme`.
 
 ## Projektstruktur
 
