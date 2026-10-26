@@ -66,10 +66,10 @@ Es gibt keinen separaten Puffer – die **Kürzungsliste** unten ist der Puffer.
 ## Phase 1 – Fundament (Sa 24.10. – Mo 26.10.)
 
 ### P1-01 [Claude] Projekt aufsetzen
-- [ ] Vite + React + TypeScript (strict), Pfad-Alias `@/`, ESLint, Prettier, Vitest + Testing Library (jsdom)
-- [ ] Scripts `dev`, `build`, `preview`, `lint`, `typecheck`, `test`, `check`
-- [ ] Ordnerstruktur laut CLAUDE.md; README mit Startanleitung
-- [ ] Das Repo ist nicht leer: in einen temporären Unterordner scaffolden und übernehmen – nie „Remove existing files“ oder `--overwrite` von create-vite
+- [x] Vite + React + TypeScript (strict), Pfad-Alias `@/`, ESLint, Prettier, Vitest + Testing Library (jsdom)
+- [x] Scripts `dev`, `build`, `preview`, `lint`, `typecheck`, `test`, `check`
+- [x] Ordnerstruktur laut CLAUDE.md; README mit Startanleitung
+- [x] Das Repo ist nicht leer: in einen temporären Unterordner scaffolden und übernehmen – nie „Remove existing files“ oder `--overwrite` von create-vite
 - **AK:** `npm run check` grün; `CLAUDE.md`, `AGENTS.md`, `docs/` und vorhandene Inhalte von `README.md`/`.gitignore` sind erhalten.
 
 ### P1-02 [Claude] Tailwind und shadcn/ui
