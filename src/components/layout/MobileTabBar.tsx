@@ -4,8 +4,8 @@ import { MoreSheet } from "@/components/layout/MoreSheet";
 import { MORE_ITEMS, TAB_ITEMS } from "@/components/layout/navigation";
 
 // Tab links and the "Mehr" button look alike. The current entry (aria-current "page" on links, "true" on
-// the button) is marked by bold text and the bar on top. The ring stays inside: the bar ends at the
-// bottom edge of the screen.
+// the button) is marked by bold text and the marker on top. The focus ring sits inside the item, since
+// the tab bar ends at the bottom edge of the screen.
 const TAB_CLASS =
   "group relative flex h-16 w-full flex-col items-center justify-center gap-1 text-meta text-muted-foreground transition-colors hover:text-foreground focus-visible:-outline-offset-2 aria-[current=page]:font-semibold aria-[current=page]:text-foreground aria-[current=true]:font-semibold aria-[current=true]:text-foreground";
 

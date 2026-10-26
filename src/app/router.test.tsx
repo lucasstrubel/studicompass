@@ -69,6 +69,16 @@ describe("routes (KONZEPT §7)", () => {
       screen.getByRole("link", { name: "Demo ohne Einrichtung starten" }),
     ).toHaveAttribute("href", "/");
   });
+
+  it("keeps the developer route /_ui outside the shell", async () => {
+    renderApp("/_ui");
+
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Komponenten" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByTestId("sidebar")).not.toBeInTheDocument();
+    expect(document.title).toBe(APP_NAME);
+  });
 });
 
 describe("sidebar", () => {
