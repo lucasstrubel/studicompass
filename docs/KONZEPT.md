@@ -485,7 +485,7 @@ Katalog: `docs/INHALTE.md` §10.
 
 | Referenz 1 | Im Prototyp | Begründung |
 |---|---|---|
-| Dunkle Sidebar mit Icon + Label, Einstellungen/Abmelden unten | übernommen (Tinte `#1A1917`) | – |
+| Dunkle Sidebar mit Icon + Label, Einstellungen/Abmelden unten | übernommen (Tinte `#1A1917`); unten nur Einstellungen | kein Abmelden: Der Prototyp hat keine Anmeldung, und „Abmeldung“ meint im Glossar die Prüfungsabmeldung (Entscheidung 26.10.2026) |
 | Kopf mit Seitentitel, Suche, Icons | Titel, Demo-Chip, Glocke, Avatar; Suche nur bei Zeit | Suche ist durch die Forschung nicht gedeckt |
 | Kursraster mit Fortschritt und Status | Modulkarten mit Prüfungstermin, Anmeldestatus, Moodle-Fortschritt | Fokus auf Prüfungen statt Lektionen |
 | Großer Monatskalender | ersetzt durch Studienstand, „Jetzt wichtig“, Meilenstein | Fristen sind der schwächste Pain (8/8 ohne verpasste Frist) |
