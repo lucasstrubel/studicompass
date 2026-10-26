@@ -43,12 +43,18 @@ Vercel baut die App bei jedem Push und veröffentlicht sie statisch (Preset Vite
 
 Lokal ist das nicht nötig: `npm run dev` und `npm run preview` liefern für unbekannte Pfade ohnehin `index.html`.
 
+## Komponenten-Übersicht (nur Entwicklung)
+
+Unter http://localhost:5173/_ui zeigt `npm run dev` alle shadcn/ui-Komponenten, umschaltbar zwischen hell und dunkel. Die Route gibt es nur im Entwicklungsserver: Im Produktions-Build und damit auch auf Vercel fehlt sie.
+
+Neue shadcn-Komponenten kommen mit `npx shadcn@latest add <name>` nach `src/components/ui/`; danach `npm run format`.
+
 ## Projektstruktur
 
 ```
 src/
   app/          App-Komponente, Routing, Provider
-  features/     ein Ordner je Bereich (dashboard, planner, modules, decision, …)
+  features/     ein Ordner je Bereich (dashboard, planner, modules, decision, …); dev-ui/ = Route /_ui
   components/   ui/ (shadcn), layout/ (App-Shell), common/ (gemeinsame Bausteine)
   domain/       reine Fachlogik in TypeScript, unit-getestet
   services/     Schnittstelle je Kanal und für das Regelwerk, Mocks unter mock/

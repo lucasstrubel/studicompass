@@ -48,6 +48,7 @@ src/
   app/          App.tsx, router.tsx, providers.tsx (Theme, Toaster, Tooltip)
   features/     je Bereich Seite + Teilkomponenten:
                 dashboard/ planner/ modules/ decision/ assistant/ inbox/ deadlines/ settings/ onboarding/
+                dev-ui/ (Entwickler-Route /_ui, nur im Dev-Build)
   components/
     ui/         shadcn-Komponenten (generiert)
     layout/     AppShell, Sidebar, Topbar, RightRail, MobileTabBar, MoreSheet

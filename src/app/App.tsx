@@ -1,9 +1,6 @@
-import { APP_NAME } from "@/config/demo";
+import { RouterProvider } from "react-router";
+import { router } from "@/app/router";
 
 export function App() {
-  return (
-    <main>
-      <h1>{APP_NAME}</h1>
-    </main>
-  );
+  return <RouterProvider router={router} />;
 }
