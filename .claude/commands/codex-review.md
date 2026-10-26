@@ -29,10 +29,13 @@ Argumente: $ARGUMENTS
    ```bash
    codex exec -s read-only --ephemeral -c windows.sandbox="unelevated" \
      -c model_reasoning_effort="high" -o <scratchpad>/codex-review-<zeitstempel>.md -C <repo> \
-     "Prüfe die Änderungen aus 'git diff main...HEAD' nach den Regeln in AGENTS.md.
+     "Prüfe die Änderungen aus 'git diff <basis>...HEAD' nach den Regeln in AGENTS.md.
       Schwerpunkt: <Prüfhinweise>. Nenne je Befund Datei:Zeile, Fehlerszenario und
       Schweregrad. Ändere nichts." 2> <scratchpad>/codex-review-<zeitstempel>.err
    ```
+
+   `<basis>` ist die Basis aus den Argumenten (`--base <zweig>`, sonst `main`). Beim
+   Phasen-Review auf `main` ist das das Tag `m<n-1>` – `main...HEAD` wäre dort leer.
 
    `windows.sandbox="unelevated"` ist nötig, weil die erhöhte Windows-Sandbox für die
    npm-CLI nicht eingerichtet ist; die Desktop-App bleibt unberührt.

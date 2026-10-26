@@ -1,12 +1,12 @@
 # Roadmap – StudiCompass Prototyp
 
-Zeitraum: Fr, 23.10. – Fr, 06.11.2026 (Präsentation) · Stand: 24.10.2026 (v2)
+Zeitraum: Fr, 23.10. – Fr, 06.11.2026 (Präsentation) · Stand: 26.10.2026 (v3: Zeitplan nach Verzug in Phase 1 neu gesetzt, Kürzungs-Checkpoints, Reviews startet Claude Code)
 
 ## So wird mit dieser Roadmap gearbeitet
 - Reihenfolge einhalten. Jede Phase endet mit einem **Gate**; die nächste Phase beginnt erst, wenn das Gate erfüllt ist. **Ausnahme:** Phase 1 hängt nicht von Inhalten ab und läuft parallel zu Phase 0 – Gate M0 muss erst vor P2-03 erfüllt sein.
 - **Owner:** [Claude] = Claude Code · [Codex] = Codex, delegiert von Claude Code mit Brief nach `AGENTS.md` · [Team] = Gruppe · [Lucas] = Lucas allein.
-- **Pro Task:** neue Claude-Code-Unterhaltung → Plan (`/plan`) → Freigabe → Umsetzung auf eigenem Branch → `npm run check` → Sichtprüfung (1440×900 und 390×844, hell und dunkel) → `/codex:review --base main` → Befunde abarbeiten → Checkbox abhaken → PR → Merge.
-- **Pro Phase:** Phasen-Review mit `/codex:adversarial-review --base m<n-1>` → Befunde abarbeiten → Gate prüfen → Tag `m<n>` auf `main`.
+- **Pro Task:** neue Claude-Code-Unterhaltung → Plan (`/plan`) → Freigabe → Umsetzung auf eigenem Branch → `npm run check` → Sichtprüfung (1440×900 und 390×844, hell und dunkel) → Codex-Review (startet Claude Code mit `/codex-review --base main`) → Befunde abarbeiten → Checkbox abhaken → PR → Merge.
+- **Pro Phase:** Phasen-Review (startet Claude Code mit `/codex-review --base m<n-1>` und dem Phasen-Fokus aus `docs/PROMPTS.md` §4) → Befunde abarbeiten → Gate prüfen → Tag `m<n>` auf `main`.
 - Prompt-Vorlagen für alle Schritte: `docs/PROMPTS.md`.
 - Prioritäten (Hoch/Mittel/Niedrig) und Stories: `docs/KONZEPT.md` §5 und §6.
 
@@ -14,20 +14,20 @@ Zeitraum: Fr, 23.10. – Fr, 06.11.2026 (Präsentation) · Stand: 24.10.2026 (v2
 
 | Phase | Zeitraum | Ergebnis | Gate |
 |---|---|---|---|
-| 0 Vorbereitung | Fr 23.10. – Di 27.10. (parallel zu Phase 1) | Werkzeuge, Entscheidungen, echte Inhalte, Abgleich mit dem Flow Chart | M0 (vor P2-03) |
-| 1 Fundament | Sa 24.10. – Mo 26.10. | Projekt, Tokens, App-Shell, Routing, Deployment | M1 |
-| 2 Domäne & Daten | Di 27.10. – Mi 28.10. | Typen, Dummy-Daten, Services, Store, Regeln + Tests | M2 |
-| 3 Kern-Flows | Do 29.10. – Sa 31.10. | Übersicht, Folgen-Check, Studienverlauf | M3 Durchstich |
+| 0 Vorbereitung | Fr 23.10. – Mi 28.10. vormittags (parallel zu Phase 1) | Werkzeuge, Entscheidungen, echte Inhalte, Abgleich mit dem Flow Chart | M0 (vor P2-03) |
+| 1 Fundament | Sa 24.10. – Di 27.10. | Projekt, Tokens, App-Shell, Routing, Deployment | M1 |
+| 2 Domäne & Daten | Mi 28.10. – Do 29.10. | Typen, Dummy-Daten, Services, Store, Regeln + Tests | M2 |
+| 3 Kern-Flows | Fr 30.10. – So 01.11. | Übersicht, Folgen-Check, Studienverlauf | M3 Durchstich |
 | 4 Ergänzung | So 01.11. – Mo 02.11. | Assistent, Postfach, Module, Fristen, Onboarding, Einstellungen | M4 Feature-complete |
 | 5 Test & Iteration | Di 03.11. – Mi 04.11. | Evaluation, Top-Fixes | M5 |
 | 6 Release | Do 05.11. | Release-Kandidat, Demo-Skript, Generalprobe | M6 |
 | Präsentation | Fr 06.11. | | |
 
-Es gibt keinen separaten Puffer – die **Kürzungsliste** unten ist der Puffer.
+Es gibt keinen separaten Puffer – die **Kürzungsliste** unten ist der Puffer. Wann gekürzt wird, legen die Kürzungs-Checkpoints darunter fest. Phase 5 und 6 bleiben fest (Testpersonen, Präsentation).
 
 ---
 
-## Phase 0 – Vorbereitung (Fr 23.10. – Di 27.10., parallel zu Phase 1)
+## Phase 0 – Vorbereitung (Fr 23.10. – Mi 28.10. vormittags, parallel zu Phase 1)
 
 ### P0-01 [Team] Entscheidungen bestätigen (bis Mo 26.10.)
 - [ ] Name festlegen (Arbeitstitel StudiCompass; Hinweise in KONZEPT §15 A-5) → `APP_NAME`
@@ -36,7 +36,7 @@ Es gibt keinen separaten Puffer – die **Kürzungsliste** unten ist der Puffer.
 - [ ] Demo-Zeit und Szenario (KONZEPT §10.2, §10.4) bestätigen
 - **AK:** Markierungen `[Vorschlag]` in KONZEPT.md auf `[entschieden]` gesetzt oder geändert.
 
-### P0-02 [Team] Echte Inhalte einsammeln → `docs/INHALTE.md` (bis Di 27.10. vormittags – P2-03 braucht sie)
+### P0-02 [Team] Echte Inhalte einsammeln → `docs/INHALTE.md` (bis Mi 28.10. vormittags – P2-03 braucht sie)
 - [ ] Modulliste aus dem Studienverlaufsplan WI (Name, ECTS, Fachsemester, Angebot WS/SS)
 - [ ] Regeln DR-4 bis DR-9 in der SPO WI nachschlagen (Abschnitt, Kurztext, Stand) → „geprüft: ja“
 - [ ] Zuständige Stellen: öffentliche Kontaktdaten oder fiktiv lassen
@@ -53,17 +53,19 @@ Es gibt keinen separaten Puffer – die **Kürzungsliste** unten ist der Puffer.
 
 ### P0-05 [Lucas] Repo und Werkzeuge vorbereiten (Sa 24.10.)
 - [x] Kit ins Repo-Root (`CLAUDE.md`, `AGENTS.md`, `docs/`), Commit auf `main`, Tag `m0`
-- [ ] Codex CLI installieren und anmelden; Claude-Code-Plugin `codex` (openai/codex-plugin-cc) installieren; `/codex:setup` meldet Codex als bereit; Review-Gate bleibt aus
-- [ ] optional: `gh auth login`, damit Claude Code PRs anlegen kann
+- [x] Codex CLI installieren und anmelden; Claude-Code-Plugin `codex` (openai/codex-plugin-cc) installieren; `/codex:setup` meldet Codex als bereit; Review-Gate bleibt aus
+- [x] optional: `gh auth login`, damit Claude Code PRs anlegen kann
 - [ ] Einstellung „Project instructions“ auf dem Standard lassen: Liegen `CLAUDE.md` und `AGENTS.md` beide im Repo, liest Claude Code nur `CLAUDE.md` – gewollt, weil `AGENTS.md` die Codex-Rolle beschreibt
-- [ ] Session 0 (`docs/PROMPTS.md` §0)
+- [x] Session 0 (`docs/PROMPTS.md` §0) – am 26.10. mit der Gesamtplanung erledigt: Umgebung geprüft, Testorakel §10.4 aus INHALTE.md nachgerechnet (stimmt), Lücken in v3 aufgelöst
 - **AK:** Claude Code fasst Regeln, Testorakel und Zusammenarbeit mit Codex korrekt zusammen.
 
-**Gate M0 (spätestens Di 27.10. vormittags, vor P2-03):** Werkzeuge laufen · Entscheidungen fix · Inhalte geprüft oder bewusst als Beispiel belassen · Flow-Abgleich erledigt.
+**Gate M0 (spätestens Mi 28.10. vormittags, vor P2-03):** Werkzeuge laufen · Entscheidungen fix · Inhalte geprüft oder bewusst als Beispiel belassen · Flow-Abgleich erledigt.
 
 ---
 
-## Phase 1 – Fundament (Sa 24.10. – Mo 26.10.)
+## Phase 1 – Fundament (Sa 24.10. – Di 27.10.)
+
+Reihenfolge: P1-01 → P1-05 → P1-02 → P1-03 → P1-04 → P1-06. P1-05 ist vorgezogen, damit jeder weitere Branch eine Preview-URL hat.
 
 ### P1-01 [Claude] Projekt aufsetzen
 - [x] Vite + React + TypeScript (strict), Pfad-Alias `@/`, ESLint, Prettier, Vitest + Testing Library (jsdom)
@@ -76,12 +78,14 @@ Es gibt keinen separaten Puffer – die **Kürzungsliste** unten ist der Puffer.
 - [ ] vorher die aktuelle Anleitung lesen: https://ui.shadcn.com/docs/installation/vite
 - [ ] shadcn nach dieser Anleitung initialisieren (Tailwind CSS v4 über `@tailwindcss/vite`, Alias in `tsconfig.json` und `tsconfig.app.json`)
 - [ ] Komponenten: button, card, badge, dialog, alert-dialog, sheet, tabs, tooltip, popover, progress, separator, select, switch, slider, skeleton, sonner, dropdown-menu, avatar, scroll-area, accordion, toggle-group, chart
+- Hinweis: `/_ui` braucht schon React Router (im Stack) – nur diese Dev-Route; die Routen aus KONZEPT §7 folgen in P1-04. „Dunkel“ zeigt `/_ui` über einen Container mit der Klasse `dark`; der ThemeProvider folgt in P1-03.
 - **AK:** Entwickler-Route `/_ui` (nur im Dev-Build) zeigt alle Komponenten in hell und dunkel.
 
 ### P1-03 [Claude] Design-Tokens und Theme
 - [ ] Tokens aus KONZEPT §12.2 als CSS-Variablen (hell/dunkel), auf die shadcn-Variablen gemappt, plus eigene (`--accent-strong`, `--accent-soft*`, `--status-*`, `--sidebar-*`)
 - [ ] ThemeProvider (System/Hell/Dunkel, gespeichert); Theme wird vor dem ersten Rendern gesetzt (kein Aufblitzen)
 - [ ] Manrope über Fontsource; Utility für `tabular-nums`
+- Hinweis: Theme so speichern, dass der Store in P2-05 (`setTheme`) die Speicherung übernehmen kann – kein zweiter Speicherort.
 - **AK:** keine Hex-Werte außerhalb `globals.css`; Kontrastpaare wie in §12.2.
 
 ### P1-04 [Claude] App-Shell und Routing
@@ -89,20 +93,22 @@ Es gibt keinen separaten Puffer – die **Kürzungsliste** unten ist der Puffer.
 - [ ] Sidebar (Tinte) mit aktivem Zustand (Balken + Fettung), Topbar (Titel, Demo-Chip, Glocke, Avatar-Menü), Slot für die rechte Spalte
 - [ ] Tablet: Icon-Sidebar mit Tooltips · Mobil: Tab-Leiste + „Mehr“-Sheet
 - [ ] Skip-Link „Zum Inhalt“; Scroll-Position bei Seitenwechsel zurücksetzen
+- Hinweis: Der Demo-Chip braucht `DEMO_NOW` – hier schon in `src/config/demo.ts` anlegen (aus P2-02 vorgezogen). Die Datei bleibt ohne Imports, weil `vite.config.ts` sie lädt.
 - **AK:** Navigation funktioniert bei 390, 834 und 1440 px und per Tastatur.
 
 ### P1-05 Deployment
 - [ ] [Lucas] Vercel: „Add New → Project“ → GitHub-Repo importieren (Preset Vite, Output `dist`) – möglich, sobald P1-01 auf `main` liegt
 - [ ] [Claude] `vercel.json` mit Rewrite aller Pfade auf `/index.html`
+- Hinweis: direkt nach P1-01. Bis P1-04 gemergt ist, zeigt der Deep-Link-Test nur, dass Vercel `index.html` statt 404 liefert; den Seiteninhalt unter `/verlauf` prüft Gate M1.
 - **AK:** Produktions-URL erreichbar; Deep-Link `/verlauf` funktioniert nach Neuladen; Branches bekommen Preview-URLs.
 
 ### P1-06 [Codex] Phasen-Review (`--base m0`) → `docs/reviews/P1.md`
 
-**Gate M1 (Mo 26.10.):** Shell deployed · beide Themes · Navigation auf allen Breakpoints.
+**Gate M1 (Di 27.10., 18:00):** Shell deployed · beide Themes · Navigation auf allen Breakpoints.
 
 ---
 
-## Phase 2 – Domäne & Daten (Di 27.10. – Mi 28.10.)
+## Phase 2 – Domäne & Daten (Mi 28.10. – Do 29.10.)
 
 ### P2-01 [Claude] Domänentypen und Zeitmodell → `src/domain/types.ts`, `terms.ts`
 - [ ] Typen laut KONZEPT §10.1; Term-Funktionen (`next`, `compare`, `semesterNumber`, `format`, `nextOffering`)
@@ -110,6 +116,7 @@ Es gibt keinen separaten Puffer – die **Kürzungsliste** unten ist der Puffer.
 
 ### P2-02 [Claude] Demo-Konfiguration → `src/config/demo.ts`
 - [ ] `APP_NAME`, `DEMO_NOW = 2027-01-25T19:30:00+01:00`, `LATENCY_MS`, `FLAGS.simulateErrors`
+- Hinweis: `APP_NAME` (P1-01) und `DEMO_NOW` (P1-04) gibt es dann schon; hier kommen `LATENCY_MS` und `FLAGS` dazu.
 
 ### P2-03 [Claude] Kerndaten → `src/data/`
 - [ ] program, modules, exams, rules, offices, student aus INHALTE §1–§4, §7, §8
@@ -123,6 +130,7 @@ Es gibt keinen separaten Puffer – die **Kürzungsliste** unten ist der Puffer.
 ### P2-05 [Claude] Services und Store
 - [ ] Service-Interfaces je Kanal (pos, moodle, mail, website) sowie Regelwerk und Assistent; Mock-Implementierungen mit Latenz und optionalem Fehler
 - [ ] Zustand-Store: `hydrate()`, Ladestatus und „zuletzt aktualisiert“ je Kanal; Aktionen `markRead`, `withdrawExam` (simuliert, mit Snapshot), `undo`, `confirmAttend`, `setWhatIf` / `clearWhatIf`, `setTheme`, `setHintTone`, `completeOnboarding`, `resetDemo`; `persist` mit `version`
+- Hinweis: `setTheme` übernimmt die Theme-Speicherung aus P1-03.
 - **AK:** Ladezustände sichtbar beobachtbar; `FLAGS.simulateErrors` erzeugt Fehlerzustand; `resetDemo` stellt den Ausgangszustand her.
 
 P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch `feat/P2-06-domain`: erst Signaturen, dann schreibt Codex die Tests aus der Spezifikation, dann implementiert Claude Code. So sind die Tests unabhängig von der Implementierung. Gemergt wird nach P2-08; dazwischen ist `npm run check` rot – gewollt.
@@ -144,11 +152,11 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch `feat/P2-06-domain`:
 
 ### P2-09 [Codex] Phasen-Review (`--base m1`, Fokus KONZEPT §10) → `docs/reviews/P2.md`
 
-**Gate M2 (Mi 28.10.):** alle Domänentests grün · Testorakel-Werte stimmen · Store lädt alle Daten mit sichtbaren Ladezuständen.
+**Gate M2 (Do 29.10., 22:00):** alle Domänentests grün · Testorakel-Werte stimmen · Store lädt alle Daten mit sichtbaren Ladezuständen.
 
 ---
 
-## Phase 3 – Kern-Flows (Do 29.10. – Sa 31.10.)
+## Phase 3 – Kern-Flows (Fr 30.10. – So 01.11.)
 
 ### P3-01 [Claude] Gemeinsame Komponenten (KONZEPT §12.4)
 - [ ] StatusBadge, ChannelBadge, Countdown, EctsProgress, IconCircle, ConsequenceItem, CitationList, DemoBadge, EmptyState, ErrorState, PageHeader
@@ -166,6 +174,7 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch `feat/P2-06-domain`:
 ### P3-04 [Claude] Studienverlauf (S2) – US-04, US-09, US-10
 - [ ] Zeitleiste mit 7 Semestern, Meilensteinen, Abschlussprognose, Regeln mit Quellen
 - [ ] Was-wäre-wenn *(Mittel)*: „Verschieben nach …“ nur in zulässige Semester; Neuberechnung; Kennzeichnung; „Simulation verwerfen“
+- Hinweis: vor dem Start den Kürzungs-Checkpoint „Start P3-04“ prüfen (unter der Kürzungsliste).
 - **AK:** Werte konsistent mit Folgen-Check und Übersicht; Simulation verändert keine echten Daten.
 
 ### P3-05 [Claude, Mittel] Playwright-Smoke-Test und Screenshots
@@ -177,7 +186,7 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch `feat/P2-06-domain`:
 ### P3-07 [Team] Flur-Test (10 Min.)
 - [ ] 1–2 Kommiliton:innen klicken den Durchstich; auffällige Stolperstellen notieren
 
-**Gate M3 (Sa 31.10.):** Hero-Flow end-to-end deployed und auf Desktop und Smartphone bedienbar.
+**Gate M3 (So 01.11., 14:00):** Hero-Flow end-to-end deployed und auf Desktop und Smartphone bedienbar.
 
 ---
 
@@ -209,7 +218,7 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch `feat/P2-06-domain`:
 
 ### P4-08 [Codex] Phasen-Review (`--base m3`) + A11y-Durchgang (Tastatur, Fokus, Labels, Kontraste) → `docs/reviews/P4.md`
 
-**Gate M4 (Mo 02.11.):** alle Stories mit Priorität Hoch und Mittel umgesetzt · keine offenen Blocker oder Major-Befunde.
+**Gate M4 (Mo 02.11., 22:00):** alle Stories mit Priorität Hoch und Mittel umgesetzt · keine offenen Blocker oder Major-Befunde.
 
 ---
 
@@ -240,7 +249,7 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch `feat/P2-06-domain`:
 ## Kürzungsliste (von oben nach unten streichen, wenn die Zeit knapp wird)
 1. Produkt-Tour
 2. ICS-Export
-3. Restverlauf-Vorschlag (US-11) und Belastungshinweis (DR-10)
+3. Restverlauf-Vorschlag (US-11) – der Belastungshinweis (DR-10) bleibt, weil Szenario D (KONZEPT §10.4), das AK von P3-03 und T5 ihn brauchen
 4. Fehler-Simulation je Kanal (Fehlerzustände bleiben im Code)
 5. ECTS-Verlaufsdiagramm auf der Übersicht
 6. Playwright-Test (Screenshots dann manuell)
@@ -249,6 +258,16 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch `feat/P2-06-domain`:
 9. Was-wäre-wenn im Studienverlauf (der Folgen-Check bleibt)
 
 **Nie streichen:** Studienstand · Folgen-Check inkl. simulierter Abmeldung und Marketing-Vergleich · Assistent mit Quellen und Fallback · Postfach · mobile Bedienbarkeit von Übersicht und Folgen-Check.
+
+**Kürzungs-Checkpoints:** beim Gate-Check (`docs/PROMPTS.md` §7) bzw. vor dem Start von P3-04 prüfen. Ist der Sollzeitpunkt überschritten, werden die genannten Punkte gestrichen.
+
+| Checkpoint | Soll | Verfehlt → streichen |
+|---|---|---|
+| M1 | Di 27.10., 18:00 | 1, 2 |
+| M2 | Do 29.10., 22:00 | 3, 4, 5 |
+| Start P3-04 | Sa 31.10., 12:00 | 6, 7, 8; ab 1 Tag Verzug zusätzlich 9 |
+| M3 | So 01.11., 14:00 | alles bis 8, was noch offen ist |
+| M4 | Mo 02.11., 22:00 | Phase 5 beginnt trotzdem; Offenes kommt auf die Liste für P5-04 |
 
 ---
 
@@ -265,8 +284,9 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch `feat/P2-06-domain`:
 | Assistent wirkt „fake“ | Glaubwürdigkeit | offen sagen, dass Antworten im Prototyp vorbereitet sind; Fokus auf Quellenkonzept und ehrlichen Fallback |
 
 ## Review-Protokoll
-- **Pro Task:** `/codex:review --base main` (read-only). Bei P2-08, P3-03 und P3-04 zusätzlich `/codex:adversarial-review --base main` mit Fokus KONZEPT §10.
-- **Pro Phase:** `/codex:adversarial-review --base m<n-1>` (Tag des vorigen Gates) mit Fokus auf Konsistenz über alle Tasks der Phase.
+- **Pro Task:** Claude Code startet `/codex-review --base main` (CLI `codex review`, read-only). Bei P2-08, P3-03 und P3-04 zusätzlich `/codex-review --base main` mit dem Fokus aus `docs/PROMPTS.md` §4 (KONZEPT §10).
+- **Pro Phase:** Claude Code startet `/codex-review --base m<n-1>` (Tag des vorigen Gates) mit dem Phasen-Fokus aus `docs/PROMPTS.md` §4 – Konsistenz über alle Tasks der Phase.
+- Lucas kann jedes Review weiterhin selbst über das Plugin starten (`/codex:review`, `/codex:adversarial-review`).
 - Claude Code arbeitet die Befunde ab (Blocker und Major vor dem Merge, Minor und Nit nach Ermessen) und speichert die Zusammenfassung unter `docs/reviews/<task-id>.md`.
 - Das Review-Gate des Plugins bleibt aus (Endlosschleifen, hoher Verbrauch).
 - Uneinigkeit zwischen Claude Code und Codex entscheidet Lucas.
