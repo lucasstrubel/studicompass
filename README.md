@@ -33,6 +33,16 @@ Die App läuft dann unter http://localhost:5173.
 | `npm run format:check` | Prettier prüft die Formatierung                                          |
 | `npm run check`        | Prüf-Gate: typecheck, lint, test und build – muss vor jedem PR grün sein |
 
+## Deployment
+
+Vercel baut die App bei jedem Push und veröffentlicht sie statisch (Preset Vite, Ausgabe `dist/`).
+
+- **Produktion:** `main` → https://studicompass-six.vercel.app
+- **Preview:** Jeder andere Branch bekommt eine eigene Preview-URL; im Pull Request verlinkt sie der Vercel-Bot. Previews können eine Vercel-Anmeldung verlangen.
+- [`vercel.json`](vercel.json) leitet alle Pfade ohne passende Datei auf `index.html` um. So öffnen Direktlinks wie `/verlauf` die App auch nach dem Neuladen; die Route löst React Router im Browser auf.
+
+Lokal ist das nicht nötig: `npm run dev` und `npm run preview` liefern für unbekannte Pfade ohnehin `index.html`.
+
 ## Projektstruktur
 
 ```
