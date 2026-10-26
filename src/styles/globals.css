@@ -100,17 +100,17 @@
   --primary-foreground: #faf9f5;
   --secondary: var(--muted);
   --secondary-foreground: var(--foreground);
-  --muted: #f3f1ec;
-  --muted-foreground: #6b6760;
+  --muted: #eeeae3;
+  --muted-foreground: #57534b;
   /* Terracotta is the brand accent, never a status colour and never text on a light surface. */
   --accent: #d97757;
   --accent-foreground: #1a1917;
-  --accent-strong: #b04f2f;
+  --accent-strong: #a4492e;
   --accent-soft: #f7e4dd;
   --accent-soft-foreground: #9a4128;
   --destructive: var(--status-critical-foreground);
-  --border: #e6e3dc;
-  --input: #8c887f;
+  --border: #d4cfc6;
+  --input: #817b70;
   --ring: var(--accent-strong);
   --chart-1: var(--accent);
   --chart-2: var(--muted-foreground);
@@ -221,4 +221,20 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Reference 1: a quiet inset workspace, using only the Warm Ink palette. */
+@media (min-width: 48rem) {
+  .app-frame {
+    box-shadow: 0 16px 48px -24px
+      color-mix(in srgb, var(--foreground) 24%, transparent);
+  }
+}
+
+/* Warm neutral canvas around the light workspace; dark mode retains its existing canvas. */
+body:has(.app-frame) {
+  background-color: var(--muted);
+}
+.dark body:has(.app-frame) {
+  background-color: var(--background);
 }

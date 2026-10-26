@@ -157,16 +157,16 @@ function blend(foreground: string, alpha: number, background: string): string {
 const DOCUMENTED_PAIRS: Record<Theme, [string, string, number][]> = {
   light: [
     ["--foreground", "--background", 16.7],
-    ["--muted-foreground", "--background", 5.3],
-    ["--muted-foreground", "--card", 5.6],
-    ["--muted-foreground", "--muted", 5.0],
-    ["--input", "--card", 3.5],
+    ["--muted-foreground", "--background", 7.3],
+    ["--muted-foreground", "--card", 7.7],
+    ["--muted-foreground", "--muted", 6.4],
+    ["--input", "--card", 4.2],
     ["--primary-foreground", "--primary", 16.7],
     ["--accent", "--background", 2.96],
     ["--accent-foreground", "--accent", 5.6],
     ["--card", "--accent", 3.1],
-    ["--accent-strong", "--background", 5.0],
-    ["--accent-strong", "--card", 5.2],
+    ["--accent-strong", "--background", 5.6],
+    ["--accent-strong", "--card", 5.9],
     ["--accent-soft-foreground", "--accent-soft", 5.4],
     ["--sidebar-foreground", "--sidebar", 12.1],
     ["--sidebar-muted", "--sidebar", 6.9],
@@ -290,6 +290,26 @@ describe("design tokens (KONZEPT §12.2)", () => {
       }
     }
   });
+
+  it.each(THEMES)(
+    "%s: secondary text, progress and control outlines stay distinguishable",
+    (theme) => {
+      const t = (name: string) => token(name, theme);
+      for (const surface of ["--background", "--card", "--muted"]) {
+        expect(
+          contrast(t("--muted-foreground"), t(surface)),
+        ).toBeGreaterThanOrEqual(4.5);
+        expect(contrast(t("--input"), t(surface))).toBeGreaterThanOrEqual(3);
+      }
+      expect(
+        contrast(t("--accent-strong"), t("--muted")),
+      ).toBeGreaterThanOrEqual(3);
+      // The prominent card uses ink for text and focus on terracotta in light mode.
+      expect(
+        contrast(t("--accent-foreground"), t("--accent")),
+      ).toBeGreaterThanOrEqual(4.5);
+    },
+  );
 });
 
 // --- Static checks over the source files -------------------------------------------------------------

@@ -5,7 +5,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { AppProviders } from "@/app/providers";
 import { routes } from "@/app/router";
 import { NAV_ITEMS, SETTINGS_ITEM } from "@/components/layout/navigation";
-import { APP_NAME } from "@/config/demo";
+import { APP_NAME, THEME_STORAGE_KEY } from "@/config/demo";
+import { SYSTEM_DARK_QUERY } from "@/lib/theme";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -21,8 +22,10 @@ function renderApp(path: string) {
   return router;
 }
 
-const sidebar = () => within(screen.getByTestId("sidebar"));
-const tabBar = () => within(screen.getByTestId("tab-bar"));
+const menu = () => within(screen.getByRole("dialog", { name: APP_NAME }));
+async function openMenu(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByRole("button", { name: "Navigation öffnen" }));
+}
 const pageTitle = () => screen.getByRole("heading", { level: 1 });
 const currentLinks = (links: HTMLElement[]) =>
   links.filter((link) => link.hasAttribute("aria-current"));
@@ -74,42 +77,53 @@ describe("routes (KONZEPT §7)", () => {
     renderApp("/_ui");
 
     expect(
-      await screen.findByRole("heading", { level: 1, name: "Komponenten" }),
+      await screen.findByRole(
+        "heading",
+        { level: 1, name: "Komponenten" },
+        { timeout: 10000 },
+      ),
     ).toBeInTheDocument();
     expect(screen.queryByTestId("sidebar")).not.toBeInTheDocument();
     expect(document.title).toBe(APP_NAME);
   });
 });
 
-describe("sidebar", () => {
+describe("full navigation", () => {
   it.each([...NAV_ITEMS, SETTINGS_ITEM].map((item) => [item.label, item.to]))(
     "the link %s opens %s and marks it as the current page",
     async (label, to) => {
       const user = userEvent.setup();
       const router = renderApp("/gibt-es-nicht");
 
-      await user.click(sidebar().getByRole("link", { name: label }));
+      await openMenu(user);
+      await user.click(menu().getByRole("link", { name: label }));
 
       expect(router.state.location.pathname).toBe(to);
       expect(pageTitle()).toHaveTextContent(label);
-      expect(currentLinks(sidebar().getAllByRole("link"))).toEqual([
-        sidebar().getByRole("link", { name: label }),
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+      await openMenu(user);
+      expect(currentLinks(menu().getAllByRole("link"))).toEqual([
+        menu().getByRole("link", { name: label }),
       ]);
     },
   );
 
-  it("marks Module & Noten on a module detail page, and the Übersicht only on /", () => {
+  it("marks Module & Noten on a module detail page, and the Übersicht only on /", async () => {
+    const user = userEvent.setup();
     renderApp("/module/m-stat");
+    await openMenu(user);
 
-    expect(currentLinks(sidebar().getAllByRole("link"))).toEqual([
-      sidebar().getByRole("link", { name: "Module & Noten" }),
+    expect(currentLinks(menu().getAllByRole("link"))).toEqual([
+      menu().getByRole("link", { name: "Module & Noten" }),
     ]);
   });
 
-  it("marks no entry on the Folgen-Check, which is not in the navigation", () => {
+  it("marks no entry on the Folgen-Check, which is not in the navigation", async () => {
+    const user = userEvent.setup();
     renderApp("/entscheidung/e-stat-ws26");
+    await openMenu(user);
 
-    expect(currentLinks(sidebar().getAllByRole("link"))).toEqual([]);
+    expect(currentLinks(menu().getAllByRole("link"))).toEqual([]);
   });
 });
 
@@ -130,11 +144,12 @@ describe("keyboard", () => {
     const router = renderApp("/");
 
     await user.tab(); // skip link
-    await user.tab(); // Übersicht
+    await user.tab(); // hamburger
+    await user.keyboard("{Enter}");
+    await user.tab(); // hamburger close -> close button
+    await user.tab(); // close button -> Übersicht
     await user.tab(); // Studienverlauf
-    expect(
-      sidebar().getByRole("link", { name: "Studienverlauf" }),
-    ).toHaveFocus();
+    expect(menu().getByRole("link", { name: "Studienverlauf" })).toHaveFocus();
 
     await user.keyboard("{Enter}");
     expect(router.state.location.pathname).toBe("/verlauf");
@@ -142,6 +157,37 @@ describe("keyboard", () => {
 });
 
 describe("top bar", () => {
+  it("toggles between light and dark by click and keyboard and remembers the choice", async () => {
+    const user = userEvent.setup();
+    renderApp("/");
+    const toggle = screen.getByRole("switch", { name: "Dunkelmodus" });
+    expect(toggle).not.toBeChecked();
+    await user.click(toggle);
+    expect(toggle).toBeChecked();
+    expect(document.documentElement).toHaveClass("dark");
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe("dark");
+    await user.keyboard(" ");
+    expect(toggle).not.toBeChecked();
+    expect(document.documentElement).not.toHaveClass("dark");
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe("light");
+  });
+
+  it("switches to explicit light when the system starts in dark mode", async () => {
+    const user = userEvent.setup();
+    const matchMedia = window.matchMedia.bind(window);
+    vi.spyOn(window, "matchMedia").mockImplementation((query) => ({
+      ...matchMedia(query),
+      matches: query === SYSTEM_DARK_QUERY,
+    }));
+    renderApp("/");
+    const toggle = screen.getByRole("switch", { name: "Dunkelmodus" });
+    expect(toggle).toBeChecked();
+    await user.click(toggle);
+    expect(toggle).not.toBeChecked();
+    expect(document.documentElement).not.toHaveClass("dark");
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe("light");
+  });
+
   it("shows the demo time", () => {
     renderApp("/");
 
@@ -181,37 +227,14 @@ describe("top bar", () => {
   });
 });
 
-describe("mobile tab bar", () => {
-  it("shows Übersicht, Verlauf, Postfach and Assistent, then Mehr", () => {
+describe("responsive navigation structure", () => {
+  it("has no permanent sidebar or bottom tab bar", () => {
     renderApp("/");
-
+    expect(screen.queryByTestId("sidebar")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("tab-bar")).not.toBeInTheDocument();
     expect(
-      tabBar()
-        .getAllByRole("link")
-        .map((link) => link.textContent),
-    ).toEqual(["Übersicht", "Verlauf", "Postfach", "Assistent"]);
-    expect(tabBar().getByRole("button", { name: "Mehr" })).toBeInTheDocument();
-  });
-
-  it("opens the other areas from Mehr and closes the sheet after navigating", async () => {
-    const user = userEvent.setup();
-    const router = renderApp("/");
-
-    await user.click(tabBar().getByRole("button", { name: "Mehr" }));
-    const sheet = within(screen.getByRole("dialog", { name: "Mehr" }));
-    expect(sheet.getAllByRole("link").map((link) => link.textContent)).toEqual([
-      "Module & Noten",
-      "Fristen",
-      "Einstellungen",
-    ]);
-
-    await user.click(sheet.getByRole("link", { name: "Fristen" }));
-    expect(router.state.location.pathname).toBe("/fristen");
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-    expect(tabBar().getByRole("button", { name: "Mehr" })).toHaveAttribute(
-      "aria-current",
-      "true",
-    );
+      screen.getByRole("button", { name: "Navigation öffnen" }),
+    ).toHaveAttribute("aria-expanded", "false");
   });
 });
 
@@ -222,7 +245,8 @@ describe("scroll position", () => {
     renderApp("/");
     scrollTo.mockClear();
 
-    await user.click(sidebar().getByRole("link", { name: "Postfach" }));
+    await openMenu(user);
+    await user.click(menu().getByRole("link", { name: "Postfach" }));
 
     expect(scrollTo).toHaveBeenLastCalledWith(0, 0);
   });

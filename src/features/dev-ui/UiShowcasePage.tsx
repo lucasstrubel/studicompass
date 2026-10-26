@@ -109,6 +109,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { ModuleIllustration } from "@/features/dashboard/ModuleIllustration";
 import { isThemePreference } from "@/lib/theme";
 
 // The components from ROADMAP P1-02; each one gets its own section.
@@ -359,7 +360,7 @@ export function UiShowcasePage() {
               </div>
             ))}
           </div>
-          {/* Sidebar tokens only; the real navigation follows in P1-04. */}
+          {/* Dark overlay menu tokens from the P1-07 navigation revision. */}
           <div className="flex max-w-64 flex-col gap-1 rounded-xl bg-sidebar p-2 text-sidebar-foreground">
             <span className="rounded-r-lg border-l-3 border-sidebar-primary bg-sidebar-active px-3 py-2 font-semibold">
               Übersicht
@@ -422,6 +423,13 @@ export function UiShowcasePage() {
           </Section>
 
           <Section name="card">
+            <div className="flex items-center gap-3">
+              <ModuleIllustration kind="books" />
+              <p className="text-meta text-muted-foreground">
+                Referenz 1: kompakte Karten, feine Rahmen, lokale
+                Linienillustrationen.
+              </p>
+            </div>
             <Card>
               <CardHeader>
                 <CardTitle>Statistik</CardTitle>

@@ -170,14 +170,17 @@ Ehrliche Einschränkung zu P4: Echte Sonderfälle stehen per Definition oft nich
 | Assistent | `/assistent` (optional `?frage=<id>`, `?modul=<id>`) | ja |
 | Fristen | `/fristen` | ja |
 | Folgen-Check | `/entscheidung/:examId` | nein (Einstiege siehe unten) |
-| Einstellungen | `/einstellungen` | Sidebar unten |
+| Einstellungen | `/einstellungen` | Hamburger-Menü |
 | Onboarding | `/start` | nein |
 | Nicht gefunden | `*` | nein |
 
-**Breakpoints**
-- Desktop ≥ 1280 px: Sidebar 248 px (Tinte) · Hauptbereich · rechte Spalte 320 px
-- Tablet 768–1279 px: Sidebar als Icon-Leiste mit Tooltips · rechte Spalte unter dem Hauptbereich
-- Mobil < 768 px: Tab-Leiste unten (Übersicht · Verlauf · Postfach · Assistent · Mehr); „Mehr“ öffnet ein Sheet (Module & Noten, Fristen, Einstellungen)
+**Breakpoints und Navigation (Designrevision P1-07)**
+- Desktop ≥ 1280 px: eingerückter App-Rahmen mit 24 px Außenabstand, maximal 1600 px breit, abgerundeten Ecken und dezentem Schatten. Topbar mit Hamburger, Marke, Übersicht, Studienverlauf, Module & Noten, Postfach, Hell-/Dunkel-Schalter, Glocke, Profil und Demo-Datum. Hauptbereich plus rechte Spalte 320 px.
+- Tablet 768–1279 px: gleicher Rahmen, Navigation über Hamburger; rechte Spalte unter dem Hauptbereich.
+- Mobil < 768 px: bildschirmfüllend, kompakte Topbar mit Hamburger; keine untere Tab-Leiste. Demo-Datum darf umbrechen.
+- Alle Bereiche einschließlich Assistent, Fristen und Einstellungen im 280 px breiten dunklen Overlay-Menü. Keine permanente Sidebar, keine Verschiebung des Inhalts. Aktive Links mit Markierung und Fettung.
+- Maus mit Hover-Unterstützung: nach 150 ms Vorschau öffnen; beim Wechsel zwischen Trigger und Menü offen halten; nach 250 ms außerhalb schließen, sofern kein Tastaturfokus darin liegt. Klick fixiert als Radix-Sheet; Touch und Tastatur öffnen explizit. Schließen über Trigger/Schließen, Außenklick, Escape oder Navigation; explizites Menü mit Fokusführung und Fokusrückgabe. Routenwechsel schließt auch die Vorschau.
+- Ein semantischer Seitentitel im Inhaltsbereich. Bestehende Routen bleiben unverändert. Der Hell-/Dunkel-Schalter in der Topbar ist auf allen Bildschirmgrößen erreichbar, zeigt den aktuellen Dunkelmodus über aria-checked und speichert die explizite Auswahl über useTheme; Ausgangspunkt ist das aufgelöste System- oder gespeicherte Design.
 
 **Einstiege in den Folgen-Check:** „Jetzt wichtig“-Karte (S1) · Modulkarte und Moduldetail (S1, S3) · Benachrichtigung (S8) · Assistentenantwort (S5) · Studienverlauf (S2)
 
@@ -217,9 +220,9 @@ Jeder Screen hat Lade-, Leer- und Fehlerzustand. Werte in Beispielen entsprechen
 **Hauptspalte (Reihenfolge = Priorität):**
 1. **Studienstand** (Hero): „48 ECTS“ groß, „von 210“; Fortschrittsbalken mit Soll-Markierung bei 60; Ampel „Knapp“ + „12 ECTS hinter dem Regelverlauf (Soll nach 2 Semestern: 60)“; Prognose „Ende dieses Semesters: 78 von 90 – wenn du alle angemeldeten Prüfungen bestehst“; Link „Wie wird das berechnet?“ (Popover mit DR-1, DR-2); Button „Studienverlauf ansehen“.
 2. **Jetzt wichtig** (Terrakotta-Karte, höchstens 2 Einträge, nur bei Sonderregel): „Statistik: Abmeldung nur noch bis morgen, 23:59 Uhr“ · Folge in einem Satz (Text je Hinweis-Stil, §12.5) · Countdown · Button „Folgen prüfen“ → S4.
-3. **Nächster Meilenstein:** „Praxissemester · WS 2027/28“ · Bedingung (DR-6) mit Quelle · „Noch offen: 7 Module des Grundstudiums (5 davon in diesem Semester angemeldet)“ · „Erreichbar, wenn du Programmieren 2 und Wirtschaftsprivatrecht im SS 2027 bestehst“.
-4. **Dieses Semester (WS 2026/27):** fünf Modulkarten im Raster (wie Referenz 1): Titel, Prüfungstermin, Status „Angemeldet“, Moodle-Fortschritt (z. B. „Übungsblätter 5/12“), Label „nur im WS“ bei jährlichem Angebot, Link zum Moduldetail.
-5. *(Niedrig)* **ECTS-Verlauf:** Flächendiagramm Ist vs. Soll je Semester (Stil wie die Temperaturkarte in Referenz 2).
+3. **Dieses Semester (WS 2026/27):** fünf Modulkarten im Raster (wie Referenz 1): Titel, Prüfungstermin, Status „Angemeldet“, Moodle-Fortschritt (z. B. „Übungsblätter 5/12“), Label „nur im WS“ bei jährlichem Angebot, Link zum Moduldetail.
+4. **Nächster Meilenstein:** „Praxissemester · WS 2027/28“ · Bedingung (DR-6) mit Quelle · „Noch offen: 7 Module des Grundstudiums (5 davon in diesem Semester angemeldet)“ · „Erreichbar, wenn du Programmieren 2 und Wirtschaftsprivatrecht im SS 2027 bestehst“.
+5. *(Niedrig)* **ECTS-Verlauf:** Flächendiagramm Ist vs. Soll je Semester (in der Bildsprache von Referenz 1).
 
 **Rechte Spalte:** Nächste Frist mit Countdown · Neu im Postfach (3 relevante Einträge mit Kanal-Badge) · Letzte Noten (3 Einträge mit Noten-Badge, wie Referenz 1) · „Frag den Assistenten“ (Eingabefeld + 2 Vorschlagsfragen).
 
@@ -481,35 +484,41 @@ Katalog: `docs/INHALTE.md` §10.
 
 ## 12 Gestaltung
 
-### 12.1 Layout – Referenz 1 (Studierenden-Dashboard) übernommen und angepasst
+### 12.1 Layout und Ästhetik – Referenz 1
+
+Referenz 1 bestimmt Komposition, Kartengestaltung und Bildsprache. Referenz 2 liefert ausschließlich die Farbpalette (§12.2), keine Komponenten- oder Layoutmuster. Entscheidung von Lucas: Designrevision vor Phase 2.
 
 | Referenz 1 | Im Prototyp | Begründung |
 |---|---|---|
-| Dunkle Sidebar mit Icon + Label, Einstellungen/Abmelden unten | übernommen (Tinte `#1A1917`); unten nur Einstellungen | kein Abmelden: Der Prototyp hat keine Anmeldung, und „Abmeldung“ meint im Glossar die Prüfungsabmeldung (Entscheidung 26.10.2026) |
-| Kopf mit Seitentitel, Suche, Icons | Titel, Demo-Chip, Glocke, Avatar; Suche nur bei Zeit | Suche ist durch die Forschung nicht gedeckt |
-| Kursraster mit Fortschritt und Status | Modulkarten mit Prüfungstermin, Anmeldestatus, Moodle-Fortschritt | Fokus auf Prüfungen statt Lektionen |
-| Großer Monatskalender | ersetzt durch Studienstand, „Jetzt wichtig“, Meilenstein | Fristen sind der schwächste Pain (8/8 ohne verpasste Frist) |
-| Rechte Spalte: laufende Vorlesung, Noten, Inbox | Nächste Frist, Neu im Postfach, Letzte Noten, Assistent | Live-Vorlesung ist nicht Teil des Problems |
-| Illustrationen auf Karten | Icon im weichen Kreis (Muster aus Referenz 2) | konsistent, keine Bildplatzhalter |
+| Eingerücktes Dashboard mit weichen Außenecken | Desktop-Rahmen, mobil bildschirmfüllend | ruhige Arbeitsfläche |
+| Dunkle Navigation | aufklappbares Hamburger-Menü; Hauptlinks in der Topbar (§7) | mehr Raum für Inhalte |
+| Kompakte Karten mit feinem Rahmen | kleine Radien, keine starken Kartenschatten, klare Typografie | Informationshierarchie wie Referenz 1 |
+| Kursraster mit Linienillustrationen | originale lokale SVG-Illustrationen zu Modulen, Prüfungstermin und Moodle-Fortschritt | keine Bildplatzhalter oder übernommenen Fremdassets |
+| Großer Monatskalender | Studienstand, Jetzt wichtig, Module und Meilenstein | bestehender fachlicher Scope |
+| Ruhigere rechte Spalte | Frist, Postfach, bestandene Prüfungen, Assistent | dokumentierte Studieninhalte |
 
-### 12.2 Farb-Tokens (aus Referenz 2 „Warm Ink“ gemessen; Kontraste nach WCAG berechnet)
+P1-07 stellt auf der Übersicht eine Designvorschau mit typisierten Präsentationsdaten aus INHALTE bereit. Keine Domänenberechnung, Services oder Persistenz. Daten und ungeprüfte Regeln als Beispiel kennzeichnen, Quellen nennen. Einbindung über Props; P3-02 ersetzt die Fixture durch Store-Selektoren. Vorschau-Links führen zu bestehenden Routen; keine vorgetäuschten Aktionen. Die Vorschau hat keine asynchronen Ladezustände; diese folgen mit den Services. Hell- und Dunkelmodus bleiben erhalten.
+
+### 12.2 Farb-Tokens (Referenz 2 „Warm Ink“, für Lesbarkeit angepasst; Kontraste nach WCAG berechnet)
 
 **Hell**
+
+Kontrastrevision auf Wunsch von Lucas: cremefarbene Arbeitsfläche, weiße Karten und wärmere, deutlichere Nebenflächen. Sekundärtext und interaktive Konturen sind dunkler. „Jetzt wichtig“ nutzt die kräftige Terrakotta-Fläche mit Tinte als Textfarbe (5,6:1), statt langer farbiger Texte auf blasser Fläche. Der Fokusring auf dieser Karte ist Tinte; im dunklen Theme bleibt die bisherige weiche Akzentfläche erhalten. Fortschrittsbalken nutzen den dunkleren Akzent, damit der Füllstand mindestens 3:1 zum neutralen Track erreicht.
 
 | Token | Wert | Verwendung | Kontrast |
 |---|---|---|---|
 | `--background` | `#FAF9F5` | Seite | – |
 | `--card` | `#FFFFFF` | Karten | – |
-| `--muted` | `#F3F1EC` | rechte Spalte, Chips, Flächen | Sekundärtext darauf 5,0:1 |
-| `--border` | `#E6E3DC` | dekorative Rahmen, Trenner | dekorativ |
-| `--input` | `#8C887F` | Rahmen von Eingabefeldern | 3,5:1 auf Weiß |
+| `--muted` | `#EEEAE3` | rechte Spalte, Chips, Flächen | Sekundärtext darauf 6,4:1 |
+| `--border` | `#D4CFC6` | dekorative Rahmen, Trenner | dekorativ |
+| `--input` | `#817B70` | Rahmen von Eingabefeldern | 4,2:1 auf Weiß |
 | `--foreground` | `#1A1917` | Text | 16,7:1 |
-| `--muted-foreground` | `#6B6760` | Sekundärtext | 5,3:1 (Seite) / 5,6:1 (Karte) |
+| `--muted-foreground` | `#57534B` | Sekundärtext | 7,3:1 (Seite) / 7,7:1 (Karte) |
 | `--primary` / `--primary-foreground` | `#1A1917` / `#FAF9F5` | Primär-Buttons (Tinte) | 16,7:1 |
 | `--accent` | `#D97757` | Markenakzent: Flächen, Icons, Diagramme, aktive Markierung | als Text nur 3,0:1 → **nie Text auf hellem Grund**; als Fläche auf hellem Grund 2,96:1 → nie alleiniger Informationsträger |
 | `--accent-foreground` | `#1A1917` | Text auf Terrakotta | **5,6:1** (Weiß auf Terrakotta nur 3,1:1 → nur ab 24 px) |
-| `--accent-strong` | `#B04F2F` | Links, Akzenttext, Fokusring | 5,0:1 / 5,2:1 |
-| `--accent-soft` / `--accent-soft-foreground` | `#F7E4DD` / `#9A4128` | Icon-Kreise, Hervorhebungsflächen / Text darauf | 5,4:1 |
+| `--accent-strong` | `#A4492E` | Links, Akzenttext, Fokusring | 5,6:1 / 5,9:1 |
+| `--accent-soft` / `--accent-soft-foreground` | `#F7E4DD` / `#9A4128` | zurückhaltende Hervorhebungen / Text darauf | 5,4:1 |
 | `--sidebar` | `#1A1917` | Sidebar | – |
 | `--sidebar-foreground` | `#D9D6CF` | Sidebar-Text | 12,1:1 |
 | `--sidebar-muted` | `#A4A29B` | inaktive Einträge | 6,9:1 |
@@ -553,8 +562,8 @@ Regeln: Terrakotta ist nie Statusfarbe. Kritisch-Rot und Terrakotta liegen im Fa
 - Zahlen (ECTS, Countdown, Noten) mit `tabular-nums`.
 
 ### 12.4 Komponenten und Muster
-- **Card:** Radius 16 px, Innenabstand 20–24 px, Rahmen `--border`, ohne Schatten.
-- **IconCircle:** 40 px, Fläche `--accent-soft`, Icon `--accent` (hell) bzw. `--accent-soft-foreground`.
+- **Card:** Radius 14 px (`rounded-xl`), Innenabstand 16 px kompakt bzw. 24 px regulär, Rahmen `--border`, ohne Schatten. Studienstand und Jetzt wichtig stehen auf Desktop nebeneinander; auf kleinen Ansichten untereinander.
+- **Modulillustrationen:** originale lokale SVG-Linienzeichnungen (Bücher, Datenbank, Diagramm, Prozess, Globus), dekorativ neben dem Modultitel; keine dekorativen Icon-Kreise aus Referenz 2.
 - **StatusBadge:** Icon (Häkchen-Kreis / Warndreieck / Achteck mit Ausrufezeichen) + Text + Farbe.
 - **ChannelBadge:** Icon + Kanalname (POS, Moodle, Mail, Website).
 - **Countdown, EctsProgress** (mit Soll-Markierung und Zahl), **ConsequenceItem** (Schwere-Icon, Titel, „Warum?“), **CitationList**, **DemoBadge**, **EmptyState**, **ErrorState**, Skeletons.
@@ -582,7 +591,7 @@ Regeln: Terrakotta ist nie Statusfarbe. Kritisch-Rot und Terrakotta liegen im Fa
 | Aufgabenangemessenheit | Übersicht beantwortet „Wo stehe ich, was fehlt?“ ohne Klick; Folgen-Check zeigt nur entscheidungsrelevante Zeilen; Begriffe der Studierenden statt Systemjargon (keine Prüfungsnummern im Vordergrund); vorbelegte Werte im Onboarding |
 | Selbstbeschreibungsfähigkeit | Seitentitel und aktiver Navigationszustand; „Wie wird das berechnet?“ und „Warum?“; Kanal-Badges zeigen die Herkunft; Demo-Badge |
 | Steuerbarkeit | Folgen-Check erzwingt keine Entscheidung; Simulationen jederzeit verwerfbar; Assistent per Vorschlag oder Freitext; Zurück überall |
-| Erwartungskonformität | bekannte Dashboard-Muster (Sidebar, Karten, Glocke) wie Referenz 1; konsistente Komponenten; deutsche Datums- und Zahlformate; Begriffe laut Glossar |
+| Erwartungskonformität | bekannte Dashboard-Muster (Topnavigation, aufklappbares Menü, Karten, Glocke) wie Referenz 1; konsistente Komponenten; deutsche Datums- und Zahlformate; Begriffe laut Glossar |
 | Fehlertoleranz | Bestätigung vor folgenreicher Aktion; Rückgängig-Toast; Fallback statt erfundener Antwort; Fehlerzustand je Kanal mit Stand der letzten Aktualisierung |
 | Individualisierbarkeit | Hell/Dunkel/System (Folienbeispiel Dark Mode); Hinweis-Stil; Benachrichtigungstypen – abgegrenzt von **Personalisierung** („Für dich wichtig“ ordnet das System selbst) |
 | Lernförderlichkeit | Onboarding und kurze Tour; Vorschlagsfragen; Erklärungen direkt am Ort der Information |

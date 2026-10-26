@@ -1,5 +1,6 @@
-import { Bell, Settings, UserRound } from "lucide-react";
-import { Link } from "react-router";
+import { Bell, Compass, Moon, Settings, Sun, UserRound } from "lucide-react";
+import { Link, NavLink, useLocation } from "react-router";
+import { useTheme } from "@/app/theme-context";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +16,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { DEMO_NOW } from "@/config/demo";
+import { NavigationMenu } from "@/components/layout/NavigationMenu";
+import { TOP_NAV_ITEMS } from "@/components/layout/navigation";
+import { APP_NAME, DEMO_NOW } from "@/config/demo";
 import { formatDate } from "@/lib/format";
 
 /** S8: the bell opens the notifications. Their count and list arrive together with P4-05. */
@@ -64,20 +67,64 @@ function ProfileMenu() {
   );
 }
 
-/** Top bar of the main column (KONZEPT §8 S1, §12.1): page title, demo chip, bell and avatar menu. */
-export function Topbar({ title }: { title: string }) {
+function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  const dark = resolvedTheme === "dark";
   return (
-    <header className="flex flex-wrap items-center gap-x-4 gap-y-1 border-b px-4 py-3 md:px-6 md:py-4 xl:px-8">
-      <h1 className="min-w-0 flex-1 text-page-title md:flex-none">{title}</h1>
-      {/* Below 768 px the chip gets its own row under the title and the buttons. */}
-      <div className="order-last basis-full md:order-none md:basis-auto">
-        <span className="inline-flex rounded-full bg-accent-soft px-2.5 py-0.5 text-meta text-accent-soft-foreground tabular-nums">
-          {`Demo · ${formatDate(DEMO_NOW)}`}
-        </span>
-      </div>
+    <Button
+      variant="ghost"
+      size="icon"
+      role="switch"
+      aria-label="Dunkelmodus"
+      aria-checked={dark}
+      title={
+        dark ? "Zum hellen Design wechseln" : "Zum dunklen Design wechseln"
+      }
+      onClick={() => setTheme(dark ? "light" : "dark")}
+    >
+      {dark ? <Sun className="size-5" /> : <Moon className="size-5" />}
+    </Button>
+  );
+}
+
+/** Shared top navigation; the page heading belongs to the content area. */
+export function Topbar() {
+  const location = useLocation();
+  return (
+    <header className="relative z-30 flex flex-wrap items-center gap-x-3 gap-y-2 border-b bg-card px-4 py-3 md:px-6">
+      <NavigationMenu key={location.key} />
+      <Link
+        to="/"
+        aria-label={APP_NAME + " – Übersicht"}
+        className="flex items-center gap-2 text-card-title"
+      >
+        <Compass className="size-6 text-accent-strong" />
+        <span>{APP_NAME}</span>
+      </Link>
+      <nav aria-label="Hauptnavigation" className="ml-5 hidden xl:block">
+        <ul className="flex items-center gap-1">
+          {TOP_NAV_ITEMS.map((item) => (
+            <li key={item.to}>
+              <NavLink
+                to={item.to}
+                end={item.end}
+                className="block rounded-lg border-b-2 border-transparent px-3 py-2 text-meta text-muted-foreground hover:bg-muted hover:text-foreground aria-[current=page]:border-accent-strong aria-[current=page]:font-semibold aria-[current=page]:text-foreground"
+              >
+                {item.label}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </nav>
       <div className="ml-auto flex items-center gap-1">
+        <ThemeToggle />
         <NotificationsButton />
         <ProfileMenu />
+      </div>
+      <div className="basis-full pl-1 md:ml-auto md:basis-auto md:pl-0">
+        <span className="inline-flex rounded-full bg-muted px-2.5 py-1 text-meta text-muted-foreground tabular-nums">
+          {"Demo · " + formatDate(DEMO_NOW)}
+        </span>
       </div>
     </header>
   );

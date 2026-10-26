@@ -1,9 +1,7 @@
 import { useRef } from "react";
 import { Outlet } from "react-router";
-import { MobileTabBar } from "@/components/layout/MobileTabBar";
 import { RightRail } from "@/components/layout/RightRail";
 import { useRouteHandle } from "@/components/layout/route-handle";
-import { Sidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
 import { APP_NAME } from "@/config/demo";
 
@@ -26,30 +24,29 @@ export function AppShell() {
       >
         Zum Inhalt
       </a>
-      <div className="flex min-h-dvh">
-        <Sidebar />
-        {/* Below 768 px the fixed tab bar covers the last 4 rem of the page. */}
-        <div className="flex min-w-0 flex-1 flex-col pb-16 md:pb-0 xl:flex-row">
-          <div className="flex min-w-0 flex-1 flex-col">
-            <Topbar title={handle?.title ?? APP_NAME} />
-            {/* Target of the skip link. Only script focuses it, so it shows no ring. */}
-            <main
-              id="inhalt"
-              ref={mainRef}
-              tabIndex={-1}
-              className="flex-1 px-4 py-6 outline-none md:px-6 xl:px-8"
-            >
-              <Outlet />
-            </main>
+      <div className="app-frame mx-auto flex min-h-dvh min-w-0 max-w-400 flex-col bg-background md:my-6 md:min-h-[calc(100dvh-3rem)] md:w-[calc(100%-3rem)] md:rounded-3xl md:border">
+        <div className="md:rounded-t-3xl md:[&>header]:rounded-t-3xl">
+          <Topbar />
+        </div>
+        <main
+          id="inhalt"
+          ref={mainRef}
+          tabIndex={-1}
+          className="grid min-w-0 flex-1 outline-none xl:grid-cols-[minmax(0,1fr)_auto]"
+        >
+          <div className="min-w-0 px-4 py-6 md:px-6 md:py-7 xl:px-8">
+            <h1 className="mb-6 text-page-title">
+              {handle?.title ?? APP_NAME}
+            </h1>
+            <Outlet />
           </div>
           {RightRailContent && (
             <RightRail>
               <RightRailContent />
             </RightRail>
           )}
-        </div>
+        </main>
       </div>
-      <MobileTabBar />
     </>
   );
 }
