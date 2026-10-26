@@ -374,9 +374,11 @@ interface Consequence { id: string; severity: Severity; title: string; detail: s
 type DecisionOption = 'attendPass' | 'attendFail' | 'withdraw';
 interface DecisionOutcome {
   option: DecisionOption;
+  status: 'projected' | 'blocked';
+  blockedModuleIds: string[];
   nextAttemptTerm?: Term; attemptsUsed: number;
   ectsEndOfTerm: number; targetEndOfTerm: number; trafficLight: TrafficLight;
-  internshipTerm: Term; internshipShift: number; graduationTerm: Term;
+  internshipTerm: Term | null; internshipShift: number | null; graduationTerm: Term | null;
   openFoundationAfterTerm: number;
   consequences: Consequence[];
 }
@@ -446,14 +448,16 @@ Szenario A vs. D ist der Kern der Präsentation: gleicher ECTS-Verlust, aber gan
 1. Bestandene Module bleiben im Term ihres Bestehens.
 2. Angemeldete Prüfungen im aktuellen Term gelten als bestanden, außer ein Override setzt `withdraw` oder `fail`.
 3. Nicht bestandene, abgemeldete oder verschobene Module landen im frühesten zulässigen Term nach dem aktuellen (DR-4) bzw. im per Override gewählten Term.
-4. Noch nicht belegte Module stehen im Term ihres Fachsemesters laut Studienverlaufsplan.
+4. Noch nicht belegte Module stehen im Term ihres Fachsemesters laut Studienverlaufsplan; liegt dieser Term nicht nach dem aktuellen, im frühesten zulässigen Term danach (DR-4).
 5. Grundstudium-Abschluss = spätester Term eines Grundstudium-Moduls.
 6. Praxissemester-Term = max(geplanter Term, Term nach Grundstudium-Abschluss) (DR-6); Verschiebung k in Semestern.
 7. Alle Module ab dem Praxissemester verschieben sich um k; danach wird DR-4 erneut angewendet (Modul ggf. in den nächsten passenden Term). Abschluss = letzter Term mit einem Modul.
 8. ECTS-Prognose und Soll je Term; Ampel nach DR-3; DR-7 und DR-10 als Hinweise.
-9. Folgen = Differenz zwischen Basis und Szenario, sortiert nach Schwere (Kritisch → Knapp → Info), jede mit Regel-ID und Quelle.
+9. Folgen = Differenz zwischen Basis und Szenario (auch für „Antreten, bestehen“, das der Basis entspricht), sortiert nach Schwere (Kritisch → Knapp → Info), jede mit Regel-ID und Quelle.
 
 Vereinfachung, die im UI benannt wird: Die Prognose verteilt Module nicht individuell neu; sie zeigt die Wirkung der Sonderregeln.
+
+**Ergänzung DR-8 (von Lucas bei P2 bestätigt):** Sind drei Fehlversuche für ein noch nicht bestandenes Modul genutzt, ist die Prognose `blocked`, der Status Kritisch. Das gilt auch für die Option „Antreten, nicht bestehen“ beim dritten Versuch. `blockedModuleIds` benennt die betroffenen Module; Grundstudium-Abschluss, Praxissemester, Verschiebung und Abschluss bleiben `null`, ein weiterer regulärer Versuch wird nicht terminiert. Der Folgen-Check verweist mit Quelle DR-8 an das Prüfungsamt. Die aktuelle ECTS-Prognose berücksichtigt die übrigen angemeldeten Prüfungen weiter als bestanden; die zukünftige Zeitleiste bleibt leer. Die Werte der Szenarien A–D ändern sich dadurch nicht.
 
 ### 10.6 Zustand, Simulation und Rückgängig
 - Daten fließen Services → Store → Selektoren (Domänenfunktionen) → UI.

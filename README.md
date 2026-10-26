@@ -33,6 +33,16 @@ Die App läuft dann unter http://localhost:5173.
 | `npm run format:check` | Prettier prüft die Formatierung                                          |
 | `npm run check`        | Prüf-Gate: typecheck, lint, test und build – muss vor jedem PR grün sein |
 
+## Daten und Berechnungen (Phase 2)
+
+- `src/data/` enthält die Beispieldaten aus `docs/INHALTE.md`; ungeprüfte Regeln bleiben mit `verified: false` gekennzeichnet.
+- Sechs Services laden POS, Moodle, Mail, Website, Regelwerk und Assistent unabhängig voneinander. Die Mocks warten 500 ms; `FLAGS.simulateErrors` in `src/config/demo.ts` aktiviert Fehler. Es gibt keine Hochschul-Requests.
+- `src/store/demo-store.ts` hält Ladezustände, Einstellungen und Simulationen. `hydrate()` lädt die Daten, `retry()` wiederholt einen einzelnen Service. Unter `/_ui` lassen sich Ladezustände und Fehler beobachten; die funktionale Übersicht folgt mit P3-02.
+- `src/store/selectors.ts` liefert akademischen Zustand, Studienstand, Prognose, Postfach, Fristen und Benachrichtigungen. Berechnete Selektoren liefern bei unverändertem Store stabile Referenzen für React.
+- Abmeldung speichert einen Snapshot; `undo()` stellt ihn wieder her, auch nach einem Neuladen. Was-wäre-wenn bleibt temporär. Nutzeränderungen werden unter `DEMO_STORAGE_KEY` gespeichert, bei einer anderen `DATA_VERSION` verworfen und durch `resetDemo()` zurückgesetzt. Nach Änderungen an den Beispieldaten `DATA_VERSION` erhöhen. Das Theme behält seinen eigenen Schlüssel und übersteht den Demo-Reset.
+- `src/domain/` enthält ausschließlich reine TypeScript-Berechnungen nach KONZEPT §10. Die Spezifikationstests wurden vor der Implementierung ausgeführt und bleiben unverändert. Nach drei Fehlversuchen wird die Prognose blockiert; zukünftige Praxis- und Abschlusstermine bleiben offen.
+- Prüfnachweis, Testorakel und Übergabe: [Phase-2-Review](docs/reviews/P2.md).
+
 ## Deployment
 
 Vercel baut die App bei jedem Push und veröffentlicht sie statisch (Preset Vite, Ausgabe `dist/`).
@@ -70,7 +80,7 @@ Nie `shadcn add --overwrite` für vorhandene Komponenten: Die Wrapper weichen be
 - **Farben:** [`src/styles/globals.css`](src/styles/globals.css) enthält die Werte aus KONZEPT §12.2, hell in `:root`, dunkel in `.dark`. Die shadcn-Variablen sind darauf abgebildet. Eigene Tokens gibt es als Tailwind-Klassen, z. B. `text-accent-strong`, `bg-accent-soft`, `bg-status-critical-soft`, `text-status-critical-foreground`. Komponenten verwenden nur Tokens, keine Hex-Werte. [`src/styles/tokens.test.ts`](src/styles/tokens.test.ts) vergleicht die Werte mit den Tabellen in KONZEPT §12.2, rechnet die Kontrastpaare nach und prüft die Quelltexte auf Hex-Werte.
 - **Schrift:** Manrope, lokal über Fontsource; es gibt keine Requests an fremde Server. Größen über die Typo-Klassen aus KONZEPT §12.3: `text-page-title`, `text-section-title`, `text-card-title`, `text-body` (Standard), `text-meta`, `text-figure`. Zahlen mit `tabular-nums`.
 - **Fokus:** Ein Fokusring für alle fokussierbaren Elemente steht zentral in `globals.css`: 2 px `--ring` (= `--accent-strong`), 2 px Abstand. Schneidet ein Elternteil mit `overflow-hidden` ihn ab, kommt er mit `focus-visible:-outline-offset-2` nach innen.
-- **Theme:** Hell, Dunkel oder System, gespeichert im `localStorage` unter `studicompass:theme` (`THEME_STORAGE_KEY` in [`src/config/demo.ts`](src/config/demo.ts)). Ein Inline-Skript in [`index.html`](index.html) setzt die Klasse `dark` an `<html>` vor dem ersten Rendern, damit nichts hell aufblitzt. Danach hält der ThemeProvider sie aktuell, auch wenn sich die Systemeinstellung ändert. Komponenten lesen und setzen das Theme über `useTheme()`. Ab P2-05 übernimmt der Store `setTheme`.
+- **Theme:** Hell, Dunkel oder System, gespeichert im `localStorage` unter `studicompass:theme` (`THEME_STORAGE_KEY` in [`src/config/demo.ts`](src/config/demo.ts)). Ein Inline-Skript in [`index.html`](index.html) setzt die Klasse `dark` an `<html>` vor dem ersten Rendern, damit nichts hell aufblitzt. Danach hält der ThemeProvider sie aktuell, auch wenn sich die Systemeinstellung ändert. Komponenten lesen und setzen das Theme über `useTheme()`, die Auswahl verwaltet der Store über `setTheme`.
 - **Dunkel ansehen:** Einen Umschalter in der App gibt es erst mit den Einstellungen (S9, P4-05). Bis dahin folgt die App der Systemeinstellung. In Chrome geht es auch ohne: DevTools → ⋮ → More tools → Rendering → „Emulate CSS media feature prefers-color-scheme“. Lokal schaltet zusätzlich `/_ui` um; die Wahl gilt auch für die App-Seiten.
 
 ## App-Shell und Navigation
