@@ -7,6 +7,9 @@ export const APP_NAME = "StudiCompass";
  */
 export const DEMO_NOW = new Date("2027-01-25T19:30:00+01:00");
 
+/** Time zone of the demo (TH Mannheim): dates and times appear as in Germany on every device. */
+export const DEMO_TIME_ZONE = "Europe/Berlin";
+
 /**
  * localStorage key of the theme preference ("system" | "light" | "dark"). Read and written only by
  * src/lib/theme.ts; the inline script in index.html reads it before the first render.
