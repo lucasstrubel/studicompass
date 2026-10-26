@@ -1,5 +1,17 @@
 # Logs
 *.log
+logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Abhängigkeiten und Build-Ausgaben
+node_modules
+dist
+dist-ssr
+*.local
 
 # Umgebungsvariablen und Geheimnisse — nie versionieren
 .env
@@ -15,6 +27,11 @@ docs/referenzen/
 # IDE
 .idea/
 .vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # OS
 Thumbs.db
