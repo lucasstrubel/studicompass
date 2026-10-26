@@ -86,6 +86,7 @@ Nie `shadcn add --overwrite` für vorhandene Komponenten: Die Wrapper weichen be
   - Die aktuelle Seite markieren Balken und Fettung, gesteuert über `aria-current`.
 - **Topbar:** Seitentitel, Demo-Chip, Glocke und Profil-Menü.
   - Der Chip zeigt die feste Demo-Zeit `DEMO_NOW` aus [`src/config/demo.ts`](src/config/demo.ts): Mo, 25.01.2027, 19:30.
+  - Datum und Uhrzeit erscheinen auf jedem Gerät in deutscher Zeit (`DEMO_TIME_ZONE`, Formatierung in [`src/lib/format.ts`](src/lib/format.ts)).
   - Zähler, Initialen und Benachrichtigungen kommen mit dem Store.
 - **Rechte Spalte:** Eine Seite belegt sie über `handle.rightRail` (Komponente). Ab 1280 px steht sie rechts neben dem Hauptbereich, darunter unter ihm.
 - **Tastatur und Scrollen:**
