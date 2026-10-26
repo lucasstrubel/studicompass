@@ -4,11 +4,13 @@ import { App } from "@/app/App";
 import { APP_NAME } from "@/config/demo";
 
 describe("App", () => {
-  it("shows the app name as the main heading", () => {
+  it("opens on the Übersicht inside the app shell", () => {
     render(<App />);
 
     expect(
-      screen.getByRole("heading", { level: 1, name: APP_NAME }),
+      screen.getByRole("heading", { level: 1, name: "Übersicht" }),
     ).toBeInTheDocument();
+    expect(screen.getByTestId("sidebar")).toHaveTextContent(APP_NAME);
+    expect(document.title).toBe(`Übersicht · ${APP_NAME}`);
   });
 });
