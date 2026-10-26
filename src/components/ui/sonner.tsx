@@ -9,11 +9,13 @@ import {
 
 // Unlike the registry version, the theme comes in as a prop instead of from next-themes:
 // the app's own ThemeProvider (P1-03) passes it, so the theme is stored in one place only.
+// The labels are German: the toast region is always in the DOM as a landmark ("Meldungen alt+T").
 const Toaster = ({ theme = "light", ...props }: ToasterProps) => {
   return (
     <Sonner
       theme={theme}
       className="toaster group"
+      containerAriaLabel="Meldungen"
       icons={{
         success: <CircleCheckIcon className="size-4" />,
         info: <InfoIcon className="size-4" />,
@@ -33,6 +35,7 @@ const Toaster = ({ theme = "light", ...props }: ToasterProps) => {
         classNames: {
           toast: "cn-toast",
         },
+        closeButtonAriaLabel: "Meldung schließen",
       }}
       {...props}
     />
