@@ -97,8 +97,8 @@ Reihenfolge: P1-01 → P1-05 → P1-02 → P1-03 → P1-04 → P1-06. P1-05 ist 
 - **AK:** Navigation funktioniert bei 390, 834 und 1440 px und per Tastatur.
 
 ### P1-05 Deployment
-- [ ] [Lucas] Vercel: „Add New → Project“ → GitHub-Repo importieren (Preset Vite, Output `dist`) – möglich, sobald P1-01 auf `main` liegt
-- [ ] [Claude] `vercel.json` mit Rewrite aller Pfade auf `/index.html`
+- [x] [Lucas] Vercel: „Add New → Project“ → GitHub-Repo importieren (Preset Vite, Output `dist`) – möglich, sobald P1-01 auf `main` liegt
+- [x] [Claude] `vercel.json` mit Rewrite aller Pfade auf `/index.html`
 - Hinweis: direkt nach P1-01. Bis P1-04 gemergt ist, zeigt der Deep-Link-Test nur, dass Vercel `index.html` statt 404 liefert; den Seiteninhalt unter `/verlauf` prüft Gate M1.
 - **AK:** Produktions-URL erreichbar; Deep-Link `/verlauf` funktioniert nach Neuladen; Branches bekommen Preview-URLs.
 
