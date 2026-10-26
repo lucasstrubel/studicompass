@@ -3,6 +3,12 @@ import userEvent from "@testing-library/user-event";
 import { toast } from "sonner";
 import { describe, expect, it } from "vitest";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Dialog,
   DialogContent,
   DialogFooter,
@@ -17,6 +23,92 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 // Accessibility fixes on top of the generated shadcn wrappers (Codex review P1-02).
 describe("shadcn wrapper accessibility", () => {
+  it("Popover names its dialog with PopoverTitle", async () => {
+    const user = userEvent.setup();
+    render(
+      <Popover>
+        <PopoverTrigger>Quelle öffnen</PopoverTrigger>
+        <PopoverContent>
+          <PopoverTitle>Modulhandbuch Wirtschaftsinformatik</PopoverTitle>
+        </PopoverContent>
+      </Popover>,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Quelle öffnen" }));
+
+    expect(
+      screen.getByRole("dialog", {
+        name: "Modulhandbuch Wirtschaftsinformatik",
+      }),
+    ).toHaveAttribute(
+      "aria-labelledby",
+      screen.getByText("Modulhandbuch Wirtschaftsinformatik").id,
+    );
+  });
+
+  it("Popover without a title has no aria-labelledby", () => {
+    render(
+      <Popover defaultOpen>
+        <PopoverContent>Quellenangaben</PopoverContent>
+      </Popover>,
+    );
+
+    expect(screen.getByRole("dialog")).not.toHaveAttribute("aria-labelledby");
+  });
+
+  it("Popover removes aria-labelledby when its title is removed", () => {
+    const { rerender } = render(
+      <Popover defaultOpen>
+        <PopoverContent>
+          <PopoverTitle>Quellenangaben</PopoverTitle>
+        </PopoverContent>
+      </Popover>,
+    );
+
+    expect(
+      screen.getByRole("dialog", { name: "Quellenangaben" }),
+    ).toBeInTheDocument();
+    rerender(
+      <Popover defaultOpen>
+        <PopoverContent>Quellenangaben</PopoverContent>
+      </Popover>,
+    );
+
+    expect(screen.getByRole("dialog")).not.toHaveAttribute("aria-labelledby");
+  });
+
+  it("Popover gives an explicit aria-label priority over its title", () => {
+    render(
+      <Popover defaultOpen>
+        <PopoverContent aria-label="Quelle">
+          <PopoverTitle>Modulhandbuch Wirtschaftsinformatik</PopoverTitle>
+        </PopoverContent>
+      </Popover>,
+    );
+
+    expect(screen.getByRole("dialog", { name: "Quelle" })).not.toHaveAttribute(
+      "aria-labelledby",
+    );
+  });
+
+  it("Popover gives an explicit aria-labelledby priority over its title and aria-label", () => {
+    render(
+      <>
+        <span id="source-label">Quelle</span>
+        <Popover defaultOpen>
+          <PopoverContent aria-labelledby="source-label" aria-label="Beleg">
+            <PopoverTitle>Modulhandbuch Wirtschaftsinformatik</PopoverTitle>
+          </PopoverContent>
+        </Popover>
+      </>,
+    );
+
+    expect(screen.getByRole("dialog", { name: "Quelle" })).toHaveAttribute(
+      "aria-labelledby",
+      "source-label",
+    );
+  });
+
   it("Progress exposes its value to assistive technology", () => {
     render(<Progress value={42} aria-label="Übungsblätter" />);
 
