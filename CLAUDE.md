@@ -35,7 +35,7 @@ npm run dev        # Entwicklungsserver
 npm run build      # Produktions-Build
 npm run preview    # Build lokal ansehen
 npm run lint       # ESLint
-npm run typecheck  # tsc --noEmit
+npm run typecheck  # tsc -b
 npm run test       # Vitest
 npm run check      # typecheck + lint + test + build  ← Prüf-Gate: muss vor jedem PR grün sein
 npm run e2e        # optional: Playwright-Smoke-Test des Hero-Flows
@@ -95,8 +95,8 @@ Abhängigkeiten nur in diese Richtung: UI → Store/Selektoren → Domain; Store
 6. Dokumentation nachgezogen.
 
 ## Zusammenarbeit mit Codex
-Codex ist über das Claude-Code-Plugin `codex` (openai/codex-plugin-cc) angebunden und liest `AGENTS.md`. Installation und `/codex:setup` gehören zu ROADMAP P0-05; bis das Plugin läuft, gilt die Rückfallebene unten.
-- **Review:** Nach jedem Task startet Lucas `/codex:review --base main`. Bei P2-08, P3-03 und P3-04 kommt `/codex:adversarial-review --base main` mit Fokus auf KONZEPT §10 dazu. Reviews laufen read-only. Du arbeitest das Ergebnis ab: jeden Befund zuerst am Code nachprüfen, Blocker und Major vor dem Merge beheben, Widerspruch zu einem Befund begründen, Zusammenfassung nach `docs/reviews/<task-id>.md` (Format aus AGENTS.md, ergänzt um „Umgesetzt“ und „Abgelehnt mit Begründung“). Abgelehnte Befunde stehen mit Begründung auch im PR.
+Codex ist über das Claude-Code-Plugin `codex` (openai/codex-plugin-cc) angebunden und liest `AGENTS.md`. Plugin und CLI sind eingerichtet (ROADMAP P0-05). Reviews startest du über den CLI-Befehl `/codex-review` (siehe unten), Delegationen laufen über das Plugin.
+- **Review:** Nach jedem Task startest du das Review selbst mit `/codex-review --base main` (`/codex:review` aus dem Plugin kann nur Lucas tippen). Bei P2-08, P3-03 und P3-04 kommt ein zweites Review mit dem Fokus aus `docs/PROMPTS.md` §4 dazu (KONZEPT §10), am Phasenende das Phasen-Review mit `--base m<n-1>`. Reviews laufen read-only. Test und Build kann Codex in seiner Sandbox nicht ausführen (`spawn EPERM`); Nachweis ist dein lokaler `npm run check`. Du arbeitest das Ergebnis ab: jeden Befund zuerst am Code nachprüfen, Blocker und Major vor dem Merge beheben, Widerspruch zu einem Befund begründen, Zusammenfassung nach `docs/reviews/<task-id>.md` (Format aus AGENTS.md, ergänzt um „Umgesetzt“ und „Abgelehnt mit Begründung“). Abgelehnte Befunde stehen mit Begründung auch im PR.
 - **Delegation:** nur Tasks mit Owner [Codex] oder kleine, klar abgegrenzte Aufgaben (Inhalte übertragen, Spezifikationstests, A11y-Fixes, Lint). Ablauf:
   1. Brief nach der Vorlage in `AGENTS.md` unter `.agents/briefs/<task-id>.md` anlegen und Lucas zeigen
   2. nach OK Branch `codex/<task-id>` auschecken (bzw. bei P2-07 den laufenden Branch `feat/P2-06-domain`)
@@ -107,9 +107,9 @@ Codex ist über das Claude-Code-Plugin `codex` (openai/codex-plugin-cc) angebund
 - **Nie delegieren:** Architektur, Domänenlogik, Store, Layout-Shell, Design-Tokens.
 - Das Review-Gate des Plugins bleibt aus (Endlosschleifen, hoher Verbrauch). Uneinigkeit zwischen dir und Codex → Lucas entscheidet.
 
-### Rückfallebene ohne Plugin
+### CLI-Befehle und Rückfallebene
 CLI `codex` (npm-Paket `@openai/codex`, angemeldet mit ChatGPT), aufgerufen über versionierte Befehle:
-- `/codex-review` – Codex prüft den Stand (`codex review --base main`); jeder Befund wird am Code nachgeprüft.
+- `/codex-review` – Codex prüft den Stand (`codex review --base <basis>`, mit Prüfhinweisen `codex exec -s read-only`); jeder Befund wird am Code nachgeprüft. Seit 26.10. der Standardweg für alle Reviews.
 - `/codex-aufgabe` – Auftrag an Codex in einem **eigenen Git-Worktree** auf `codex/<task-id>`. Die Codex-Sandbox darf nicht in das gemeinsame `.git` schreiben: Du legst den Branch im Worktree an und committest nach dem Review; Codex ändert nur Dateien und committet nicht. Der Brief folgt trotzdem der Vorlage aus `AGENTS.md`.
 
 | Pfad | Agent | Inhalt |

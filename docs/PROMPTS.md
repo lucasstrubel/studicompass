@@ -91,27 +91,26 @@ Fehlt etwas: den Plan kommentieren, nicht freigeben.
 
 ## 4 Review mit Codex
 
-**Nach jedem Task** (du tippst):
+Claude Code startet jedes Review selbst über `/codex-review` (CLI, read-only) und arbeitet es in derselben Unterhaltung ab – du musst nichts tippen. Falls du anstoßen willst:
+
+**Nach jedem Task:**
 ```
-/codex:review --base main
+Starte das Codex-Review mit /codex-review --base main und arbeite es ab: Blocker und Major beheben; widersprichst du einem Befund, begründe es. Minor und Nit nur, wenn sie diesen Task betreffen. Speichere die Zusammenfassung unter docs/reviews/<ID>.md (Format aus AGENTS.md plus „Umgesetzt“ und „Abgelehnt mit Begründung“). Dann npm run check und Commit.
 ```
 
-**Zusätzlich bei P2-08, P3-03 und P3-04:**
+**Zusätzlich bei P2-08, P3-03 und P3-04** (zweites Review mit Fokus):
 ```
-/codex:adversarial-review --base main Prüfe gegen docs/KONZEPT.md §10.3–10.5 und die Testorakel-Werte in §10.4, besonders Szenario A (Statistik) gegen D (Marketing). Nutze Checkliste, Schweregrade und Ausgabeformat aus AGENTS.md.
+/codex-review --base main Prüfe gegen docs/KONZEPT.md §10.3–10.5 und die Testorakel-Werte in §10.4, besonders Szenario A (Statistik) gegen D (Marketing). Nutze Checkliste, Schweregrade und Ausgabeformat aus AGENTS.md.
 ```
 
 **Am Ende jeder Phase** (`m<n-1>` = Tag des vorigen Gates, z. B. `m0` für Phase 1):
 ```
-/codex:adversarial-review --base m<n-1> Prüfe alle Änderungen dieser Phase auf Konsistenz: Architekturregeln aus CLAUDE.md, Tokens statt Hex-Werten, Glossar-Begriffe, Lade-, Leer- und Fehlerzustände, Barrierearmut. Nutze Checkliste und Ausgabeformat aus AGENTS.md.
+/codex-review --base m<n-1> Prüfe alle Änderungen dieser Phase auf Konsistenz: Architekturregeln aus CLAUDE.md, Tokens statt Hex-Werten, Glossar-Begriffe, Lade-, Leer- und Fehlerzustände, Barrierearmut. Nutze Checkliste und Ausgabeformat aus AGENTS.md.
 ```
 
-Dauert ein Review lange: `--background` anhängen, später `/codex:status` und `/codex:result`.
-
-**Danach an Claude Code:**
-```
-Arbeite das Codex-Review ab: Blocker und Major beheben; widersprichst du einem Befund, begründe es. Minor und Nit nur, wenn sie diesen Task betreffen. Speichere die Zusammenfassung unter docs/reviews/<ID>.md (Format aus AGENTS.md plus „Umgesetzt“ und „Abgelehnt mit Begründung“). Dann npm run check und Commit.
-```
+- Reviews mit Fokus laufen als `codex exec -s read-only`; dafür fragt Claude Code einmal nach deiner Freigabe.
+- Test und Build kann Codex in seiner Sandbox nicht ausführen (`spawn EPERM`) – dort gelten sie als offen. Nachweis ist der lokale `npm run check` von Claude Code.
+- Du kannst jedes Review weiterhin selbst über das Plugin starten (`/codex:review`, `/codex:adversarial-review`; bei langen Läufen mit `--background`, später `/codex:status` und `/codex:result`).
 
 ---
 
