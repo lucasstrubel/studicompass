@@ -19,6 +19,7 @@ import { useDemoStore } from "@/store/use-demo-store";
 import { APP_NAME } from "@/config/demo";
 import { CitationList } from "@/components/common/CitationList";
 import type { Notification } from "@/domain/types";
+import { CHANNELS } from "@/services/types";
 
 const TYPES: { type: Notification["type"]; label: string }[] = [
   { type: "decision", label: "Entscheidungen" },
@@ -134,7 +135,7 @@ export function SettingsPage() {
         </p>
         <ChannelStatus />
         <div className="flex flex-wrap gap-2">
-          {(["pos", "moodle", "mail", "website"] as const).map((channel) => (
+          {CHANNELS.map((channel) => (
             <Button
               key={channel}
               variant="outline"

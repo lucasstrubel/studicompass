@@ -19,7 +19,12 @@ import {
   type ThemePreference,
 } from "@/lib/theme";
 import { createMockServices } from "@/services/mock";
-import type { ServiceData, ServiceKey, Services } from "@/services/types";
+import {
+  isChannel,
+  type ServiceData,
+  type ServiceKey,
+  type Services,
+} from "@/services/types";
 
 export interface LoadState<T> {
   status: "idle" | "loading" | "ready" | "error";
@@ -237,17 +242,7 @@ export function createDemoStore(
           key: K,
           force = false,
         ): Promise<void> {
-          const channel =
-            key === "pos"
-              ? "pos"
-              : key === "moodle"
-                ? "moodle"
-                : key === "mail"
-                  ? "mail"
-                  : key === "website"
-                    ? "website"
-                    : null;
-          if (channel && !get().connectedChannels[channel]) return;
+          if (isChannel(key) && !get().connectedChannels[key]) return;
           const active = pending.get(key);
           if (!force && active) return active;
           const request = ++requests[key];

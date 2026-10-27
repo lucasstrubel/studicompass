@@ -3,8 +3,7 @@ import { ResourceBoundary } from "./ResourceBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDemoStore } from "@/store/use-demo-store";
 import { formatShortDateTime } from "@/lib/format";
-
-const CHANNELS = ["pos", "moodle", "mail", "website"] as const;
+import { CHANNELS } from "@/services/types";
 
 /** Individual boundaries keep healthy channels usable when another one fails. */
 export function ChannelStatus() {
@@ -17,7 +16,7 @@ export function ChannelStatus() {
     >
       {CHANNELS.map((channel) => (
         <div key={channel} className="min-w-0 rounded-lg border bg-card p-3">
-          {!connected[channel] && (
+          {!connected[channel] && resources[channel].data && (
             <p className="mb-2 font-semibold">
               Verbindung getrennt · vorhandene Daten bleiben sichtbar
             </p>

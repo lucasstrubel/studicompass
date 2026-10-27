@@ -87,14 +87,7 @@ export function selectAssistantPersonal(
           .join(" ") || "Aktuell gibt es keine nicht bestandene offene Prüfung."
       );
     }
-    default: {
-      if (entry.id === "A-08") {
-        const module = academic.modules.find((item) => item.id === "m-stat");
-        return module
-          ? `Nächstes Angebot nach diesem Semester: ${format(nextOffering(academic.currentTerm, module.offering))}.`
-          : "Statistik ist in deinen Daten nicht verfügbar.";
-      }
+    default:
       return entry.personalExample ?? "";
-    }
   }
 }

@@ -13,6 +13,12 @@ export const notifications: Notification[] = [
       direct:
         "Morgen um 23:59 ist Schluss. Meldest du dich von Statistik ab, gibt es das Modul erst im nächsten Winter – und dein Praxissemester rutscht voraussichtlich ein Semester nach hinten.",
     },
+    simulatedText: {
+      neutral:
+        "Abmeldung simuliert. Deine Übersicht und dein Studienverlauf zeigen bereits die aktualisierte Prognose.",
+      direct:
+        "Abmeldung simuliert – Übersicht und Studienverlauf zeigen schon deine neue Prognose.",
+    },
     read: false,
     ruleIds: ["DR-4", "DR-5", "DR-6"],
   },
@@ -39,6 +45,12 @@ export const notifications: Notification[] = [
         "Für das Praxissemester im WS 2027/28 fehlen dir noch 7 Module des Grundstudiums; 5 davon sind in diesem Semester angemeldet.",
       direct:
         "Praxissemester im Winter? Dann müssen Programmieren 2 und Wirtschaftsprivatrecht im Sommer klappen – plus alles aus diesem Semester.",
+    },
+    simulatedText: {
+      neutral:
+        "Dein Studienstand hat sich durch die Simulation geändert. Prüfe die aktualisierte Prognose und die noch offenen Module im Studienverlauf.",
+      direct:
+        "Durch die Simulation verschiebt sich dein Plan. Schau dir die neue Prognose und die offenen Module im Studienverlauf an.",
     },
     read: false,
     ruleIds: ["DR-6"],

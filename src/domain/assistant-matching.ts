@@ -31,12 +31,9 @@ export function matchAssistant(
   const scored = catalog
     .map((entry) => ({
       id: entry.id,
-      score:
-        new Set(entry.keywords.map(normalizeQuestion)).size === 0
-          ? 0
-          : [...new Set(entry.keywords.map(normalizeQuestion))].filter(
-              (keyword) => padded.includes(` ${keyword} `),
-            ).length,
+      score: [...new Set(entry.keywords.map(normalizeQuestion))].filter(
+        (keyword) => keyword && padded.includes(` ${keyword} `),
+      ).length,
     }))
     .sort((a, b) => b.score - a.score);
   return scored[0]?.score >= 2 && scored[0].score !== scored[1]?.score

@@ -9,6 +9,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ChannelBadge } from "@/components/common/ChannelBadge";
 import { ChannelStatus } from "@/components/common/ChannelStatus";
 import { CHANNEL_LABELS } from "@/components/common/labels";
@@ -17,6 +18,7 @@ import { useDemoStore } from "@/store/use-demo-store";
 import { selectInbox } from "@/store/selectors";
 import { selectInboxReason } from "@/store/inbox-selectors";
 import type { Channel, InboxItem } from "@/domain/types";
+import { CHANNELS } from "@/services/types";
 import { formatDateTime } from "@/lib/format";
 import { DEMO_NOW } from "@/config/demo";
 
@@ -76,14 +78,13 @@ export function InboxPage() {
   const trigger = useRef<HTMLButtonElement | null>(null);
   const id = params.get("eintrag");
   const selected = all.find((item) => item.id === id);
-  const busy = [
-    resources.pos,
-    resources.moodle,
-    resources.mail,
-    resources.website,
-  ].some(
-    (resource) => resource.status === "loading" || resource.status === "idle",
+  const connected = useDemoStore((state) => state.connectedChannels);
+  const busy = CHANNELS.some(
+    (key) =>
+      connected[key] &&
+      (resources[key].status === "loading" || resources[key].status === "idle"),
   );
+  const incomplete = CHANNELS.some((key) => resources[key].data === null);
   const filtered = all.filter(
     (item) =>
       (channel === "all" || item.channel === channel) &&
@@ -118,22 +119,14 @@ export function InboxPage() {
         >
           Alle
         </Button>
-        {Object.entries(CHANNEL_LABELS).map(([key, label]) => (
+        {CHANNELS.map((key) => (
           <Button
             key={key}
             variant={channel === key ? "default" : "outline"}
             aria-pressed={channel === key}
-            onClick={() => {
-              if (
-                key === "pos" ||
-                key === "moodle" ||
-                key === "mail" ||
-                key === "website"
-              )
-                setChannel(key);
-            }}
+            onClick={() => setChannel(key)}
           >
-            {label}
+            {CHANNEL_LABELS[key]}
           </Button>
         ))}
       </div>
@@ -146,6 +139,19 @@ export function InboxPage() {
         />
         Nur ungelesene
       </label>
+      {busy && (
+        <Skeleton
+          role="status"
+          aria-label="Nachrichten werden geladen"
+          className="h-24"
+        />
+      )}
+      {!busy && incomplete && (
+        <p role="status" className="text-body text-muted-foreground">
+          Das Postfach ist unvollständig. Prüfe den Sync-Status und verbinde
+          getrennte Kanäle in den Einstellungen erneut.
+        </p>
+      )}
       {high.length > 0 && (
         <section aria-labelledby="important-inbox">
           <h2 id="important-inbox" className="mb-3 text-section-title">
@@ -170,7 +176,7 @@ export function InboxPage() {
           </ul>
         </section>
       )}
-      {filtered.length === 0 && !busy && (
+      {filtered.length === 0 && !busy && !incomplete && (
         <EmptyState
           title="Keine Nachrichten für diesen Filter"
           description="Wähle einen anderen Kanal oder zeige auch gelesene Nachrichten."

@@ -2,6 +2,7 @@ import { expect, it } from "vitest";
 import { deadlines } from "@/data/deadlines";
 import { DEMO_NOW } from "@/config/demo";
 import { deadlinesToIcs } from "./ics";
+import { CHANNEL_LABELS } from "@/components/common/labels";
 import {
   deadlineInstant,
   groupDeadlines,
@@ -28,6 +29,17 @@ it("P4-04: maskiert Sonderzeichen und faltet UTF-8 ohne Zeichenverlust", () => {
   const unfolded = ics.replaceAll("\r\n ", "");
   expect(unfolded).toContain("SUMMARY:Ä😀\\; Test\\, \\\\ neuer\\nTitel");
   expect(unfolded).not.toContain("�");
+});
+it("Gegencheck: Zeiträume mit Uhrzeit enden zur Frist, Kanal mit UI-Namen", () => {
+  const ics = deadlinesToIcs([
+    {
+      ...deadlines[0],
+      startsAt: "2027-01-26T08:00:00+01:00",
+      dueAt: "2027-01-26T23:59:00+01:00",
+    },
+  ]).replaceAll("\r\n ", "");
+  expect(ics).toContain("DTSTART:20270126T070000Z\r\nDTEND:20270126T225900Z");
+  expect(ics).toContain(`Kanal: ${CHANNEL_LABELS[deadlines[0].channel]}.`);
 });
 it("P4-04: gruppiert relativ zur Demo-Zeit und zur Kalenderwoche", () => {
   expect(deadlineInstant("2027-05-14")).toBe("2027-05-14T23:59:59+02:00");

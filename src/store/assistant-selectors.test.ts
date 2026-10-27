@@ -35,3 +35,22 @@ it("P4-01: Resolver berücksichtigen Abmeldung und Rückgängig, aber keine Was-
     "2 Prüfungen",
   );
 });
+
+it("Gegencheck: Simulationstexte folgen dem Hinweis-Stil, Meilensteine nur bei Verschiebung", async () => {
+  const store = createDemoStore(createMockServices({ latencyMs: 0 }));
+  await store.getState().hydrate();
+  const message = (id: string) =>
+    selectNotifications(store.getState()).find((item) => item.id === id)
+      ?.message;
+  const original = message("n-03");
+  store.getState().withdrawExam("e-mkt-ws26");
+  expect(message("n-03")).toBe(original);
+  store.getState().undo();
+  store.getState().withdrawExam("e-stat-ws26");
+  expect(message("n-03")).toContain("Simulation");
+  store.getState().setHintTone("neutral");
+  const neutral = message("n-01");
+  store.getState().setHintTone("direct");
+  expect(message("n-01")).toContain("Abmeldung simuliert");
+  expect(message("n-01")).not.toBe(neutral);
+});

@@ -1,6 +1,7 @@
 import type {
   AssistantEntry,
   AssistantFallback,
+  Channel,
   DecisionHint,
   Deadline,
   ExamRecord,
@@ -69,6 +70,16 @@ export interface ServiceData {
   assistant: AssistantData;
 }
 export type ServiceKey = keyof ServiceData;
+/** The four channels among the services (Kanal, KONZEPT §14). */
+export const CHANNELS = [
+  "pos",
+  "moodle",
+  "mail",
+  "website",
+] as const satisfies readonly Channel[];
+export function isChannel(key: string): key is Channel {
+  return (CHANNELS as readonly string[]).includes(key);
+}
 export interface Services {
   pos: PosService;
   moodle: MoodleService;

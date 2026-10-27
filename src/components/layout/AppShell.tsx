@@ -7,6 +7,7 @@ import { APP_NAME } from "@/config/demo";
 import { useDemoStore } from "@/store/use-demo-store";
 import { CHANNEL_LABELS } from "@/components/common/labels";
 import { ProductTour } from "@/features/onboarding/ProductTour";
+import { CHANNELS } from "@/services/types";
 
 /** Layout of every app page (KONZEPT §7, §12.1); the route's handle supplies title and right column. */
 export function AppShell() {
@@ -14,9 +15,7 @@ export function AppShell() {
   const mainRef = useRef<HTMLElement>(null);
   const RightRailContent = handle?.rightRail;
   const connected = useDemoStore((state) => state.connectedChannels);
-  const disconnected = (["pos", "moodle", "mail", "website"] as const).filter(
-    (channel) => !connected[channel],
-  );
+  const disconnected = CHANNELS.filter((channel) => !connected[channel]);
 
   return (
     <>

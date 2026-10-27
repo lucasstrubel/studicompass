@@ -28,9 +28,9 @@ import {
   selectRulesById,
 } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
+import { CHANNELS } from "@/services/types";
 
 const SUGGESTED_QUESTIONS = ["A-01", "A-03"];
-const CHANNELS = ["pos", "moodle", "mail", "website"] as const;
 
 function capitalize(text: string) {
   return text.charAt(0).toUpperCase() + text.slice(1);

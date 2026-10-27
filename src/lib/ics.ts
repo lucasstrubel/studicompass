@@ -1,5 +1,6 @@
 import { APP_NAME, DEMO_NOW } from "@/config/demo";
 import type { Deadline } from "@/domain/types";
+import { CHANNEL_LABELS } from "@/components/common/labels";
 
 function escapeText(value: string) {
   return value
@@ -58,10 +59,15 @@ export function deadlinesToIcs(deadlines: Deadline[]): string {
         `DTSTART;VALUE=DATE:${(deadline.startsAt ?? deadline.dueAt).replaceAll("-", "")}`,
         `DTEND;VALUE=DATE:${followingDay(deadline.dueAt)}`,
       );
-    } else lines.push(`DTSTART:${utc(deadline.startsAt ?? deadline.dueAt)}`);
+    } else if (deadline.startsAt)
+      lines.push(
+        `DTSTART:${utc(deadline.startsAt)}`,
+        `DTEND:${utc(deadline.dueAt)}`,
+      );
+    else lines.push(`DTSTART:${utc(deadline.dueAt)}`);
     lines.push(
       `SUMMARY:${escapeText(deadline.title)}`,
-      `DESCRIPTION:${escapeText(`Beispiel – ${APP_NAME} Demo. Kanal: ${deadline.channel}. Verbindlich sind die Angaben im Originalsystem.`)}`,
+      `DESCRIPTION:${escapeText(`Beispiel – ${APP_NAME} Demo. Kanal: ${CHANNEL_LABELS[deadline.channel]}. Verbindlich sind die Angaben im Originalsystem.`)}`,
       "TRANSP:TRANSPARENT",
       "END:VEVENT",
     );

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChannelBadge } from "@/components/common/ChannelBadge";
 import { ChannelStatus } from "@/components/common/ChannelStatus";
+import { CHANNEL_LABELS } from "@/components/common/labels";
 import { Countdown } from "@/components/common/Countdown";
 import { CitationList } from "@/components/common/CitationList";
 import { EmptyState } from "@/components/common/EmptyState";
@@ -13,19 +14,20 @@ import { formatDate, formatDateTime } from "@/lib/format";
 import { downloadDeadlines } from "@/lib/ics";
 
 import { deadlineInstant, groupDeadlines } from "./deadline-groups";
+import { CHANNELS } from "@/services/types";
 
 export function DeadlinesPage() {
   const deadlines = useDemoStore(selectActionableDeadlines);
   const pos = useDemoStore((state) => state.resources.pos.data);
   const resources = useDemoStore((state) => state.resources);
   const connected = useDemoStore((state) => state.connectedChannels);
-  const loading = (["pos", "moodle", "mail", "website"] as const).some(
+  const loading = CHANNELS.some(
     (channel) =>
       connected[channel] &&
       (resources[channel].status === "loading" ||
         resources[channel].status === "idle"),
   );
-  const incomplete = (["pos", "moodle", "mail", "website"] as const).some(
+  const incomplete = CHANNELS.some(
     (channel) => resources[channel].data === null,
   );
   const groups = groupDeadlines(deadlines, DEMO_NOW);
@@ -98,7 +100,7 @@ export function DeadlinesPage() {
                     <CitationList
                       citations={[
                         {
-                          document: `${deadline.channel.toUpperCase()} – ${deadline.title} (Demodaten)`,
+                          document: `${CHANNEL_LABELS[deadline.channel]} – ${deadline.title} (Demodaten)`,
                           summary: deadline.title,
                           verified: false,
                         },

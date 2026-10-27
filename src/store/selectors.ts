@@ -61,26 +61,45 @@ function deadlines(state: DemoState): Deadline[] {
     .sort((left, right) => left.dueAt.localeCompare(right.dueAt));
 }
 
-function notifications(state: DemoState) {
-  const academic = selectAcademicState(state);
-  return (state.resources.website.data?.notifications ?? []).map((item) => ({
-    ...item,
-    read: item.read || state.readNotificationIds.includes(item.id),
-    message:
-      item.type === "decision" &&
-      academic?.exams.some(
-        (exam) =>
-          item.href === `/entscheidung/${exam.id}` &&
-          exam.status === "withdrawn",
-      )
-        ? "Abmeldung simuliert. Deine Übersicht und dein Studienverlauf zeigen bereits die aktualisierte Prognose."
-        : item.type === "milestone" && state.withdrawnExamIds.length > 0
-          ? `Dein Studienstand hat sich durch die Simulation geändert. Prüfe die aktualisierte Prognose und die noch offenen Module im Studienverlauf.`
-          : item.text[state.hintTone],
-  }));
+function sameTerm(left: Term | null, right: Term | null) {
+  return left && right ? compare(left, right) === 0 : left === right;
 }
 
-/** Current progress uses the last completed semester; the projection uses the current semester. */
+/** Whether simulated withdrawals move the internship or graduation term against the POS state. */
+function milestonesMoved(state: DemoState): boolean {
+  const academic = selectAcademicState(state);
+  const pos = state.resources.pos.data;
+  if (!academic || !pos || state.withdrawnExamIds.length === 0) return false;
+  const before = projectPlan({ ...academic, exams: pos.exams });
+  const after = projectPlan(academic);
+  return (
+    !sameTerm(before.internshipTerm, after.internshipTerm) ||
+    !sameTerm(before.graduationTerm, after.graduationTerm)
+  );
+}
+
+function notifications(state: DemoState) {
+  const exams = selectAcademicState(state)?.exams ?? [];
+  const moved = milestonesMoved(state);
+  return (state.resources.website.data?.notifications ?? []).map((item) => {
+    const settled =
+      (item.type === "decision" &&
+        exams.some(
+          (exam) =>
+            item.href === `/entscheidung/${exam.id}` &&
+            exam.status === "withdrawn",
+        )) ||
+      (item.type === "milestone" && moved);
+    return {
+      ...item,
+      read: item.read || state.readNotificationIds.includes(item.id),
+      message: (settled && item.simulatedText ? item.simulatedText : item.text)[
+        state.hintTone
+      ],
+    };
+  });
+}
+
 function progress(state: DemoState) {
   const academic = selectAcademicState(state);
   if (!academic) return null;

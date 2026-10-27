@@ -8,6 +8,7 @@ import { CitationList } from "@/components/common/CitationList";
 import { APP_NAME, DEMO_CURRENT_TERM } from "@/config/demo";
 import { semesterNumber } from "@/domain/terms";
 import { useDemoStore } from "@/store/use-demo-store";
+import { CHANNELS } from "@/services/types";
 
 const STEPS = [
   "Willkommen",
@@ -30,7 +31,7 @@ export function OnboardingPage() {
   function finish(skip = false) {
     if (skip) {
       state.setHintTone("direct");
-      for (const channel of ["pos", "moodle", "mail", "website"] as const)
+      for (const channel of CHANNELS)
         if (!state.connectedChannels[channel])
           void state.setChannelConnected(channel, true);
     }
@@ -80,7 +81,7 @@ export function OnboardingPage() {
             übertragen.
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
-            {(["pos", "moodle", "mail", "website"] as const).map((channel) => (
+            {CHANNELS.map((channel) => (
               <label
                 key={channel}
                 className="space-y-2 rounded-xl border bg-card p-4"
