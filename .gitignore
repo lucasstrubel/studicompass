@@ -24,6 +24,10 @@ CLAUDE.local.md
 # Fremde Design-Referenzen — nur lokal, das Repo ist öffentlich
 docs/referenzen/
 
+# Playwright-Ausgaben (die Screenshots in docs/screens/ werden versioniert)
+test-results/
+playwright-report/
+
 # IDE
 .idea/
 .vscode/

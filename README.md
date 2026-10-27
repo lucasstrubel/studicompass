@@ -32,12 +32,22 @@ Die App läuft dann unter http://localhost:5173.
 | `npm run format`       | Prettier formatiert alle Dateien                                         |
 | `npm run format:check` | Prettier prüft die Formatierung                                          |
 | `npm run check`        | Prüf-Gate: typecheck, lint, test und build – muss vor jedem PR grün sein |
+| `npm run e2e`          | Playwright: Hero-Flow (Desktop und 390 px) gegen den Produktions-Build   |
+| `npm run screens`      | Playwright: Screenshots der Kernscreens nach `docs/screens/`             |
+
+### End-to-End-Tests und Screenshots (P3-05)
+
+- Playwright nutzt das lokal installierte **Google Chrome** (`channel: "chrome"`); ein Browser-Download ist nicht nötig. Ohne Chrome schlagen `e2e` und `screens` fehl.
+- Beide Befehle bauen die App (`npm run build`) und starten `vite preview` auf Port 4173. Läuft dort schon ein Server, wird er wiederverwendet.
+- `npm run e2e` prüft Übersicht → Folgen-Check → simulierte Abmeldung → Übersicht (Kritisch, SS 2028, SS 2029) → „Rückgängig“, dazu denselben Weg nur per Tastatur und horizontales Scrollen auf den Kernscreens.
+- `npm run screens` schreibt Übersicht, Folgen-Check (Statistik, Marketing) und Studienverlauf in 1440×900 und 390×844, jeweils hell und dunkel, nach `docs/screens/`.
+- `npm run check` enthält die End-to-End-Tests nicht; Playwright-Dateien enden auf `.e2e.ts`, damit Vitest sie nicht aufgreift.
 
 ## Daten und Berechnungen (Phase 2)
 
 - `src/data/` enthält die Beispieldaten aus `docs/INHALTE.md`; ungeprüfte Regeln bleiben mit `verified: false` gekennzeichnet.
 - Sechs Services laden POS, Moodle, Mail, Website, Regelwerk und Assistent unabhängig voneinander. Die Mocks warten 500 ms; `FLAGS.simulateErrors` in `src/config/demo.ts` aktiviert Fehler. Es gibt keine Hochschul-Requests.
-- `src/store/demo-store.ts` hält Ladezustände, Einstellungen und Simulationen. `hydrate()` lädt die Daten, `retry()` wiederholt einen einzelnen Service. Unter `/_ui` lassen sich Ladezustände und Fehler beobachten; die funktionale Übersicht folgt mit P3-02.
+- `src/store/demo-store.ts` hält Ladezustände, Einstellungen und Simulationen. `hydrate()` lädt die Daten, `retry()` wiederholt einen einzelnen Service. Unter `/_ui` lassen sich Ladezustände und Fehler beobachten; Übersicht, Folgen-Check und Studienverlauf zeigen sie je Kanal (Phase 3).
 - `src/store/selectors.ts` liefert akademischen Zustand, Studienstand, Prognose, Postfach, Fristen und Benachrichtigungen. Berechnete Selektoren liefern bei unverändertem Store stabile Referenzen für React.
 - Abmeldung speichert einen Snapshot; `undo()` stellt ihn wieder her, auch nach einem Neuladen. Was-wäre-wenn bleibt temporär. Nutzeränderungen werden unter `DEMO_STORAGE_KEY` gespeichert, bei einer anderen `DATA_VERSION` verworfen und durch `resetDemo()` zurückgesetzt. Nach Änderungen an den Beispieldaten `DATA_VERSION` erhöhen. Das Theme behält seinen eigenen Schlüssel und übersteht den Demo-Reset.
 - `src/domain/` enthält ausschließlich reine TypeScript-Berechnungen nach KONZEPT §10. Die Spezifikationstests wurden vor der Implementierung ausgeführt und bleiben unverändert. Nach drei Fehlversuchen wird die Prognose blockiert; zukünftige Praxis- und Abschlusstermine bleiben offen.
