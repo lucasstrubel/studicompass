@@ -8,6 +8,7 @@ import {
   formatRelativeDay,
   formatShortDateTime,
   formatTime,
+  greeting,
 } from "@/lib/format";
 
 afterEach(() => {
@@ -72,5 +73,15 @@ describe("formatGrade", () => {
   it("uses one decimal and a comma", () => {
     expect(formatGrade(2.4)).toBe("2,4");
     expect(formatGrade(2)).toBe("2,0");
+  });
+});
+
+describe("greeting", () => {
+  it("greets Niklas in the evening at DEMO_NOW", () => {
+    expect(greeting(DEMO_NOW)).toBe("Guten Abend");
+    expect(greeting(new Date("2027-01-25T09:00:00+01:00"))).toBe(
+      "Guten Morgen",
+    );
+    expect(greeting(new Date("2027-01-25T14:00:00+01:00"))).toBe("Guten Tag");
   });
 });

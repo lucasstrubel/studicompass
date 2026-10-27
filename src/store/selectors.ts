@@ -1,5 +1,15 @@
-import type { AcademicState, Deadline, InboxItem } from "@/domain/types";
-import { DEMO_CURRENT_TERM } from "@/config/demo";
+import type {
+  AcademicState,
+  Deadline,
+  ExamRecord,
+  InboxItem,
+  Module,
+  MoodleProgress,
+  Rule,
+  Term,
+} from "@/domain/types";
+import { DEMO_CURRENT_TERM, DEMO_NOW } from "@/config/demo";
+import { compareDecision, hasSpecialRuleImpact } from "@/domain/decision";
 import {
   earnedEcts,
   openFoundationModules,
@@ -8,7 +18,7 @@ import {
 import { gradeAverage } from "@/domain/grades";
 import { projectPlan } from "@/domain/projection";
 import { trafficLight } from "@/domain/rules";
-import { semesterNumber } from "@/domain/terms";
+import { compare, semesterNumber } from "@/domain/terms";
 import type { DemoState } from "./demo-store";
 
 function academicState(state: DemoState): AcademicState | null {
@@ -85,6 +95,175 @@ function plan(state: DemoState) {
   return academic ? projectPlan(academic, state.whatIf) : null;
 }
 
+/** Projection without what-if overrides: the real plan, also while the planner simulates. */
+function basePlan(state: DemoState) {
+  const academic = selectAcademicState(state);
+  return academic ? projectPlan(academic) : null;
+}
+
+export interface CurrentExam {
+  exam: ExamRecord;
+  module: Module;
+  progress: MoodleProgress | null;
+}
+
+/** Exams of the current semester that are registered or (simulated) withdrawn, by exam date. */
+function currentExams(state: DemoState): CurrentExam[] {
+  const academic = selectAcademicState(state);
+  if (!academic) return [];
+  const progress = state.resources.moodle.data?.progress ?? [];
+  return academic.exams
+    .filter(
+      (exam) =>
+        compare(exam.term, academic.currentTerm) === 0 &&
+        (exam.status === "registered" || exam.status === "withdrawn"),
+    )
+    .flatMap((exam) => {
+      const module = academic.modules.find((item) => item.id === exam.moduleId);
+      if (!module) return [];
+      return [
+        {
+          exam,
+          module,
+          progress:
+            progress.find((item) => item.moduleId === module.id) ?? null,
+        },
+      ];
+    })
+    .sort((left, right) =>
+      (left.exam.date ?? "").localeCompare(right.exam.date ?? ""),
+    );
+}
+
+/** The first deadline after DEMO_NOW (US-05); a withdrawal deadline ends with the (simulated) withdrawal. */
+function nextDeadline(state: DemoState): Deadline | null {
+  const settled = new Set(
+    (selectAcademicState(state)?.exams ?? [])
+      .filter((exam) => exam.status !== "registered")
+      .map((exam) => exam.id),
+  );
+  return (
+    selectDeadlines(state).find(
+      (deadline) =>
+        new Date(deadline.dueAt) > DEMO_NOW &&
+        !(deadline.examId && settled.has(deadline.examId)),
+    ) ?? null
+  );
+}
+
+export interface ImportantDecision {
+  notificationId: string;
+  message: string;
+  exam: ExamRecord;
+  module: Module;
+  ruleIds: string[];
+}
+
+/**
+ * "Jetzt wichtig" (KONZEPT §8 S1): decision notifications whose exam is still registered, whose withdrawal
+ * deadline lies after DEMO_NOW and where a special rule applies; at most two.
+ */
+function importantDecisions(state: DemoState): ImportantDecision[] {
+  const academic = selectAcademicState(state);
+  if (!academic) return [];
+  return selectNotifications(state)
+    .filter((item) => item.type === "decision")
+    .flatMap((item) => {
+      const examId = /^\/entscheidung\/([^/?#]+)$/.exec(item.href)?.[1];
+      const exam = academic.exams.find((entry) => entry.id === examId);
+      const module = academic.modules.find(
+        (entry) => entry.id === exam?.moduleId,
+      );
+      if (
+        !exam ||
+        !module ||
+        exam.status !== "registered" ||
+        !exam.withdrawalDeadline ||
+        new Date(exam.withdrawalDeadline) <= DEMO_NOW
+      )
+        return [];
+      try {
+        if (!hasSpecialRuleImpact(compareDecision(academic, exam.id)))
+          return [];
+      } catch {
+        return [];
+      }
+      return [
+        {
+          notificationId: item.id,
+          message: item.message,
+          exam,
+          module,
+          ruleIds: item.ruleIds,
+        },
+      ];
+    })
+    .slice(0, 2);
+}
+
+export interface RecentGrade {
+  exam: ExamRecord;
+  module: Module;
+}
+
+/** The three most recent passed exams (right column "Letzte Noten"). */
+function recentGrades(state: DemoState): RecentGrade[] {
+  const academic = selectAcademicState(state);
+  if (!academic) return [];
+  return academic.exams
+    .filter((exam) => exam.status === "passed" && exam.grade !== undefined)
+    .sort((left, right) => (right.date ?? "").localeCompare(left.date ?? ""))
+    .slice(0, 3)
+    .flatMap((exam) => {
+      const module = academic.modules.find((item) => item.id === exam.moduleId);
+      return module ? [{ exam, module }] : [];
+    });
+}
+
+export interface MilestoneSummary {
+  internshipTerm: Term | null;
+  internshipShift: number | null;
+  graduationTerm: Term | null;
+  openFoundation: Module[];
+  registeredNow: Module[];
+  /** Open foundation modules that are not registered now, with the term the plan expects them in. */
+  later: { module: Module; term: Term }[];
+}
+
+/** Next milestone (KONZEPT §8 S1 no. 4): internship term and what is still missing for it (DR-6). */
+function milestone(state: DemoState): MilestoneSummary | null {
+  const plan = selectBasePlan(state);
+  const progress = selectProgress(state);
+  if (!plan || !progress) return null;
+  const registered = new Set(
+    selectCurrentExams(state)
+      .filter((item) => item.exam.status === "registered")
+      .map((item) => item.module.id),
+  );
+  const open = progress.openFoundationModules;
+  return {
+    internshipTerm: plan.internshipTerm,
+    internshipShift: plan.internshipShift,
+    graduationTerm: plan.graduationTerm,
+    openFoundation: open,
+    registeredNow: open.filter((module) => registered.has(module.id)),
+    later: open
+      .filter((module) => !registered.has(module.id))
+      .flatMap((module) => {
+        const term = plan.modules.find(
+          (item) => item.moduleId === module.id,
+        )?.term;
+        return term ? [{ module, term }] : [];
+      }),
+  };
+}
+
+function rulesById(state: DemoState): Record<string, Rule> {
+  return Object.fromEntries(
+    (state.resources.rules.data?.rules ?? []).map((rule) => [rule.id, rule]),
+  );
+}
+
 /** Stable snapshots for React's external-store subscription, scoped to each immutable store state. */
 function memoize<T>(selector: (state: DemoState) => T) {
   const cache = new WeakMap<DemoState, { value: T }>();
@@ -103,3 +282,10 @@ export const selectDeadlines = memoize(deadlines);
 export const selectNotifications = memoize(notifications);
 export const selectProgress = memoize(progress);
 export const selectPlan = memoize(plan);
+export const selectBasePlan = memoize(basePlan);
+export const selectCurrentExams = memoize(currentExams);
+export const selectNextDeadline = memoize(nextDeadline);
+export const selectImportantDecisions = memoize(importantDecisions);
+export const selectRecentGrades = memoize(recentGrades);
+export const selectMilestone = memoize(milestone);
+export const selectRulesById = memoize(rulesById);
