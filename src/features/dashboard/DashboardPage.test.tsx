@@ -185,3 +185,31 @@ describe("Übersicht (KONZEPT §8 S1, §10.4)", () => {
     ).toBeInTheDocument();
   });
 });
+
+describe("Übersicht (P3-06 review)", () => {
+  it("names the calculation popover after its title", () => {
+    renderOverview();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Wie wird das berechnet?" }),
+    );
+    expect(
+      screen.getByRole("dialog", { name: "So rechnet StudiCompass" }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows Moodle progress as loading, not as unavailable, while Moodle loads", () => {
+    // POS is loaded, Moodle has not answered yet (first load).
+    act(() => {
+      demoStore.setState((state) => ({
+        resources: {
+          ...state.resources,
+          moodle: { ...state.resources.moodle, data: null, status: "loading" },
+        },
+      }));
+    });
+    renderOverview();
+    const modules = region("Dieses Semester (WS 2026/27)");
+    expect(modules).toHaveTextContent("Moodle-Fortschritt wird geladen");
+    expect(modules).not.toHaveTextContent("nicht verfügbar");
+  });
+});

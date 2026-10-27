@@ -7,6 +7,7 @@ import {
   RotateCcw,
   TriangleAlert,
 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import {
@@ -106,6 +107,8 @@ function ModuleChip({
 }) {
   const { module, status } = item;
   const { label, Icon, className } = STATUS[status];
+  // Set when a target was chosen: the menu then must not return focus to this (moving) trigger.
+  const moved = useRef(false);
   // Milestones follow from the rules (DR-6) and are not moved by hand.
   const movable =
     simulation && status !== "passed" && !module.isMilestone && canMove;
@@ -157,17 +160,32 @@ function ModuleChip({
                   variant="outline"
                   size="xs"
                   aria-label={`${module.title} verschieben`}
+                  data-move-trigger={module.id}
                   className="max-w-full"
                 >
                   <MoveRight aria-hidden="true" />
                   Verschieben
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
+              <DropdownMenuContent
+                align="start"
+                // After a move the trigger sits in another column; Timeline moves the focus there itself.
+                onCloseAutoFocus={(event) => {
+                  if (!moved.current) return;
+                  moved.current = false;
+                  event.preventDefault();
+                }}
+              >
                 <DropdownMenuLabel>
                   Verschieben nach … (zulässig laut Angebot, DR-4)
                 </DropdownMenuLabel>
-                <MoveTargets targets={moveTargets} onMove={onMove} />
+                <MoveTargets
+                  targets={moveTargets}
+                  onMove={(term) => {
+                    moved.current = true;
+                    onMove(term);
+                  }}
+                />
               </DropdownMenuContent>
             </DropdownMenu>
           )}
@@ -199,6 +217,20 @@ export function Timeline({
   /** DR-10 context: job hours and the rule's source. */
   load: { jobHours: number; citation?: Citation };
 }) {
+  // A moved module re-renders in another semester column, so its old menu trigger is gone. Return the
+  // keyboard focus to the module's new trigger (P3-06 review).
+  const [focusModuleId, setFocusModuleId] = useState<string | null>(null);
+  useEffect(() => {
+    if (!focusModuleId) return;
+    const frame = requestAnimationFrame(() => {
+      document
+        .querySelector<HTMLElement>(`[data-move-trigger="${focusModuleId}"]`)
+        ?.focus();
+      setFocusModuleId(null);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [focusModuleId, terms]);
+
   return (
     <ol className="grid gap-3 xl:auto-cols-[minmax(0,1fr)] xl:grid-flow-col xl:gap-2">
       {terms.map((item) => {
@@ -261,7 +293,10 @@ export function Timeline({
                   simulation={simulation}
                   canMove={canMove(entry.module.id)}
                   moveTargets={() => moveTargets(entry.module.id)}
-                  onMove={(term) => onMove(entry.module.id, term)}
+                  onMove={(term) => {
+                    setFocusModuleId(entry.module.id);
+                    onMove(entry.module.id, term);
+                  }}
                 />
               ))}
             </ul>

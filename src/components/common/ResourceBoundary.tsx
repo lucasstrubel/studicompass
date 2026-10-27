@@ -12,10 +12,13 @@ import { SERVICE_LABELS } from "./labels";
 export function ResourceBoundary({
   services,
   skeleton,
+  header,
   children,
 }: {
   services: ServiceKey[];
   skeleton: ReactNode;
+  /** Shown above skeleton or errors (e.g. the page's h1), because the content brings its own header. */
+  header?: ReactNode;
   children: () => ReactNode;
 }) {
   const resources = useDemoStore((state) => state.resources);
@@ -37,8 +40,20 @@ export function ResourceBoundary({
     />
   ));
 
-  if (missing.some((key) => !failed.includes(key))) return <>{skeleton}</>;
-  if (missing.length > 0) return <div className="space-y-2">{errors}</div>;
+  if (missing.some((key) => !failed.includes(key)))
+    return (
+      <>
+        {header}
+        {skeleton}
+      </>
+    );
+  if (missing.length > 0)
+    return (
+      <>
+        {header}
+        <div className="space-y-2">{errors}</div>
+      </>
+    );
   return (
     <>
       {errors.length > 0 && <div className="mb-3 space-y-2">{errors}</div>}
