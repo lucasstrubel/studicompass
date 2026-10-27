@@ -253,7 +253,7 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch (ursprünglich `feat
 
 ### P4-08 [Codex] Phasen-Review (`--base m3`) + A11y-Durchgang (Tastatur, Fokus, Labels, Kontraste) → `docs/reviews/P4.md`
 - [x] Technische Eigenprüfung gegen `m3`, A11y-Nachweis und behobene Befunde dokumentiert.
-- [ ] Unabhängiger Gegencheck durch einen zweiten Reviewer.
+- [x] Unabhängiger Gegencheck durch einen zweiten Reviewer: Claude Code, 27.10.2026 → [Gegencheck](reviews/P4-P5-gegencheck.md).
 
 **Gate M4 (Mo 02.11., 22:00):** alle Stories mit Priorität Hoch und Mittel umgesetzt · keine offenen Blocker oder Major-Befunde.
 

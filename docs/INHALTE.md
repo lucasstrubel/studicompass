@@ -212,6 +212,13 @@ Demo-Zeitpunkte (Phase 4): n-01: 25.01.2027, 18:00; n-02: 22.01.2027, 14:05; n-0
 | n-03 | Meilenstein | `/verlauf` | Für das Praxissemester im WS 2027/28 fehlen dir noch 7 Module des Grundstudiums; 5 davon sind in diesem Semester angemeldet. | Praxissemester im Winter? Dann müssen Programmieren 2 und Wirtschaftsprivatrecht im Sommer klappen – plus alles aus diesem Semester. |
 | n-04 | Frist | `/fristen` | Die Rückmeldung zum SS 2027 ist bis 15.02. möglich. | Rückmeldung bis 15.02. nicht vergessen – dauert zwei Minuten. |
 
+**Nach einer simulierten Abmeldung** (Gegencheck P4/P5, formuliert von Claude Code, Freigabe durch Lucas mit dem PR): n-01 wechselt, sobald die zugehörige Prüfung abgemeldet ist; n-03 nur, wenn sich Praxissemester oder Abschluss gegenüber dem POS-Stand verschieben (Statistik ja, Marketing nein).
+
+| ID | Sachlich | Direkt |
+|---|---|---|
+| n-01 | Abmeldung simuliert. Deine Übersicht und dein Studienverlauf zeigen bereits die aktualisierte Prognose. | Abmeldung simuliert – Übersicht und Studienverlauf zeigen schon deine neue Prognose. |
+| n-03 | Dein Studienstand hat sich durch die Simulation geändert. Prüfe die aktualisierte Prognose und die noch offenen Module im Studienverlauf. | Durch die Simulation verschiebt sich dein Plan. Schau dir die neue Prognose und die offenen Module im Studienverlauf an. |
+
 ### Hinweise im Folgen-Check (formuliert von Claude Code in P3-03, von Lucas am 27.10.2026 freigegeben)
 
 Der Folgen-Check zeigt oben einen Hinweis im gewählten Stil. Statistik übernimmt den Text von n-01. Prüfungen ohne Sonderregel (Angebot jedes Semester) bekommen bewusst keinen Alarm (KONZEPT §1, Szenario D).
