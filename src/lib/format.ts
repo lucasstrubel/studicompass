@@ -95,3 +95,11 @@ const gradeFormat = new Intl.NumberFormat("de-DE", {
 export function formatGrade(grade: number): string {
   return gradeFormat.format(grade);
 }
+
+/** Greeting for the time of day in German time, e.g. "Guten Abend" at 19:30. */
+export function greeting(date: Date): string {
+  const hour = inDemoTimeZone(date).getHours();
+  if (hour < 11) return "Guten Morgen";
+  if (hour < 18) return "Guten Tag";
+  return "Guten Abend";
+}

@@ -1,4 +1,5 @@
 import type { Channel, TrafficLight } from "@/domain/types";
+import type { ServiceKey } from "@/services/types";
 
 /** UI names of the traffic-light status (KONZEPT §14). */
 export const STATUS_LABELS: Record<TrafficLight, string> = {
@@ -13,4 +14,11 @@ export const CHANNEL_LABELS: Record<Channel, string> = {
   moodle: "Moodle",
   mail: "Mail",
   website: "Website",
+};
+
+/** UI names of the services behind the store (four channels plus rules and assistant). */
+export const SERVICE_LABELS: Record<ServiceKey, string> = {
+  ...CHANNEL_LABELS,
+  rules: "Regelwerk",
+  assistant: "Assistent",
 };
