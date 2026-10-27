@@ -1,6 +1,7 @@
 import type {
   AssistantEntry,
   AssistantFallback,
+  DecisionHint,
   Deadline,
   ExamRecord,
   InboxItem,
@@ -33,6 +34,7 @@ export interface WebsiteData extends ChannelContent {
 export interface RulesData {
   rules: Rule[];
   offices: Office[];
+  decisionHints: DecisionHint[];
 }
 export interface AssistantData {
   catalog: AssistantEntry[];

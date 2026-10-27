@@ -5,6 +5,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import type { RouteHandle } from "@/components/layout/route-handle";
 import { DashboardPage } from "@/features/dashboard/DashboardPage";
 import { DashboardRail } from "@/features/dashboard/DashboardRail";
+import { DecisionPage } from "@/features/decision/DecisionPage";
 import { OnboardingPage } from "@/features/onboarding/OnboardingPage";
 
 type PageRoute = RouteObject & { handle: RouteHandle };
@@ -30,7 +31,11 @@ const shellRoutes: PageRoute[] = [
   { path: "postfach", ...titleOnly("Postfach") },
   { path: "assistent", ...titleOnly("Assistent") },
   { path: "fristen", ...titleOnly("Fristen") },
-  { path: "entscheidung/:examId", ...titleOnly("Folgen-Check") },
+  {
+    path: "entscheidung/:examId",
+    Component: DecisionPage,
+    handle: { title: "Folgen-Check", ownHeader: true },
+  },
   { path: "einstellungen", ...titleOnly("Einstellungen") },
   {
     path: "*",
