@@ -195,9 +195,9 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch (ursprünglich `feat
 - **AK:** Tabelle zeigt exakt die Werte aus §10.4; nach simulierter Abmeldung zeigt die Übersicht Kritisch, Praxissemester SS 2028, Abschluss SS 2029; „Rückgängig“ stellt alles wieder her; Marketing (Szenario D) zeigt keine Meilenstein-Verschiebung, aber den Belastungshinweis; Kernflow per Tastatur bedienbar.
 
 ### P3-04 [Claude] Studienverlauf (S2) – US-04, US-09, US-10
-- [ ] Zeitleiste mit 7 Semestern, Meilensteinen, Abschlussprognose, Regeln mit Quellen
-- [ ] Was-wäre-wenn *(Mittel)*: „Verschieben nach …“ nur in zulässige Semester; Neuberechnung; Kennzeichnung; „Simulation verwerfen“
-- Hinweis: vor dem Start den Kürzungs-Checkpoint „Start P3-04“ prüfen (unter der Kürzungsliste).
+- [x] Zeitleiste mit 7 Semestern, Meilensteinen, Abschlussprognose, Regeln mit Quellen
+- [x] Was-wäre-wenn *(Mittel)*: „Verschieben nach …“ nur in zulässige Semester; Neuberechnung; Kennzeichnung; „Simulation verwerfen“
+- Hinweis: vor dem Start den Kürzungs-Checkpoint „Start P3-04“ prüfen (unter der Kürzungsliste). Geprüft am 27.10.: Soll Sa 31.10., 12:00 nicht erreicht – nichts gestrichen.
 - **AK:** Werte konsistent mit Folgen-Check und Übersicht; Simulation verändert keine echten Daten.
 
 ### P3-05 [Claude, Mittel] Playwright-Smoke-Test und Screenshots

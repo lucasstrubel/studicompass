@@ -7,6 +7,7 @@ import type {
   InboxItem,
   Module,
   MoodleProgress,
+  PlanProjection,
   Rule,
   Term,
 } from "@/domain/types";
@@ -390,3 +391,107 @@ export function selectUndoableExamId(state: DemoState): string | null {
   ];
   return changed.length === 1 ? changed[0] : null;
 }
+
+export type TimelineStatus = "passed" | "registered" | "retake" | "planned";
+
+export interface TimelineModule {
+  module: Module;
+  status: TimelineStatus;
+  grade?: number;
+  /** Registered exam of the current term; links to the Folgen-Check. */
+  examId?: string;
+  /** Term in the real plan when the simulation moved this module. */
+  movedFrom: Term | null;
+}
+
+export interface TimelineTerm {
+  term: Term;
+  semester: number;
+  ects: number;
+  earnedEcts: number;
+  modules: TimelineModule[];
+  milestones: ("foundationEnd" | "internship" | "project" | "thesis")[];
+}
+
+export interface Timeline {
+  terms: TimelineTerm[];
+  /** Plan shown: the what-if projection while simulating, the real plan otherwise. */
+  plan: PlanProjection;
+  basePlan: PlanProjection;
+  simulating: boolean;
+}
+
+/** Studienverlauf (KONZEPT §8 S2): semesters with modules, status, ECTS and milestone markers. */
+function timeline(state: DemoState): Timeline | null {
+  const academic = selectAcademicState(state);
+  const plan = selectPlan(state);
+  const basePlan = selectBasePlan(state);
+  if (!academic || !plan || !basePlan) return null;
+  const { modules, exams, currentTerm, student } = academic;
+  const baseTerms = new Map(
+    basePlan.modules.map((item) => [item.moduleId, item.term]),
+  );
+  const statusOf = (
+    module: Module,
+  ): Omit<TimelineModule, "module" | "movedFrom"> => {
+    const history = exams.filter((exam) => exam.moduleId === module.id);
+    const passed = history.find((exam) => exam.status === "passed");
+    if (passed) return { status: "passed", grade: passed.grade };
+    const registered = history.find(
+      (exam) =>
+        exam.status === "registered" && compare(exam.term, currentTerm) === 0,
+    );
+    if (registered) return { status: "registered", examId: registered.id };
+    return { status: history.length > 0 ? "retake" : "planned" };
+  };
+  const milestoneTerm = (kind: "internship" | "project" | "thesis") => {
+    const module = modules.find((item) => item.isMilestone === kind);
+    return module
+      ? plan.modules.find((item) => item.moduleId === module.id)?.term
+      : undefined;
+  };
+  const markers: [
+    TimelineTerm["milestones"][number],
+    Term | null | undefined,
+  ][] = [
+    ["foundationEnd", plan.foundationCompletionTerm],
+    ["internship", plan.internshipTerm],
+    ["project", milestoneTerm("project")],
+    ["thesis", milestoneTerm("thesis")],
+  ];
+
+  const terms: TimelineTerm[] = plan.terms.map((item) => {
+    const inTerm = plan.modules
+      .filter((entry) => compare(entry.term, item.term) === 0)
+      .flatMap((entry) => {
+        const module = modules.find(
+          (candidate) => candidate.id === entry.moduleId,
+        );
+        if (!module) return [];
+        const baseTerm = baseTerms.get(module.id);
+        return [
+          {
+            module,
+            ...statusOf(module),
+            movedFrom:
+              baseTerm && compare(baseTerm, entry.term) !== 0 ? baseTerm : null,
+          },
+        ];
+      });
+    return {
+      term: item.term,
+      semester: semesterNumber(item.term, student.startTerm),
+      ects: item.ects,
+      earnedEcts: inTerm
+        .filter((entry) => entry.status === "passed")
+        .reduce((sum, entry) => sum + entry.module.ects, 0),
+      modules: inTerm,
+      milestones: markers
+        .filter(([, term]) => term && compare(term, item.term) === 0)
+        .map(([kind]) => kind),
+    };
+  });
+  return { terms, plan, basePlan, simulating: state.whatIf.length > 0 };
+}
+
+export const selectTimeline = memoize(timeline);

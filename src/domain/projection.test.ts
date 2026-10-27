@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { academicFixture } from "@/test/academic-fixture";
 import { compareDecision } from "./decision";
-import { projectPlan } from "./projection";
+import { allowedMoveTerms, projectPlan } from "./projection";
 import { compare } from "./terms";
 import type { PlanOverride } from "./types";
 
@@ -238,5 +238,34 @@ describe("validation fixes", () => {
       expect(outcome.consequences.some((item) => item.ruleId === "DR-10")).toBe(
         false,
       );
+  });
+});
+
+describe("allowedMoveTerms (DR-4, US-10)", () => {
+  it("offers only winter terms after the current one for Statistik", () => {
+    expect(allowedMoveTerms(academicFixture(), "m-stat", 2)).toEqual([
+      { season: "WS", year: 2027 },
+      { season: "WS", year: 2028 },
+    ]);
+  });
+
+  it("offers every term for Marketing and nothing before the curriculum slot", () => {
+    expect(allowedMoveTerms(academicFixture(), "m-mkt", 3)).toEqual([
+      { season: "SS", year: 2027 },
+      { season: "WS", year: 2027 },
+      { season: "SS", year: 2028 },
+    ]);
+    expect(allowedMoveTerms(academicFixture(), "m-itsec", 1)).toEqual([
+      { season: "SS", year: 2028 },
+    ]);
+  });
+
+  it("offers nothing for passed modules, and every offered term passes projectPlan", () => {
+    const state = academicFixture();
+    expect(allowedMoveTerms(state, "m-gwi")).toEqual([]);
+    for (const term of allowedMoveTerms(state, "m-recht"))
+      expect(() =>
+        projectPlan(state, [{ moduleId: "m-recht", action: "move", term }]),
+      ).not.toThrow();
   });
 });
