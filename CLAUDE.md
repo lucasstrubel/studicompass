@@ -129,6 +129,12 @@ CLI `codex` (npm-Paket `@openai/codex`, angemeldet mit ChatGPT), aufgerufen übe
 
 Persönliche Vorgaben (Modell, Aufwand, Windows-Sandbox) gehören in die Benutzerkonfiguration, nicht ins Repository.
 
+## Externe Skills (.claude/skills/)
+`break-ui`, `review-animations` und `ask-sonner` stammen aus `emilkowalski/skills` (MIT, Stand 2d22863) und sind Prüfhilfen. Bei Widerspruch gelten KONZEPT §12 und die Regeln oben. Befunde meldest du als Vorschlag und setzt sie nicht eigenmächtig um. Neue Ideen kommen in den Ideenparkplatz (KONZEPT §5.2).
+- `review-animations`: Maßstab ist KONZEPT §12.6 (150–200 ms ease-out für Zustandswechsel, ruhige Skeletons). `prefers-reduced-motion` schaltet Animationen ab, auch wenn der Skill „sanfter statt aus“ empfiehlt. Eigene Kurven (`cubic-bezier`) oder längere Dauern nur nach Rücksprache.
+- `break-ui`: Worst-Case-Daten und Umschalter nur in der Entwickler-Route `/_ui` und nie in `src/data/` oder `docs/INHALTE.md`. Die Worst-Case-Werte sind realistisch und deutsch (lange Modulnamen, Umlaute, 0 und 1 Einträge). Die Fixes halten sich an Tokens und Typo-Klassen.
+- `ask-sonner`: Der Toaster in `src/components/ui/sonner.tsx` bekommt das Theme von `useTheme()` und die Farben über Tokens. Kein `richColors` und keine eigenen Statusfarben.
+
 ## Git
 - Branch pro Task: `feat/<task-id>-<kurzname>` (Delegation: `codex/<task-id>`); Conventional Commits (`feat:`, `fix:`, `test:`, `docs:`, `chore:`).
 - Nie direkt auf `main` – einzige Ausnahme war der Kit-Commit mit Tag `m0` (P0-05).
