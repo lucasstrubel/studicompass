@@ -12,6 +12,7 @@ beforeEach(async () => {
   const ready = demoStore.getState().resetDemo();
   await vi.advanceTimersByTimeAsync(LATENCY_MS);
   await ready;
+  demoStore.getState().completeOnboarding();
 });
 afterEach(() => {
   FLAGS.simulateErrors = false;
@@ -157,6 +158,7 @@ describe("Übersicht (KONZEPT §8 S1, §10.4)", () => {
   it("shows skeletons while loading and an error with retry per channel", async () => {
     FLAGS.simulateErrors = true;
     const reload = demoStore.getState().resetDemo();
+    demoStore.getState().completeOnboarding();
     renderOverview();
     expect(screen.getAllByRole("status").length).toBeGreaterThan(0);
 

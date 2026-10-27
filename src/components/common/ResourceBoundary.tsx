@@ -3,6 +3,7 @@ import { useDemoStore } from "@/store/use-demo-store";
 import type { ServiceKey } from "@/services/types";
 import { ErrorState } from "./ErrorState";
 import { SERVICE_LABELS } from "./labels";
+import { EmptyState } from "./EmptyState";
 
 /**
  * Loading and error state of a data area (KONZEPT §8, Q-2): the skeleton while one of the services has no
@@ -23,8 +24,12 @@ export function ResourceBoundary({
 }) {
   const resources = useDemoStore((state) => state.resources);
   const retry = useDemoStore((state) => state.retry);
+  const connected = useDemoStore((state) => state.connectedChannels);
   const failed = services.filter((key) => resources[key].status === "error");
   const missing = services.filter((key) => !resources[key].data);
+  const disconnected = missing.filter(
+    (key) => key !== "rules" && key !== "assistant" && !connected[key],
+  );
 
   const errors = failed.map((key) => (
     <ErrorState
@@ -40,7 +45,9 @@ export function ResourceBoundary({
     />
   ));
 
-  if (missing.some((key) => !failed.includes(key)))
+  if (
+    missing.some((key) => !failed.includes(key) && !disconnected.includes(key))
+  )
     return (
       <>
         {header}
@@ -52,6 +59,13 @@ export function ResourceBoundary({
       <>
         {header}
         <div className="space-y-2">{errors}</div>
+        {disconnected.map((key) => (
+          <EmptyState
+            key={key}
+            title={`${SERVICE_LABELS[key]} ist getrennt`}
+            description="Verbinde den Kanal in den Einstellungen, um seine Beispieldaten zu laden."
+          />
+        ))}
       </>
     );
   return (

@@ -4,6 +4,9 @@ import { expect, test, type Page } from "@playwright/test";
 
 async function openOverview(page: Page) {
   await page.goto("/");
+  await page
+    .getByRole("button", { name: "Demo ohne Einrichtung starten" })
+    .click();
   await expect(
     page.getByRole("heading", { level: 1, name: "Guten Abend, Niklas" }),
   ).toBeVisible();
@@ -79,11 +82,23 @@ test("runs the same flow by keyboard only", async ({ page, isMobile }) => {
       .getByRole("region", { name: "Dein Studienstand" })
       .getByText("Kritisch"),
   ).toBeVisible();
+  await focusByTab("Rückgängig");
+  await page.keyboard.press("Enter");
+  await expect(
+    page.getByRole("region", { name: "Dein Studienstand" }).getByText("Knapp"),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("region", { name: "Dein Studienstand" }),
+  ).toContainText("78 von 90");
 });
 
 test("keeps the page within the viewport width", async ({ page }) => {
   for (const path of ["/", "/entscheidung/e-stat-ws26", "/verlauf"]) {
     await page.goto(path);
+    if (path === "/")
+      await page
+        .getByRole("button", { name: "Demo ohne Einrichtung starten" })
+        .click();
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     // The h1 shows while loading; measure only once every skeleton has given way to the content.
     await expect(page.locator("[data-slot=skeleton]")).toHaveCount(0);

@@ -141,9 +141,12 @@ export interface DecisionHint {
 }
 export interface Notification {
   id: string;
+  createdAt: string;
   type: "decision" | "inbox" | "milestone" | "deadline";
   href: string;
   text: Record<HintTone, string>;
+  /** Text once the simulation has settled the notification: its exam withdrawn or its milestones moved. */
+  simulatedText?: Record<HintTone, string>;
   read: boolean;
   ruleIds: string[];
 }

@@ -191,7 +191,7 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch (ursprünglich `feat
 ### P3-03 [Claude] Folgen-Check (S4) inkl. simulierter Abmeldung – US-06, US-07, US-08
 - [x] Kopf, Ziel-Zeile, Vergleichstabelle (mobil: Umschalter), „Warum?“ mit Quelle, Hilfsangebote, Fußzeile
 - [x] Beide Aktionen gleich gewichtet; Bestätigungsdialog; Toast mit „Rückgängig“ (8 s)
-- Hinweis: Hinweistexte für die übrigen angemeldeten Prüfungen in INHALTE §9 ergänzt (Vorschlag, Freigabe durch Lucas im PR); `DATA_VERSION` 2.
+- Hinweis: Hinweistexte für die übrigen angemeldeten Prüfungen in INHALTE §9 ergänzt, von Lucas am 27.10. freigegeben; `DATA_VERSION` 2.
 - **AK:** Tabelle zeigt exakt die Werte aus §10.4; nach simulierter Abmeldung zeigt die Übersicht Kritisch, Praxissemester SS 2028, Abschluss SS 2029; „Rückgängig“ stellt alles wieder her; Marketing (Szenario D) zeigt keine Meilenstein-Verschiebung, aber den Belastungshinweis; Kernflow per Tastatur bedienbar.
 
 ### P3-04 [Claude] Studienverlauf (S2) – US-04, US-09, US-10
@@ -213,50 +213,72 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch (ursprünglich `feat
 - [ ] 1–2 Kommiliton:innen klicken den Durchstich; auffällige Stolperstellen notieren
 
 **Gate M3 (So 01.11., 14:00):** Hero-Flow end-to-end deployed und auf Desktop und Smartphone bedienbar.
+- [x] Erfüllt am 27.10.2026 (vor dem Soll), Tag `m3` auf `629a859` nach OK von Lucas. Nachweis in `docs/reviews/P3.md` („Gate M3“). P3-07 (Flur-Test) führt Lucas selbst durch.
 
 ---
 
 ## Phase 4 – Ergänzung (So 01.11. – Mo 02.11.)
 
+**Umsetzungsauftrag von Lucas (27.10.2026):** Codex setzt P4-01 bis P4-08 vollständig einschließlich Fristen, ICS und Tour um. Die bisherigen Owner bleiben als ursprüngliche Planung stehen. Umsetzung und technische Eigenprüfung: `docs/reviews/P4-implementation.md`, Phasenbefunde: `docs/reviews/P4.md`. Kalenderimport in einer echten Kalender-App und unabhängiger Gegencheck bleiben separat offen; kein Merge oder Tag ohne Lucas' OK.
+
 ### P4-01 [Claude] Assistent (S5) – US-12, US-13, US-14
-- [ ] Chat-Oberfläche, Vorschlagsfragen, Zuordnung (KONZEPT §11), Antwortkarte, Resolver für „Für dich heißt das“, Fallback mit „Anfrage vorbereiten“, Kontext-Chip
+- [x] Chat-Oberfläche, Vorschlagsfragen, Zuordnung (KONZEPT §11), Antwortkarte, Resolver für „Für dich heißt das“, Fallback mit „Anfrage vorbereiten“, Kontext-Chip
 - **AK:** alle 8 Katalogfragen und der Fallback F-01 funktionieren per Klick und per Freitext; jede Antwort mit Quelle und zuständiger Stelle (Q-3).
 
 ### P4-02 [Claude] Postfach (S6) – US-15, US-16
-- [ ] Filter, „Nur ungelesene“, „Für dich wichtig“ mit Begründung, Detail-Sheet, Sync-Status je Kanal
+- [x] Filter, „Nur ungelesene“, „Für dich wichtig“ mit Begründung, Detail-Sheet, Sync-Status je Kanal
 - **AK:** Deep-Link `/postfach?eintrag=i-02` öffnet das Detail; gelesen-Status bleibt nach Neuladen erhalten.
 
 ### P4-03 [Claude] Module & Noten (S3) inkl. Detail
+- [x] Kennzahlen, Semesterliste, Moduldetail, Quellen und Kontextlinks umgesetzt und getestet.
 - **AK:** Kennzahlen 48 ECTS, Schnitt 2,4, 8 bestandene Module; Detail verlinkt Folgen-Check und Assistent mit Kontext.
 
 ### P4-04 [Codex] Fristen (S7) inkl. ICS-Export *(Niedrig)*
+- [x] Fristenliste, relative Gruppierung sowie Einzel- und Gesamtexport umgesetzt; ICS-Syntax und Browser-Download geprüft.
+- [ ] Tatsächlicher Import in ein Kalenderprogramm (kein Kalenderprogramm in der verfügbaren Windows-App-Liste gefunden).
 - Brief: nur `src/features/deadlines/` und `src/lib/ics.ts`; Daten über den Store.
 - **AK:** Gruppierung relativ zu `DEMO_NOW`; ICS-Datei lässt sich in einen Kalender importieren.
 
 ### P4-05 [Claude] Benachrichtigungen (S8) und Einstellungen (S9) – US-18, US-19
+- [x] Glocken-Sheet, Hinweis-Stil, Darstellung, Benachrichtigungstypen, simulierte Kanalverbindungen und Demo-Reset umgesetzt.
 - **AK:** Hinweis-Stil wirkt auf Übersicht, Folgen-Check und Benachrichtigungen; „Demo zurücksetzen“ funktioniert.
 
 ### P4-06 [Claude] Onboarding (S0) *(Mittel)*, Produkt-Tour *(Niedrig)* – US-01, US-02
+- [x] Vier Schritte, Erststart, Überspringen, persönliche Einstellungen und optionale dreistufige Tour umgesetzt.
 - **AK:** Onboarding vollständig per Tastatur; überspringbar; Ziel und Nebenjob wirken auf Folgen-Check und Studienverlauf.
 
 ### P4-07 [Claude] Responsive-, Dark-Mode- und Textdurchgang aller Screens
+- [x] Breitenprüfung, Sichtprüfung und Glossardurchgang; Screenshot-Skript auf alle Phase-4-Seiten erweitert.
 - **AK:** keine horizontale Scrollleiste von 360 bis 1920 px; alle Texte gegen das Glossar geprüft; keine Platzhalter.
 
 ### P4-08 [Codex] Phasen-Review (`--base m3`) + A11y-Durchgang (Tastatur, Fokus, Labels, Kontraste) → `docs/reviews/P4.md`
+- [x] Technische Eigenprüfung gegen `m3`, A11y-Nachweis und behobene Befunde dokumentiert.
+- [x] Unabhängiger Gegencheck durch einen zweiten Reviewer: Claude Code, 27.10.2026 → [Gegencheck](reviews/P4-P5-gegencheck.md).
 
 **Gate M4 (Mo 02.11., 22:00):** alle Stories mit Priorität Hoch und Mittel umgesetzt · keine offenen Blocker oder Major-Befunde.
+
+Stand der Umsetzung: Hoch/Mittel implementiert, technische Prüfungen dokumentiert. Formale Abnahme einschließlich unabhängigem Gegencheck steht aus; `m4` wurde nicht gesetzt.
 
 ---
 
 ## Phase 5 – Test & Iteration (Di 03.11. – Mi 04.11.) – Details in `docs/TESTPLAN.md`
 
+**Umsetzungsauftrag von Lucas (27.10.2026):** Codex übernimmt die Agenteninspektion, behebt belegte Befunde und bereitet das Testpaket vor. Eigenprüfung und Walkthrough: [P5.md](reviews/P5.md). Dies ersetzt keine Evaluation durch unabhängige Teammitglieder oder Studierende. Der vorhandene uncommittete Phase-4-Stand bleibt erhalten; M4-Abnahme und unabhängiger Gegencheck sind weiter offen.
+
 - [ ] **P5-01 [Team]** Heuristische Evaluation und Cognitive Walkthrough des Hero-Flows (Di vormittags)
+  - [x] Vorgelagerte Agenteninspektion aller Screens und Walkthrough dokumentiert; zwei belegte Befunde priorisiert.
 - [ ] **P5-02 [Team]** Usability-Test mit Thinking Aloud, 3–5 Personen aus dem Persona-Segment (Di/Mi)
+  - [x] Moderationsleitfaden, Aufgabenblatt ohne Lösungen und leere Protokolle P1–P5 vorbereitet: [Testpaket](TESTPLAN.md).
 - [ ] **P5-03 [Team]** Auswertung: Befunde mit Schweregrad und betroffenem Prinzip, Top 5 festlegen
+  - [x] Vorläufige Priorisierung der Inspektionsbefunde; [Auswertungsvorlage](evaluation/P5-auswertung.md) mit Schweregrad, beobachteter Häufigkeit und Präsentationsstruktur vorbereitet. Nutzerhäufigkeit nicht erhoben.
 - [ ] **P5-04 [Claude]** Top 5 umsetzen; **[Codex]** Review
+  - [x] Zwei belegte Inspektionsbefunde umgesetzt und technisch nachgeprüft; endgültige Top-Befunde nach Nutzertests und unabhängiges Review bleiben offen.
 - [ ] **P5-05 [Team]** Ergebnisse für die Präsentation festhalten: drei Kernbefunde und was daraufhin geändert wurde
+  - [x] Vorlage für Beobachtung, Änderung und Nachprüfung vorbereitet; noch keine Nutzertestergebnisse eingetragen.
 
 **Gate M5 (Mi 04.11. abends):** Top-Befunde behoben · Testergebnisse dokumentiert.
+
+Stand: Agenteninspektion, technische Iteration und Testvorbereitung erledigt. Echte Sitzungen, nutzerbasierte Endauswertung und Präsentationsergebnisse stehen aus. **M5 bleibt offen; kein Tag gesetzt.**
 
 ---
 

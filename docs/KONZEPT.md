@@ -167,7 +167,7 @@ Ehrliche Einschränkung zu P4: Echte Sonderfälle stehen per Definition oft nich
 | Studienverlauf | `/verlauf` | ja |
 | Module & Noten | `/module`, `/module/:moduleId` | ja |
 | Postfach | `/postfach` (Detail über `?eintrag=<id>`) | ja |
-| Assistent | `/assistent` (optional `?frage=<id>`, `?modul=<id>`) | ja |
+| Assistent | `/assistent` (optional `?frage=<id oder Freitext>`, `?module=<id>`; bisheriges `?modul=` bleibt kompatibel) | ja |
 | Fristen | `/fristen` | ja |
 | Folgen-Check | `/entscheidung/:examId` | nein (Einstiege siehe unten) |
 | Einstellungen | `/einstellungen` | Hamburger-Menü |
@@ -463,6 +463,8 @@ Vereinfachung, die im UI benannt wird: Die Prognose verteilt Module nicht indivi
 - Daten fließen Services → Store → Selektoren (Domänenfunktionen) → UI.
 - Simulierte Aktionen speichern vorher einen Snapshot; „Rückgängig“ stellt ihn wieder her.
 - Persistenz mit Versionsnummer; ändert sich die Datenversion, wird der gespeicherte Demo-Stand verworfen. „Demo zurücksetzen“ stellt den Ausgangszustand her.
+- Phase 4 (von Lucas bestätigt): Kanalverbindungen und Benachrichtigungstypen werden lokal gespeichert. Trennen stoppt weitere Aktualisierungen und behält bereits geladene Daten im Sitzungsspeicher; nach Neuladen lädt ein getrennter Kanal erst beim Wiederverbinden. Benachrichtigungstypen filtern das Glocken-Sheet, die wichtigen Hinweise auf der Übersicht bleiben erhalten.
+- Datenversion 3 ergänzt Benachrichtigungszeitpunkte und Einstellungen additiv; die Migration aus Version 2 erhält vorhandene Einstellungen und simulierte Entscheidungen. Ältere Datenversionen werden weiterhin zurückgesetzt. Nur ein erster Aufruf der Übersicht ohne abgeschlossenes Onboarding führt nach `/start`; andere Deep-Links bleiben erreichbar. Überspringen schließt die Einrichtung mit Standardwerten ab.
 
 ---
 
@@ -470,7 +472,7 @@ Vereinfachung, die im UI benannt wird: Die Prognose verteilt Module nicht indivi
 
 **Zuordnung**
 1. Klick auf eine Vorschlagsfrage → feste Antwort-ID.
-2. Freitext → normalisieren (Kleinschreibung, ä→ae, ö→oe, ü→ue, ß→ss, Satzzeichen entfernen) → Punktzahl = Treffer in den Schlüsselwörtern eines Eintrags (inkl. Synonymen) → bester Eintrag ab Schwellwert 2 → sonst Fallback.
+2. Freitext → normalisieren (Kleinschreibung, ä→ae, ö→oe, ü→ue, ß→ss, Satzzeichen entfernen). Sonderfälle (Ausland, Auslandssemester, Sonderfall, Härtefall) führen zuerst zum Fallback. Exakte normalisierte Katalogfragen erhalten direkt ihre Antwort-ID. Sonst: Punktzahl = Treffer verschiedener Schlüsselwörter bzw. Wortgruppen an Wortgrenzen (inkl. Synonymen) → eindeutig bester Eintrag ab Schwellwert 2 → bei Gleichstand oder weniger Treffern Fallback. Präzisierung von Lucas für Phase 4 bestätigt.
 
 **Antwortkarte (immer diese Reihenfolge)**
 1. Kurzantwort (1–2 Sätze, Kernaussage fett)

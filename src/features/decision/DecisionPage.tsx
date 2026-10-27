@@ -163,7 +163,7 @@ function HelpOffers({ exam, module }: { exam: ExamRecord; module: Module }) {
         )}
         <li>
           <Link
-            to={`/assistent?modul=${module.id}`}
+            to={`/assistent?module=${module.id}`}
             className="flex h-full flex-col gap-1 rounded-xl border bg-card p-3 hover:bg-muted"
           >
             <span className="flex items-center gap-2 text-body font-semibold">
@@ -278,6 +278,7 @@ function ReadyView({
   updatedAt: string | null;
 }) {
   const { exam, module, outcomes } = view;
+  const goalRegularTime = useDemoStore((state) => state.goalRegularTime);
   const moduleRules = rulesForModule(module, rules);
   const withdraw = outcomes.find((outcome) => outcome.option === "withdraw");
   const fail = outcomes.find((outcome) => outcome.option === "attendFail");
@@ -305,8 +306,9 @@ function ReadyView({
         <p className="flex flex-wrap items-center gap-2 rounded-xl border bg-card p-3 text-body">
           <Target className="size-4 shrink-0" aria-hidden="true" />
           <span>
-            Dein Ziel: Abschluss in Regelstudienzeit (
-            {format(view.regularGraduationTerm)})
+            {goalRegularTime
+              ? `Dein Ziel: Abschluss in Regelstudienzeit (${format(view.regularGraduationTerm)})`
+              : "Dein Ziel: Studium im eigenen Tempo"}
           </span>
           {baseline?.graduationTerm && (
             <span className="text-muted-foreground">

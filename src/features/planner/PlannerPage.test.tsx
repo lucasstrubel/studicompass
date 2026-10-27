@@ -13,6 +13,7 @@ beforeEach(async () => {
   const ready = demoStore.getState().resetDemo();
   await vi.advanceTimersByTimeAsync(LATENCY_MS);
   await ready;
+  demoStore.getState().completeOnboarding();
   // user-event drives menus and focus; the data is loaded, so real timers from here on.
   vi.useRealTimers();
 });

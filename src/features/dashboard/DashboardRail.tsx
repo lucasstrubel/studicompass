@@ -28,9 +28,9 @@ import {
   selectRulesById,
 } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
+import { CHANNELS } from "@/services/types";
 
 const SUGGESTED_QUESTIONS = ["A-01", "A-03"];
-const CHANNELS = ["pos", "moodle", "mail", "website"] as const;
 
 function capitalize(text: string) {
   return text.charAt(0).toUpperCase() + text.slice(1);
@@ -203,7 +203,8 @@ function AssistantTeaser() {
         onSubmit={(event) => {
           event.preventDefault();
           const text = question.trim();
-          if (text) void navigate("/assistent", { state: { question: text } });
+          if (text)
+            void navigate(`/assistent?frage=${encodeURIComponent(text)}`);
         }}
       >
         <label htmlFor="assistant-question" className="sr-only">

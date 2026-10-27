@@ -2,6 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { demoStore } from "@/store/demo-store";
 import { AppProviders } from "@/app/providers";
 import { routes } from "@/app/router";
 import { NAV_ITEMS, SETTINGS_ITEM } from "@/components/layout/navigation";
@@ -13,6 +14,7 @@ afterEach(() => {
 });
 
 function renderApp(path: string) {
+  demoStore.getState().completeOnboarding();
   const router = createMemoryRouter(routes, { initialEntries: [path] });
   render(
     <AppProviders>
@@ -74,8 +76,8 @@ describe("routes (KONZEPT §7)", () => {
 
     expect(screen.queryByTestId("sidebar")).not.toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Demo ohne Einrichtung starten" }),
-    ).toHaveAttribute("href", "/");
+      screen.getByRole("button", { name: "Demo ohne Einrichtung starten" }),
+    ).toBeInTheDocument();
   });
 
   it("keeps the developer route /_ui outside the shell", async () => {
@@ -204,13 +206,13 @@ describe("top bar", () => {
     renderApp("/");
 
     await user.click(
-      screen.getByRole("button", { name: "Benachrichtigungen" }),
+      screen.getByRole("button", { name: /^Benachrichtigungen/ }),
     );
     const sheet = within(
       screen.getByRole("dialog", { name: "Benachrichtigungen" }),
     );
     expect(
-      sheet.getByText("Du hast keine neuen Benachrichtigungen."),
+      await sheet.findByRole("button", { name: "Alle als gelesen markieren" }),
     ).toBeInTheDocument();
 
     await user.click(sheet.getByRole("button", { name: "Schließen" }));

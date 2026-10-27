@@ -203,6 +203,8 @@ DR-3 und DR-10 sind Gestaltungsregeln von StudiCompass, keine SPO-Regeln (Quelle
 
 ## 9 Benachrichtigungen (je Hinweis-Stil)
 
+Demo-Zeitpunkte (Phase 4): n-01: 25.01.2027, 18:00; n-02: 22.01.2027, 14:05; n-03: 22.01.2027, 09:30; n-04: 20.01.2027, 08:00 (Europe/Berlin). Nur Zeitpunkte ergänzt; die fachlichen Beispieltexte bleiben unverändert.
+
 | ID | Typ | Ziel | Sachlich | Direkt |
 |---|---|---|---|---|
 | n-01 | Entscheidung | `/entscheidung/e-stat-ws26` | Die Abmeldefrist für Statistik endet morgen um 23:59 Uhr. Statistik wird nur im Wintersemester angeboten; eine Abmeldung kann den Beginn deines Praxissemesters verschieben. | Morgen um 23:59 ist Schluss. Meldest du dich von Statistik ab, gibt es das Modul erst im nächsten Winter – und dein Praxissemester rutscht voraussichtlich ein Semester nach hinten. |
@@ -210,7 +212,14 @@ DR-3 und DR-10 sind Gestaltungsregeln von StudiCompass, keine SPO-Regeln (Quelle
 | n-03 | Meilenstein | `/verlauf` | Für das Praxissemester im WS 2027/28 fehlen dir noch 7 Module des Grundstudiums; 5 davon sind in diesem Semester angemeldet. | Praxissemester im Winter? Dann müssen Programmieren 2 und Wirtschaftsprivatrecht im Sommer klappen – plus alles aus diesem Semester. |
 | n-04 | Frist | `/fristen` | Die Rückmeldung zum SS 2027 ist bis 15.02. möglich. | Rückmeldung bis 15.02. nicht vergessen – dauert zwei Minuten. |
 
-### Hinweise im Folgen-Check (Vorschlag von Claude Code, P3-03 – von Lucas im PR zu prüfen)
+**Nach einer simulierten Abmeldung** (Gegencheck P4/P5, formuliert von Claude Code, von Lucas am 27.10.2026 freigegeben): n-01 wechselt, sobald die zugehörige Prüfung abgemeldet ist; n-03 nur, wenn sich Praxissemester oder Abschluss gegenüber dem POS-Stand verschieben (Statistik ja, Marketing nein).
+
+| ID | Sachlich | Direkt |
+|---|---|---|
+| n-01 | Abmeldung simuliert. Deine Übersicht und dein Studienverlauf zeigen bereits die aktualisierte Prognose. | Abmeldung simuliert – Übersicht und Studienverlauf zeigen schon deine neue Prognose. |
+| n-03 | Dein Studienstand hat sich durch die Simulation geändert. Prüfe die aktualisierte Prognose und die noch offenen Module im Studienverlauf. | Durch die Simulation verschiebt sich dein Plan. Schau dir die neue Prognose und die offenen Module im Studienverlauf an. |
+
+### Hinweise im Folgen-Check (formuliert von Claude Code in P3-03, von Lucas am 27.10.2026 freigegeben)
 
 Der Folgen-Check zeigt oben einen Hinweis im gewählten Stil. Statistik übernimmt den Text von n-01. Prüfungen ohne Sonderregel (Angebot jedes Semester) bekommen bewusst keinen Alarm (KONZEPT §1, Szenario D).
 

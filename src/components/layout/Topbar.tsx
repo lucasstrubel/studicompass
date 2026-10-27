@@ -1,4 +1,4 @@
-import { Bell, Compass, Moon, Settings, Sun, UserRound } from "lucide-react";
+import { Compass, Moon, Settings, Sun, UserRound } from "lucide-react";
 import { Link, NavLink, useLocation } from "react-router";
 import { useTheme } from "@/app/theme-context";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -9,38 +9,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { NavigationMenu } from "@/components/layout/NavigationMenu";
 import { TOP_NAV_ITEMS } from "@/components/layout/navigation";
 import { APP_NAME, DEMO_NOW } from "@/config/demo";
 import { formatDate } from "@/lib/format";
 
-/** S8: the bell opens the notifications. Their count and list arrive together with P4-05. */
-function NotificationsButton() {
-  return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Benachrichtigungen">
-          <Bell className="size-5" />
-        </Button>
-      </SheetTrigger>
-      <SheetContent aria-describedby={undefined}>
-        <SheetHeader>
-          <SheetTitle>Benachrichtigungen</SheetTitle>
-        </SheetHeader>
-        <p className="px-6 text-body text-muted-foreground">
-          Du hast keine neuen Benachrichtigungen.
-        </p>
-      </SheetContent>
-    </Sheet>
-  );
-}
+import { NotificationsButton } from "@/features/notifications/NotificationsButton";
 
 /** Avatar menu; initials and name follow with the student data from the store (P2-05, KONZEPT A-6). */
 function ProfileMenu() {

@@ -4,12 +4,18 @@ import { RightRail } from "@/components/layout/RightRail";
 import { useRouteHandle } from "@/components/layout/route-handle";
 import { Topbar } from "@/components/layout/Topbar";
 import { APP_NAME } from "@/config/demo";
+import { useDemoStore } from "@/store/use-demo-store";
+import { CHANNEL_LABELS } from "@/components/common/labels";
+import { ProductTour } from "@/features/onboarding/ProductTour";
+import { CHANNELS } from "@/services/types";
 
 /** Layout of every app page (KONZEPT §7, §12.1); the route's handle supplies title and right column. */
 export function AppShell() {
   const handle = useRouteHandle();
   const mainRef = useRef<HTMLElement>(null);
   const RightRailContent = handle?.rightRail;
+  const connected = useDemoStore((state) => state.connectedChannels);
+  const disconnected = CHANNELS.filter((channel) => !connected[channel]);
 
   return (
     <>
@@ -41,6 +47,19 @@ export function AppShell() {
               </h1>
             )}
             <Outlet />
+            {disconnected.length > 0 && (
+              <p
+                role="status"
+                className="mt-4 rounded-lg border bg-muted p-3 text-meta"
+              >
+                Verbindung getrennt (Simulation):{" "}
+                {disconnected
+                  .map((channel) => CHANNEL_LABELS[channel])
+                  .join(", ")}
+                . Vorhandene Daten bleiben sichtbar und werden nicht
+                aktualisiert. Verbinde den Kanal in den Einstellungen erneut.
+              </p>
+            )}
           </div>
           {RightRailContent && (
             <RightRail>
@@ -49,6 +68,7 @@ export function AppShell() {
           )}
         </main>
       </div>
+      <ProductTour />
     </>
   );
 }
