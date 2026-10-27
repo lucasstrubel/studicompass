@@ -43,4 +43,4 @@ F1, F2, F3, F5, F6, F7, F8. Neue Texte für n-01/n-03 nach der Simulation stehen
 - Tatsächlicher ICS-Import in eine Kalender-App, Screenreader, reale Geräte (aus P4).
 - Nutzertests P5-02, Auswertung P5-03/05 (Team).
 
-Offene Fragen an Lucas: Freigabe der zwei neuen Hinweistexte (INHALTE §9).
+Offene Fragen an Lucas: keine. Die zwei neuen Hinweistexte (INHALTE §9) hat Lucas am 27.10.2026 freigegeben.

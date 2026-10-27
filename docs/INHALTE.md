@@ -212,7 +212,7 @@ Demo-Zeitpunkte (Phase 4): n-01: 25.01.2027, 18:00; n-02: 22.01.2027, 14:05; n-0
 | n-03 | Meilenstein | `/verlauf` | Für das Praxissemester im WS 2027/28 fehlen dir noch 7 Module des Grundstudiums; 5 davon sind in diesem Semester angemeldet. | Praxissemester im Winter? Dann müssen Programmieren 2 und Wirtschaftsprivatrecht im Sommer klappen – plus alles aus diesem Semester. |
 | n-04 | Frist | `/fristen` | Die Rückmeldung zum SS 2027 ist bis 15.02. möglich. | Rückmeldung bis 15.02. nicht vergessen – dauert zwei Minuten. |
 
-**Nach einer simulierten Abmeldung** (Gegencheck P4/P5, formuliert von Claude Code, Freigabe durch Lucas mit dem PR): n-01 wechselt, sobald die zugehörige Prüfung abgemeldet ist; n-03 nur, wenn sich Praxissemester oder Abschluss gegenüber dem POS-Stand verschieben (Statistik ja, Marketing nein).
+**Nach einer simulierten Abmeldung** (Gegencheck P4/P5, formuliert von Claude Code, von Lucas am 27.10.2026 freigegeben): n-01 wechselt, sobald die zugehörige Prüfung abgemeldet ist; n-03 nur, wenn sich Praxissemester oder Abschluss gegenüber dem POS-Stand verschieben (Statistik ja, Marketing nein).
 
 | ID | Sachlich | Direkt |
 |---|---|---|
