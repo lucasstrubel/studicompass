@@ -191,7 +191,7 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch (ursprünglich `feat
 ### P3-03 [Claude] Folgen-Check (S4) inkl. simulierter Abmeldung – US-06, US-07, US-08
 - [x] Kopf, Ziel-Zeile, Vergleichstabelle (mobil: Umschalter), „Warum?“ mit Quelle, Hilfsangebote, Fußzeile
 - [x] Beide Aktionen gleich gewichtet; Bestätigungsdialog; Toast mit „Rückgängig“ (8 s)
-- Hinweis: Hinweistexte für die übrigen angemeldeten Prüfungen in INHALTE §9 ergänzt (Vorschlag, Freigabe durch Lucas im PR); `DATA_VERSION` 2.
+- Hinweis: Hinweistexte für die übrigen angemeldeten Prüfungen in INHALTE §9 ergänzt, von Lucas am 27.10. freigegeben; `DATA_VERSION` 2.
 - **AK:** Tabelle zeigt exakt die Werte aus §10.4; nach simulierter Abmeldung zeigt die Übersicht Kritisch, Praxissemester SS 2028, Abschluss SS 2029; „Rückgängig“ stellt alles wieder her; Marketing (Szenario D) zeigt keine Meilenstein-Verschiebung, aber den Belastungshinweis; Kernflow per Tastatur bedienbar.
 
 ### P3-04 [Claude] Studienverlauf (S2) – US-04, US-09, US-10
@@ -213,6 +213,7 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch (ursprünglich `feat
 - [ ] 1–2 Kommiliton:innen klicken den Durchstich; auffällige Stolperstellen notieren
 
 **Gate M3 (So 01.11., 14:00):** Hero-Flow end-to-end deployed und auf Desktop und Smartphone bedienbar.
+- [x] Erfüllt am 27.10.2026 (vor dem Soll), Tag `m3` auf `629a859` nach OK von Lucas. Nachweis in `docs/reviews/P3.md` („Gate M3“). P3-07 (Flur-Test) führt Lucas selbst durch.
 
 ---
 

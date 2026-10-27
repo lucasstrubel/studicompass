@@ -210,7 +210,7 @@ DR-3 und DR-10 sind Gestaltungsregeln von StudiCompass, keine SPO-Regeln (Quelle
 | n-03 | Meilenstein | `/verlauf` | Für das Praxissemester im WS 2027/28 fehlen dir noch 7 Module des Grundstudiums; 5 davon sind in diesem Semester angemeldet. | Praxissemester im Winter? Dann müssen Programmieren 2 und Wirtschaftsprivatrecht im Sommer klappen – plus alles aus diesem Semester. |
 | n-04 | Frist | `/fristen` | Die Rückmeldung zum SS 2027 ist bis 15.02. möglich. | Rückmeldung bis 15.02. nicht vergessen – dauert zwei Minuten. |
 
-### Hinweise im Folgen-Check (Vorschlag von Claude Code, P3-03 – von Lucas im PR zu prüfen)
+### Hinweise im Folgen-Check (formuliert von Claude Code in P3-03, von Lucas am 27.10.2026 freigegeben)
 
 Der Folgen-Check zeigt oben einen Hinweis im gewählten Stil. Statistik übernimmt den Text von n-01. Prüfungen ohne Sonderregel (Angebot jedes Semester) bekommen bewusst keinen Alarm (KONZEPT §1, Szenario D).
 
