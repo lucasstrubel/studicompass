@@ -4,7 +4,9 @@ import { ChannelBadge } from "@/components/common/ChannelBadge";
 import { CitationList } from "@/components/common/CitationList";
 import type { Citation } from "@/domain/types";
 import { DemoBadge } from "@/components/common/DemoBadge";
+import { EmptyState } from "@/components/common/EmptyState";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "@/domain/terms";
 import { formatDateTime } from "@/lib/format";
 import { selectCurrentExams, type CurrentExam } from "@/store/selectors";
@@ -21,12 +23,14 @@ const OFFERING_SOURCE: Citation = {
   verified: false,
 };
 
+type MoodleState = "loading" | "error" | "ready";
+
 function ModuleCard({
   item,
-  moodleReady,
+  moodle,
 }: {
   item: CurrentExam;
-  moodleReady: boolean;
+  moodle: MoodleState;
 }) {
   const { exam, module, progress } = item;
   const withdrawn = exam.status === "withdrawn";
@@ -100,8 +104,16 @@ function ModuleCard({
                   )}
                 </p>
               </>
+            ) : moodle === "loading" ? (
+              // Loading is not unavailability (Q-2): a quiet placeholder until Moodle answers.
+              <div className="mt-3 space-y-2">
+                <Skeleton className="h-1 rounded-full" aria-hidden="true" />
+                <p className="text-meta text-muted-foreground">
+                  Moodle-Fortschritt wird geladen …
+                </p>
+              </div>
             ) : (
-              !moodleReady && (
+              moodle === "error" && (
                 <p className="mt-2 text-meta text-muted-foreground">
                   Moodle-Fortschritt gerade nicht verfügbar
                 </p>
@@ -117,9 +129,11 @@ function ModuleCard({
 /** "Dieses Semester" (KONZEPT §8 S1 no. 3): registered exams of the current semester as module cards. */
 export function SemesterModules() {
   const exams = useDemoStore(selectCurrentExams);
-  const moodleReady = useDemoStore(
-    (state) => state.resources.moodle.data !== null,
-  );
+  const moodle = useDemoStore((state): MoodleState => {
+    const { data, status } = state.resources.moodle;
+    if (data) return "ready";
+    return status === "error" ? "error" : "loading";
+  });
   const term = exams[0]?.exam.term;
 
   return (
@@ -136,15 +150,18 @@ export function SemesterModules() {
           <BookOpen className="size-4" aria-hidden="true" />
         </Link>
       </div>
-      <ul className="grid gap-3 md:grid-cols-2">
-        {exams.map((item) => (
-          <ModuleCard
-            key={item.exam.id}
-            item={item}
-            moodleReady={moodleReady}
-          />
-        ))}
-      </ul>
+      {exams.length === 0 ? (
+        <EmptyState
+          title="In diesem Semester bist du für keine Prüfung angemeldet."
+          description="Angemeldete Prüfungen aus dem POS erscheinen hier mit Termin und Moodle-Fortschritt."
+        />
+      ) : (
+        <ul className="grid gap-3 md:grid-cols-2">
+          {exams.map((item) => (
+            <ModuleCard key={item.exam.id} item={item} moodle={moodle} />
+          ))}
+        </ul>
+      )}
       <p className="mt-3 flex flex-wrap items-center gap-2 text-meta text-muted-foreground">
         Kanäle: <ChannelBadge channel="pos" /> <ChannelBadge channel="moodle" />
       </p>

@@ -42,6 +42,7 @@ import {
 import { demoStore } from "@/store/demo-store";
 import { useDemoStore } from "@/store/use-demo-store";
 import { ComparisonTable } from "./ComparisonTable";
+import { focusMainContent } from "@/lib/focus";
 import { rulesForModule } from "@/lib/offering-rule";
 
 /**
@@ -397,7 +398,15 @@ function SettledView({ exam, module }: { exam: ExamRecord; module: Module }) {
         action={
           <div className="flex flex-wrap gap-2">
             {withdrawn && canUndo && (
-              <Button variant="outline" size="sm" onClick={undo}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  undo();
+                  // The comparison replaces this view; keep the focus on the page (P3-06 review).
+                  focusMainContent();
+                }}
+              >
                 <Undo2 aria-hidden="true" />
                 Rückgängig
               </Button>
@@ -472,15 +481,13 @@ export function DecisionPage() {
   return (
     <ResourceBoundary
       services={["pos", "rules"]}
+      header={<h1 className="mb-6 text-page-title">Folgen-Check</h1>}
       skeleton={
-        <div className="space-y-4">
-          <h1 className="text-page-title">Folgen-Check</h1>
-          <Skeleton
-            role="status"
-            aria-label="Folgen-Check wird geladen"
-            className="h-96"
-          />
-        </div>
+        <Skeleton
+          role="status"
+          aria-label="Folgen-Check wird geladen"
+          className="h-96"
+        />
       }
     >
       {() => <DecisionContent examId={examId} />}

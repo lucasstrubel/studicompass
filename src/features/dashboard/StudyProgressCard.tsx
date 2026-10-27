@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   Popover,
   PopoverContent,
+  PopoverTitle,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { format, semesterNumber } from "@/domain/terms";
@@ -128,7 +129,9 @@ export function StudyProgressCard() {
               </Button>
             </PopoverTrigger>
             <PopoverContent align="start" className="w-80 space-y-3">
-              <p className="text-card-title">So rechnet StudiCompass</p>
+              <PopoverTitle className="text-card-title">
+                So rechnet StudiCompass
+              </PopoverTitle>
               <ul className="space-y-2 text-body">
                 {calculationRules.map((rule) => (
                   <li key={rule.id}>{rule.citation.summary}</li>

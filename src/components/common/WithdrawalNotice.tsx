@@ -1,5 +1,7 @@
 import { Undo2 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { focusMainContent } from "@/lib/focus";
 import { selectCurrentExams, selectUndoableExamId } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 import { DemoBadge } from "./DemoBadge";
@@ -25,7 +27,16 @@ export function WithdrawalNotice() {
         Betrieb meldest du dich im POS ab.
       </p>
       {undoable && (
-        <Button variant="outline" size="sm" onClick={undo}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            undo();
+            toast.success(`${undoable.module.title}: Abmeldung zurückgenommen`);
+            // The notice and its button disappear; keep the focus on the page.
+            focusMainContent();
+          }}
+        >
           <Undo2 aria-hidden="true" />
           Rückgängig
           {withdrawn.length > 1 && `: ${undoable.module.title}`}

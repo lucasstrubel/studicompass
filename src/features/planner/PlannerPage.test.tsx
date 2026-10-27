@@ -238,3 +238,49 @@ describe("Studienverlauf (P3-04 review)", () => {
     expect(screen.getByRole("button", { name: "Rückgängig" })).toBeVisible();
   });
 });
+
+describe("Studienverlauf (P3-06 review: focus)", () => {
+  it("keeps the keyboard focus on the moved module's menu button", async () => {
+    const user = userEvent.setup();
+    renderPlanner();
+    await user.click(screen.getByRole("switch", { name: "Simulation" }));
+    screen.getByRole("button", { name: "Statistik verschieben" }).focus();
+    await user.keyboard("{Enter}");
+    await user.click(screen.getByRole("menuitem", { name: "WS 2027/28" }));
+
+    await vi.waitFor(() =>
+      expect(document.activeElement).toBe(
+        screen.getByRole("button", { name: "Statistik verschieben" }),
+      ),
+    );
+    expect(semester("WS 2027/28")).toContainElement(
+      document.activeElement as HTMLElement,
+    );
+  });
+
+  it("moves the focus to the simulation switch after discarding", async () => {
+    const user = userEvent.setup();
+    renderPlanner();
+    await user.click(screen.getByRole("switch", { name: "Simulation" }));
+    await user.click(
+      screen.getByRole("button", { name: "Statistik verschieben" }),
+    );
+    await user.click(screen.getByRole("menuitem", { name: "WS 2027/28" }));
+    await user.click(
+      screen.getByRole("button", { name: "Simulation verwerfen" }),
+    );
+    expect(document.activeElement).toBe(
+      screen.getByRole("switch", { name: "Simulation" }),
+    );
+  });
+
+  it("moves the focus to the main content after undoing a withdrawal", async () => {
+    const user = userEvent.setup();
+    act(() => {
+      demoStore.getState().withdrawExam("e-stat-ws26");
+    });
+    renderPlanner();
+    await user.click(screen.getByRole("button", { name: "Rückgängig" }));
+    expect(document.activeElement).toBe(screen.getByRole("main"));
+  });
+});
