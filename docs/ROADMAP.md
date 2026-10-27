@@ -189,8 +189,9 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch (ursprünglich `feat
 - **AK:** Werte aus Store/Domäne (48 / Soll 60 / Knapp; Prognose 78 von 90); Studienstand, Ampel und „Jetzt wichtig“ bei 1440×900 ohne Scrollen sichtbar (Q-1); Skeletons; Fehlerzustand je Kanal; mobile Reihenfolge laut §8.
 
 ### P3-03 [Claude] Folgen-Check (S4) inkl. simulierter Abmeldung – US-06, US-07, US-08
-- [ ] Kopf, Ziel-Zeile, Vergleichstabelle (mobil: Umschalter), „Warum?“ mit Quelle, Hilfsangebote, Fußzeile
-- [ ] Beide Aktionen gleich gewichtet; Bestätigungsdialog; Toast mit „Rückgängig“ (8 s)
+- [x] Kopf, Ziel-Zeile, Vergleichstabelle (mobil: Umschalter), „Warum?“ mit Quelle, Hilfsangebote, Fußzeile
+- [x] Beide Aktionen gleich gewichtet; Bestätigungsdialog; Toast mit „Rückgängig“ (8 s)
+- Hinweis: Hinweistexte für die übrigen angemeldeten Prüfungen in INHALTE §9 ergänzt (Vorschlag, Freigabe durch Lucas im PR); `DATA_VERSION` 2.
 - **AK:** Tabelle zeigt exakt die Werte aus §10.4; nach simulierter Abmeldung zeigt die Übersicht Kritisch, Praxissemester SS 2028, Abschluss SS 2029; „Rückgängig“ stellt alles wieder her; Marketing (Szenario D) zeigt keine Meilenstein-Verschiebung, aber den Belastungshinweis; Kernflow per Tastatur bedienbar.
 
 ### P3-04 [Claude] Studienverlauf (S2) – US-04, US-09, US-10

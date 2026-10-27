@@ -133,6 +133,12 @@ export interface Program {
 }
 
 export type HintTone = "neutral" | "direct";
+
+/** Hint at the top of the Folgen-Check for one exam, in both hint tones (KONZEPT §12.5, INHALTE §9). */
+export interface DecisionHint {
+  examId: string;
+  text: Record<HintTone, string>;
+}
 export interface Notification {
   id: string;
   type: "decision" | "inbox" | "milestone" | "deadline";

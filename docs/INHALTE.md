@@ -210,6 +210,18 @@ DR-3 und DR-10 sind Gestaltungsregeln von StudiCompass, keine SPO-Regeln (Quelle
 | n-03 | Meilenstein | `/verlauf` | Für das Praxissemester im WS 2027/28 fehlen dir noch 7 Module des Grundstudiums; 5 davon sind in diesem Semester angemeldet. | Praxissemester im Winter? Dann müssen Programmieren 2 und Wirtschaftsprivatrecht im Sommer klappen – plus alles aus diesem Semester. |
 | n-04 | Frist | `/fristen` | Die Rückmeldung zum SS 2027 ist bis 15.02. möglich. | Rückmeldung bis 15.02. nicht vergessen – dauert zwei Minuten. |
 
+### Hinweise im Folgen-Check (Vorschlag von Claude Code, P3-03 – von Lucas im PR zu prüfen)
+
+Der Folgen-Check zeigt oben einen Hinweis im gewählten Stil. Statistik übernimmt den Text von n-01. Prüfungen ohne Sonderregel (Angebot jedes Semester) bekommen bewusst keinen Alarm (KONZEPT §1, Szenario D).
+
+| Prüfung | Sachlich | Direkt |
+|---|---|---|
+| e-stat-ws26 | wie n-01 | wie n-01 |
+| e-db-ws26 | Die Abmeldefrist für Datenbanken endet am Donnerstag um 23:59 Uhr. Datenbanken wird nur im Wintersemester angeboten; eine Abmeldung kann den Beginn deines Praxissemesters verschieben. | Bis Donnerstag, 23:59 kannst du dich noch abmelden. Tust du es, gibt es Datenbanken erst im nächsten Winter – und dein Praxissemester rutscht voraussichtlich ein Semester nach hinten. |
+| e-se1-ws26 | Die Abmeldefrist für Software Engineering 1 endet am Montag, 01.02., um 23:59 Uhr. Das Modul wird nur im Wintersemester angeboten; eine Abmeldung kann den Beginn deines Praxissemesters verschieben. | Bis Montag, 23:59 hast du Zeit. Meldest du dich von Software Engineering 1 ab, kommt das Modul erst im nächsten Winter wieder – und dein Praxissemester rutscht voraussichtlich mit. |
+| e-gpm-ws26 | Geschäftsprozessmanagement wird jedes Semester angeboten. Eine Abmeldung verschiebt keinen Meilenstein, erhöht aber deine Belastung im SS 2027. | Geschäftsprozessmanagement gibt es jedes Semester – eine Abmeldung kostet dich keinen Meilenstein, macht dein SS 2027 aber voller. |
+| e-mkt-ws26 | Marketing wird jedes Semester angeboten. Eine Abmeldung verschiebt keinen Meilenstein, erhöht aber deine Belastung im SS 2027. | Marketing gibt es jedes Semester – eine Abmeldung kostet dich keinen Meilenstein, macht dein SS 2027 aber voller. |
+
 ---
 
 ## 10 Assistent – Antwortkatalog

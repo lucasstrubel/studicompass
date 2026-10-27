@@ -8,6 +8,7 @@ import { deadlines } from "@/data/deadlines";
 import { notifications } from "@/data/notifications";
 import { moodleProgress } from "@/data/moodle-progress";
 import { rules } from "@/data/rules";
+import { decisionHints } from "@/data/decision-hints";
 import { offices } from "@/data/offices";
 import { assistantCatalog } from "@/data/assistant-catalog";
 import { assistantFallback } from "@/data/assistant-fallback";
@@ -54,7 +55,7 @@ export function createMockServices(options: MockOptions = {}): Services {
     }),
     mail: service("mail", content("mail")),
     website: service("website", { notifications, ...content("website") }),
-    rules: service("rules", { rules, offices }),
+    rules: service("rules", { rules, offices, decisionHints }),
     assistant: service("assistant", {
       catalog: assistantCatalog,
       fallback: assistantFallback,

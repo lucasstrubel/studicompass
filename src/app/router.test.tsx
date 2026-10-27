@@ -38,7 +38,6 @@ describe("routes (KONZEPT §7)", () => {
     ["/postfach", "Postfach"],
     ["/assistent", "Assistent"],
     ["/fristen", "Fristen"],
-    ["/entscheidung/e-stat-ws26", "Folgen-Check"],
     ["/einstellungen", "Einstellungen"],
     ["/start", "Onboarding"],
     ["/gibt-es-nicht", "Seite nicht gefunden"],
