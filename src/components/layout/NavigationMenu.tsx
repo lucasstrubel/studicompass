@@ -1,52 +1,63 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { Menu, X } from "lucide-react";
 import { NavLink } from "react-router";
+import { Dialog as DialogPrimitive } from "radix-ui";
 import { NAV_ITEMS, SETTINGS_ITEM } from "@/components/layout/navigation";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { APP_NAME } from "@/config/demo";
 
-function MenuLinks({ onNavigate }: { onNavigate: () => void }) {
+const TITLE = "Alle Bereiche";
+
+// One light panel below the hamburger for preview and pinned menu (KONZEPT §7, P5-06).
+const PANEL =
+  "panel-shadow absolute top-full left-0 z-50 mt-2 flex max-h-[calc(100dvh-6rem)] w-70 max-w-[calc(100vw-2rem)] flex-col overflow-y-auto rounded-2xl border bg-card text-card-foreground";
+
+function MenuPanel({
+  title,
+  closeButton,
+  onNavigate,
+}: {
+  title: ReactNode;
+  closeButton: ReactNode;
+  onNavigate: () => void;
+}) {
   return (
-    <nav aria-label="Alle Bereiche" className="flex flex-1 flex-col p-4">
-      <p className="mb-3 px-3 text-meta text-sidebar-muted">Dein Studium</p>
-      <ul className="space-y-1">
-        {[...NAV_ITEMS, SETTINGS_ITEM].map((item) => (
-          <li
-            key={item.to}
-            className={
-              item === SETTINGS_ITEM
-                ? "mt-6 border-t border-sidebar-border pt-4"
-                : ""
-            }
-          >
-            <NavLink
-              to={item.to}
-              end={item.end}
-              onClick={onNavigate}
-              className="flex min-h-11 items-center gap-3 rounded-lg border-l-3 border-transparent px-3 text-body text-sidebar-muted hover:bg-sidebar-active hover:text-sidebar-foreground aria-[current=page]:border-sidebar-primary aria-[current=page]:bg-sidebar-active aria-[current=page]:font-semibold aria-[current=page]:text-sidebar-foreground"
+    <>
+      <div className="flex items-center justify-between border-b px-4 py-3">
+        {title}
+        {closeButton}
+      </div>
+      <nav aria-label={TITLE} className="flex flex-1 flex-col p-2">
+        <p className="px-3 pt-2 pb-1 text-meta text-muted-foreground">
+          Dein Studium
+        </p>
+        <ul className="space-y-0.5">
+          {[...NAV_ITEMS, SETTINGS_ITEM].map((item) => (
+            <li
+              key={item.to}
+              className={item === SETTINGS_ITEM ? "mt-2 border-t pt-2" : ""}
             >
-              <item.icon className="size-5 shrink-0" />
-              {item.label}
-            </NavLink>
-          </li>
-        ))}
-      </ul>
-      <p className="mt-auto px-3 pt-10 text-meta text-sidebar-muted">
-        {APP_NAME} · Designvorschau
-      </p>
-    </nav>
+              <NavLink
+                to={item.to}
+                end={item.end}
+                onClick={onNavigate}
+                className="group flex min-h-11 items-center gap-3 rounded-xl px-3 text-body text-muted-foreground hover:bg-muted hover:text-foreground aria-[current=page]:bg-muted aria-[current=page]:font-semibold aria-[current=page]:text-foreground"
+              >
+                <item.icon className="size-5 shrink-0 group-aria-[current=page]:text-accent-strong" />
+                {item.label}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-auto px-3 pt-6 pb-1 text-meta text-muted-foreground">
+          {APP_NAME} · Prototyp mit Demodaten
+        </p>
+      </nav>
+    </>
   );
 }
 
-/** Hover is a nonmodal disclosure; explicit activation opens a focus-managed Radix sheet. */
+/** Hover is a nonmodal disclosure; explicit activation pins the same panel as a focus-managed dialog. */
 export function NavigationMenu() {
   const [mode, setMode] = useState<"preview" | "pinned" | null>(null);
   const id = useId();
@@ -123,14 +134,14 @@ export function NavigationMenu() {
           setMode((current) => (current === "preview" ? null : current));
       }}
     >
-      <Sheet
+      <DialogPrimitive.Root
         open={mode === "pinned"}
         onOpenChange={(open) => {
           clearTimers();
           setMode(open ? "pinned" : null);
         }}
       >
-        <SheetTrigger asChild>
+        <DialogPrimitive.Trigger asChild>
           <Button
             ref={trigger}
             variant="ghost"
@@ -141,60 +152,55 @@ export function NavigationMenu() {
           >
             <Menu className="size-5" />
           </Button>
-        </SheetTrigger>
-        <SheetContent
+        </DialogPrimitive.Trigger>
+        {/* Rendered in place (no portal), so the pinned panel sits exactly where the preview does. The
+            transparent overlay only catches outside clicks: the page stays visible and sharp. */}
+        <DialogPrimitive.Overlay
+          data-slot="navigation-overlay"
+          className="fixed inset-0 z-40"
+        />
+        <DialogPrimitive.Content
           id={id}
-          side="left"
-          showCloseButton={false}
           aria-describedby={undefined}
-          className="overflow-y-auto data-[side=left]:w-70 max-w-full border-sidebar-border bg-sidebar text-sidebar-foreground [--ring:var(--sidebar-ring)]"
+          className={PANEL}
         >
-          <SheetHeader className="flex-row items-center justify-between border-b border-sidebar-border p-4">
-            <SheetClose asChild>
+          <MenuPanel
+            title={
+              <DialogPrimitive.Title className="text-card-title">
+                {TITLE}
+              </DialogPrimitive.Title>
+            }
+            closeButton={
+              <DialogPrimitive.Close asChild>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-label="Navigation schließen"
+                >
+                  <X />
+                </Button>
+              </DialogPrimitive.Close>
+            }
+            onNavigate={close}
+          />
+        </DialogPrimitive.Content>
+      </DialogPrimitive.Root>
+      {mode === "preview" && (
+        <div id={id} className={PANEL}>
+          <MenuPanel
+            title={<span className="text-card-title">{TITLE}</span>}
+            closeButton={
               <Button
                 variant="ghost"
-                size="icon"
-                aria-label="Navigation einklappen"
-                className="hover:bg-sidebar-active hover:text-sidebar-foreground"
-              >
-                <Menu />
-              </Button>
-            </SheetClose>
-            <SheetTitle className="flex items-center gap-2 text-card-title text-sidebar-foreground">
-              {APP_NAME}
-            </SheetTitle>
-            <SheetClose asChild>
-              <Button
-                variant="ghost"
-                size="icon"
+                size="icon-sm"
                 aria-label="Navigation schließen"
-                className="hover:bg-sidebar-active hover:text-sidebar-foreground"
+                onClick={close}
               >
                 <X />
               </Button>
-            </SheetClose>
-          </SheetHeader>
-          <MenuLinks onNavigate={close} />
-        </SheetContent>
-      </Sheet>
-      {mode === "preview" && (
-        <div
-          id={id}
-          className="absolute top-full -left-4 z-50 flex max-h-[calc(100dvh-6rem)] w-70 max-w-[calc(100vw-2rem)] flex-col overflow-y-auto rounded-b-xl bg-sidebar text-sidebar-foreground shadow-xl [--ring:var(--sidebar-ring)]"
-        >
-          <div className="flex items-center justify-between border-b border-sidebar-border px-4 py-3">
-            <span className="text-card-title">Alle Bereiche</span>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              aria-label="Navigation schließen"
-              onClick={close}
-              className="hover:bg-sidebar-active hover:text-sidebar-foreground"
-            >
-              <X />
-            </Button>
-          </div>
-          <MenuLinks onNavigate={close} />
+            }
+            onNavigate={close}
+          />
         </div>
       )}
     </div>

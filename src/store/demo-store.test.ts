@@ -5,10 +5,9 @@ import {
   DEMO_STORAGE_KEY,
   FLAGS,
   LATENCY_MS,
-  THEME_STORAGE_KEY,
 } from "@/config/demo";
 import { createMockServices } from "@/services/mock";
-import { createDemoStore } from "./demo-store";
+import { ASSISTANT_DELAY_MS, createDemoStore } from "./demo-store";
 import {
   selectAcademicState,
   selectDeadlines,
@@ -146,7 +145,6 @@ describe("P2-05: simulations and persistence", () => {
     store
       .getState()
       .completeOnboarding({ goalRegularTime: false, jobHoursPerWeek: 12 });
-    store.getState().setTheme("dark");
     const reloaded = makeStore();
     await reloaded.getState().hydrate();
     expect(
@@ -163,12 +161,10 @@ describe("P2-05: simulations and persistence", () => {
       )?.read,
     ).toBe(true);
     expect(reloaded.getState()).toMatchObject({
-      theme: "dark",
       hintTone: "neutral",
       onboardingComplete: true,
       jobHoursPerWeek: 12,
     });
-    expect(localStorage.getItem(DEMO_STORAGE_KEY)).not.toContain('"theme"');
     reloaded.getState().undo();
     expect(
       selectAcademicState(reloaded.getState())?.exams.find(
@@ -185,11 +181,10 @@ describe("P2-05: simulations and persistence", () => {
     expect(makeStore().getState()).toMatchObject({
       withdrawnExamIds: [],
       hintTone: "direct",
-      theme: "dark",
     });
   });
 
-  it("what-if remains temporary and reset restores the fixture without losing the theme", async () => {
+  it("what-if remains temporary and reset restores the fixture", async () => {
     const store = makeStore();
     await store.getState().hydrate();
     const baseline = selectAcademicState(store.getState());
@@ -199,7 +194,6 @@ describe("P2-05: simulations and persistence", () => {
     store.getState().clearWhatIf();
     store.getState().withdrawExam("e-stat-ws26");
     store.getState().markRead("i-02");
-    store.getState().setTheme("dark");
     await store.getState().resetDemo();
     expect(selectAcademicState(store.getState())).toEqual(baseline);
     expect(store.getState()).toMatchObject({
@@ -207,9 +201,42 @@ describe("P2-05: simulations and persistence", () => {
       snapshot: null,
       whatIf: [],
       hintTone: "direct",
-      theme: "dark",
     });
-    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe("dark");
+  });
+
+  it("keeps one assistant conversation in memory only and clears it on reset (P5-06)", async () => {
+    const store = makeStore();
+    await store.getState().hydrate();
+    vi.useFakeTimers();
+    store.getState().askAssistant("Wann wird Statistik angeboten?", "A-08");
+    // One question at a time: a second one while the first is pending is ignored.
+    store.getState().askAssistant("Ausland?");
+    expect(store.getState().assistantPending).toEqual({
+      question: "Wann wird Statistik angeboten?",
+      id: "A-08",
+    });
+    expect(store.getState().assistantThread).toEqual([]);
+    await vi.advanceTimersByTimeAsync(ASSISTANT_DELAY_MS);
+    store
+      .getState()
+      .askAssistant("  Kann ich Statistik im Ausland schreiben?  ");
+    await vi.advanceTimersByTimeAsync(ASSISTANT_DELAY_MS);
+    expect(store.getState().assistantPending).toBeNull();
+    expect(store.getState().assistantThread).toEqual([
+      { question: "Wann wird Statistik angeboten?", id: "A-08" },
+      // Free text is matched; a special case leads to the fallback (id null, KONZEPT §11).
+      { question: "Kann ich Statistik im Ausland schreiben?", id: null },
+    ]);
+    expect(localStorage.getItem(DEMO_STORAGE_KEY)).not.toContain("Ausland");
+    expect(makeStore().getState().assistantThread).toEqual([]);
+
+    // A reset drops the conversation and a pending question.
+    store.getState().askAssistant("Wie viele ECTS fehlen mir noch?", "A-06");
+    const reset = store.getState().resetDemo();
+    await vi.advanceTimersByTimeAsync(ASSISTANT_DELAY_MS);
+    await reset;
+    expect(store.getState().assistantThread).toEqual([]);
+    expect(store.getState().assistantPending).toBeNull();
   });
 
   it("ignores an obsolete response when reset races with hydration", async () => {

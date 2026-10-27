@@ -12,7 +12,6 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { useTheme } from "@/app/theme-context";
 import { CHANNEL_LABELS } from "@/components/common/labels";
 import { ChannelStatus } from "@/components/common/ChannelStatus";
 import { useDemoStore } from "@/store/use-demo-store";
@@ -29,7 +28,6 @@ const TYPES: { type: Notification["type"]; label: string }[] = [
 ];
 
 export function SettingsPage() {
-  const { theme, setTheme } = useTheme();
   const state = useDemoStore((state) => state);
   const navigate = useNavigate();
   const [resetting, setResetting] = useState(false);
@@ -38,32 +36,6 @@ export function SettingsPage() {
   );
   return (
     <div className="max-w-4xl space-y-6">
-      <fieldset className="space-y-3 rounded-xl border bg-card p-4">
-        <legend className="px-1 text-section-title">Darstellung</legend>
-        <div className="flex flex-wrap gap-4">
-          {(
-            [
-              { value: "light", label: "Hell" },
-              { value: "dark", label: "Dunkel" },
-              { value: "system", label: "System" },
-            ] as const
-          ).map((item) => (
-            <label
-              key={item.value}
-              className="flex items-center gap-2 text-body"
-            >
-              <input
-                className="accent-primary"
-                type="radio"
-                name="theme"
-                checked={theme === item.value}
-                onChange={() => setTheme(item.value)}
-              />
-              {item.label}
-            </label>
-          ))}
-        </div>
-      </fieldset>
       <fieldset className="space-y-3 rounded-xl border bg-card p-4">
         <legend className="px-1 text-section-title">Hinweis-Stil</legend>
         <div className="flex flex-wrap gap-4">
@@ -182,8 +154,7 @@ export function SettingsPage() {
                 <AlertDialogTitle>Demo zurücksetzen?</AlertDialogTitle>
                 <AlertDialogDescription>
                   Simulierte Entscheidungen, Gelesenstatus und persönliche
-                  Einstellungen werden zurückgesetzt. Dein gewähltes Design
-                  bleibt erhalten.
+                  Einstellungen werden zurückgesetzt.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

@@ -1,8 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { AppProviders } from "@/app/providers";
-import { THEME_STORAGE_KEY } from "@/config/demo";
 import { COMMON_COMPONENTS } from "@/features/dev-ui/common-components";
 import { UiShowcasePage } from "@/features/dev-ui/UiShowcasePage";
 
@@ -98,24 +96,5 @@ describe("UiShowcasePage", () => {
     for (const status of ["Im Plan", "Knapp", "Kritisch", "Info"]) {
       expect(within(colours).getByText(status)).toBeInTheDocument();
     }
-  });
-
-  it("switches the app theme on <html> and stores the choice", async () => {
-    const user = userEvent.setup();
-    renderPage();
-
-    expect(screen.getByRole("radio", { name: "System" })).toBeChecked();
-    expect(document.documentElement).not.toHaveClass("dark");
-
-    await user.click(screen.getByRole("radio", { name: "Dunkel" }));
-    expect(document.documentElement).toHaveClass("dark");
-    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe("dark");
-
-    await user.click(screen.getByRole("radio", { name: "Hell" }));
-    expect(document.documentElement).not.toHaveClass("dark");
-    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe("light");
-
-    await user.click(screen.getByRole("radio", { name: "System" }));
-    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe("system");
   });
 });

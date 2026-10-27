@@ -12,7 +12,7 @@ import { formatDateTime } from "@/lib/format";
 import { selectCurrentExams, type CurrentExam } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 import { ModuleIllustration } from "./ModuleIllustration";
-import { moduleArt } from "./module-art";
+import { moduleArt, moduleToneStyle } from "./module-art";
 
 const OFFERING_LABELS = { WS: "nur im WS", SS: "nur im SS" } as const;
 
@@ -36,7 +36,7 @@ function ModuleCard({
   const withdrawn = exam.status === "withdrawn";
   return (
     <li>
-      <Card size="sm" className="h-full">
+      <Card size="sm" className="h-full" style={moduleToneStyle(module.id)}>
         <CardContent className="flex items-start gap-3">
           <div className="hidden sm:block">
             <ModuleIllustration kind={moduleArt(module.id)} />
@@ -87,7 +87,7 @@ function ModuleCard({
                       className="mt-3 h-1 rounded-full bg-muted"
                     >
                       <div
-                        className="h-full rounded-full bg-accent-strong"
+                        className="h-full rounded-full bg-(--module-tone)"
                         style={{
                           width: `${(progress.completed / progress.total) * 100}%`,
                         }}

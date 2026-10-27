@@ -4,18 +4,12 @@ import globalsCss from "@/styles/globals.css?raw";
 
 // KONZEPT §12.2 is the oracle for the colour tokens: the values are read from its tables, so this file
 // contains no colour values of its own; the contrast ratios below are the ones documented there.
-
-type Theme = "light" | "dark";
-const THEMES: Theme[] = ["light", "dark"];
+// The prototype has only the light design (P5-06), so there is one palette: the :root block.
 
 // --- Tokens in globals.css ---------------------------------------------------------------------------
 
-function cssBlock(selector: ":root" | ".dark"): Map<string, string> {
-  const pattern = new RegExp(
-    `^${selector.replace(".", "\\.")} \\{([^}]*)\\}`,
-    "m",
-  );
-  const body = pattern.exec(globalsCss)?.[1] ?? "";
+function rootBlock(): Map<string, string> {
+  const body = /^:root \{([^}]*)\}/m.exec(globalsCss)?.[1] ?? "";
   const tokens = new Map<string, string>();
   for (const [, name, value] of body.matchAll(/(--[\w-]+):\s*([^;]+);/g)) {
     tokens.set(name, value.trim());
@@ -23,22 +17,17 @@ function cssBlock(selector: ":root" | ".dark"): Map<string, string> {
   return tokens;
 }
 
-const CSS_TOKENS: Record<Theme, Map<string, string>> = {
-  light: cssBlock(":root"),
-  dark: cssBlock(".dark"),
-};
+const CSS_TOKENS = rootBlock();
 
-/** Value of a token in a theme as an uppercase hex colour, with var(--…) aliases resolved. */
-function token(name: string, theme: Theme): string {
-  let value = CSS_TOKENS[theme].get(name);
+/** Value of a token as an uppercase hex colour, with var(--…) aliases resolved. */
+function token(name: string): string {
+  let value = CSS_TOKENS.get(name);
   for (let depth = 0; value?.startsWith("var(") && depth < 5; depth++) {
     const reference = /^var\((--[\w-]+)\)$/.exec(value)?.[1] ?? "";
-    value = CSS_TOKENS[theme].get(reference);
+    value = CSS_TOKENS.get(reference);
   }
   if (!value || !/^#[0-9a-f]{6}$/i.test(value)) {
-    throw new Error(
-      `${name} (${theme}) does not resolve to a colour: ${value}`,
-    );
+    throw new Error(`${name} does not resolve to a colour: ${value}`);
   }
   return value.toUpperCase();
 }
@@ -88,39 +77,26 @@ const STATUS_KEYS: Record<string, string> = {
   Info: "info",
 };
 
-/** Status rows: light = surface/icon · text · soft surface, dark = text/icon · soft surface. */
-function statusTable(table: string): Record<Theme, Map<string, string>> {
-  const expected = {
-    light: new Map<string, string>(),
-    dark: new Map<string, string>(),
-  };
-  for (const [status = "", light = "", dark = ""] of tableRows(table)) {
+/** Status rows: surface/icon · text · soft surface. */
+function statusTable(table: string): Map<string, string> {
+  const expected = new Map<string, string>();
+  for (const [status = "", values = ""] of tableRows(table)) {
     const key = STATUS_KEYS[status];
     if (!key) continue;
-    const [surface, text, soft] = colours(light);
-    expected.light.set(`--status-${key}`, surface);
-    expected.light.set(`--status-${key}-foreground`, text);
-    expected.light.set(`--status-${key}-soft`, soft);
-    const [darkText, darkSoft] = colours(dark);
-    expected.dark.set(`--status-${key}`, darkText);
-    expected.dark.set(`--status-${key}-foreground`, darkText);
-    expected.dark.set(`--status-${key}-soft`, darkSoft);
+    const [surface, text, soft] = colours(values);
+    expected.set(`--status-${key}`, surface);
+    expected.set(`--status-${key}-foreground`, text);
+    expected.set(`--status-${key}-soft`, soft);
   }
   return expected;
 }
 
 const SECTION = between(konzept, "### 12.2", "### 12.3");
-const STATUS = statusTable(between(SECTION, "**Statusfarben**", "Regeln:"));
-const KONZEPT_TOKENS: Record<Theme, Map<string, string>> = {
-  light: new Map([
-    ...tokenTable(between(SECTION, "**Hell**", "**Dunkel**")),
-    ...STATUS.light,
-  ]),
-  dark: new Map([
-    ...tokenTable(between(SECTION, "**Dunkel**", "**Statusfarben**")),
-    ...STATUS.dark,
-  ]),
-};
+const KONZEPT_TOKENS = new Map([
+  ...tokenTable(between(SECTION, "**Grundfarben**", "**Farbfamilie**")),
+  ...tokenTable(between(SECTION, "**Farbfamilie**", "**Statusfarben**")),
+  ...statusTable(between(SECTION, "**Statusfarben**", "Regeln:")),
+]);
 
 // --- WCAG 2 contrast ---------------------------------------------------------------------------------
 
@@ -154,64 +130,41 @@ function blend(foreground: string, alpha: number, background: string): string {
 }
 
 // Pairs documented in KONZEPT §12.2: [text or graphic, surface, ratio as given there].
-const DOCUMENTED_PAIRS: Record<Theme, [string, string, number][]> = {
-  light: [
-    ["--foreground", "--background", 16.7],
-    ["--muted-foreground", "--background", 7.3],
-    ["--muted-foreground", "--card", 7.7],
-    ["--muted-foreground", "--muted", 6.4],
-    ["--input", "--card", 4.2],
-    ["--primary-foreground", "--primary", 16.7],
-    ["--accent", "--background", 2.96],
-    ["--accent-foreground", "--accent", 5.6],
-    ["--card", "--accent", 3.1],
-    ["--accent-strong", "--background", 5.6],
-    ["--accent-strong", "--card", 5.9],
-    ["--accent-soft-foreground", "--accent-soft", 5.4],
-    ["--sidebar-foreground", "--sidebar", 12.1],
-    ["--sidebar-muted", "--sidebar", 6.9],
-    ["--accent", "--sidebar-active", 4.7],
-    ["--sidebar-foreground", "--sidebar-active", 10.0],
-    ["--status-on-track", "--card", 3.7],
-    ["--status-on-track-foreground", "--card", 5.8],
-    ["--status-on-track-foreground", "--status-on-track-soft", 5.0],
-    ["--status-tight", "--card", 3.7],
-    ["--status-tight-foreground", "--card", 5.9],
-    ["--status-tight-foreground", "--status-tight-soft", 5.2],
-    ["--status-critical", "--card", 4.8],
-    ["--status-critical-foreground", "--card", 6.5],
-    ["--status-critical-foreground", "--status-critical-soft", 5.3],
-    ["--status-info-foreground", "--card", 6.0],
-    ["--status-info-foreground", "--status-info-soft", 5.0],
-  ],
-  dark: [
-    ["--foreground", "--background", 15.1],
-    ["--foreground", "--card", 13.3],
-    ["--muted-foreground", "--background", 6.9],
-    ["--muted-foreground", "--card", 6.1],
-    ["--muted-foreground", "--muted", 5.5],
-    ["--input", "--card", 3.8],
-    ["--primary-foreground", "--primary", 15.1],
-    ["--accent", "--background", 5.6],
-    ["--accent", "--card", 5.0],
-    ["--accent-foreground", "--accent", 5.6],
-    ["--accent-strong", "--background", 7.4],
-    ["--accent-strong", "--card", 6.6],
-    ["--accent-soft-foreground", "--accent-soft", 7.7],
-    ["--sidebar-foreground", "--sidebar", 12.8],
-    ["--sidebar-muted", "--sidebar", 7.3],
-    ["--accent", "--sidebar-active", 5.0],
-    ["--sidebar-foreground", "--sidebar-active", 10.7],
-    ["--status-on-track-foreground", "--card", 6.8],
-    ["--status-on-track-foreground", "--status-on-track-soft", 5.7],
-    ["--status-tight-foreground", "--card", 7.8],
-    ["--status-tight-foreground", "--status-tight-soft", 6.6],
-    ["--status-critical-foreground", "--card", 6.4],
-    ["--status-critical-foreground", "--status-critical-soft", 6.0],
-    ["--status-info-foreground", "--card", 7.0],
-    ["--status-info-foreground", "--status-info-soft", 6.5],
-  ],
-};
+const DOCUMENTED_PAIRS: [string, string, number][] = [
+  ["--foreground", "--background", 16.7],
+  ["--muted-foreground", "--background", 7.3],
+  ["--muted-foreground", "--card", 7.7],
+  ["--muted-foreground", "--muted", 6.4],
+  ["--input", "--card", 4.2],
+  ["--primary-foreground", "--primary", 16.7],
+  ["--accent", "--background", 2.96],
+  ["--accent-foreground", "--accent", 5.6],
+  ["--card", "--accent", 3.1],
+  ["--accent-strong", "--background", 5.6],
+  ["--accent-strong", "--card", 5.9],
+  ["--accent-soft-foreground", "--accent-soft", 5.4],
+  ["--tone-violet", "--card", 5.9],
+  ["--tone-violet", "--muted", 4.9],
+  ["--tone-teal", "--card", 5.7],
+  ["--tone-teal", "--muted", 4.7],
+  ["--tone-blue", "--card", 5.8],
+  ["--tone-blue", "--muted", 4.8],
+  ["--tone-plum", "--card", 5.9],
+  ["--tone-plum", "--muted", 4.9],
+  ["--tone-terracotta", "--card", 5.9],
+  ["--tone-terracotta", "--muted", 4.9],
+  ["--status-on-track", "--card", 3.7],
+  ["--status-on-track-foreground", "--card", 5.8],
+  ["--status-on-track-foreground", "--status-on-track-soft", 5.0],
+  ["--status-tight", "--card", 3.7],
+  ["--status-tight-foreground", "--card", 5.9],
+  ["--status-tight-foreground", "--status-tight-soft", 5.2],
+  ["--status-critical", "--card", 4.8],
+  ["--status-critical-foreground", "--card", 6.5],
+  ["--status-critical-foreground", "--status-critical-soft", 5.3],
+  ["--status-info-foreground", "--card", 6.0],
+  ["--status-info-foreground", "--status-info-soft", 5.0],
+];
 
 const round = (value: number, decimals: number) =>
   Math.round(value * 10 ** decimals) / 10 ** decimals;
@@ -233,83 +186,78 @@ function matchesDocumented(ratio: number, documented: number): boolean {
 }
 
 describe("design tokens (KONZEPT §12.2)", () => {
-  it.each(THEMES)(
-    "%s: every token has the value from the KONZEPT tables",
-    (theme) => {
-      const expected = KONZEPT_TOKENS[theme];
-      // 18 tokens per theme plus 3 per status; fails if the tables can no longer be read.
-      expect(expected.size).toBe(30);
-      for (const [name, value] of expected) {
-        expect(token(name, theme), `${name} (${theme})`).toBe(value);
-      }
-    },
-  );
+  it("every token has the value from the KONZEPT tables", () => {
+    // 14 base tokens, 10 tones plus 3 per status; fails if the tables can no longer be read.
+    expect(KONZEPT_TOKENS.size).toBe(36);
+    for (const [name, value] of KONZEPT_TOKENS) {
+      expect(token(name), name).toBe(value);
+    }
+  });
 
-  it.each(THEMES)("%s: contrast pairs match KONZEPT §12.2", (theme) => {
-    for (const [foreground, background, documented] of DOCUMENTED_PAIRS[
-      theme
-    ]) {
-      const ratio = contrast(
-        token(foreground, theme),
-        token(background, theme),
-      );
+  it("contrast pairs match KONZEPT §12.2", () => {
+    for (const [foreground, background, documented] of DOCUMENTED_PAIRS) {
+      const ratio = contrast(token(foreground), token(background));
       expect(
         matchesDocumented(ratio, documented),
-        `${foreground} on ${background} (${theme}): ${ratio.toFixed(3)}:1, KONZEPT ${documented}:1`,
+        `${foreground} on ${background}: ${ratio.toFixed(3)}:1, KONZEPT ${documented}:1`,
       ).toBe(true);
     }
   });
 
   // Pairs that arise from mapping the tokens onto shadcn (Q-4: text 4.5:1, controls 3:1).
-  it.each(THEMES)("%s: mapped shadcn states keep AA contrast", (theme) => {
-    const t = (name: string) => token(name, theme);
+  it("mapped shadcn states keep AA contrast", () => {
     for (const surface of ["--background", "--card", "--muted"]) {
       expect(
-        contrast(t("--ring"), t(surface)),
+        contrast(token("--ring"), token(surface)),
         `focus ring on ${surface}`,
       ).toBeGreaterThanOrEqual(3);
       expect(
-        contrast(t("--accent-strong"), t(surface)),
+        contrast(token("--accent-strong"), token(surface)),
         `link on ${surface}`,
       ).toBeGreaterThanOrEqual(4.5);
-    }
-    for (const surface of ["--sidebar", "--sidebar-active"]) {
-      expect(
-        contrast(t("--sidebar-ring"), t(surface)),
-        `sidebar focus ring on ${surface}`,
-      ).toBeGreaterThanOrEqual(3);
     }
     // Button and badge "destructive": tint 10 % at rest and 15 % on hover (button.tsx, badge.tsx).
     for (const surface of ["--background", "--card"]) {
       for (const alpha of [0.1, 0.15]) {
-        const tint = blend(t("--destructive"), alpha, t(surface));
+        const tint = blend(token("--destructive"), alpha, token(surface));
         expect(
-          contrast(t("--destructive"), tint),
+          contrast(token("--destructive"), tint),
           `destructive/${alpha * 100} on ${surface}`,
         ).toBeGreaterThanOrEqual(4.5);
       }
     }
   });
 
-  it.each(THEMES)(
-    "%s: secondary text, progress and control outlines stay distinguishable",
-    (theme) => {
-      const t = (name: string) => token(name, theme);
+  it("secondary text, progress and control outlines stay distinguishable", () => {
+    for (const surface of ["--background", "--card", "--muted"]) {
+      expect(
+        contrast(token("--muted-foreground"), token(surface)),
+      ).toBeGreaterThanOrEqual(4.5);
+      expect(contrast(token("--input"), token(surface))).toBeGreaterThanOrEqual(
+        3,
+      );
+    }
+    expect(
+      contrast(token("--accent-strong"), token("--muted")),
+    ).toBeGreaterThanOrEqual(3);
+    // Colour family: lines, bars and strokes on every surface they appear on; ink on the soft tones.
+    for (const tone of ["violet", "teal", "blue", "plum", "terracotta"]) {
       for (const surface of ["--background", "--card", "--muted"]) {
         expect(
-          contrast(t("--muted-foreground"), t(surface)),
-        ).toBeGreaterThanOrEqual(4.5);
-        expect(contrast(t("--input"), t(surface))).toBeGreaterThanOrEqual(3);
+          contrast(token(`--tone-${tone}`), token(surface)),
+          `${tone} on ${surface}`,
+        ).toBeGreaterThanOrEqual(3);
       }
       expect(
-        contrast(t("--accent-strong"), t("--muted")),
-      ).toBeGreaterThanOrEqual(3);
-      // The prominent card uses ink for text and focus on terracotta in light mode.
-      expect(
-        contrast(t("--accent-foreground"), t("--accent")),
+        contrast(token("--foreground"), token(`--tone-${tone}-soft`)),
+        `ink on ${tone}-soft`,
       ).toBeGreaterThanOrEqual(4.5);
-    },
-  );
+    }
+    // Ink on terracotta: the assistant button.
+    expect(
+      contrast(token("--accent-foreground"), token("--accent")),
+    ).toBeGreaterThanOrEqual(4.5);
+  });
 });
 
 // --- Static checks over the source files -------------------------------------------------------------

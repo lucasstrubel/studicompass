@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-/** ECTS bar with the target marker; the numbers stay visible below it (KONZEPT §12.4). */
+/** ECTS bar (always blue, KONZEPT §12.2) with the target marker; the numbers stay visible below it (§12.4). */
 export function EctsProgress({
   earned,
   total,
@@ -28,7 +28,7 @@ export function EctsProgress({
         className="relative h-2 rounded-full bg-muted"
       >
         <div
-          className="h-full rounded-full bg-accent-strong"
+          className="h-full rounded-full bg-tone-blue"
           style={{ width: `${percent(earned)}%` }}
         />
         <span

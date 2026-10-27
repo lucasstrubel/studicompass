@@ -18,11 +18,11 @@ import { compare, format } from "@/domain/terms";
 import { selectAcademicState, selectBasePlan } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 
-// KONZEPT §12.2 diagrams: actual = accent line with soft area, target = dashed muted line. The lines use
-// --accent-strong because informative graphics need 3:1 (--accent on the page: 2.96:1).
+// KONZEPT §12.2 diagrams: ECTS are blue throughout – actual = line with soft area, forecast = dashed line,
+// target = dashed muted line. Both tones reach at least 3:1 on the card.
 const CHART_CONFIG = {
-  actual: { label: "Ist", color: "var(--accent-strong)" },
-  forecast: { label: "Prognose", color: "var(--accent-strong)" },
+  actual: { label: "Ist", color: "var(--tone-blue)" },
+  forecast: { label: "Prognose", color: "var(--tone-blue)" },
   target: { label: "Soll", color: "var(--muted-foreground)" },
 } satisfies ChartConfig;
 
@@ -33,7 +33,10 @@ interface Point {
   target: number;
 }
 
-/** ECTS-Verlauf (KONZEPT §8 S1 no. 5, low priority): cumulative actual vs. target up to this semester. */
+/**
+ * Chart and value table of the ECTS-Verlauf (KONZEPT §8 S1 no. 3): cumulative actual vs. target up to this
+ * semester. The section heading lives on the page, so it shows while this lazy chunk loads.
+ */
 export function EctsHistory() {
   const plan = useDemoStore(selectBasePlan);
   const academic = useDemoStore(selectAcademicState);
@@ -54,17 +57,10 @@ export function EctsHistory() {
   });
 
   return (
-    <>
-      <h2 id="ects-history" className="text-section-title">
-        ECTS-Verlauf
-      </h2>
-      <p className="mt-1 text-meta text-muted-foreground">
-        Kumuliert je Semester; das laufende Semester als Prognose, wenn du alle
-        angemeldeten Prüfungen bestehst.
-      </p>
+    <div className="mt-3 grid gap-4 xl:grid-cols-[minmax(0,1fr)_15rem] xl:items-center">
       <ChartContainer
         config={CHART_CONFIG}
-        className="mt-3 aspect-auto h-56 w-full"
+        className="aspect-auto h-48 w-full"
         aria-hidden="true"
       >
         <ComposedChart
@@ -88,7 +84,7 @@ export function EctsHistory() {
             type="linear"
             stroke="var(--color-actual)"
             strokeWidth={2}
-            fill="var(--accent-soft)"
+            fill="var(--tone-blue-soft)"
             fillOpacity={1}
             dot={{ r: 4 }}
             isAnimationActive={false}
@@ -113,7 +109,7 @@ export function EctsHistory() {
           />
         </ComposedChart>
       </ChartContainer>
-      <table className="mt-3 w-full text-meta tabular-nums">
+      <table className="w-full text-meta tabular-nums">
         <caption className="sr-only">ECTS je Semester</caption>
         <thead className="text-muted-foreground">
           <tr>
@@ -142,6 +138,6 @@ export function EctsHistory() {
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
 }

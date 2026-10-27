@@ -3,11 +3,10 @@ import { cleanup } from "@testing-library/react";
 import { afterEach } from "vitest";
 
 // Without Vitest globals, Testing Library does not clean up on its own.
-// The theme lives on <html> and in localStorage, so it is reset after every test as well.
+// The persisted demo state lives in localStorage, so it is reset after every test as well.
 afterEach(() => {
   cleanup();
   localStorage.clear();
-  document.documentElement.classList.remove("dark");
 });
 
 // jsdom has no ResizeObserver; Radix (Slider, ScrollArea) and Recharts need one.
@@ -21,8 +20,8 @@ globalThis.ResizeObserver ??= ResizeObserverStub;
 // jsdom does not scroll; React Router's ScrollRestoration calls window.scrollTo on every navigation.
 window.scrollTo = () => undefined;
 
-// jsdom has no matchMedia; the ThemeProvider reads prefers-color-scheme. Default: light system theme.
-// Tests that need a dark or changing system theme replace it with vi.spyOn(window, "matchMedia").
+// jsdom has no matchMedia; the navigation menu asks for hover support. Default: no query matches.
+// Tests that need a matching query replace it with vi.spyOn(window, "matchMedia").
 window.matchMedia = (query: string): MediaQueryList => ({
   matches: false,
   media: query,

@@ -110,9 +110,7 @@ test("P4: alle acht Fragen, Fallback, Kontext und ICS-Download", async ({
   expect((await download).suggestedFilename()).toBe("studienfristen.ics");
 });
 
-test("P4: Screens ohne Überlauf von 360 bis 1920 px in beiden Themes", async ({
-  page,
-}) => {
+test("P4: Screens ohne Überlauf von 360 bis 1920 px", async ({ page }) => {
   const paths = [
     "/start",
     "/module",
@@ -123,24 +121,21 @@ test("P4: Screens ohne Überlauf von 360 bis 1920 px in beiden Themes", async ({
     "/fristen",
     "/einstellungen",
   ];
-  for (const theme of ["light", "dark"] as const) {
-    await page.emulateMedia({ colorScheme: theme });
-    for (const path of paths) {
-      await page.goto(path);
-      await expect(page.locator("[data-slot=skeleton]")).toHaveCount(0);
-      if (path.includes("frage="))
-        await expect(page.getByRole("log")).toContainText("KI-Antwort");
-      for (const width of [360, 390, 834, 1280, 1440, 1920]) {
-        await page.setViewportSize({ width, height: 900 });
-        expect(
-          await page.evaluate(
-            () =>
-              document.documentElement.scrollWidth <=
-              document.documentElement.clientWidth,
-          ),
-          `${path}, ${theme}, ${width}`,
-        ).toBe(true);
-      }
+  for (const path of paths) {
+    await page.goto(path);
+    await expect(page.locator("[data-slot=skeleton]")).toHaveCount(0);
+    if (path.includes("frage="))
+      await expect(page.getByRole("log")).toContainText("KI-Antwort");
+    for (const width of [360, 390, 834, 1280, 1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      expect(
+        await page.evaluate(
+          () =>
+            document.documentElement.scrollWidth <=
+            document.documentElement.clientWidth,
+        ),
+        `${path}, ${width}`,
+      ).toBe(true);
     }
   }
 });

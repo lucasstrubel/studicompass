@@ -1,6 +1,5 @@
-import { Compass, Moon, Settings, Sun, UserRound } from "lucide-react";
+import { Compass, Settings, UserRound } from "lucide-react";
 import { Link, NavLink, useLocation } from "react-router";
-import { useTheme } from "@/app/theme-context";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,8 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { NavigationMenu } from "@/components/layout/NavigationMenu";
 import { TOP_NAV_ITEMS } from "@/components/layout/navigation";
-import { APP_NAME, DEMO_NOW } from "@/config/demo";
-import { formatDate } from "@/lib/format";
+import { APP_NAME } from "@/config/demo";
 
 import { NotificationsButton } from "@/features/notifications/NotificationsButton";
 
@@ -38,26 +36,6 @@ function ProfileMenu() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
-}
-
-function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
-  const dark = resolvedTheme === "dark";
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      role="switch"
-      aria-label="Dunkelmodus"
-      aria-checked={dark}
-      title={
-        dark ? "Zum hellen Design wechseln" : "Zum dunklen Design wechseln"
-      }
-      onClick={() => setTheme(dark ? "light" : "dark")}
-    >
-      {dark ? <Sun className="size-5" /> : <Moon className="size-5" />}
-    </Button>
   );
 }
 
@@ -91,14 +69,8 @@ export function Topbar() {
         </ul>
       </nav>
       <div className="ml-auto flex items-center gap-1">
-        <ThemeToggle />
         <NotificationsButton />
         <ProfileMenu />
-      </div>
-      <div className="basis-full pl-1 md:ml-auto md:basis-auto md:pl-0">
-        <span className="inline-flex rounded-full bg-muted px-2.5 py-1 text-meta text-muted-foreground tabular-nums">
-          {"Demo · " + formatDate(DEMO_NOW)}
-        </span>
       </div>
     </header>
   );

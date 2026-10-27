@@ -13,11 +13,7 @@ import type {
 } from "@/domain/types";
 import { projectPlan } from "@/domain/projection";
 import { selectAcademicState } from "./selectors";
-import {
-  readStoredTheme,
-  writeStoredTheme,
-  type ThemePreference,
-} from "@/lib/theme";
+import { selectAssistantMatch } from "./assistant-selectors";
 import { createMockServices } from "@/services/mock";
 import {
   isChannel,
@@ -58,13 +54,25 @@ interface Preferences {
   jobHoursPerWeek: number;
 }
 
+/** Typing indicator of the assistant (KONZEPT §8 S5: 0.6–1.2 s). */
+export const ASSISTANT_DELAY_MS = 800;
+
+/** One question in the assistant conversation; id = catalog entry, null = fallback (KONZEPT §11). */
+export interface AssistantMessage {
+  question: string;
+  id: string | null;
+}
+
 export interface DemoState extends Preferences {
   setChannelConnected: (channel: Channel, connected: boolean) => Promise<void>;
   setNotificationType: (type: Notification["type"], enabled: boolean) => void;
   resources: Resources;
-  theme: ThemePreference;
   snapshot: SimulationSnapshot | null;
   whatIf: PlanOverride[];
+  /** Shared by the assistant page and the assistant window; in memory only, never persisted. */
+  assistantThread: AssistantMessage[];
+  /** Question whose answer is being prepared; it survives closing the window or changing the page. */
+  assistantPending: AssistantMessage | null;
   hydrate: () => Promise<void>;
   retry: (service: ServiceKey) => Promise<void>;
   markRead: (id: string) => void;
@@ -75,7 +83,8 @@ export interface DemoState extends Preferences {
   confirmAttend: (id: string) => boolean;
   setWhatIf: (overrides: PlanOverride[]) => void;
   clearWhatIf: () => void;
-  setTheme: (theme: ThemePreference) => void;
+  /** Asks a catalog question (id) or free text; ignored while another answer is pending. */
+  askAssistant: (question: string, id?: string) => void;
   setHintTone: (tone: HintTone) => void;
   completeOnboarding: (preferences?: {
     goalRegularTime: boolean;
@@ -211,7 +220,7 @@ function readSnapshot(value: unknown): SimulationSnapshot | null {
   };
 }
 
-/** Persist user changes and the undo point, never fixture copies, loading state, theme, or what-if. */
+/** Persist user changes and the undo point, never fixture copies, loading state, what-if, or the assistant conversation. */
 function readPersisted(
   value: unknown,
 ): Preferences & { snapshot: SimulationSnapshot | null } {
@@ -235,6 +244,7 @@ export function createDemoStore(
     assistant: 0,
   };
   const pending = new Map<ServiceKey, Promise<void>>();
+  let assistantTimer: ReturnType<typeof setTimeout> | undefined;
   return createStore<DemoState>()(
     persist(
       (set, get) => {
@@ -294,9 +304,10 @@ export function createDemoStore(
         return {
           ...defaultPreferences(),
           resources: emptyResources(),
-          theme: readStoredTheme(),
           snapshot: null,
           whatIf: [],
+          assistantThread: [],
+          assistantPending: null,
           hydrate: async () => {
             await Promise.all(SERVICE_KEYS.map((key) => load(key)));
           },
@@ -405,9 +416,20 @@ export function createDemoStore(
             set({ whatIf: structuredClone(overrides) });
           },
           clearWhatIf: () => set({ whatIf: [] }),
-          setTheme(theme) {
-            writeStoredTheme(theme);
-            set({ theme });
+          askAssistant(question, id) {
+            const text = question.trim();
+            if (!text || get().assistantPending) return;
+            const message = {
+              question: text,
+              id: id ?? selectAssistantMatch(get(), text),
+            };
+            set({ assistantPending: message });
+            assistantTimer = setTimeout(() => {
+              set((state) => ({
+                assistantThread: [...state.assistantThread, message],
+                assistantPending: null,
+              }));
+            }, ASSISTANT_DELAY_MS);
           },
           setHintTone: (hintTone) => set({ hintTone }),
           completeOnboarding(preferences) {
@@ -423,11 +445,14 @@ export function createDemoStore(
           async resetDemo() {
             for (const key of SERVICE_KEYS) requests[key]++;
             pending.clear();
+            clearTimeout(assistantTimer);
             set({
               ...defaultPreferences(),
               resources: emptyResources(),
               snapshot: null,
               whatIf: [],
+              assistantThread: [],
+              assistantPending: null,
             });
             await get().hydrate();
           },

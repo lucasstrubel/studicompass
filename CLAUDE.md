@@ -39,14 +39,14 @@ npm run typecheck  # tsc -b
 npm run test       # Vitest
 npm run check      # typecheck + lint + test + build  ← Prüf-Gate: muss vor jedem PR grün sein
 npm run e2e        # Playwright-Smoke-Test des Hero-Flows (installiertes Chrome, nicht Teil von check)
-npm run screens    # Screenshots der Kernscreens nach docs/screens/ (2 Viewports × 2 Themes)
+npm run screens    # Screenshots der Kernscreens nach docs/screens/ (2 Viewports, nur hell)
 ```
 Bis das Projekt aufgesetzt ist (P1-01), gilt als Prüf-Gate: Änderungen sind nachvollziehbar beschrieben und manuell geprüft.
 
 ## Ordnerstruktur
 ```
 src/
-  app/          App.tsx, router.tsx, providers.tsx (Theme, Toaster, Tooltip)
+  app/          App.tsx, router.tsx, providers.tsx (Toaster, Tooltip)
   features/     je Bereich Seite + Teilkomponenten:
                 dashboard/ planner/ modules/ decision/ assistant/ inbox/ deadlines/ settings/ onboarding/
                 dev-ui/ (Entwickler-Route /_ui, nur im Dev-Build)
@@ -60,9 +60,9 @@ src/
   services/     Interfaces je Kanal und Regelwerk; mock/ mit Latenz und optionalem Fehler
   data/         Dummy-Daten aus docs/INHALTE.md
   store/        Zustand-Store, Selektoren
-  config/       demo.ts (APP_NAME, DEMO_NOW, LATENCY_MS, FLAGS, THEME_STORAGE_KEY)
+  config/       demo.ts (APP_NAME, DEMO_NOW, LATENCY_MS, FLAGS)
   lib/          cn, Formatierung (Datum, Countdown, ECTS, Noten), ics
-  styles/       globals.css (Tailwind, Design-Tokens hell/dunkel)
+  styles/       globals.css (Tailwind, Design-Tokens)
 ```
 
 ## Architekturregeln
@@ -73,17 +73,17 @@ Abhängigkeiten nur in diese Richtung: UI → Store/Selektoren → Domain; Store
 - „Jetzt“ ist ausschließlich `DEMO_NOW` – nie `new Date()` oder `Date.now()` in Komponenten oder Domäne.
 - Simulierte Aktionen (z. B. Abmeldung) ändern nur den Store, speichern vorher einen Snapshot (Rückgängig) und sind im UI als Simulation erkennbar.
 - Persistenz über Zustand `persist` mit `version`. Ändern sich Dummy-Daten: Version erhöhen, damit alte Demo-Stände verworfen werden. „Demo zurücksetzen“ in den Einstellungen.
-- Theme: Komponenten lesen und setzen es über `useTheme()`. Gespeichert wird nur über `readStoredTheme`/`writeStoredTheme` in `src/lib/theme.ts`; denselben Schlüssel liest das Init-Skript in `index.html`. Ab P2-05 übernimmt der Store `setTheme`, ohne zweiten Speicherort.
+- Nur helles Design (P5-06, Entscheidung von Lucas): kein Theme-Code. `@custom-variant dark` in `globals.css` bleibt an die nie gesetzte Klasse `.dark` gebunden, damit die generierten `dark:`-Klassen von shadcn wirkungslos bleiben – nicht entfernen.
 - Die Werte aus KONZEPT §10.4 sind das Testorakel. Weicht Code davon ab, ist zuerst der Code verdächtig.
 - Tests: `*.test.ts` schreibst du selbst. `src/domain/*.spec.ts` sind Spezifikationstests von Codex, abgeleitet aus KONZEPT §10 – die änderst du nur nach Rücksprache mit Lucas.
 
 ## UI- und Inhaltsregeln
-- Designrevision P1-07: Referenz 1 bestimmt Ästhetik, kompakte Karten und lokale Linienillustrationen. Referenz 2 liefert ausschließlich die Farbpalette. Topnavigation und Hamburger-Overlay statt permanenter Sidebar und mobiler Tab-Leiste (KONZEPT §7, §12.1).
+- Designrevisionen P1-07 und P5-06: Referenz 1 bestimmt Ästhetik, kompakte Karten und lokale Linienillustrationen. Referenz 2 liefert die Grundpalette, ergänzt um die Farbfamilie (KONZEPT §12.2). Topnavigation und helles Menü-Panel unter dem Hamburger statt permanenter Sidebar und mobiler Tab-Leiste; Assistent-Button mit Sprechblase und Fenster unten rechts (KONZEPT §7, §12.1).
 - Die Übersicht liest seit P3-02 alle Werte über Store-Selektoren (`src/store/selectors.ts`); Lade- und Fehlerzustände je Kanal über `ResourceBoundary`.
 - UI auf Deutsch mit Du-Ansprache; Code, Bezeichner und Commits auf Englisch; Dokumentation (README, CHANGELOG, `docs/`) auf Deutsch. Begriffe laut Glossar (KONZEPT §14) – insbesondere **Quelle** (Beleg) ≠ **Kanal** (Herkunftssystem).
 - Farben **nur über Tokens** aus `src/styles/globals.css` (Werte: KONZEPT §12.2). Keine Hex-Werte in Komponenten.
 - Terrakotta (`--accent`) ist Markenfarbe, **nie** Statusfarbe und nie Text auf hellem Grund (dort `--accent-strong`). Text auf Terrakotta-Flächen in `--accent-foreground` (Tinte). Neutrale Hover- und Auswahlflächen (Menüs, Listen) sind `bg-muted`, nicht `bg-accent`. Bringt eine neue shadcn-Komponente `bg-accent` als Hover mit, beim Hinzufügen umstellen.
-- Helles Theme: Creme als Arbeitsfläche, Weiß als Karte, warme neutrale Nebenflächen; lange Texte in Tinte statt Terrakotta. Die hervorgehobene Terrakotta-Karte verwendet Tinte für Text und Fokusring. Informationshaltige Fortschrittsbalken nutzen `--accent-strong` statt `--accent` (Kontrastrevision P1-07).
+- Creme als Arbeitsfläche, Weiß als Karte, warme neutrale Nebenflächen; lange Texte in Tinte statt Terrakotta. Terrakotta ist nur Marke: Logo, Links, aktive Navigation, Fokusring, Assistent-Button, Kante von „Jetzt wichtig“ (zart getönt, Text in Tinte). Farbfamilie (`--tone-*`) für Module, Noten und ECTS – ECTS immer `--tone-blue`; nie Statusfarbe. Informationshaltige Fortschrittsbalken nutzen die starken Töne (≥ 3:1 zum Track).
 - Schriftgrößen über die Typo-Klassen aus KONZEPT §12.3 (`text-page-title` … `text-figure`); Zahlen (ECTS, Countdown, Noten) mit `tabular-nums`.
 - Status „Im Plan / Knapp / Kritisch“ immer als Icon + Text + Farbe.
 - Hi-Fi-Regel (VL05): realistische deutsche Texte aus `docs/INHALTE.md`; kein Lorem Ipsum, keine Bildplatzhalter, keine sichtbaren TODOs.
@@ -97,7 +97,7 @@ Abhängigkeiten nur in diese Richtung: UI → Store/Selektoren → Domain; Store
 ## Definition of Done (pro Task)
 1. Akzeptanzkriterien aus `docs/ROADMAP.md` erfüllt, Checkbox abgehakt.
 2. `npm run check` grün.
-3. Sichtprüfung bei 1440×900 und 390×844, jeweils hell und dunkel.
+3. Sichtprüfung bei 1440×900 und 390×844.
 4. PR-Beschreibung nennt Task-ID, Story-IDs (US-xx), VPC-Bezug (P1–P5, G1–G4) und die Prüfergebnisse; bei Oberflächenänderungen Screenshots aus Demodaten.
 5. Codex-Review ohne offene Blocker oder Major-Befunde.
 6. Dokumentation nachgezogen.

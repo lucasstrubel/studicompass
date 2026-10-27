@@ -86,7 +86,7 @@ Ehrliche Einschränkung zu P4: Echte Sonderfälle stehen per Definition oft nich
 | Priorität | Inhalt | Stories |
 |---|---|---|
 | **Hoch** | Studienstand mit Ampel und Meilenstein · Folgen-Check inkl. simulierter Abmeldung · Studienverlauf mit Prognose · Assistent mit Quellen und Fallback · Postfach · mobil bedienbarer Kernflow | US-03, US-04, US-06, US-07, US-09, US-12, US-13, US-15, US-20 |
-| **Mittel** | Onboarding mit Kanälen · Frist-Widget und Fristenliste · Rückgängig · Was-wäre-wenn · personalisierte Antwortzeile · „Für dich wichtig“ · Hinweis-Stil · Hell/Dunkel | US-01, US-05, US-08, US-10, US-14, US-16, US-17 (ohne Export), US-18, US-19 |
+| **Mittel** | Onboarding mit Kanälen · Frist-Widget und Fristenliste · Rückgängig · Was-wäre-wenn · personalisierte Antwortzeile · „Für dich wichtig“ · Hinweis-Stil | US-01, US-05, US-08, US-10, US-14, US-16, US-17 (ohne Export), US-18 |
 | **Niedrig** | Ziel und Nebenjob im Onboarding mit Belastungshinweis · Restverlauf-Vorschlag · ICS-Export · Produkt-Tour · Fehler-Simulation je Kanal · ECTS-Verlaufsdiagramm | US-02, US-11, US-17 (Export) |
 
 ### 5.2 Ideenparkplatz (bewusst nicht im Prototyp)
@@ -98,6 +98,7 @@ Ehrliche Einschränkung zu P4: Echte Sonderfälle stehen per Definition oft nich
 - Lerngruppen und Chat mit Kommiliton:innen
 - Lernplan-Generator, Notenprognose
 - Mehrsprachigkeit
+- Dunkles Design (für die Produktdemo entfernt, Entscheidung von Lucas am 27.10.2026, P5-06; zuvor US-19)
 - Sicht für Prüfungsamt/Studienberatung (zweite Persona)
 
 > Claude Code: Neue Ideen hier als Zeile ergänzen – nicht bauen.
@@ -131,7 +132,7 @@ Ehrliche Einschränkung zu P4: Echte Sonderfälle stehen per Definition oft nich
 | US-16 | 6 | Als Niklas möchte ich, dass für mich wichtige Nachrichten hervorgehoben werden. | Mittel | P1 | Abschnitt „Für dich wichtig“ (Prüfung oder Frist in den nächsten 7 Tagen, Meilenstein) mit kurzer Begründung je Eintrag |
 | US-17 | 6 | Als Niklas möchte ich alle Fristen in einer Liste sehen und in meinen Kalender übernehmen. | Mittel / Niedrig (Export) | G1 | Liste gruppiert; ICS-Export |
 | US-18 | 6 | Als Niklas möchte ich den Ton der Hinweise einstellen (sachlich oder direkt). | Mittel | G4 | Einstellung wirkt auf Übersicht, Folgen-Check, Benachrichtigungen |
-| US-19 | – | Als Niklas möchte ich zwischen hellem und dunklem Design wählen. | Mittel | – | Hell/Dunkel/System; Kontraste laut §12.2 |
+| US-19 | – | ~~Als Niklas möchte ich zwischen hellem und dunklem Design wählen.~~ **Gestrichen** (P5-06): für die Produktdemo nur das helle Design, Entscheidung von Lucas am 27.10.2026 | – | – | – |
 | US-20 | – | Als Niklas möchte ich den Kernflow auch am Smartphone bedienen können. | Hoch | – | S1 und S4 ab 360 px vollständig bedienbar |
 
 ### 6.2 Qualitätsanforderungen
@@ -174,13 +175,14 @@ Ehrliche Einschränkung zu P4: Echte Sonderfälle stehen per Definition oft nich
 | Onboarding | `/start` | nein |
 | Nicht gefunden | `*` | nein |
 
-**Breakpoints und Navigation (Designrevision P1-07)**
-- Desktop ≥ 1280 px: eingerückter App-Rahmen mit 24 px Außenabstand, maximal 1600 px breit, abgerundeten Ecken und dezentem Schatten. Topbar mit Hamburger, Marke, Übersicht, Studienverlauf, Module & Noten, Postfach, Hell-/Dunkel-Schalter, Glocke, Profil und Demo-Datum. Hauptbereich plus rechte Spalte 320 px.
+**Breakpoints und Navigation (Designrevision P1-07, überarbeitet in P5-06)**
+- Desktop ≥ 1280 px: eingerückter App-Rahmen mit 24 px Außenabstand, maximal 1600 px breit, abgerundeten Ecken und dezentem Schatten. Topbar mit Hamburger, Marke, Übersicht, Studienverlauf, Module & Noten, Postfach, Glocke und ganz rechts Profil. Kein Demo-Datum in der Topbar (P5-06): Das Testszenario nennt den 25. Januar. Hauptbereich plus rechte Spalte 320 px.
 - Tablet 768–1279 px: gleicher Rahmen, Navigation über Hamburger; rechte Spalte unter dem Hauptbereich.
-- Mobil < 768 px: bildschirmfüllend, kompakte Topbar mit Hamburger; keine untere Tab-Leiste. Demo-Datum darf umbrechen.
-- Alle Bereiche einschließlich Assistent, Fristen und Einstellungen im 280 px breiten dunklen Overlay-Menü. Keine permanente Sidebar, keine Verschiebung des Inhalts. Aktive Links mit Markierung und Fettung.
-- Maus mit Hover-Unterstützung: nach 150 ms Vorschau öffnen; beim Wechsel zwischen Trigger und Menü offen halten; nach 250 ms außerhalb schließen, sofern kein Tastaturfokus darin liegt. Klick fixiert als Radix-Sheet; Touch und Tastatur öffnen explizit. Schließen über Trigger/Schließen, Außenklick, Escape oder Navigation; explizites Menü mit Fokusführung und Fokusrückgabe. Routenwechsel schließt auch die Vorschau.
-- Ein semantischer Seitentitel im Inhaltsbereich. Bestehende Routen bleiben unverändert. Der Hell-/Dunkel-Schalter in der Topbar ist auf allen Bildschirmgrößen erreichbar, zeigt den aktuellen Dunkelmodus über aria-checked und speichert die explizite Auswahl über useTheme; Ausgangspunkt ist das aufgelöste System- oder gespeicherte Design.
+- Mobil < 768 px: bildschirmfüllend, einzeilige Topbar mit Hamburger, Marke, Glocke und Profil; keine untere Tab-Leiste.
+- Alle Bereiche einschließlich Assistent, Fristen und Einstellungen in einem 280 px breiten hellen Panel direkt unter dem Hamburger: weiße Fläche, rundum abgerundet, feiner Rahmen, weicher Schatten. Die Seite dahinter bleibt sichtbar und scharf (kein Abdunkeln, keine Unschärfe). Keine permanente Sidebar, keine Verschiebung des Inhalts. Aktiver Link mit Fläche `--muted`, Fettung und Icon in Terrakotta.
+- Maus mit Hover-Unterstützung: nach 150 ms Vorschau öffnen; beim Wechsel zwischen Trigger und Menü offen halten; nach 250 ms außerhalb schließen, sofern kein Tastaturfokus darin liegt. Klick fixiert dasselbe Panel als Radix-Dialog; Touch und Tastatur öffnen explizit. Schließen über Trigger/Schließen, Außenklick, Escape oder Navigation; explizites Menü mit Fokusführung und Fokusrückgabe. Routenwechsel schließt auch die Vorschau.
+- Ein semantischer Seitentitel im Inhaltsbereich. Bestehende Routen bleiben unverändert. Nur helles Design (P5-06).
+- **Assistent-Button** (P5-06): runder Terrakotta-Button unten rechts auf jeder Seite der App außer `/assistent`. Beim Aufruf stellt eine Sprechblase ihn vor („Hallo Niklas! Fragen zur Prüfungsordnung? Ich antworte mit Quelle.“); sie verschwindet beim Schließen, beim Öffnen des Assistenten oder beim ersten Seitenwechsel. Der Button öffnet das Assistent-Fenster (§8 S5). Toasts und das Seitenende halten Abstand zum Button.
 
 **Einstiege in den Folgen-Check:** „Jetzt wichtig“-Karte (S1) · Modulkarte und Moduldetail (S1, S3) · Benachrichtigung (S8) · Assistentenantwort (S5) · Studienverlauf (S2)
 
@@ -215,18 +217,18 @@ Jeder Screen hat Lade-, Leer- und Fehlerzustand. Werte in Beispielen entsprechen
 - Danach Übersicht; optional Produkt-Tour mit 3 Schritten (Studienstand → Jetzt wichtig → Assistent), abbrechbar.
 
 ### S1 Übersicht `/` (US-03, US-04, US-05, US-07, US-15)
-**Kopf:** „Guten Abend, Niklas“ · Chip „Demo · Mo, 25.01.2027“ · Glocke mit Zähler · Avatar-Menü.
+**Kopf:** „Guten Abend, Niklas“ · Chip „3. Semester · WS 2026/27“; Glocke mit Zähler und Profil-Menü in der Topbar.
 
-**Hauptspalte (Reihenfolge = Priorität):**
+**Hauptspalte** (Reihenfolge = Priorität; den ECTS-Verlauf hat Lucas in P5-06 direkt unter die erste Reihe gesetzt):
 1. **Studienstand** (Hero): „48 ECTS“ groß, „von 210“; Fortschrittsbalken mit Soll-Markierung bei 60; Ampel „Knapp“ + „12 ECTS hinter dem Regelverlauf (Soll nach 2 Semestern: 60)“; Prognose „Ende dieses Semesters: 78 von 90 – wenn du alle angemeldeten Prüfungen bestehst“; Link „Wie wird das berechnet?“ (Popover mit DR-1, DR-2); Button „Studienverlauf ansehen“.
-2. **Jetzt wichtig** (Terrakotta-Karte, höchstens 2 Einträge, nur bei Sonderregel): „Statistik: Abmeldung nur noch bis morgen, 23:59 Uhr“ · Folge in einem Satz (Text je Hinweis-Stil, §12.5) · Countdown · Button „Folgen prüfen“ → S4.
-3. **Dieses Semester (WS 2026/27):** fünf Modulkarten im Raster (wie Referenz 1): Titel, Prüfungstermin, Status „Angemeldet“, Moodle-Fortschritt (z. B. „Übungsblätter 5/12“), Label „nur im WS“ bei jährlichem Angebot, Link zum Moduldetail.
-4. **Nächster Meilenstein:** „Praxissemester · WS 2027/28“ · Bedingung (DR-6) mit Quelle · „Noch offen: 7 Module des Grundstudiums (5 davon in diesem Semester angemeldet)“ · „Erreichbar, wenn du Programmieren 2 und Wirtschaftsprivatrecht im SS 2027 bestehst“.
-5. *(Niedrig)* **ECTS-Verlauf:** Flächendiagramm Ist vs. Soll je Semester (in der Bildsprache von Referenz 1).
+2. **Jetzt wichtig** (zart getönte Karte `--accent-soft` mit Terrakotta-Kante links, Text in Tinte; höchstens 2 Einträge, nur bei Sonderregel): „Statistik: Abmeldung nur noch bis morgen, 23:59 Uhr“ · Folge in einem Satz (Text je Hinweis-Stil, §12.5) · Countdown · Button „Folgen prüfen“ → S4.
+3. *(Niedrig)* **ECTS-Verlauf** in voller Breite: Flächendiagramm Ist vs. Soll je Semester, das laufende Semester als Prognose (blau wie der Studienstand-Balken, §12.2); ab 1280 px Wertetabelle rechts daneben.
+4. **Dieses Semester (WS 2026/27):** fünf Modulkarten im Raster (wie Referenz 1), jede in ihrer Modulfarbe (Illustration, Moodle-Balken; §12.2): Titel, Prüfungstermin, Status „Angemeldet“, Moodle-Fortschritt (z. B. „Übungsblätter 5/12“), Label „nur im WS“ bei jährlichem Angebot, Link zum Moduldetail.
+5. **Nächster Meilenstein:** „Praxissemester · WS 2027/28“ · Bedingung (DR-6) mit Quelle · „Noch offen: 7 Module des Grundstudiums (5 davon in diesem Semester angemeldet)“ · „Erreichbar, wenn du Programmieren 2 und Wirtschaftsprivatrecht im SS 2027 bestehst“.
 
 **Rechte Spalte:** Nächste Frist mit Countdown · Neu im Postfach (3 relevante Einträge mit Kanal-Badge) · Letzte Noten (3 Einträge mit Noten-Badge, wie Referenz 1) · „Frag den Assistenten“ (Eingabefeld + 2 Vorschlagsfragen).
 
-**Mobil:** Studienstand → Jetzt wichtig → Nächste Frist → Dieses Semester → Meilenstein → Rest.
+**Mobil:** Studienstand → Jetzt wichtig → Nächste Frist → ECTS-Verlauf → Dieses Semester → Meilenstein → Rest.
 
 ### S2 Studienverlauf `/verlauf` (US-04, US-09, US-10, US-11)
 - **Kopf:** Abschlussprognose („Voraussichtlicher Abschluss: WS 2028/29 – in Regelstudienzeit“) + Ampel + Ziel aus dem Onboarding.
@@ -267,6 +269,7 @@ Jeder Screen hat Lade-, Leer- und Fehlerzustand. Werte in Beispielen entsprechen
 - **Antwortkarte** (Aufbau §11), Tipp-Indikator 0,6–1,2 s.
 - **Fallback** bei fehlender Zuordnung oder Sonderfall + „Anfrage vorbereiten“ (Dialog mit kopierbarem Text).
 - **Kontext:** Aufruf aus einem Modul → Chip „bezogen auf: Statistik“.
+- **Assistent-Fenster** (P5-06): Der Assistent-Button (§7) öffnet auf jeder Seite ein kompaktes Fenster unten rechts (mobil bildschirmfüllend) mit Vorschlagsfragen, denselben Antwortkarten samt Quellen, Fallback und „Anfrage vorbereiten“; Eingabe unten fixiert. Fenster und Seite teilen sich einen Gesprächsverlauf (nur im Speicher, „Demo zurücksetzen“ leert ihn). „Auf der Assistent-Seite öffnen“ führt den Verlauf auf `/assistent` fort; ein Seitenwechsel schließt das Fenster.
 - Label an jeder Antwort: „KI-Antwort · verbindlich ist die SPO“.
 
 ### S6 Postfach `/postfach` (US-15, US-16)
@@ -283,8 +286,8 @@ Jeder Screen hat Lade-, Leer- und Fehlerzustand. Werte in Beispielen entsprechen
 ### S8 Benachrichtigungen (Glocke → Sheet) (US-07, US-18)
 Liste mit Typ-Icon, Text im gewählten Hinweis-Stil, Zeit, Ziel-Link; „Alle als gelesen markieren“.
 
-### S9 Einstellungen `/einstellungen` (US-18, US-19)
-Darstellung (Hell/Dunkel/System) · Hinweis-Stil (mit Vorschau) · Benachrichtigungen je Typ · verbundene Kanäle (Status, „Verbindung trennen“ simuliert) · Demo: „Demo zurücksetzen“, „Onboarding erneut starten“, Hinweis zum Prototyp.
+### S9 Einstellungen `/einstellungen` (US-18)
+Hinweis-Stil (mit Vorschau) · Benachrichtigungen je Typ · verbundene Kanäle (Status, „Verbindung trennen“ simuliert) · Demo: „Demo zurücksetzen“, „Onboarding erneut starten“, Hinweis zum Prototyp.
 
 ### 404
 „Diese Seite gibt es nicht.“ + Button „Zur Übersicht“.
@@ -492,24 +495,24 @@ Katalog: `docs/INHALTE.md` §10.
 
 ### 12.1 Layout und Ästhetik – Referenz 1
 
-Referenz 1 bestimmt Komposition, Kartengestaltung und Bildsprache. Referenz 2 liefert ausschließlich die Farbpalette (§12.2), keine Komponenten- oder Layoutmuster. Entscheidung von Lucas: Designrevision vor Phase 2.
+Referenz 1 bestimmt Komposition, Kartengestaltung und Bildsprache. Referenz 2 liefert die Grundpalette (§12.2), keine Komponenten- oder Layoutmuster. Entscheidung von Lucas: Designrevision vor Phase 2. Designrevision P5-06: Terrakotta allein wirkte monoton; dazu kommt eine Farbfamilie für Module, Noten und ECTS (§12.2), Terrakotta bleibt Marke.
 
 | Referenz 1 | Im Prototyp | Begründung |
 |---|---|---|
 | Eingerücktes Dashboard mit weichen Außenecken | Desktop-Rahmen, mobil bildschirmfüllend | ruhige Arbeitsfläche |
-| Dunkle Navigation | aufklappbares Hamburger-Menü; Hauptlinks in der Topbar (§7) | mehr Raum für Inhalte |
+| Dunkle Navigation | helles, aufklappbares Menü-Panel; Hauptlinks in der Topbar (§7) | mehr Raum für Inhalte; fügt sich in die helle Fläche (P5-06) |
 | Kompakte Karten mit feinem Rahmen | kleine Radien, keine starken Kartenschatten, klare Typografie | Informationshierarchie wie Referenz 1 |
 | Kursraster mit Linienillustrationen | originale lokale SVG-Illustrationen zu Modulen, Prüfungstermin und Moodle-Fortschritt | keine Bildplatzhalter oder übernommenen Fremdassets |
 | Großer Monatskalender | Studienstand, Jetzt wichtig, Module und Meilenstein | bestehender fachlicher Scope |
 | Ruhigere rechte Spalte | Frist, Postfach, bestandene Prüfungen, Assistent | dokumentierte Studieninhalte |
 
-P1-07 hat die Übersicht als Designvorschau mit Präsentationsdaten gestaltet; P3-02 hat die Fixture durch Store-Selektoren ersetzt. Die Komposition bleibt: Studienstand und Jetzt wichtig nebeneinander, Modulraster mit Linienillustrationen, Meilenstein, ECTS-Verlauf; rechte Spalte mit Frist, Postfach, Noten und Assistent. Jeder Bereich hat Skeleton und Fehlerzustand je Kanal; eine simulierte Abmeldung ist als „Simulation“ markiert und auf der Übersicht rückgängig zu machen.
+P1-07 hat die Übersicht als Designvorschau mit Präsentationsdaten gestaltet; P3-02 hat die Fixture durch Store-Selektoren ersetzt. Die Komposition: Studienstand und Jetzt wichtig nebeneinander, darunter der ECTS-Verlauf (P5-06), Modulraster mit Linienillustrationen in Modulfarben, Meilenstein; rechte Spalte mit Frist, Postfach, Noten und Assistent. Jeder Bereich hat Skeleton und Fehlerzustand je Kanal; eine simulierte Abmeldung ist als „Simulation“ markiert und auf der Übersicht rückgängig zu machen.
 
 ### 12.2 Farb-Tokens (Referenz 2 „Warm Ink“, für Lesbarkeit angepasst; Kontraste nach WCAG berechnet)
 
-**Hell**
+**Grundfarben**
 
-Kontrastrevision auf Wunsch von Lucas: cremefarbene Arbeitsfläche, weiße Karten und wärmere, deutlichere Nebenflächen. Sekundärtext und interaktive Konturen sind dunkler. „Jetzt wichtig“ nutzt die kräftige Terrakotta-Fläche mit Tinte als Textfarbe (5,6:1), statt langer farbiger Texte auf blasser Fläche. Der Fokusring auf dieser Karte ist Tinte; im dunklen Theme bleibt die bisherige weiche Akzentfläche erhalten. Fortschrittsbalken nutzen den dunkleren Akzent, damit der Füllstand mindestens 3:1 zum neutralen Track erreicht.
+Nur helles Design (Entscheidung von Lucas am 27.10.2026, P5-06). Kontrastrevision auf Wunsch von Lucas: cremefarbene Arbeitsfläche, weiße Karten und wärmere, deutlichere Nebenflächen. Sekundärtext und interaktive Konturen sind dunkler. „Jetzt wichtig“ ist seit P5-06 eine zart getönte Fläche `--accent-soft` mit Terrakotta-Kante und Tinte als Textfarbe (14,3:1; Sekundärtext 6,2:1, Fokusring 4,8:1); die volle Terrakotta-Fläche stach zu sehr heraus. Terrakotta ist Marke: Logo, Links, aktive Navigation, Fokusring, Assistent-Button (Tinte auf Terrakotta 5,6:1) und die Kante von „Jetzt wichtig“. Fortschrittsbalken nutzen die starken Töne der Farbfamilie, damit der Füllstand mindestens 3:1 zum neutralen Track erreicht.
 
 | Token | Wert | Verwendung | Kontrast |
 |---|---|---|---|
@@ -521,48 +524,37 @@ Kontrastrevision auf Wunsch von Lucas: cremefarbene Arbeitsfläche, weiße Karte
 | `--foreground` | `#1A1917` | Text | 16,7:1 |
 | `--muted-foreground` | `#57534B` | Sekundärtext | 7,3:1 (Seite) / 7,7:1 (Karte) |
 | `--primary` / `--primary-foreground` | `#1A1917` / `#FAF9F5` | Primär-Buttons (Tinte) | 16,7:1 |
-| `--accent` | `#D97757` | Markenakzent: Flächen, Icons, Diagramme, aktive Markierung | als Text nur 3,0:1 → **nie Text auf hellem Grund**; als Fläche auf hellem Grund 2,96:1 → nie alleiniger Informationsträger |
+| `--accent` | `#D97757` | Markenakzent: Assistent-Button, Kante von „Jetzt wichtig“, aktive Markierung | als Text nur 3,0:1 → **nie Text auf hellem Grund**; als Fläche auf hellem Grund 2,96:1 → nie alleiniger Informationsträger |
 | `--accent-foreground` | `#1A1917` | Text auf Terrakotta | **5,6:1** (Weiß auf Terrakotta nur 3,1:1 → nur ab 24 px) |
 | `--accent-strong` | `#A4492E` | Links, Akzenttext, Fokusring | 5,6:1 / 5,9:1 |
 | `--accent-soft` / `--accent-soft-foreground` | `#F7E4DD` / `#9A4128` | zurückhaltende Hervorhebungen / Text darauf | 5,4:1 |
-| `--sidebar` | `#1A1917` | Sidebar | – |
-| `--sidebar-foreground` | `#D9D6CF` | Sidebar-Text | 12,1:1 |
-| `--sidebar-muted` | `#A4A29B` | inaktive Einträge | 6,9:1 |
-| `--sidebar-active` | `#2B2926` + 3-px-Balken `--accent` | aktiver Eintrag (zusätzlich fett) | Balken 4,7:1, Text 10,0:1 |
 
-**Dunkel**
+**Farbfamilie** – Designrevision P5-06: Terrakotta allein wirkte monoton. Wie in Referenz 1 bekommt jedes Modul eine eigene Farbe; die ECTS-Werte (Balken und Verlauf) sind durchgehend blau. Starke Töne für Linien, Balken und Illustrationskonturen (≥ 3:1 auf Seite, Karte und Track `--muted`), weiche Töne als Fläche unter Tinte (≥ 14:1). Nie Statusfarbe: Grün, Ocker und Rot bleiben Im Plan, Knapp und Kritisch vorbehalten.
 
-| Token | Wert | Kontrast |
-|---|---|---|
-| `--background` | `#1A1917` | – |
-| `--card` | `#262422` | – |
-| `--muted` | `#2E2C29` | Sekundärtext darauf 5,5:1 |
-| `--border` | `#3A3733` | dekorativ |
-| `--input` | `#827E74` | 3,8:1 auf Karte |
-| `--foreground` | `#F0EEE8` | 15,1:1 / 13,3:1 |
-| `--muted-foreground` | `#A4A29B` | 6,9:1 / 6,1:1 |
-| `--primary` / `--primary-foreground` | `#F0EEE8` / `#1A1917` | 15,1:1 |
-| `--accent` | `#D97757` | darf hier auch Text sein: 5,6:1 / 5,0:1 |
-| `--accent-foreground` | `#1A1917` | 5,6:1 |
-| `--accent-strong` | `#E8946F` | 7,4:1 / 6,6:1 |
-| `--accent-soft` / `--accent-soft-foreground` | `#3A2A22` / `#F2B49B` | 7,7:1 |
-| `--sidebar` / `--sidebar-foreground` / `--sidebar-muted` | `#141311` / `#D9D6CF` / `#A4A29B` | 12,8:1 / 7,3:1 |
-| `--sidebar-active` | `#262422` + Balken `--accent` | Balken 5,0:1, Text 10,7:1 |
+| Token | Wert | Verwendung | Kontrast |
+|---|---|---|---|
+| `--tone-violet` / `--tone-violet-soft` | `#6A55B5` / `#ECE8F7` | Statistik, Mathematik 2 | 5,9:1 Karte · 4,9:1 Track |
+| `--tone-teal` / `--tone-teal-soft` | `#1E7369` / `#DCEFEA` | Datenbanken, Kosten- und Leistungsrechnung | 5,7:1 Karte · 4,7:1 Track |
+| `--tone-blue` / `--tone-blue-soft` | `#3466A8` / `#E2EBF7` | ECTS (Studienstand-Balken, ECTS-Verlauf), Software Engineering 1, Betriebssysteme und Rechnernetze | 5,8:1 Karte · 4,8:1 Track |
+| `--tone-plum` / `--tone-plum-soft` | `#9C4675` / `#F5E3EC` | Geschäftsprozessmanagement | 5,9:1 Karte · 4,9:1 Track |
+| `--tone-terracotta` / `--tone-terracotta-soft` | `#A4492E` / `#F7E4DD` | Marketing (= `--accent-strong` / `--accent-soft`) | 5,9:1 Karte · 4,9:1 Track |
+
+Weitere Module erhalten über eine feste Zuordnung (`moduleTone`) einen der fünf Töne.
 
 **Statusfarben** – getrennt vom Markenakzent; immer mit Icon und Text
 
-| Status | Hell: Fläche/Icon · Text · weiche Fläche | Dunkel: Text/Icon · weiche Fläche |
-|---|---|---|
-| Im Plan | `#788C5D` (3,7:1) · `#5A6B43` (5,8:1) · `#EAEFE2` (Text 5,0:1) | `#9CB37E` (6,8:1) · `#2C3324` (5,7:1) |
-| Knapp | `#B07A12` (3,7:1) · `#8A5A00` (5,9:1) · `#FBEFD5` (5,2:1) | `#E2B04F` (7,8:1) · `#3A2F17` (6,6:1) |
-| Kritisch | `#C8443A` (4,8:1) · `#B3261E` (6,5:1) · `#FBE3E0` (5,3:1) | `#F08A7E` (6,4:1) · `#3D2220` (6,0:1) |
-| Info | `#8CB2D7` (dekorativ) · `#3B6694` (6,0:1) · `#E3ECF6` (5,0:1) | `#8CB2D7` (7,0:1) · `#1F2B38` (6,5:1) |
+| Status | Fläche/Icon · Text · weiche Fläche |
+|---|---|
+| Im Plan | `#788C5D` (3,7:1) · `#5A6B43` (5,8:1) · `#EAEFE2` (Text 5,0:1) |
+| Knapp | `#B07A12` (3,7:1) · `#8A5A00` (5,9:1) · `#FBEFD5` (5,2:1) |
+| Kritisch | `#C8443A` (4,8:1) · `#B3261E` (6,5:1) · `#FBE3E0` (5,3:1) |
+| Info | `#8CB2D7` (dekorativ) · `#3B6694` (6,0:1) · `#E3ECF6` (5,0:1) |
 
-**Overlay** hinter Dialogen und Sheets: `--overlay` = Tinte mit 30 % Deckkraft (hell) bzw. Schwarz mit 50 % (dunkel); dekorativ, kein Kontrastpaar.
+**Overlay** hinter Dialogen und Sheets: `--overlay` = Tinte mit 30 % Deckkraft, ohne Unschärfe; dekorativ, kein Kontrastpaar.
 
 Regeln: Terrakotta ist nie Statusfarbe. Kritisch-Rot und Terrakotta liegen im Farbton nah beieinander – deshalb tragen Status-Badges immer Icon und Text.
 
-**Diagramme:** Ist = Linie `--accent` + Fläche `--accent-soft`; Soll = gestrichelte Linie `--muted-foreground`; Werte immer zusätzlich als Zahl.
+**Diagramme:** Ist = Linie `--tone-blue` + Fläche `--tone-blue-soft`, Prognose gestrichelt in `--tone-blue`; Soll = gestrichelte Linie `--muted-foreground`; Werte immer zusätzlich als Zahl.
 
 ### 12.3 Typografie
 - Schrift: **Manrope** (variabel, lokal über Fontsource) `[Vorschlag]`; Alternative: Plus Jakarta Sans.
@@ -570,8 +562,8 @@ Regeln: Terrakotta ist nie Statusfarbe. Kritisch-Rot und Terrakotta liegen im Fa
 - Zahlen (ECTS, Countdown, Noten) mit `tabular-nums`.
 
 ### 12.4 Komponenten und Muster
-- **Card:** Radius 14 px (`rounded-xl`), Innenabstand 16 px kompakt bzw. 24 px regulär, Rahmen `--border`, ohne Schatten. Studienstand und Jetzt wichtig stehen auf Desktop nebeneinander; auf kleinen Ansichten untereinander.
-- **Modulillustrationen:** originale lokale SVG-Linienzeichnungen (Bücher, Datenbank, Diagramm, Prozess, Globus), dekorativ neben dem Modultitel; keine dekorativen Icon-Kreise aus Referenz 2.
+- **Card:** Radius 14 px (`rounded-xl`), Innenabstand 16 px kompakt bzw. 24 px regulär, Rahmen `--border`, ohne Schatten. Studienstand und Jetzt wichtig stehen auf Desktop nebeneinander; auf kleinen Ansichten untereinander. Schwebende Flächen (Menü-Panel, Sprechblase, Assistent-Fenster) haben `rounded-2xl` und den weichen Schatten des App-Rahmens.
+- **Modulillustrationen:** originale lokale SVG-Linienzeichnungen (Bücher, Datenbank, Diagramm, Prozess, Globus), dekorativ neben dem Modultitel, in der Modulfarbe (Fläche weich, Kontur stark); keine dekorativen Icon-Kreise aus Referenz 2. Notenkreise der rechten Spalte in der weichen Modulfarbe.
 - **StatusBadge:** Icon (Häkchen-Kreis / Warndreieck / Achteck mit Ausrufezeichen) + Text + Farbe.
 - **ChannelBadge:** Icon + Kanalname (POS, Moodle, Mail, Website).
 - **Countdown** (relativ zu `DEMO_NOW`), **EctsProgress** (mit Soll-Markierung und Zahl), **ConsequenceItem** (Schwere-Icon und -Text, Titel, „Warum?“ mit Quelle), **CitationList** („Beispiel“ bei ungeprüften Regeln), **DemoBadge** („Demo“ / „Simulation“), **EmptyState**, **ErrorState** (mit „zuletzt aktualisiert“ und Erneut laden), **PageHeader**, Skeletons. Alle Zustände zeigt `/_ui`.
@@ -603,7 +595,7 @@ Regeln: Terrakotta ist nie Statusfarbe. Kritisch-Rot und Terrakotta liegen im Fa
 | Steuerbarkeit | Folgen-Check erzwingt keine Entscheidung; Simulationen jederzeit verwerfbar; Assistent per Vorschlag oder Freitext; Zurück überall |
 | Erwartungskonformität | bekannte Dashboard-Muster (Topnavigation, aufklappbares Menü, Karten, Glocke) wie Referenz 1; konsistente Komponenten; deutsche Datums- und Zahlformate; Begriffe laut Glossar |
 | Fehlertoleranz | Bestätigung vor folgenreicher Aktion; Rückgängig-Toast; Fallback statt erfundener Antwort; Fehlerzustand je Kanal mit Stand der letzten Aktualisierung |
-| Individualisierbarkeit | Hell/Dunkel/System (Folienbeispiel Dark Mode); Hinweis-Stil; Benachrichtigungstypen – abgegrenzt von **Personalisierung** („Für dich wichtig“ ordnet das System selbst) |
+| Individualisierbarkeit | Hinweis-Stil; Benachrichtigungstypen (Hell/Dunkel für die Produktdemo gestrichen, P5-06) – abgegrenzt von **Personalisierung** („Für dich wichtig“ ordnet das System selbst) |
 | Lernförderlichkeit | Onboarding und kurze Tour; Vorschlagsfragen; Erklärungen direkt am Ort der Information |
 
 ### 13.2 Weitere Prinzipien aus VL05

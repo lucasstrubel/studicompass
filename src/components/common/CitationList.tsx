@@ -6,12 +6,9 @@ import { cn } from "@/lib/utils";
 /** Sources (Quelle, KONZEPT §14) of a statement; unverified rules carry the label "Beispiel". */
 export function CitationList({
   citations,
-  muted = true,
   className,
 }: {
   citations: Citation[];
-  /** false on coloured surfaces (terracotta card), where the text keeps the surface's text colour. */
-  muted?: boolean;
   className?: string;
 }) {
   // Several rules often cite the same document; each source is listed once.
@@ -29,10 +26,7 @@ export function CitationList({
       {unique.map((citation, index) => (
         <li
           key={`${citation.document}-${index}`}
-          className={cn(
-            "flex flex-wrap items-center gap-x-2 gap-y-1 text-meta",
-            muted && "text-muted-foreground",
-          )}
+          className="flex flex-wrap items-center gap-x-2 gap-y-1 text-meta text-muted-foreground"
         >
           <BookOpen className="size-3.5 shrink-0" aria-hidden="true" />
           <span>

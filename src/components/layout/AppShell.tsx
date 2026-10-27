@@ -6,6 +6,7 @@ import { Topbar } from "@/components/layout/Topbar";
 import { APP_NAME } from "@/config/demo";
 import { useDemoStore } from "@/store/use-demo-store";
 import { CHANNEL_LABELS } from "@/components/common/labels";
+import { AssistantLauncher } from "@/features/assistant/AssistantLauncher";
 import { ProductTour } from "@/features/onboarding/ProductTour";
 import { CHANNELS } from "@/services/types";
 
@@ -40,7 +41,8 @@ export function AppShell() {
           tabIndex={-1}
           className="grid min-w-0 flex-1 outline-none xl:grid-cols-[minmax(0,1fr)_auto]"
         >
-          <div className="min-w-0 px-4 py-6 md:px-6 md:py-7 xl:px-8">
+          {/* The last column (content or right column) keeps its end clear of the assistant button. */}
+          <div className="min-w-0 px-4 py-6 last:pb-24 md:px-6 md:py-7 md:last:pb-24 xl:px-8">
             {!handle?.ownHeader && (
               <h1 className="mb-6 text-page-title">
                 {handle?.title ?? APP_NAME}
@@ -68,6 +70,7 @@ export function AppShell() {
           )}
         </main>
       </div>
+      <AssistantLauncher />
       <ProductTour />
     </>
   );

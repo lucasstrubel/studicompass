@@ -5,7 +5,7 @@ Zeitraum: Fr, 23.10. – Fr, 06.11.2026 (Präsentation) · Stand: 26.10.2026 (v3
 ## So wird mit dieser Roadmap gearbeitet
 - Reihenfolge einhalten. Jede Phase endet mit einem **Gate**; die nächste Phase beginnt erst, wenn das Gate erfüllt ist. **Ausnahme:** Phase 1 hängt nicht von Inhalten ab und läuft parallel zu Phase 0 – Gate M0 muss erst vor P2-03 erfüllt sein.
 - **Owner:** [Claude] = Claude Code · [Codex] = Codex, delegiert von Claude Code mit Brief nach `AGENTS.md` · [Team] = Gruppe · [Lucas] = Lucas allein.
-- **Pro Task:** neue Claude-Code-Unterhaltung → Plan (`/plan`) → Freigabe → Umsetzung auf eigenem Branch → `npm run check` → Sichtprüfung (1440×900 und 390×844, hell und dunkel) → Codex-Review (startet Claude Code mit `/codex-review --base main`) → Befunde abarbeiten → Checkbox abhaken → PR → Merge.
+- **Pro Task:** neue Claude-Code-Unterhaltung → Plan (`/plan`) → Freigabe → Umsetzung auf eigenem Branch → `npm run check` → Sichtprüfung (1440×900 und 390×844; seit P5-06 nur hell) → Codex-Review (startet Claude Code mit `/codex-review --base main`) → Befunde abarbeiten → Checkbox abhaken → PR → Merge.
 - **Pro Phase:** Phasen-Review (startet Claude Code mit `/codex-review --base m<n-1>` und dem Phasen-Fokus aus `docs/PROMPTS.md` §4) → Befunde abarbeiten → Gate prüfen → Tag `m<n>` auf `main`.
 - Prompt-Vorlagen für alle Schritte: `docs/PROMPTS.md`.
 - Prioritäten (Hoch/Mittel/Niedrig) und Stories: `docs/KONZEPT.md` §5 und §6.
@@ -275,6 +275,16 @@ Stand der Umsetzung: Hoch/Mittel implementiert, technische Prüfungen dokumentie
   - [x] Zwei belegte Inspektionsbefunde umgesetzt und technisch nachgeprüft; endgültige Top-Befunde nach Nutzertests und unabhängiges Review bleiben offen.
 - [ ] **P5-05 [Team]** Ergebnisse für die Präsentation festhalten: drei Kernbefunde und was daraufhin geändert wurde
   - [x] Vorlage für Beobachtung, Änderung und Nachprüfung vorbereitet; noch keine Nutzertestergebnisse eingetragen.
+
+### P5-06 [Claude] Designrevision 2 (Feedback von Lucas, 27.10.2026)
+Vor den Nutzertests, damit sie den neuen Stand sehen. Entscheidungen von Lucas: Chatfenster vor Ort, Terrakotta bleibt Marke plus Farbfamilie, helles Menü-Panel, „Jetzt wichtig“ zart getönt mit Kante.
+- [x] Topbar ohne Demo-Chip und Hell-/Dunkel-Schalter; Profil ganz rechts
+- [x] Hamburger-Menü als helles, rundum abgerundetes Panel für Hover und Klick; keine Unschärfe hinter Overlays
+- [x] Farbfamilie (Violett, Petrol, Blau, Pflaume, Terrakotta) für Module, Noten und ECTS; Terrakotta nur noch Marke
+- [x] Übersicht: „Jetzt wichtig“ zart getönt mit Kante; ECTS-Verlauf direkt unter Studienstand und Jetzt wichtig
+- [x] Assistent-Button mit Sprechblase und Chatfenster auf jeder Seite außer `/assistent`; gemeinsamer Verlauf mit der Assistent-Seite
+- [x] Dark Mode vollständig entfernt (Code, Tokens, Tests, Screenshots, Doku); US-19 gestrichen
+- **AK:** keine Hex-Werte außerhalb `globals.css`; Farbfamilie ≥ 3:1 zu Seite, Karte und Track; Menü und Assistent-Fenster per Tastatur bedienbar (Fokus hinein und zurück); keine horizontale Scrollleiste 360–1920 px; Assistent-Button verdeckt weder Seitenende noch Toasts; `npm run check` und `npm run e2e` grün; Screenshots neu (1440×900, 390×844).
 
 **Gate M5 (Mi 04.11. abends):** Top-Befunde behoben · Testergebnisse dokumentiert.
 

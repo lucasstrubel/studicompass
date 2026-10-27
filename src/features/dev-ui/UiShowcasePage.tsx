@@ -19,7 +19,6 @@ import {
   YAxis,
 } from "recharts";
 import { toast } from "sonner";
-import { useTheme } from "@/app/theme-context";
 import {
   Accordion,
   AccordionContent,
@@ -112,7 +111,10 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { ModuleIllustration } from "@/features/dashboard/ModuleIllustration";
-import { isThemePreference } from "@/lib/theme";
+import {
+  moduleToneStyle,
+  type ModuleTone,
+} from "@/features/dashboard/module-art";
 
 // The components from ROADMAP P1-02; each one gets its own section.
 type ShowcaseComponent =
@@ -161,7 +163,7 @@ const ECTS_DATA = [
   { term: "2. Sem.", actual: 48, target: 60 },
 ];
 
-// KONZEPT §12.2 charts: Ist = line --accent with surface --accent-soft, Soll = dashed --muted-foreground.
+// KONZEPT §12.2 charts: Ist = line --tone-blue with surface --tone-blue-soft, Soll = dashed --muted-foreground.
 const ECTS_CHART_CONFIG = {
   actual: { label: "Ist", color: "var(--chart-1)" },
   target: { label: "Soll", color: "var(--chart-2)" },
@@ -195,6 +197,29 @@ const COLOR_PAIRS = [
     className: "bg-accent-soft text-accent-soft-foreground",
   },
 ];
+
+// Colour family (KONZEPT §12.2): strong tone as bar, soft tone as surface under ink.
+const TONES: { tone: ModuleTone; label: string }[] = [
+  { tone: "violet", label: "Violett" },
+  { tone: "teal", label: "Petrol" },
+  { tone: "blue", label: "Blau" },
+  { tone: "plum", label: "Pflaume" },
+  { tone: "terracotta", label: "Terrakotta" },
+];
+const TONE_SURFACES: Record<ModuleTone, string> = {
+  violet: "bg-tone-violet-soft",
+  teal: "bg-tone-teal-soft",
+  blue: "bg-tone-blue-soft",
+  plum: "bg-tone-plum-soft",
+  terracotta: "bg-tone-terracotta-soft",
+};
+const TONE_BARS: Record<ModuleTone, string> = {
+  violet: "bg-tone-violet",
+  teal: "bg-tone-teal",
+  blue: "bg-tone-blue",
+  plum: "bg-tone-plum",
+  terracotta: "bg-tone-terracotta",
+};
 
 // Status colours: soft surface with text, plus the surface/icon colour; always icon and text (KONZEPT §12.2).
 const STATUSES = [
@@ -287,9 +312,6 @@ function Section({
 }
 
 export function UiShowcasePage() {
-  // The app-wide theme (class on <html>, stored like in the app), so portals and toasts switch too.
-  const { theme, setTheme } = useTheme();
-
   return (
     <div className="min-h-svh bg-background px-4 py-8 text-foreground md:px-8">
       <main className="mx-auto flex max-w-6xl flex-col gap-8">
@@ -301,19 +323,6 @@ export function UiShowcasePage() {
               kommen aus den Design-Tokens (KONZEPT §12).
             </p>
           </div>
-          <ToggleGroup
-            type="single"
-            variant="outline"
-            value={theme}
-            onValueChange={(value) => {
-              if (isThemePreference(value)) setTheme(value);
-            }}
-            aria-label="Darstellung"
-          >
-            <ToggleGroupItem value="light">Hell</ToggleGroupItem>
-            <ToggleGroupItem value="dark">Dunkel</ToggleGroupItem>
-            <ToggleGroupItem value="system">System</ToggleGroupItem>
-          </ToggleGroup>
         </header>
 
         <DemoDataPanel />
@@ -366,13 +375,26 @@ export function UiShowcasePage() {
               </div>
             ))}
           </div>
-          {/* Dark overlay menu tokens from the P1-07 navigation revision. */}
-          <div className="flex max-w-64 flex-col gap-1 rounded-xl bg-sidebar p-2 text-sidebar-foreground">
-            <span className="rounded-r-lg border-l-3 border-sidebar-primary bg-sidebar-active px-3 py-2 font-semibold">
-              Übersicht
-            </span>
-            <span className="px-3 py-2 text-sidebar-muted">Studienverlauf</span>
-            <span className="px-3 py-2 text-sidebar-muted">Postfach</span>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+            {TONES.map(({ tone, label }) => (
+              <div
+                key={tone}
+                className={cn(
+                  "flex flex-col gap-2 rounded-xl p-3",
+                  TONE_SURFACES[tone],
+                )}
+              >
+                <span className="text-meta">{label}</span>
+                <span className="h-1.5 rounded-full bg-muted">
+                  <span
+                    className={cn(
+                      "block h-full w-2/3 rounded-full",
+                      TONE_BARS[tone],
+                    )}
+                  />
+                </span>
+              </div>
+            ))}
           </div>
         </Section>
 
@@ -430,7 +452,9 @@ export function UiShowcasePage() {
 
           <Section name="card">
             <div className="flex items-center gap-3">
-              <ModuleIllustration kind="books" />
+              <div style={moduleToneStyle("m-se1")}>
+                <ModuleIllustration kind="books" />
+              </div>
               <p className="text-meta text-muted-foreground">
                 Referenz 1: kompakte Karten, feine Rahmen, lokale
                 Linienillustrationen.
@@ -774,7 +798,7 @@ export function UiShowcasePage() {
                   dataKey="actual"
                   type="monotone"
                   stroke="var(--color-actual)"
-                  fill="var(--accent-soft)"
+                  fill="var(--tone-blue-soft)"
                   fillOpacity={1}
                 />
                 <Line

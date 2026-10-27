@@ -22,9 +22,3 @@ export const FLAGS = { simulateErrors: false };
 /** Increment whenever the dummy data changes to discard older persisted demo states. */
 export const DATA_VERSION = 3;
 export const DEMO_STORAGE_KEY = `${APP_NAME.toLowerCase()}:demo`;
-
-/**
- * localStorage key of the theme preference ("system" | "light" | "dark"). Read and written only by
- * src/lib/theme.ts; the inline script in index.html reads it before the first render.
- */
-export const THEME_STORAGE_KEY = `${APP_NAME.toLowerCase()}:theme`;

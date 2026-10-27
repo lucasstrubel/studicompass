@@ -2,21 +2,13 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* The prototype has only the light design (P5-06). The class "dark" is never set; the variant keeps the
+   generated dark: classes of shadcn/ui inert instead of following prefers-color-scheme. */
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --font-sans: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
   --font-heading: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-muted: var(--sidebar-muted);
-  --color-sidebar-active: var(--sidebar-active);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
@@ -41,6 +33,16 @@
   --color-foreground: var(--foreground);
   --color-background: var(--background);
   --color-overlay: var(--overlay);
+  --color-tone-violet: var(--tone-violet);
+  --color-tone-violet-soft: var(--tone-violet-soft);
+  --color-tone-teal: var(--tone-teal);
+  --color-tone-teal-soft: var(--tone-teal-soft);
+  --color-tone-blue: var(--tone-blue);
+  --color-tone-blue-soft: var(--tone-blue-soft);
+  --color-tone-plum: var(--tone-plum);
+  --color-tone-plum-soft: var(--tone-plum-soft);
+  --color-tone-terracotta: var(--tone-terracotta);
+  --color-tone-terracotta-soft: var(--tone-terracotta-soft);
   --color-status-on-track: var(--status-on-track);
   --color-status-on-track-foreground: var(--status-on-track-foreground);
   --color-status-on-track-soft: var(--status-on-track-soft);
@@ -86,8 +88,7 @@
 
 /*
  * Colour tokens from KONZEPT §12.2 ("Warm Ink"); src/styles/tokens.test.ts compares them with the tables
- * there and checks the contrast pairs. The shadcn names are mapped onto these tokens. Both blocks list
- * every variable, so the aliases also resolve inside a .dark scope below <html>.
+ * there and checks the contrast pairs. The shadcn names are mapped onto these tokens.
  */
 :root {
   color-scheme: light;
@@ -113,19 +114,9 @@
   --border: #d4cfc6;
   --input: #817b70;
   --ring: var(--accent-strong);
-  --chart-1: var(--accent);
+  --chart-1: var(--tone-blue);
   --chart-2: var(--muted-foreground);
   --radius: 0.625rem;
-  --sidebar: #1a1917;
-  --sidebar-foreground: #d9d6cf;
-  --sidebar-muted: #a4a29b;
-  --sidebar-active: #2b2926;
-  --sidebar-primary: var(--accent);
-  --sidebar-primary-foreground: var(--accent-foreground);
-  --sidebar-accent: var(--sidebar-active);
-  --sidebar-accent-foreground: var(--sidebar-foreground);
-  --sidebar-border: var(--sidebar-active);
-  --sidebar-ring: var(--accent);
   /* Status: --status-* = surface/icon, -foreground = text, -soft = soft surface; always with icon and text. */
   --status-on-track: #788c5d;
   --status-on-track-foreground: #5a6b43;
@@ -139,59 +130,24 @@
   --status-info: #8cb2d7;
   --status-info-foreground: #3b6694;
   --status-info-soft: #e3ecf6;
+  /*
+   * Colour family (KONZEPT §12.2): module identities, grades and the ECTS figures, so the page is not
+   * terracotta only. Strong tones are lines, bars and illustration strokes (at least 3:1 on page, card
+   * and track); soft tones are surfaces under ink. Never a status colour: green, ochre and red stay
+   * reserved for Im Plan, Knapp and Kritisch.
+   */
+  --tone-violet: #6a55b5;
+  --tone-violet-soft: #ece8f7;
+  --tone-teal: #1e7369;
+  --tone-teal-soft: #dcefea;
+  --tone-blue: #3466a8;
+  --tone-blue-soft: #e2ebf7;
+  --tone-plum: #9c4675;
+  --tone-plum-soft: #f5e3ec;
+  --tone-terracotta: var(--accent-strong);
+  --tone-terracotta-soft: var(--accent-soft);
   /* Backdrop behind dialogs and sheets (KONZEPT §12.2, below the tables). */
   --overlay: rgb(26 25 23 / 0.3);
-}
-
-.dark {
-  color-scheme: dark;
-  --background: #1a1917;
-  --foreground: #f0eee8;
-  --card: #262422;
-  --card-foreground: var(--foreground);
-  --popover: var(--card);
-  --popover-foreground: var(--foreground);
-  --primary: #f0eee8;
-  --primary-foreground: #1a1917;
-  --secondary: var(--muted);
-  --secondary-foreground: var(--foreground);
-  --muted: #2e2c29;
-  --muted-foreground: #a4a29b;
-  --accent: #d97757;
-  --accent-foreground: #1a1917;
-  --accent-strong: #e8946f;
-  --accent-soft: #3a2a22;
-  --accent-soft-foreground: #f2b49b;
-  --destructive: var(--status-critical-foreground);
-  --border: #3a3733;
-  --input: #827e74;
-  --ring: var(--accent-strong);
-  --chart-1: var(--accent);
-  --chart-2: var(--muted-foreground);
-  --sidebar: #141311;
-  --sidebar-foreground: #d9d6cf;
-  --sidebar-muted: #a4a29b;
-  --sidebar-active: #262422;
-  --sidebar-primary: var(--accent);
-  --sidebar-primary-foreground: var(--accent-foreground);
-  --sidebar-accent: var(--sidebar-active);
-  --sidebar-accent-foreground: var(--sidebar-foreground);
-  --sidebar-border: var(--sidebar-active);
-  --sidebar-ring: var(--accent);
-  /* Dark mode has one colour for text and icon per status. */
-  --status-on-track: var(--status-on-track-foreground);
-  --status-on-track-foreground: #9cb37e;
-  --status-on-track-soft: #2c3324;
-  --status-tight: var(--status-tight-foreground);
-  --status-tight-foreground: #e2b04f;
-  --status-tight-soft: #3a2f17;
-  --status-critical: var(--status-critical-foreground);
-  --status-critical-foreground: #f08a7e;
-  --status-critical-soft: #3d2220;
-  --status-info: var(--status-info-foreground);
-  --status-info-foreground: #8cb2d7;
-  --status-info-soft: #1f2b38;
-  --overlay: rgb(0 0 0 / 0.5);
 }
 
 @layer base {
@@ -227,18 +183,19 @@
   }
 }
 
-/* Reference 1: a quiet inset workspace, using only the Warm Ink palette. */
+/* Reference 1: a quiet inset workspace; floating panels (menu, assistant) share its soft shadow. */
 @media (min-width: 48rem) {
   .app-frame {
     box-shadow: 0 16px 48px -24px
       color-mix(in srgb, var(--foreground) 24%, transparent);
   }
 }
+.panel-shadow {
+  box-shadow: 0 16px 40px -16px
+    color-mix(in srgb, var(--foreground) 28%, transparent);
+}
 
-/* Warm neutral canvas around the light workspace; dark mode retains its existing canvas. */
+/* Warm neutral canvas around the light workspace. */
 body:has(.app-frame) {
   background-color: var(--muted);
-}
-.dark body:has(.app-frame) {
-  background-color: var(--background);
 }
