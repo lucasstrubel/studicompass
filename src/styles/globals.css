@@ -33,6 +33,16 @@
   --color-foreground: var(--foreground);
   --color-background: var(--background);
   --color-overlay: var(--overlay);
+  --color-tone-violet: var(--tone-violet);
+  --color-tone-violet-soft: var(--tone-violet-soft);
+  --color-tone-teal: var(--tone-teal);
+  --color-tone-teal-soft: var(--tone-teal-soft);
+  --color-tone-blue: var(--tone-blue);
+  --color-tone-blue-soft: var(--tone-blue-soft);
+  --color-tone-plum: var(--tone-plum);
+  --color-tone-plum-soft: var(--tone-plum-soft);
+  --color-tone-terracotta: var(--tone-terracotta);
+  --color-tone-terracotta-soft: var(--tone-terracotta-soft);
   --color-status-on-track: var(--status-on-track);
   --color-status-on-track-foreground: var(--status-on-track-foreground);
   --color-status-on-track-soft: var(--status-on-track-soft);
@@ -104,7 +114,7 @@
   --border: #d4cfc6;
   --input: #817b70;
   --ring: var(--accent-strong);
-  --chart-1: var(--accent);
+  --chart-1: var(--tone-blue);
   --chart-2: var(--muted-foreground);
   --radius: 0.625rem;
   /* Status: --status-* = surface/icon, -foreground = text, -soft = soft surface; always with icon and text. */
@@ -120,6 +130,22 @@
   --status-info: #8cb2d7;
   --status-info-foreground: #3b6694;
   --status-info-soft: #e3ecf6;
+  /*
+   * Colour family (KONZEPT §12.2): module identities, grades and the ECTS figures, so the page is not
+   * terracotta only. Strong tones are lines, bars and illustration strokes (at least 3:1 on page, card
+   * and track); soft tones are surfaces under ink. Never a status colour: green, ochre and red stay
+   * reserved for Im Plan, Knapp and Kritisch.
+   */
+  --tone-violet: #6a55b5;
+  --tone-violet-soft: #ece8f7;
+  --tone-teal: #1e7369;
+  --tone-teal-soft: #dcefea;
+  --tone-blue: #3466a8;
+  --tone-blue-soft: #e2ebf7;
+  --tone-plum: #9c4675;
+  --tone-plum-soft: #f5e3ec;
+  --tone-terracotta: var(--accent-strong);
+  --tone-terracotta-soft: var(--accent-soft);
   /* Backdrop behind dialogs and sheets (KONZEPT §12.2, below the tables). */
   --overlay: rgb(26 25 23 / 0.3);
 }

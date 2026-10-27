@@ -1,7 +1,10 @@
 export type IllustrationKind =
   "chart" | "database" | "books" | "process" | "globe";
 
-/** Original local line art; decorative because the adjacent module heading names the subject. */
+/**
+ * Original local line art; decorative because the adjacent module heading names the subject. The module
+ * colour comes from --module-tone / --module-tone-soft on an ancestor (moduleToneStyle).
+ */
 export function ModuleIllustration({ kind }: { kind: IllustrationKind }) {
   return (
     <svg
@@ -23,7 +26,7 @@ export function ModuleIllustration({ kind }: { kind: IllustrationKind }) {
           <path d="M17 66V29M17 66H73" />
           <path
             d="M26 65V48H36V65M43 65V35H53V65M60 65V20H70V65"
-            className="fill-accent-soft stroke-accent-strong"
+            className="fill-(--module-tone-soft) stroke-(--module-tone)"
           />
           <path d="M22 37L40 24L52 28L72 10M64 10H72V18" />
           <circle cx="25" cy="19" r="5" className="fill-muted" />
@@ -33,18 +36,21 @@ export function ModuleIllustration({ kind }: { kind: IllustrationKind }) {
         <>
           <path
             d="M21 24V63C21 76 69 76 69 63V24"
-            className="fill-accent-soft"
+            className="fill-(--module-tone-soft)"
           />
           <ellipse cx="45" cy="24" rx="24" ry="10" className="fill-card" />
           <path d="M21 42C21 55 69 55 69 42M21 59C21 72 69 72 69 59" />
-          <path d="M29 38L35 40M29 55L35 57" className="stroke-accent-strong" />
+          <path
+            d="M29 38L35 40M29 55L35 57"
+            className="stroke-(--module-tone)"
+          />
         </>
       )}
       {kind === "books" && (
         <>
           <path
             d="M14 61L53 49L76 57L37 71ZM14 61V68L37 78L76 64V57"
-            className="fill-accent-soft"
+            className="fill-(--module-tone-soft)"
           />
           <path
             d="M13 45L52 33L75 41L36 55ZM13 45V53L36 62L75 49V41"
@@ -66,7 +72,7 @@ export function ModuleIllustration({ kind }: { kind: IllustrationKind }) {
             width="34"
             height="17"
             rx="4"
-            className="fill-accent-soft"
+            className="fill-(--module-tone-soft)"
           />
           <path d="M44 36L62 48L44 60L26 48Z" className="fill-card" />
           <rect
@@ -81,7 +87,12 @@ export function ModuleIllustration({ kind }: { kind: IllustrationKind }) {
       )}
       {kind === "globe" && (
         <>
-          <circle cx="44" cy="40" r="27" className="fill-accent-soft" />
+          <circle
+            cx="44"
+            cy="40"
+            r="27"
+            className="fill-(--module-tone-soft)"
+          />
           <ellipse cx="44" cy="40" rx="13" ry="27" />
           <path d="M18 40H70M23 25Q44 35 65 25M23 55Q44 45 65 55M44 13V67M29 75H60M44 67V75" />
         </>

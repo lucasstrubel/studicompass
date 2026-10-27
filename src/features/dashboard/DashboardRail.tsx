@@ -29,6 +29,7 @@ import {
 } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 import { CHANNELS } from "@/services/types";
+import { moduleToneStyle } from "./module-art";
 
 const SUGGESTED_QUESTIONS = ["A-01", "A-03"];
 
@@ -175,7 +176,10 @@ function RecentGrades() {
                 </span>
               )}
             </span>
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted text-card-title tabular-nums">
+            <span
+              className="flex size-10 shrink-0 items-center justify-center rounded-full bg-(--module-tone-soft) text-card-title tabular-nums"
+              style={moduleToneStyle(module.id)}
+            >
               <span className="sr-only">Note </span>
               {formatGrade(exam.grade ?? 0)}
             </span>

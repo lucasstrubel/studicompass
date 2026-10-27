@@ -93,7 +93,8 @@ function statusTable(table: string): Map<string, string> {
 
 const SECTION = between(konzept, "### 12.2", "### 12.3");
 const KONZEPT_TOKENS = new Map([
-  ...tokenTable(between(SECTION, "**Grundfarben**", "**Statusfarben**")),
+  ...tokenTable(between(SECTION, "**Grundfarben**", "**Farbfamilie**")),
+  ...tokenTable(between(SECTION, "**Farbfamilie**", "**Statusfarben**")),
   ...statusTable(between(SECTION, "**Statusfarben**", "Regeln:")),
 ]);
 
@@ -142,6 +143,16 @@ const DOCUMENTED_PAIRS: [string, string, number][] = [
   ["--accent-strong", "--background", 5.6],
   ["--accent-strong", "--card", 5.9],
   ["--accent-soft-foreground", "--accent-soft", 5.4],
+  ["--tone-violet", "--card", 5.9],
+  ["--tone-violet", "--muted", 4.9],
+  ["--tone-teal", "--card", 5.7],
+  ["--tone-teal", "--muted", 4.7],
+  ["--tone-blue", "--card", 5.8],
+  ["--tone-blue", "--muted", 4.8],
+  ["--tone-plum", "--card", 5.9],
+  ["--tone-plum", "--muted", 4.9],
+  ["--tone-terracotta", "--card", 5.9],
+  ["--tone-terracotta", "--muted", 4.9],
   ["--status-on-track", "--card", 3.7],
   ["--status-on-track-foreground", "--card", 5.8],
   ["--status-on-track-foreground", "--status-on-track-soft", 5.0],
@@ -176,8 +187,8 @@ function matchesDocumented(ratio: number, documented: number): boolean {
 
 describe("design tokens (KONZEPT §12.2)", () => {
   it("every token has the value from the KONZEPT tables", () => {
-    // 14 base tokens plus 3 per status; fails if the tables can no longer be read.
-    expect(KONZEPT_TOKENS.size).toBe(26);
+    // 14 base tokens, 10 tones plus 3 per status; fails if the tables can no longer be read.
+    expect(KONZEPT_TOKENS.size).toBe(36);
     for (const [name, value] of KONZEPT_TOKENS) {
       expect(token(name), name).toBe(value);
     }
@@ -229,7 +240,20 @@ describe("design tokens (KONZEPT §12.2)", () => {
     expect(
       contrast(token("--accent-strong"), token("--muted")),
     ).toBeGreaterThanOrEqual(3);
-    // The prominent card uses ink for text and focus on terracotta.
+    // Colour family: lines, bars and strokes on every surface they appear on; ink on the soft tones.
+    for (const tone of ["violet", "teal", "blue", "plum", "terracotta"]) {
+      for (const surface of ["--background", "--card", "--muted"]) {
+        expect(
+          contrast(token(`--tone-${tone}`), token(surface)),
+          `${tone} on ${surface}`,
+        ).toBeGreaterThanOrEqual(3);
+      }
+      expect(
+        contrast(token("--foreground"), token(`--tone-${tone}-soft`)),
+        `ink on ${tone}-soft`,
+      ).toBeGreaterThanOrEqual(4.5);
+    }
+    // Ink on terracotta: the assistant button.
     expect(
       contrast(token("--accent-foreground"), token("--accent")),
     ).toBeGreaterThanOrEqual(4.5);

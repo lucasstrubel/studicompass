@@ -526,6 +526,18 @@ Nur helles Design (Entscheidung von Lucas am 27.10.2026, P5-06). Kontrastrevisio
 | `--accent-strong` | `#A4492E` | Links, Akzenttext, Fokusring | 5,6:1 / 5,9:1 |
 | `--accent-soft` / `--accent-soft-foreground` | `#F7E4DD` / `#9A4128` | zurückhaltende Hervorhebungen / Text darauf | 5,4:1 |
 
+**Farbfamilie** – Designrevision P5-06: Terrakotta allein wirkte monoton. Wie in Referenz 1 bekommt jedes Modul eine eigene Farbe; die ECTS-Werte (Balken und Verlauf) sind durchgehend blau. Starke Töne für Linien, Balken und Illustrationskonturen (≥ 3:1 auf Seite, Karte und Track `--muted`), weiche Töne als Fläche unter Tinte (≥ 14:1). Nie Statusfarbe: Grün, Ocker und Rot bleiben Im Plan, Knapp und Kritisch vorbehalten.
+
+| Token | Wert | Verwendung | Kontrast |
+|---|---|---|---|
+| `--tone-violet` / `--tone-violet-soft` | `#6A55B5` / `#ECE8F7` | Statistik, Mathematik 2 | 5,9:1 Karte · 4,9:1 Track |
+| `--tone-teal` / `--tone-teal-soft` | `#1E7369` / `#DCEFEA` | Datenbanken, Kosten- und Leistungsrechnung | 5,7:1 Karte · 4,7:1 Track |
+| `--tone-blue` / `--tone-blue-soft` | `#3466A8` / `#E2EBF7` | ECTS (Studienstand-Balken, ECTS-Verlauf), Software Engineering 1, Betriebssysteme und Rechnernetze | 5,8:1 Karte · 4,8:1 Track |
+| `--tone-plum` / `--tone-plum-soft` | `#9C4675` / `#F5E3EC` | Geschäftsprozessmanagement | 5,9:1 Karte · 4,9:1 Track |
+| `--tone-terracotta` / `--tone-terracotta-soft` | `#A4492E` / `#F7E4DD` | Marketing (= `--accent-strong` / `--accent-soft`) | 5,9:1 Karte · 4,9:1 Track |
+
+Weitere Module erhalten über eine feste Zuordnung (`moduleTone`) einen der fünf Töne.
+
 **Statusfarben** – getrennt vom Markenakzent; immer mit Icon und Text
 
 | Status | Fläche/Icon · Text · weiche Fläche |
@@ -539,7 +551,7 @@ Nur helles Design (Entscheidung von Lucas am 27.10.2026, P5-06). Kontrastrevisio
 
 Regeln: Terrakotta ist nie Statusfarbe. Kritisch-Rot und Terrakotta liegen im Farbton nah beieinander – deshalb tragen Status-Badges immer Icon und Text.
 
-**Diagramme:** Ist = Linie `--accent` + Fläche `--accent-soft`; Soll = gestrichelte Linie `--muted-foreground`; Werte immer zusätzlich als Zahl.
+**Diagramme:** Ist = Linie `--tone-blue` + Fläche `--tone-blue-soft`, Prognose gestrichelt in `--tone-blue`; Soll = gestrichelte Linie `--muted-foreground`; Werte immer zusätzlich als Zahl.
 
 ### 12.3 Typografie
 - Schrift: **Manrope** (variabel, lokal über Fontsource) `[Vorschlag]`; Alternative: Plus Jakarta Sans.

@@ -18,11 +18,11 @@ import { compare, format } from "@/domain/terms";
 import { selectAcademicState, selectBasePlan } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 
-// KONZEPT §12.2 diagrams: actual = accent line with soft area, target = dashed muted line. The lines use
-// --accent-strong because informative graphics need 3:1 (--accent on the page: 2.96:1).
+// KONZEPT §12.2 diagrams: ECTS are blue throughout – actual = line with soft area, forecast = dashed line,
+// target = dashed muted line. Both tones reach at least 3:1 on the card.
 const CHART_CONFIG = {
-  actual: { label: "Ist", color: "var(--accent-strong)" },
-  forecast: { label: "Prognose", color: "var(--accent-strong)" },
+  actual: { label: "Ist", color: "var(--tone-blue)" },
+  forecast: { label: "Prognose", color: "var(--tone-blue)" },
   target: { label: "Soll", color: "var(--muted-foreground)" },
 } satisfies ChartConfig;
 
@@ -88,7 +88,7 @@ export function EctsHistory() {
             type="linear"
             stroke="var(--color-actual)"
             strokeWidth={2}
-            fill="var(--accent-soft)"
+            fill="var(--tone-blue-soft)"
             fillOpacity={1}
             dot={{ r: 4 }}
             isAnimationActive={false}
