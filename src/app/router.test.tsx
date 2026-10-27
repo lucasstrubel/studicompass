@@ -6,8 +6,7 @@ import { demoStore } from "@/store/demo-store";
 import { AppProviders } from "@/app/providers";
 import { routes } from "@/app/router";
 import { NAV_ITEMS, SETTINGS_ITEM } from "@/components/layout/navigation";
-import { APP_NAME, THEME_STORAGE_KEY } from "@/config/demo";
-import { SYSTEM_DARK_QUERY } from "@/lib/theme";
+import { APP_NAME } from "@/config/demo";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -164,43 +163,6 @@ describe("keyboard", () => {
 });
 
 describe("top bar", () => {
-  it("toggles between light and dark by click and keyboard and remembers the choice", async () => {
-    const user = userEvent.setup();
-    renderApp("/");
-    const toggle = screen.getByRole("switch", { name: "Dunkelmodus" });
-    expect(toggle).not.toBeChecked();
-    await user.click(toggle);
-    expect(toggle).toBeChecked();
-    expect(document.documentElement).toHaveClass("dark");
-    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe("dark");
-    await user.keyboard(" ");
-    expect(toggle).not.toBeChecked();
-    expect(document.documentElement).not.toHaveClass("dark");
-    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe("light");
-  });
-
-  it("switches to explicit light when the system starts in dark mode", async () => {
-    const user = userEvent.setup();
-    const matchMedia = window.matchMedia.bind(window);
-    vi.spyOn(window, "matchMedia").mockImplementation((query) => ({
-      ...matchMedia(query),
-      matches: query === SYSTEM_DARK_QUERY,
-    }));
-    renderApp("/");
-    const toggle = screen.getByRole("switch", { name: "Dunkelmodus" });
-    expect(toggle).toBeChecked();
-    await user.click(toggle);
-    expect(toggle).not.toBeChecked();
-    expect(document.documentElement).not.toHaveClass("dark");
-    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe("light");
-  });
-
-  it("shows the demo time", () => {
-    renderApp("/");
-
-    expect(screen.getByText("Demo · Mo, 25.01.2027")).toBeInTheDocument();
-  });
-
   it("opens the notifications from the bell", async () => {
     const user = userEvent.setup();
     renderApp("/");

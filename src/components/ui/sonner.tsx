@@ -7,8 +7,7 @@ import {
   Loader2Icon,
 } from "lucide-react";
 
-// Unlike the registry version, the theme comes in as a prop instead of from next-themes:
-// the app's own ThemeProvider (P1-03) passes it, so the theme is stored in one place only.
+// Unlike the registry version, there is no next-themes: the prototype has only the light design (P5-06).
 // The labels are German: the toast region is always in the DOM as a landmark ("Meldungen alt+T").
 const Toaster = ({ theme = "light", ...props }: ToasterProps) => {
   return (

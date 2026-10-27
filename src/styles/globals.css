@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* The prototype has only the light design (P5-06). The class "dark" is never set; the variant keeps the
+   generated dark: classes of shadcn/ui inert instead of following prefers-color-scheme. */
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -86,8 +88,7 @@
 
 /*
  * Colour tokens from KONZEPT §12.2 ("Warm Ink"); src/styles/tokens.test.ts compares them with the tables
- * there and checks the contrast pairs. The shadcn names are mapped onto these tokens. Both blocks list
- * every variable, so the aliases also resolve inside a .dark scope below <html>.
+ * there and checks the contrast pairs. The shadcn names are mapped onto these tokens.
  */
 :root {
   color-scheme: light;
@@ -143,57 +144,6 @@
   --overlay: rgb(26 25 23 / 0.3);
 }
 
-.dark {
-  color-scheme: dark;
-  --background: #1a1917;
-  --foreground: #f0eee8;
-  --card: #262422;
-  --card-foreground: var(--foreground);
-  --popover: var(--card);
-  --popover-foreground: var(--foreground);
-  --primary: #f0eee8;
-  --primary-foreground: #1a1917;
-  --secondary: var(--muted);
-  --secondary-foreground: var(--foreground);
-  --muted: #2e2c29;
-  --muted-foreground: #a4a29b;
-  --accent: #d97757;
-  --accent-foreground: #1a1917;
-  --accent-strong: #e8946f;
-  --accent-soft: #3a2a22;
-  --accent-soft-foreground: #f2b49b;
-  --destructive: var(--status-critical-foreground);
-  --border: #3a3733;
-  --input: #827e74;
-  --ring: var(--accent-strong);
-  --chart-1: var(--accent);
-  --chart-2: var(--muted-foreground);
-  --sidebar: #141311;
-  --sidebar-foreground: #d9d6cf;
-  --sidebar-muted: #a4a29b;
-  --sidebar-active: #262422;
-  --sidebar-primary: var(--accent);
-  --sidebar-primary-foreground: var(--accent-foreground);
-  --sidebar-accent: var(--sidebar-active);
-  --sidebar-accent-foreground: var(--sidebar-foreground);
-  --sidebar-border: var(--sidebar-active);
-  --sidebar-ring: var(--accent);
-  /* Dark mode has one colour for text and icon per status. */
-  --status-on-track: var(--status-on-track-foreground);
-  --status-on-track-foreground: #9cb37e;
-  --status-on-track-soft: #2c3324;
-  --status-tight: var(--status-tight-foreground);
-  --status-tight-foreground: #e2b04f;
-  --status-tight-soft: #3a2f17;
-  --status-critical: var(--status-critical-foreground);
-  --status-critical-foreground: #f08a7e;
-  --status-critical-soft: #3d2220;
-  --status-info: var(--status-info-foreground);
-  --status-info-foreground: #8cb2d7;
-  --status-info-soft: #1f2b38;
-  --overlay: rgb(0 0 0 / 0.5);
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -235,10 +185,7 @@
   }
 }
 
-/* Warm neutral canvas around the light workspace; dark mode retains its existing canvas. */
+/* Warm neutral canvas around the light workspace. */
 body:has(.app-frame) {
   background-color: var(--muted);
-}
-.dark body:has(.app-frame) {
-  background-color: var(--background);
 }

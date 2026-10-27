@@ -13,11 +13,6 @@ import type {
 } from "@/domain/types";
 import { projectPlan } from "@/domain/projection";
 import { selectAcademicState } from "./selectors";
-import {
-  readStoredTheme,
-  writeStoredTheme,
-  type ThemePreference,
-} from "@/lib/theme";
 import { createMockServices } from "@/services/mock";
 import {
   isChannel,
@@ -62,7 +57,6 @@ export interface DemoState extends Preferences {
   setChannelConnected: (channel: Channel, connected: boolean) => Promise<void>;
   setNotificationType: (type: Notification["type"], enabled: boolean) => void;
   resources: Resources;
-  theme: ThemePreference;
   snapshot: SimulationSnapshot | null;
   whatIf: PlanOverride[];
   hydrate: () => Promise<void>;
@@ -75,7 +69,6 @@ export interface DemoState extends Preferences {
   confirmAttend: (id: string) => boolean;
   setWhatIf: (overrides: PlanOverride[]) => void;
   clearWhatIf: () => void;
-  setTheme: (theme: ThemePreference) => void;
   setHintTone: (tone: HintTone) => void;
   completeOnboarding: (preferences?: {
     goalRegularTime: boolean;
@@ -211,7 +204,7 @@ function readSnapshot(value: unknown): SimulationSnapshot | null {
   };
 }
 
-/** Persist user changes and the undo point, never fixture copies, loading state, theme, or what-if. */
+/** Persist user changes and the undo point, never fixture copies, loading state, or what-if. */
 function readPersisted(
   value: unknown,
 ): Preferences & { snapshot: SimulationSnapshot | null } {
@@ -294,7 +287,6 @@ export function createDemoStore(
         return {
           ...defaultPreferences(),
           resources: emptyResources(),
-          theme: readStoredTheme(),
           snapshot: null,
           whatIf: [],
           hydrate: async () => {
@@ -405,10 +397,6 @@ export function createDemoStore(
             set({ whatIf: structuredClone(overrides) });
           },
           clearWhatIf: () => set({ whatIf: [] }),
-          setTheme(theme) {
-            writeStoredTheme(theme);
-            set({ theme });
-          },
           setHintTone: (hintTone) => set({ hintTone }),
           completeOnboarding(preferences) {
             if (

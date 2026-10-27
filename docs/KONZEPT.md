@@ -507,9 +507,9 @@ P1-07 hat die Übersicht als Designvorschau mit Präsentationsdaten gestaltet; P
 
 ### 12.2 Farb-Tokens (Referenz 2 „Warm Ink“, für Lesbarkeit angepasst; Kontraste nach WCAG berechnet)
 
-**Hell**
+**Grundfarben**
 
-Kontrastrevision auf Wunsch von Lucas: cremefarbene Arbeitsfläche, weiße Karten und wärmere, deutlichere Nebenflächen. Sekundärtext und interaktive Konturen sind dunkler. „Jetzt wichtig“ nutzt die kräftige Terrakotta-Fläche mit Tinte als Textfarbe (5,6:1), statt langer farbiger Texte auf blasser Fläche. Der Fokusring auf dieser Karte ist Tinte; im dunklen Theme bleibt die bisherige weiche Akzentfläche erhalten. Fortschrittsbalken nutzen den dunkleren Akzent, damit der Füllstand mindestens 3:1 zum neutralen Track erreicht.
+Nur helles Design (Entscheidung von Lucas am 27.10.2026, P5-06). Kontrastrevision auf Wunsch von Lucas: cremefarbene Arbeitsfläche, weiße Karten und wärmere, deutlichere Nebenflächen. Sekundärtext und interaktive Konturen sind dunkler. „Jetzt wichtig“ nutzt die kräftige Terrakotta-Fläche mit Tinte als Textfarbe (5,6:1), statt langer farbiger Texte auf blasser Fläche. Der Fokusring auf dieser Karte ist Tinte. Fortschrittsbalken nutzen den dunkleren Akzent, damit der Füllstand mindestens 3:1 zum neutralen Track erreicht.
 
 | Token | Wert | Verwendung | Kontrast |
 |---|---|---|---|
@@ -530,35 +530,16 @@ Kontrastrevision auf Wunsch von Lucas: cremefarbene Arbeitsfläche, weiße Karte
 | `--sidebar-muted` | `#A4A29B` | inaktive Einträge | 6,9:1 |
 | `--sidebar-active` | `#2B2926` + 3-px-Balken `--accent` | aktiver Eintrag (zusätzlich fett) | Balken 4,7:1, Text 10,0:1 |
 
-**Dunkel**
-
-| Token | Wert | Kontrast |
-|---|---|---|
-| `--background` | `#1A1917` | – |
-| `--card` | `#262422` | – |
-| `--muted` | `#2E2C29` | Sekundärtext darauf 5,5:1 |
-| `--border` | `#3A3733` | dekorativ |
-| `--input` | `#827E74` | 3,8:1 auf Karte |
-| `--foreground` | `#F0EEE8` | 15,1:1 / 13,3:1 |
-| `--muted-foreground` | `#A4A29B` | 6,9:1 / 6,1:1 |
-| `--primary` / `--primary-foreground` | `#F0EEE8` / `#1A1917` | 15,1:1 |
-| `--accent` | `#D97757` | darf hier auch Text sein: 5,6:1 / 5,0:1 |
-| `--accent-foreground` | `#1A1917` | 5,6:1 |
-| `--accent-strong` | `#E8946F` | 7,4:1 / 6,6:1 |
-| `--accent-soft` / `--accent-soft-foreground` | `#3A2A22` / `#F2B49B` | 7,7:1 |
-| `--sidebar` / `--sidebar-foreground` / `--sidebar-muted` | `#141311` / `#D9D6CF` / `#A4A29B` | 12,8:1 / 7,3:1 |
-| `--sidebar-active` | `#262422` + Balken `--accent` | Balken 5,0:1, Text 10,7:1 |
-
 **Statusfarben** – getrennt vom Markenakzent; immer mit Icon und Text
 
-| Status | Hell: Fläche/Icon · Text · weiche Fläche | Dunkel: Text/Icon · weiche Fläche |
-|---|---|---|
-| Im Plan | `#788C5D` (3,7:1) · `#5A6B43` (5,8:1) · `#EAEFE2` (Text 5,0:1) | `#9CB37E` (6,8:1) · `#2C3324` (5,7:1) |
-| Knapp | `#B07A12` (3,7:1) · `#8A5A00` (5,9:1) · `#FBEFD5` (5,2:1) | `#E2B04F` (7,8:1) · `#3A2F17` (6,6:1) |
-| Kritisch | `#C8443A` (4,8:1) · `#B3261E` (6,5:1) · `#FBE3E0` (5,3:1) | `#F08A7E` (6,4:1) · `#3D2220` (6,0:1) |
-| Info | `#8CB2D7` (dekorativ) · `#3B6694` (6,0:1) · `#E3ECF6` (5,0:1) | `#8CB2D7` (7,0:1) · `#1F2B38` (6,5:1) |
+| Status | Fläche/Icon · Text · weiche Fläche |
+|---|---|
+| Im Plan | `#788C5D` (3,7:1) · `#5A6B43` (5,8:1) · `#EAEFE2` (Text 5,0:1) |
+| Knapp | `#B07A12` (3,7:1) · `#8A5A00` (5,9:1) · `#FBEFD5` (5,2:1) |
+| Kritisch | `#C8443A` (4,8:1) · `#B3261E` (6,5:1) · `#FBE3E0` (5,3:1) |
+| Info | `#8CB2D7` (dekorativ) · `#3B6694` (6,0:1) · `#E3ECF6` (5,0:1) |
 
-**Overlay** hinter Dialogen und Sheets: `--overlay` = Tinte mit 30 % Deckkraft (hell) bzw. Schwarz mit 50 % (dunkel); dekorativ, kein Kontrastpaar.
+**Overlay** hinter Dialogen und Sheets: `--overlay` = Tinte mit 30 % Deckkraft, ohne Unschärfe; dekorativ, kein Kontrastpaar.
 
 Regeln: Terrakotta ist nie Statusfarbe. Kritisch-Rot und Terrakotta liegen im Farbton nah beieinander – deshalb tragen Status-Badges immer Icon und Text.
 

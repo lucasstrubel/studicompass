@@ -19,7 +19,6 @@ import {
   YAxis,
 } from "recharts";
 import { toast } from "sonner";
-import { useTheme } from "@/app/theme-context";
 import {
   Accordion,
   AccordionContent,
@@ -112,7 +111,6 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { ModuleIllustration } from "@/features/dashboard/ModuleIllustration";
-import { isThemePreference } from "@/lib/theme";
 
 // The components from ROADMAP P1-02; each one gets its own section.
 type ShowcaseComponent =
@@ -287,9 +285,6 @@ function Section({
 }
 
 export function UiShowcasePage() {
-  // The app-wide theme (class on <html>, stored like in the app), so portals and toasts switch too.
-  const { theme, setTheme } = useTheme();
-
   return (
     <div className="min-h-svh bg-background px-4 py-8 text-foreground md:px-8">
       <main className="mx-auto flex max-w-6xl flex-col gap-8">
@@ -301,19 +296,6 @@ export function UiShowcasePage() {
               kommen aus den Design-Tokens (KONZEPT §12).
             </p>
           </div>
-          <ToggleGroup
-            type="single"
-            variant="outline"
-            value={theme}
-            onValueChange={(value) => {
-              if (isThemePreference(value)) setTheme(value);
-            }}
-            aria-label="Darstellung"
-          >
-            <ToggleGroupItem value="light">Hell</ToggleGroupItem>
-            <ToggleGroupItem value="dark">Dunkel</ToggleGroupItem>
-            <ToggleGroupItem value="system">System</ToggleGroupItem>
-          </ToggleGroup>
         </header>
 
         <DemoDataPanel />
