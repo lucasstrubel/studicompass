@@ -155,3 +155,17 @@ describe("PageHeader", () => {
     ).toBeInTheDocument();
   });
 });
+
+describe("CitationList (duplicates)", () => {
+  it("lists a document cited by several rules only once", () => {
+    const spo = {
+      document: "SPO Wirtschaftsinformatik",
+      summary: "",
+      verified: false,
+    };
+    render(
+      <CitationList citations={[spo, { ...spo, summary: "andere Regel" }]} />,
+    );
+    expect(screen.getAllByRole("listitem")).toHaveLength(1);
+  });
+});

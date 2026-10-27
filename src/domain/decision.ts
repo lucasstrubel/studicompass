@@ -89,3 +89,17 @@ export function compareDecision(
     };
   });
 }
+
+/**
+ * True if withdrawing would trigger a special rule (KONZEPT §1 design rule): a critical consequence such
+ * as a delayed milestone (DR-4/DR-6), more than three open foundation exams (DR-7) or a blocked plan.
+ * Only then does the overview raise the decision under "Jetzt wichtig".
+ */
+export function hasSpecialRuleImpact(outcomes: DecisionOutcome[]): boolean {
+  const withdraw = outcomes.find((outcome) => outcome.option === "withdraw");
+  return Boolean(
+    withdraw &&
+    (withdraw.status === "blocked" ||
+      withdraw.consequences.some((item) => item.severity === "critical")),
+  );
+}

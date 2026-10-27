@@ -3,10 +3,8 @@ import { NotFoundPage } from "@/app/NotFoundPage";
 import { RootLayout } from "@/app/RootLayout";
 import { AppShell } from "@/components/layout/AppShell";
 import type { RouteHandle } from "@/components/layout/route-handle";
-import {
-  DashboardPreviewPage,
-  DashboardPreviewRightRail,
-} from "@/features/dashboard/DashboardPreviewPage";
+import { DashboardPage } from "@/features/dashboard/DashboardPage";
+import { DashboardRail } from "@/features/dashboard/DashboardRail";
 import { OnboardingPage } from "@/features/onboarding/OnboardingPage";
 
 type PageRoute = RouteObject & { handle: RouteHandle };
@@ -23,8 +21,8 @@ function titleOnly(title: string) {
 const shellRoutes: PageRoute[] = [
   {
     index: true,
-    Component: DashboardPreviewPage,
-    handle: { title: "Übersicht", rightRail: DashboardPreviewRightRail },
+    Component: DashboardPage,
+    handle: { title: "Übersicht", rightRail: DashboardRail, ownHeader: true },
   },
   { path: "verlauf", ...titleOnly("Studienverlauf") },
   { path: "module", ...titleOnly("Module & Noten") },

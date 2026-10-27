@@ -32,7 +32,6 @@ const currentLinks = (links: HTMLElement[]) =>
 
 describe("routes (KONZEPT §7)", () => {
   it.each([
-    ["/", "Übersicht"],
     ["/verlauf", "Studienverlauf"],
     ["/module", "Module & Noten"],
     ["/module/m-stat", "Module & Noten"],
@@ -53,6 +52,13 @@ describe("routes (KONZEPT §7)", () => {
     },
   );
 
+  it("/ greets on the page and shows Übersicht in the browser tab", () => {
+    renderApp("/");
+
+    expect(pageTitle()).toHaveTextContent("Guten Abend");
+    expect(document.title).toBe(`Übersicht · ${APP_NAME}`);
+  });
+
   it("answers unknown paths with the 404 page, which leads back to the Übersicht", async () => {
     const user = userEvent.setup();
     const router = renderApp("/module/m-stat/gibt-es-nicht");
@@ -61,7 +67,7 @@ describe("routes (KONZEPT §7)", () => {
     await user.click(screen.getByRole("link", { name: "Zur Übersicht" }));
 
     expect(router.state.location.pathname).toBe("/");
-    expect(pageTitle()).toHaveTextContent("Übersicht");
+    expect(document.title).toBe(`Übersicht · ${APP_NAME}`);
   });
 
   it("shows the onboarding without the app shell, with a way into the demo", () => {
@@ -99,7 +105,7 @@ describe("full navigation", () => {
       await user.click(menu().getByRole("link", { name: label }));
 
       expect(router.state.location.pathname).toBe(to);
-      expect(pageTitle()).toHaveTextContent(label);
+      expect(document.title).toBe(`${label} · ${APP_NAME}`);
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
       await openMenu(user);
       expect(currentLinks(menu().getAllByRole("link"))).toEqual([

@@ -501,7 +501,7 @@ Referenz 1 bestimmt Komposition, Kartengestaltung und Bildsprache. Referenz 2 li
 | Großer Monatskalender | Studienstand, Jetzt wichtig, Module und Meilenstein | bestehender fachlicher Scope |
 | Ruhigere rechte Spalte | Frist, Postfach, bestandene Prüfungen, Assistent | dokumentierte Studieninhalte |
 
-P1-07 stellt auf der Übersicht eine Designvorschau mit typisierten Präsentationsdaten aus INHALTE bereit. Keine Domänenberechnung, Services oder Persistenz. Daten und ungeprüfte Regeln als Beispiel kennzeichnen, Quellen nennen. Einbindung über Props; P3-02 ersetzt die Fixture durch Store-Selektoren. Vorschau-Links führen zu bestehenden Routen; keine vorgetäuschten Aktionen. Die Vorschau hat keine asynchronen Ladezustände; diese folgen mit den Services. Hell- und Dunkelmodus bleiben erhalten.
+P1-07 hat die Übersicht als Designvorschau mit Präsentationsdaten gestaltet; P3-02 hat die Fixture durch Store-Selektoren ersetzt. Die Komposition bleibt: Studienstand und Jetzt wichtig nebeneinander, Modulraster mit Linienillustrationen, Meilenstein, ECTS-Verlauf; rechte Spalte mit Frist, Postfach, Noten und Assistent. Jeder Bereich hat Skeleton und Fehlerzustand je Kanal; eine simulierte Abmeldung ist als „Simulation“ markiert und auf der Übersicht rückgängig zu machen.
 
 ### 12.2 Farb-Tokens (Referenz 2 „Warm Ink“, für Lesbarkeit angepasst; Kontraste nach WCAG berechnet)
 
