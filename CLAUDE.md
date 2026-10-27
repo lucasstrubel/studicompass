@@ -38,7 +38,8 @@ npm run lint       # ESLint
 npm run typecheck  # tsc -b
 npm run test       # Vitest
 npm run check      # typecheck + lint + test + build  ← Prüf-Gate: muss vor jedem PR grün sein
-npm run e2e        # optional: Playwright-Smoke-Test des Hero-Flows
+npm run e2e        # Playwright-Smoke-Test des Hero-Flows (installiertes Chrome, nicht Teil von check)
+npm run screens    # Screenshots der Kernscreens nach docs/screens/ (2 Viewports × 2 Themes)
 ```
 Bis das Projekt aufgesetzt ist (P1-01), gilt als Prüf-Gate: Änderungen sind nachvollziehbar beschrieben und manuell geprüft.
 

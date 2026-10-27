@@ -201,8 +201,9 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch (ursprünglich `feat
 - **AK:** Werte konsistent mit Folgen-Check und Übersicht; Simulation verändert keine echten Daten.
 
 ### P3-05 [Claude, Mittel] Playwright-Smoke-Test und Screenshots
-- [ ] Hero-Flow als E2E-Test (Übersicht → Folgen-Check → Abmeldung → Rückgängig)
-- [ ] Skript für Screenshots aller Kernscreens (2 Viewports × 2 Themes) nach `docs/screens/` – Grundlage für Reviews und Folien
+- [x] Hero-Flow als E2E-Test (Übersicht → Folgen-Check → Abmeldung → Rückgängig)
+- [x] Skript für Screenshots aller Kernscreens (2 Viewports × 2 Themes) nach `docs/screens/` – Grundlage für Reviews und Folien
+- Hinweis: Playwright läuft mit dem lokal installierten Chrome, ohne Browser-Download (Entscheidung von Lucas am 27.10.).
 
 ### P3-06 [Codex] Phasen-Review (`--base m2`) + A11y-Check des Kernflows → `docs/reviews/P3.md`
 
