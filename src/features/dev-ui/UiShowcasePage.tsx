@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { CommonComponentsShowcase } from "./CommonComponentsShowcase";
 import { DemoDataPanel } from "./DemoDataPanel";
 import {
   CircleCheck,
@@ -316,6 +317,8 @@ export function UiShowcasePage() {
         </header>
 
         <DemoDataPanel />
+
+        <CommonComponentsShowcase />
 
         <Section name="farben">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">

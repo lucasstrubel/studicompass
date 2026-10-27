@@ -7,6 +7,8 @@ export interface RouteHandle {
   title: string;
   /** Content of the right column (KONZEPT §7): next to the main area on desktop, below it otherwise. */
   rightRail?: ComponentType;
+  /** The page renders its own h1 (PageHeader); the shell then leaves its h1 out. */
+  ownHeader?: boolean;
 }
 
 function isRouteHandle(handle: unknown): handle is RouteHandle {
@@ -17,7 +19,10 @@ function isRouteHandle(handle: unknown): handle is RouteHandle {
     typeof handle.title === "string" &&
     (!("rightRail" in handle) ||
       handle.rightRail === undefined ||
-      typeof handle.rightRail === "function")
+      typeof handle.rightRail === "function") &&
+    (!("ownHeader" in handle) ||
+      handle.ownHeader === undefined ||
+      typeof handle.ownHeader === "boolean")
   );
 }
 

@@ -1,3 +1,4 @@
+import type { IllustrationKind } from "./ModuleIllustration";
 /** Presentation fixture from INHALTE §3–7 and KONZEPT §8 S1 / §10.4. Replaced by selectors in P3-02. */
 export interface PreviewModule {
   id: string;
@@ -8,7 +9,7 @@ export interface PreviewModule {
   progress: string;
   percent: number;
   winterOnly: boolean;
-  art: "chart" | "database" | "books" | "process" | "globe";
+  art: IllustrationKind;
 }
 
 export interface DashboardPreviewData {

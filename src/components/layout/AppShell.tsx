@@ -35,9 +35,11 @@ export function AppShell() {
           className="grid min-w-0 flex-1 outline-none xl:grid-cols-[minmax(0,1fr)_auto]"
         >
           <div className="min-w-0 px-4 py-6 md:px-6 md:py-7 xl:px-8">
-            <h1 className="mb-6 text-page-title">
-              {handle?.title ?? APP_NAME}
-            </h1>
+            {!handle?.ownHeader && (
+              <h1 className="mb-6 text-page-title">
+                {handle?.title ?? APP_NAME}
+              </h1>
+            )}
             <Outlet />
           </div>
           {RightRailContent && (

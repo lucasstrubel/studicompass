@@ -178,7 +178,9 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch (ursprünglich `feat
 ## Phase 3 – Kern-Flows (Fr 30.10. – So 01.11.)
 
 ### P3-01 [Claude] Gemeinsame Komponenten (KONZEPT §12.4)
-- [ ] StatusBadge, ChannelBadge, Countdown, EctsProgress, IconCircle, ConsequenceItem, CitationList, DemoBadge, EmptyState, ErrorState, PageHeader
+- [x] StatusBadge, ChannelBadge, Countdown, EctsProgress, ConsequenceItem, CitationList, DemoBadge, EmptyState, ErrorState, PageHeader
+- [x] Offene Punkte aus Phase 1: Overlay-Token, Typo-Klassen in Button und CardTitle, deutliche Auswahl in ToggleGroup und Tabs, Card-Form (`docs/reviews/P1.md`)
+- Hinweis: IconCircle gestrichen (Entscheidung von Lucas am 27.10.) – KONZEPT §12.4 schließt dekorative Icon-Kreise seit der Designrevision P1-07 aus.
 - **AK:** alle Zustände in `/_ui` sichtbar; Status nie nur über Farbe; Icon-Buttons mit `aria-label`.
 
 ### P3-02 [Claude] Übersicht (S1) – US-03, US-04, US-05, US-07

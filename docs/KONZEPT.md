@@ -556,6 +556,8 @@ Kontrastrevision auf Wunsch von Lucas: cremefarbene Arbeitsfläche, weiße Karte
 | Kritisch | `#C8443A` (4,8:1) · `#B3261E` (6,5:1) · `#FBE3E0` (5,3:1) | `#F08A7E` (6,4:1) · `#3D2220` (6,0:1) |
 | Info | `#8CB2D7` (dekorativ) · `#3B6694` (6,0:1) · `#E3ECF6` (5,0:1) | `#8CB2D7` (7,0:1) · `#1F2B38` (6,5:1) |
 
+**Overlay** hinter Dialogen und Sheets: `--overlay` = Tinte mit 30 % Deckkraft (hell) bzw. Schwarz mit 50 % (dunkel); dekorativ, kein Kontrastpaar.
+
 Regeln: Terrakotta ist nie Statusfarbe. Kritisch-Rot und Terrakotta liegen im Farbton nah beieinander – deshalb tragen Status-Badges immer Icon und Text.
 
 **Diagramme:** Ist = Linie `--accent` + Fläche `--accent-soft`; Soll = gestrichelte Linie `--muted-foreground`; Werte immer zusätzlich als Zahl.
@@ -570,8 +572,10 @@ Regeln: Terrakotta ist nie Statusfarbe. Kritisch-Rot und Terrakotta liegen im Fa
 - **Modulillustrationen:** originale lokale SVG-Linienzeichnungen (Bücher, Datenbank, Diagramm, Prozess, Globus), dekorativ neben dem Modultitel; keine dekorativen Icon-Kreise aus Referenz 2.
 - **StatusBadge:** Icon (Häkchen-Kreis / Warndreieck / Achteck mit Ausrufezeichen) + Text + Farbe.
 - **ChannelBadge:** Icon + Kanalname (POS, Moodle, Mail, Website).
-- **Countdown, EctsProgress** (mit Soll-Markierung und Zahl), **ConsequenceItem** (Schwere-Icon, Titel, „Warum?“), **CitationList**, **DemoBadge**, **EmptyState**, **ErrorState**, Skeletons.
+- **Countdown** (relativ zu `DEMO_NOW`), **EctsProgress** (mit Soll-Markierung und Zahl), **ConsequenceItem** (Schwere-Icon und -Text, Titel, „Warum?“ mit Quelle), **CitationList** („Beispiel“ bei ungeprüften Regeln), **DemoBadge** („Demo“ / „Simulation“), **EmptyState**, **ErrorState** (mit „zuletzt aktualisiert“ und Erneut laden), **PageHeader**, Skeletons. Alle Zustände zeigt `/_ui`.
 - **Buttons:** primär (Tinte), sekundär (Outline), Ghost; Fokusring 2 px `--accent-strong`, Abstand 2 px.
+- **Umschalter (ToggleGroup, Tabs):** die gewählte Option ist eine Tintenfläche (`--primary` mit `--primary-foreground`), nicht nur `--muted` – sonst ist die Auswahl kaum sichtbar.
+- **PageHeader:** Seiten mit eigenem Kopf (Meta-Chips, Aktionen) rendern ihre `h1` selbst; die Route setzt dafür `ownHeader` im Handle.
 - **Icons:** lucide-react, 20 px in der Navigation, 18 px im Text.
 
 ### 12.5 Tonalität und Hinweis-Stil
