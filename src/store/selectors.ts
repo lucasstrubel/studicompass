@@ -19,7 +19,7 @@ import {
   targetEcts,
 } from "@/domain/progress";
 import { gradeAverage } from "@/domain/grades";
-import { projectPlan } from "@/domain/projection";
+import { allowedMoveTerms, projectPlan } from "@/domain/projection";
 import { trafficLight } from "@/domain/rules";
 import { compare, next, semesterNumber } from "@/domain/terms";
 import type { DemoState } from "./demo-store";
@@ -495,3 +495,35 @@ function timeline(state: DemoState): Timeline | null {
 }
 
 export const selectTimeline = memoize(timeline);
+
+/** Whether a module may be moved at all in the what-if (DR-4; passed modules stay put). */
+export function selectCanMove(state: DemoState, moduleId: string): boolean {
+  const academic = selectAcademicState(state);
+  return academic ? allowedMoveTerms(academic, moduleId, 1).length > 0 : false;
+}
+
+/**
+ * Terms the "Verschieben nach …" menu offers (US-10): allowed by DR-4 and actually reached together with
+ * the other active moves – a milestone shift can push a module later than an earlier target. At most four.
+ */
+export function selectMoveTargets(state: DemoState, moduleId: string): Term[] {
+  const academic = selectAcademicState(state);
+  const plan = selectPlan(state);
+  if (!academic || !plan) return [];
+  const others = state.whatIf.filter((item) => item.moduleId !== moduleId);
+  const now = plan.modules.find((item) => item.moduleId === moduleId)?.term;
+  return allowedMoveTerms(academic, moduleId, 8)
+    .filter((term) => {
+      if (now && compare(now, term) === 0) return false;
+      try {
+        const placed = projectPlan(academic, [
+          ...others,
+          { moduleId, action: "move", term },
+        ]).modules.find((item) => item.moduleId === moduleId)?.term;
+        return placed !== undefined && compare(placed, term) === 0;
+      } catch {
+        return false;
+      }
+    })
+    .slice(0, 4);
+}

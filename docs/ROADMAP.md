@@ -206,6 +206,8 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch (ursprünglich `feat
 - Hinweis: Playwright läuft mit dem lokal installierten Chrome, ohne Browser-Download (Entscheidung von Lucas am 27.10.).
 
 ### P3-06 [Codex] Phasen-Review (`--base m2`) + A11y-Check des Kernflows → `docs/reviews/P3.md`
+- [x] Phasen-Review mit Phasen-Fokus und A11y-Check (gestartet von Claude Code); sieben Befunde bestätigt und behoben
+- [x] Eigener A11y-Nachweis des Kernflows (Tastatur, Fokus, Struktur, Status, Kontraste, Reduced Motion) in `docs/reviews/P3.md`; Screenreader-Durchgang bleibt offen
 
 ### P3-07 [Team] Flur-Test (10 Min.)
 - [ ] 1–2 Kommiliton:innen klicken den Durchstich; auffällige Stolperstellen notieren

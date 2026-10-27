@@ -328,3 +328,21 @@ describe("Folgen-Check (P3-03 review)", () => {
     expect(screen.getByRole("table")).toBeInTheDocument();
   });
 });
+
+describe("Folgen-Check (P3-06 review)", () => {
+  it("keeps the page heading when POS fails on first load", async () => {
+    FLAGS.simulateErrors = true;
+    const reload = demoStore.getState().resetDemo();
+    renderCheck("e-stat-ws26");
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(LATENCY_MS);
+      await reload;
+    });
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Folgen-Check" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "POS erneut laden" }),
+    ).toBeInTheDocument();
+  });
+});

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { FlaskConical, Target, X } from "lucide-react";
 import { toast } from "sonner";
 import { CitationList } from "@/components/common/CitationList";
@@ -18,12 +18,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
-import { allowedMoveTerms, projectPlan } from "@/domain/projection";
 import { compare, format, next } from "@/domain/terms";
 import { consequenceCitations, generalOfferingRule } from "@/lib/offering-rule";
 import type { PlanOverride, Term } from "@/domain/types";
+import { demoStore } from "@/store/demo-store";
 import {
   selectAcademicState,
+  selectCanMove,
+  selectMoveTargets,
   selectProgress,
   selectRulesById,
   selectTimeline,
@@ -44,6 +46,7 @@ function PlannerContent() {
   const setWhatIf = useDemoStore((state) => state.setWhatIf);
   const clearWhatIf = useDemoStore((state) => state.clearWhatIf);
   const [simulation, setSimulation] = useState(whatIf.length > 0);
+  const switchRef = useRef<HTMLButtonElement>(null);
   if (!timeline || !academic || !progress || !program) return null;
 
   const { plan, basePlan } = timeline;
@@ -64,31 +67,11 @@ function PlannerContent() {
   const jobHours = academic.student.jobHoursPerWeek;
   const loadCitation = rules["DR-10"]?.citation;
 
-  /**
-   * Terms the menu offers: allowed by DR-4 and actually reached with the other active moves – a milestone
-   * shift can push a module later than an earlier target (P3-04 review).
-   */
-  const moveTargets = (moduleId: string): Term[] => {
-    const others = whatIf.filter((item) => item.moduleId !== moduleId);
-    const now = plan.modules.find((item) => item.moduleId === moduleId)?.term;
-    return allowedMoveTerms(academic, moduleId, 8)
-      .filter((term) => {
-        if (now && compare(now, term) === 0) return false;
-        try {
-          const result = projectPlan(academic, [
-            ...others,
-            { moduleId, action: "move", term },
-          ]);
-          const placed = result.modules.find(
-            (item) => item.moduleId === moduleId,
-          )?.term;
-          return placed !== undefined && compare(placed, term) === 0;
-        } catch {
-          return false;
-        }
-      })
-      .slice(0, 4);
-  };
+  // Read lazily from the current store state when a menu opens (the targets need projections).
+  const moveTargets = (moduleId: string) =>
+    selectMoveTargets(demoStore.getState(), moduleId);
+  const canMove = (moduleId: string) =>
+    selectCanMove(demoStore.getState(), moduleId);
 
   const move = (moduleId: string, term: Term) => {
     const overrides: PlanOverride[] = [
@@ -104,6 +87,8 @@ function PlannerContent() {
   const stopSimulation = () => {
     clearWhatIf();
     setSimulation(false);
+    // The discard button disappears with the banner; keep the keyboard focus on the switch (P3-06).
+    switchRef.current?.focus();
   };
 
   return (
@@ -158,6 +143,7 @@ function PlannerContent() {
           </div>
           <label className="flex items-center gap-2 text-body font-medium">
             <Switch
+              ref={switchRef}
               checked={simulation}
               onCheckedChange={(checked) =>
                 checked ? setSimulation(true) : stopSimulation()
@@ -230,9 +216,7 @@ function PlannerContent() {
             terms={timeline.terms}
             currentTerm={academic.currentTerm}
             simulation={simulation}
-            canMove={(moduleId) =>
-              allowedMoveTerms(academic, moduleId, 1).length > 0
-            }
+            canMove={canMove}
             moveTargets={moveTargets}
             onMove={move}
             load={{ jobHours, citation: loadCitation }}
@@ -269,15 +253,13 @@ export function PlannerPage() {
   return (
     <ResourceBoundary
       services={["pos", "rules"]}
+      header={<h1 className="mb-6 text-page-title">Studienverlauf</h1>}
       skeleton={
-        <div className="space-y-4">
-          <h1 className="text-page-title">Studienverlauf</h1>
-          <Skeleton
-            role="status"
-            aria-label="Studienverlauf wird geladen"
-            className="h-96"
-          />
-        </div>
+        <Skeleton
+          role="status"
+          aria-label="Studienverlauf wird geladen"
+          className="h-96"
+        />
       }
     >
       {() => <PlannerContent />}
