@@ -258,3 +258,73 @@ describe("Folgen-Check (KONZEPT §8 S4, §10.4)", () => {
     );
   });
 });
+
+describe("Folgen-Check (P3-03 review)", () => {
+  it("offers Rückgängig only for the latest decision", () => {
+    act(() => {
+      demoStore.getState().withdrawExam("e-stat-ws26");
+      demoStore.getState().withdrawExam("e-mkt-ws26");
+    });
+    renderCheck("e-stat-ws26");
+    expect(screen.getByText("Abmeldung von Statistik simuliert")).toBeVisible();
+    expect(
+      screen.queryByRole("button", { name: "Rückgängig" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("explains the offering of the module itself (Marketing: jedes Semester)", () => {
+    renderCheck("e-mkt-ws26");
+    const table = screen.getByRole("table");
+    const why = within(table).getByRole("button", {
+      name: /^Warum\?.*Nächster Termin Marketing$/,
+    });
+    fireEvent.click(why);
+    const details = document.getElementById(
+      why.getAttribute("aria-controls") ?? "",
+    );
+    expect(details).toHaveTextContent(
+      "Marketing wird jedes Semester angeboten.",
+    );
+    expect(details).toHaveTextContent(
+      "Quelle: Modulhandbuch Wirtschaftsinformatik, Modul Marketing",
+    );
+    expect(details).not.toHaveTextContent("Statistik");
+  });
+
+  it("does not repeat a base hint that an option changes (scenario D: 48, not 42 ECTS)", () => {
+    renderCheck("e-mkt-ws26");
+    expect(
+      screen.queryByRole("region", {
+        name: "Gilt unabhängig von deiner Entscheidung",
+      }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/42 ECTS geplant/)).not.toBeInTheDocument();
+  });
+
+  it("shows channel errors with retry next to the help offers", async () => {
+    renderCheck("e-stat-ws26");
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(LATENCY_MS);
+    });
+    FLAGS.simulateErrors = true;
+    await act(async () => {
+      const reload = Promise.all([
+        demoStore.getState().retry("mail"),
+        demoStore.getState().retry("moodle"),
+      ]);
+      await vi.advanceTimersByTimeAsync(LATENCY_MS);
+      await reload;
+    });
+    const help = screen.getByRole("region", {
+      name: "Was dir jetzt helfen kann",
+    });
+    expect(
+      within(help).getByRole("button", { name: "Mail erneut laden" }),
+    ).toBeInTheDocument();
+    expect(
+      within(help).getByRole("button", { name: "Moodle erneut laden" }),
+    ).toBeInTheDocument();
+    // The comparison stays usable while the help channels fail.
+    expect(screen.getByRole("table")).toBeInTheDocument();
+  });
+});

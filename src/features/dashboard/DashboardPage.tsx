@@ -8,7 +8,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { DEMO_NOW } from "@/config/demo";
 import { format, semesterNumber } from "@/domain/terms";
 import { greeting } from "@/lib/format";
-import { selectAcademicState, selectCurrentExams } from "@/store/selectors";
+import {
+  selectAcademicState,
+  selectCurrentExams,
+  selectUndoableExamId,
+} from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 import { NextDeadline } from "./DashboardRail";
 import { ImportantCard } from "./ImportantCard";
@@ -45,7 +49,8 @@ function SimulationNotice() {
   const withdrawn = useDemoStore(selectCurrentExams).filter(
     (item) => item.exam.status === "withdrawn",
   );
-  const canUndo = useDemoStore((state) => state.snapshot !== null);
+  const undoableId = useDemoStore(selectUndoableExamId);
+  const undoable = withdrawn.find((item) => item.exam.id === undoableId);
   const undo = useDemoStore((state) => state.undo);
   if (withdrawn.length === 0) return null;
   return (
@@ -56,10 +61,11 @@ function SimulationNotice() {
         {withdrawn.map((item) => item.module.title).join(", ")}. Im echten
         Betrieb meldest du dich im POS ab.
       </p>
-      {canUndo && (
+      {undoable && (
         <Button variant="outline" size="sm" onClick={undo}>
           <Undo2 aria-hidden="true" />
           Rückgängig
+          {withdrawn.length > 1 && `: ${undoable.module.title}`}
         </Button>
       )}
     </div>

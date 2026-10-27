@@ -9,6 +9,7 @@ import {
   selectMilestone,
   selectNextDeadline,
   selectRecentGrades,
+  selectUndoableExamId,
   selectDeadlines,
   selectInbox,
   selectNotifications,
@@ -168,5 +169,19 @@ describe("P3-02 overview selectors (KONZEPT §8 S1)", () => {
       season: "WS",
       year: 2028,
     });
+  });
+});
+
+describe("selectUndoableExamId", () => {
+  it("names only the latest simulated decision", async () => {
+    const store = createDemoStore(createMockServices({ latencyMs: 0 }));
+    await store.getState().hydrate();
+    expect(selectUndoableExamId(store.getState())).toBeNull();
+    store.getState().withdrawExam("e-stat-ws26");
+    expect(selectUndoableExamId(store.getState())).toBe("e-stat-ws26");
+    store.getState().withdrawExam("e-mkt-ws26");
+    expect(selectUndoableExamId(store.getState())).toBe("e-mkt-ws26");
+    store.getState().undo();
+    expect(selectUndoableExamId(store.getState())).toBeNull();
   });
 });

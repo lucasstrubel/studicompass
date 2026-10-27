@@ -343,7 +343,13 @@ function decisionView(state: DemoState, examId: string): DecisionView {
     exam,
     module,
     outcomes,
-    baseHints: plan.consequences,
+    // Only hints that no option changes; e.g. the DR-10 load differs when withdrawing Marketing (48 vs. 42).
+    baseHints: plan.consequences.filter(
+      (hint) =>
+        !outcomes.some((outcome) =>
+          outcome.consequences.some((item) => item.id === hint.id),
+        ),
+    ),
     hint: hint ? hint.text[state.hintTone] : null,
     regularGraduationTerm,
     confirmed: state.confirmedExamIds.includes(exam.id),
@@ -365,4 +371,22 @@ export function selectDecision(state: DemoState, examId: string): DecisionView {
     byExam.set(examId, view);
   }
   return view;
+}
+
+/**
+ * The exam whose simulated decision "Rückgängig" would reverse: the one decision between the snapshot and
+ * the current state. Undo controls of other exams must not call undo (P3-03 review).
+ */
+export function selectUndoableExamId(state: DemoState): string | null {
+  const saved = state.snapshot;
+  if (!saved) return null;
+  const changed = [
+    ...state.withdrawnExamIds.filter(
+      (id) => !saved.withdrawnExamIds.includes(id),
+    ),
+    ...state.confirmedExamIds.filter(
+      (id) => !saved.confirmedExamIds.includes(id),
+    ),
+  ];
+  return changed.length === 1 ? changed[0] : null;
 }

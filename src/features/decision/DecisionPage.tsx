@@ -36,17 +36,34 @@ import {
   selectDecision,
   selectInbox,
   selectRulesById,
+  selectUndoableExamId,
   type DecisionView,
 } from "@/store/selectors";
+import { demoStore } from "@/store/demo-store";
 import { useDemoStore } from "@/store/use-demo-store";
 import { ComparisonTable } from "./ComparisonTable";
+import { rulesForModule } from "./offering";
 
-/** Toast after a simulated decision, with "Rückgängig" for 8 s (US-08). */
-function showUndoToast(message: string, undo: () => void) {
+/**
+ * Toast after a simulated decision, with "Rückgängig" for 8 s (US-08). The undo only applies while this
+ * exam's decision is still the latest one; a newer decision has replaced the snapshot otherwise.
+ */
+function showUndoToast(message: string, examId: string) {
   toast.success(message, {
     duration: 8000,
     description: "Simulation – im echten Betrieb passiert das im POS.",
-    action: { label: "Rückgängig", onClick: undo },
+    action: {
+      label: "Rückgängig",
+      onClick: () => {
+        const state = demoStore.getState();
+        if (selectUndoableExamId(state) === examId) state.undo();
+        else
+          toast.info("Rückgängig nicht mehr möglich", {
+            description:
+              "Eine neuere Entscheidung hat diese Simulation abgelöst.",
+          });
+      },
+    },
   });
 }
 
@@ -98,6 +115,19 @@ function HelpOffers({ exam, module }: { exam: ExamRecord; module: Module }) {
       <h2 id="help" className="text-section-title">
         Was dir jetzt helfen kann
       </h2>
+      {/* Messages and Moodle progress come from the channels: show their loading and errors here. */}
+      <ResourceBoundary
+        services={["pos", "moodle", "mail", "website"]}
+        skeleton={
+          <Skeleton
+            role="status"
+            aria-label="Hilfsangebote werden geladen"
+            className="h-24"
+          />
+        }
+      >
+        {() => null}
+      </ResourceBoundary>
       <ul className="grid gap-3 md:grid-cols-2">
         {inbox.map((item) => (
           <li key={item.id}>
@@ -179,7 +209,6 @@ function DecisionActions({
   const navigate = useNavigate();
   const withdrawExam = useDemoStore((state) => state.withdrawExam);
   const confirmAttend = useDemoStore((state) => state.confirmAttend);
-  const undo = useDemoStore((state) => state.undo);
 
   return (
     <section aria-labelledby="decide" className="space-y-3">
@@ -196,7 +225,7 @@ function DecisionActions({
           size="lg"
           onClick={() => {
             if (!confirmAttend(exam.id)) return;
-            showUndoToast(`${module.title}: Du trittst an`, undo);
+            showUndoToast(`${module.title}: Du trittst an`, exam.id);
             void navigate("/");
           }}
         >
@@ -221,7 +250,10 @@ function DecisionActions({
               <AlertDialogAction
                 onClick={() => {
                   if (!withdrawExam(exam.id)) return;
-                  showUndoToast(`${module.title}: Abmeldung simuliert`, undo);
+                  showUndoToast(
+                    `${module.title}: Abmeldung simuliert`,
+                    exam.id,
+                  );
                   void navigate("/");
                 }}
               >
@@ -245,6 +277,7 @@ function ReadyView({
   updatedAt: string | null;
 }) {
   const { exam, module, outcomes } = view;
+  const moduleRules = rulesForModule(module, rules);
   const withdraw = outcomes.find((outcome) => outcome.option === "withdraw");
   const fail = outcomes.find((outcome) => outcome.option === "attendFail");
   const baseline = outcomes.find((outcome) => outcome.option === "attendPass");
@@ -295,7 +328,7 @@ function ReadyView({
           module={module}
           currentTerm={exam.term}
           outcomes={outcomes}
-          rules={rules}
+          rules={moduleRules}
         />
       </section>
 
@@ -307,7 +340,7 @@ function ReadyView({
           <ConsequenceList
             title="Wenn du dich abmeldest"
             consequences={withdraw.consequences}
-            rules={rules}
+            rules={moduleRules}
           />
         )}
         {fail && (
@@ -317,13 +350,13 @@ function ReadyView({
               (item) =>
                 !withdraw?.consequences.some((other) => other.id === item.id),
             )}
-            rules={rules}
+            rules={moduleRules}
           />
         )}
         <ConsequenceList
           title="Gilt unabhängig von deiner Entscheidung"
           consequences={view.baseHints}
-          rules={rules}
+          rules={moduleRules}
         />
       </section>
 
@@ -341,7 +374,7 @@ function ReadyView({
 }
 
 function SettledView({ exam, module }: { exam: ExamRecord; module: Module }) {
-  const canUndo = useDemoStore((state) => state.snapshot !== null);
+  const canUndo = useDemoStore(selectUndoableExamId) === exam.id;
   const undo = useDemoStore((state) => state.undo);
   const withdrawn = exam.status === "withdrawn";
   return (
