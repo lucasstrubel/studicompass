@@ -44,8 +44,8 @@ Jedes „Nein“ ist ein Befund mit Bezug zur Stufe nach Norman (Ausführung ode
 ### 3.1 Vorbereitung und Moderationsleitfaden (intern)
 
 1. 3–5 Personen außerhalb des Teams aus dem Persona-Segment einladen. Nur die Kennungen P1–P5 verwenden; keine Namen, Matrikelnummern oder Kontaktdaten in die Protokolle schreiben.
-2. Moderation und Protokoll festlegen. Gerät, Viewport, Theme, Datum und getesteten Stand eintragen. Bei Smartphone-Nutzung dies im Protokoll vermerken.
-3. Vor **jeder Sitzung** unter Einstellungen → „Demo zurücksetzen“ → „Zurücksetzen“ den Ausgangsstand herstellen. „Demo ohne Einrichtung starten“ wählen, Tour nicht starten. Intern kontrollieren: 48 ECTS, Soll 60, Knapp, Prognose 78 von 90. Danach wieder ganz nach oben scrollen und erst dann die Person beginnen lassen. Theme bei Bedarf vorher einstellen; der Reset behält es bei.
+2. Moderation und Protokoll festlegen. Gerät, Viewport, Datum und getesteten Stand eintragen. Bei Smartphone-Nutzung dies im Protokoll vermerken.
+3. Vor **jeder Sitzung** unter Einstellungen → „Demo zurücksetzen“ → „Zurücksetzen“ den Ausgangsstand herstellen. „Demo ohne Einrichtung starten“ wählen, Tour nicht starten. Intern kontrollieren: 48 ECTS, Soll 60, Knapp, Prognose 78 von 90. Danach wieder ganz nach oben scrollen und erst dann die Person beginnen lassen.
 4. Nur das Aufgabenblatt zeigen. Keine Quellen, Menüpunkte oder Handlungswege vorführen. T1–T4 sind verpflichtend; T5 ist optional.
 5. Zu Beginn vorlesen: „Dürfen wir anonymisierte Notizen zu deinen Handlungen und Aussagen machen und diese zusammengefasst in unserer Studienpräsentation verwenden? Wir zeichnen nichts auf. Du kannst jederzeit eine Pause machen oder abbrechen.“ Einverständnis im Protokoll festhalten. Ohne Zustimmung keine Sitzung protokollieren. Aufnahmen sind nicht Bestandteil dieses Pakets.
 6. Einleitung und Szenario vorlesen. Zeitmessung pro Aufgabe nach dem Vorlesen starten und bei Abschluss oder Abbruch stoppen; Sekunden und Hilfe getrennt erfassen. Einleitung und Abschlussfragen zählen nicht zur Aufgabenzeit.

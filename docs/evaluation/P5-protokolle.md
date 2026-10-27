@@ -8,7 +8,7 @@ Erfolg: **ja / mit Hilfe / nein / nicht durchgeführt**. Zeit in Sekunden; konkr
 
 Datum / getesteter Stand: 
 
-Gerät / Viewport / Theme: 
+Gerät / Viewport: 
 
 Persona-Segment erfüllt (WI, Grundstudium; Nebenjob optional): 
 
@@ -36,7 +36,7 @@ Moderationseingriffe / Reset / Abbruch:
 
 Datum / getesteter Stand: 
 
-Gerät / Viewport / Theme: 
+Gerät / Viewport: 
 
 Persona-Segment erfüllt (WI, Grundstudium; Nebenjob optional): 
 
@@ -64,7 +64,7 @@ Moderationseingriffe / Reset / Abbruch:
 
 Datum / getesteter Stand: 
 
-Gerät / Viewport / Theme: 
+Gerät / Viewport: 
 
 Persona-Segment erfüllt (WI, Grundstudium; Nebenjob optional): 
 
@@ -92,7 +92,7 @@ Moderationseingriffe / Reset / Abbruch:
 
 Datum / getesteter Stand: 
 
-Gerät / Viewport / Theme: 
+Gerät / Viewport: 
 
 Persona-Segment erfüllt (WI, Grundstudium; Nebenjob optional): 
 
@@ -120,7 +120,7 @@ Moderationseingriffe / Reset / Abbruch:
 
 Datum / getesteter Stand: 
 
-Gerät / Viewport / Theme: 
+Gerät / Viewport: 
 
 Persona-Segment erfüllt (WI, Grundstudium; Nebenjob optional): 
 

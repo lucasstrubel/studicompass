@@ -83,9 +83,8 @@ Fehlt etwas: den Plan kommentieren, nicht freigeben.
 
 1. `npm run dev` → http://localhost:5173
 2. Chrome-DevTools → Gerätesymbolleiste (`Cmd+Shift+M` / `Ctrl+Shift+M`) → 1440×900 und 390×844
-3. Hell und Dunkel umschalten (ab P1-03 in der App)
-4. Mit `Tab` durch den Screen: Ist der Fokus immer sichtbar?
-5. Fällt dir etwas auf, kopierst du es wörtlich in die laufende Unterhaltung.
+3. Mit `Tab` durch den Screen: Ist der Fokus immer sichtbar?
+4. Fällt dir etwas auf, kopierst du es wörtlich in die laufende Unterhaltung.
 
 ---
 
@@ -176,5 +175,5 @@ Fasse den Stand für eine neue Unterhaltung zusammen: Task, erledigte Schritte, 
 ## 11 Screenshots (ab P3-05)
 
 ```
-Erzeuge mit dem Screenshot-Skript Bilder aller Kernscreens (1440×900 und 390×844, hell und dunkel) nach docs/screens/ und vergleiche sie mit KONZEPT §8. Liste Abweichungen, ändere noch nichts.
+Erzeuge mit dem Screenshot-Skript Bilder aller Kernscreens (1440×900 und 390×844) nach docs/screens/ und vergleiche sie mit KONZEPT §8. Liste Abweichungen, ändere noch nichts.
 ```
