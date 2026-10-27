@@ -85,6 +85,8 @@ test("keeps the page within the viewport width", async ({ page }) => {
   for (const path of ["/", "/entscheidung/e-stat-ws26", "/verlauf"]) {
     await page.goto(path);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    // The h1 shows while loading; measure only once every skeleton has given way to the content.
+    await expect(page.locator("[data-slot=skeleton]")).toHaveCount(0);
     const overflow = await page.evaluate(
       () =>
         document.documentElement.scrollWidth >
