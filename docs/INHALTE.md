@@ -203,6 +203,8 @@ DR-3 und DR-10 sind Gestaltungsregeln von StudiCompass, keine SPO-Regeln (Quelle
 
 ## 9 Benachrichtigungen (je Hinweis-Stil)
 
+Demo-Zeitpunkte (Phase 4): n-01: 25.01.2027, 18:00; n-02: 22.01.2027, 14:05; n-03: 22.01.2027, 09:30; n-04: 20.01.2027, 08:00 (Europe/Berlin). Nur Zeitpunkte ergänzt; die fachlichen Beispieltexte bleiben unverändert.
+
 | ID | Typ | Ziel | Sachlich | Direkt |
 |---|---|---|---|---|
 | n-01 | Entscheidung | `/entscheidung/e-stat-ws26` | Die Abmeldefrist für Statistik endet morgen um 23:59 Uhr. Statistik wird nur im Wintersemester angeboten; eine Abmeldung kann den Beginn deines Praxissemesters verschieben. | Morgen um 23:59 ist Schluss. Meldest du dich von Statistik ab, gibt es das Modul erst im nächsten Winter – und dein Praxissemester rutscht voraussichtlich ein Semester nach hinten. |
