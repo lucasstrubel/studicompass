@@ -178,7 +178,7 @@ describe("P2-05: simulations and persistence", () => {
     localStorage.setItem(
       DEMO_STORAGE_KEY,
       JSON.stringify({
-        version: DATA_VERSION - 1,
+        version: DATA_VERSION - 2,
         state: { withdrawnExamIds: ["e-stat-ws26"], hintTone: "neutral" },
       }),
     );

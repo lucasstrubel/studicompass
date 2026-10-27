@@ -141,6 +141,7 @@ export interface DecisionHint {
 }
 export interface Notification {
   id: string;
+  createdAt: string;
   type: "decision" | "inbox" | "milestone" | "deadline";
   href: string;
   text: Record<HintTone, string>;

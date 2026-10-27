@@ -62,10 +62,21 @@ function deadlines(state: DemoState): Deadline[] {
 }
 
 function notifications(state: DemoState) {
+  const academic = selectAcademicState(state);
   return (state.resources.website.data?.notifications ?? []).map((item) => ({
     ...item,
     read: item.read || state.readNotificationIds.includes(item.id),
-    message: item.text[state.hintTone],
+    message:
+      item.type === "decision" &&
+      academic?.exams.some(
+        (exam) =>
+          item.href === `/entscheidung/${exam.id}` &&
+          exam.status === "withdrawn",
+      )
+        ? "Abmeldung simuliert. Deine Übersicht und dein Studienverlauf zeigen bereits die aktualisierte Prognose."
+        : item.type === "milestone" && state.withdrawnExamIds.length > 0
+          ? `Dein Studienstand hat sich durch die Simulation geändert. Prüfe die aktualisierte Prognose und die noch offenen Module im Studienverlauf.`
+          : item.text[state.hintTone],
   }));
 }
 
@@ -282,6 +293,18 @@ function memoize<T>(selector: (state: DemoState) => T) {
 export const selectAcademicState = memoize(academicState);
 export const selectInbox = memoize(inbox);
 export const selectDeadlines = memoize(deadlines);
+/** Once withdrawn, the corresponding withdrawal deadline no longer requires an action. */
+export const selectActionableDeadlines = memoize((state: DemoState) => {
+  const academic = selectAcademicState(state);
+  return selectDeadlines(state).filter(
+    (deadline) =>
+      !deadline.examId ||
+      !academic ||
+      academic.exams.some(
+        (exam) => exam.id === deadline.examId && exam.status === "registered",
+      ),
+  );
+});
 export const selectNotifications = memoize(notifications);
 export const selectProgress = memoize(progress);
 export const selectPlan = memoize(plan);

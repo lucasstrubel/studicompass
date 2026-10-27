@@ -203,7 +203,8 @@ function AssistantTeaser() {
         onSubmit={(event) => {
           event.preventDefault();
           const text = question.trim();
-          if (text) void navigate("/assistent", { state: { question: text } });
+          if (text)
+            void navigate(`/assistent?frage=${encodeURIComponent(text)}`);
         }}
       >
         <label htmlFor="assistant-question" className="sr-only">

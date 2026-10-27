@@ -3,27 +3,24 @@ import { NotFoundPage } from "@/app/NotFoundPage";
 import { RootLayout } from "@/app/RootLayout";
 import { AppShell } from "@/components/layout/AppShell";
 import type { RouteHandle } from "@/components/layout/route-handle";
-import { DashboardPage } from "@/features/dashboard/DashboardPage";
+import { OverviewEntry } from "@/features/onboarding/OverviewEntry";
 import { DashboardRail } from "@/features/dashboard/DashboardRail";
 import { DecisionPage } from "@/features/decision/DecisionPage";
 import { PlannerPage } from "@/features/planner/PlannerPage";
 import { OnboardingPage } from "@/features/onboarding/OnboardingPage";
+import { AssistantPage } from "@/features/assistant/AssistantPage";
+import { InboxPage } from "@/features/inbox/InboxPage";
+import { ModulesPage } from "@/features/modules/ModulesPage";
+import { DeadlinesPage } from "@/features/deadlines/DeadlinesPage";
+import { SettingsPage } from "@/features/settings/SettingsPage";
 
 type PageRoute = RouteObject & { handle: RouteHandle };
-
-/**
- * A page that shows only its title in the top bar until its task fills it (P3-02 onwards). The explicit
- * `element: null` marks the empty page as intended; React Router warns about leaf routes without one.
- */
-function titleOnly(title: string) {
-  return { element: null, handle: { title } };
-}
 
 /** Pages inside the app shell (KONZEPT §7). */
 const shellRoutes: PageRoute[] = [
   {
     index: true,
-    Component: DashboardPage,
+    Component: OverviewEntry,
     handle: { title: "Übersicht", rightRail: DashboardRail, ownHeader: true },
   },
   {
@@ -31,17 +28,33 @@ const shellRoutes: PageRoute[] = [
     Component: PlannerPage,
     handle: { title: "Studienverlauf", ownHeader: true },
   },
-  { path: "module", ...titleOnly("Module & Noten") },
-  { path: "module/:moduleId", ...titleOnly("Module & Noten") },
-  { path: "postfach", ...titleOnly("Postfach") },
-  { path: "assistent", ...titleOnly("Assistent") },
-  { path: "fristen", ...titleOnly("Fristen") },
+  {
+    path: "module",
+    Component: ModulesPage,
+    handle: { title: "Module & Noten" },
+  },
+  {
+    path: "module/:moduleId",
+    Component: ModulesPage,
+    handle: { title: "Module & Noten" },
+  },
+  { path: "postfach", Component: InboxPage, handle: { title: "Postfach" } },
+  {
+    path: "assistent",
+    Component: AssistantPage,
+    handle: { title: "Assistent" },
+  },
+  { path: "fristen", Component: DeadlinesPage, handle: { title: "Fristen" } },
   {
     path: "entscheidung/:examId",
     Component: DecisionPage,
     handle: { title: "Folgen-Check", ownHeader: true },
   },
-  { path: "einstellungen", ...titleOnly("Einstellungen") },
+  {
+    path: "einstellungen",
+    Component: SettingsPage,
+    handle: { title: "Einstellungen" },
+  },
   {
     path: "*",
     Component: NotFoundPage,

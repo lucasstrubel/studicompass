@@ -5,7 +5,12 @@ import {
   type StateStorage,
 } from "zustand/middleware";
 import { DATA_VERSION, DEMO_NOW, DEMO_STORAGE_KEY } from "@/config/demo";
-import type { HintTone, PlanOverride } from "@/domain/types";
+import type {
+  Channel,
+  HintTone,
+  Notification,
+  PlanOverride,
+} from "@/domain/types";
 import { projectPlan } from "@/domain/projection";
 import { selectAcademicState } from "./selectors";
 import {
@@ -36,6 +41,8 @@ interface SimulationSnapshot {
   confirmedExamIds: string[];
 }
 interface Preferences {
+  connectedChannels: Record<Channel, boolean>;
+  notificationTypes: Record<Notification["type"], boolean>;
   readInboxIds: string[];
   readNotificationIds: string[];
   withdrawnExamIds: string[];
@@ -47,6 +54,8 @@ interface Preferences {
 }
 
 export interface DemoState extends Preferences {
+  setChannelConnected: (channel: Channel, connected: boolean) => Promise<void>;
+  setNotificationType: (type: Notification["type"], enabled: boolean) => void;
   resources: Resources;
   theme: ThemePreference;
   snapshot: SimulationSnapshot | null;
@@ -72,6 +81,13 @@ export interface DemoState extends Preferences {
 
 function defaultPreferences(): Preferences {
   return {
+    connectedChannels: { pos: true, moodle: true, mail: true, website: true },
+    notificationTypes: {
+      decision: true,
+      inbox: true,
+      milestone: true,
+      deadline: true,
+    },
     readInboxIds: [],
     readNotificationIds: [],
     withdrawnExamIds: [],
@@ -134,6 +150,34 @@ function readPreferences(value: unknown): Preferences {
   const defaults = defaultPreferences();
   if (!isRecord(value)) return defaults;
   return {
+    connectedChannels: {
+      pos:
+        !isRecord(value.connectedChannels) ||
+        value.connectedChannels.pos !== false,
+      moodle:
+        !isRecord(value.connectedChannels) ||
+        value.connectedChannels.moodle !== false,
+      mail:
+        !isRecord(value.connectedChannels) ||
+        value.connectedChannels.mail !== false,
+      website:
+        !isRecord(value.connectedChannels) ||
+        value.connectedChannels.website !== false,
+    },
+    notificationTypes: {
+      decision:
+        !isRecord(value.notificationTypes) ||
+        value.notificationTypes.decision !== false,
+      inbox:
+        !isRecord(value.notificationTypes) ||
+        value.notificationTypes.inbox !== false,
+      milestone:
+        !isRecord(value.notificationTypes) ||
+        value.notificationTypes.milestone !== false,
+      deadline:
+        !isRecord(value.notificationTypes) ||
+        value.notificationTypes.deadline !== false,
+    },
     readInboxIds: stringArray(value.readInboxIds),
     readNotificationIds: stringArray(value.readNotificationIds),
     withdrawnExamIds: stringArray(value.withdrawnExamIds),
@@ -193,6 +237,17 @@ export function createDemoStore(
           key: K,
           force = false,
         ): Promise<void> {
+          const channel =
+            key === "pos"
+              ? "pos"
+              : key === "moodle"
+                ? "moodle"
+                : key === "mail"
+                  ? "mail"
+                  : key === "website"
+                    ? "website"
+                    : null;
+          if (channel && !get().connectedChannels[channel]) return;
           const active = pending.get(key);
           if (!force && active) return active;
           const request = ++requests[key];
@@ -251,6 +306,41 @@ export function createDemoStore(
             await Promise.all(SERVICE_KEYS.map((key) => load(key)));
           },
           retry: (key) => load(key, true),
+          async setChannelConnected(channel, connected) {
+            if (!connected) {
+              requests[channel]++;
+              pending.delete(channel);
+              set((state) => ({
+                connectedChannels: {
+                  ...state.connectedChannels,
+                  [channel]: false,
+                },
+                resources: {
+                  ...state.resources,
+                  [channel]: {
+                    ...state.resources[channel],
+                    status: state.resources[channel].data ? "ready" : "idle",
+                    error: null,
+                  },
+                },
+              }));
+              return;
+            }
+            set((state) => ({
+              connectedChannels: {
+                ...state.connectedChannels,
+                [channel]: true,
+              },
+            }));
+            await load(channel, true);
+          },
+          setNotificationType: (type, enabled) =>
+            set((state) => ({
+              notificationTypes: {
+                ...state.notificationTypes,
+                [type]: enabled,
+              },
+            })),
           markRead: (id) =>
             set((state) => ({
               readInboxIds: [...new Set([...state.readInboxIds, id])],
@@ -353,7 +443,10 @@ export function createDemoStore(
         version: DATA_VERSION,
         storage: createJSONStorage(() => storage),
         partialize: (state) => readPersisted(state),
-        migrate: () => ({ ...defaultPreferences(), snapshot: null }),
+        migrate: (persisted, version) =>
+          version === 2
+            ? readPersisted(persisted)
+            : { ...defaultPreferences(), snapshot: null },
         merge: (persisted, current) => ({
           ...current,
           ...readPersisted(persisted),

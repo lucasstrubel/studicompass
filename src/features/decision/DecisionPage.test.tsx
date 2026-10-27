@@ -13,6 +13,7 @@ beforeEach(async () => {
   const ready = demoStore.getState().resetDemo();
   await vi.advanceTimersByTimeAsync(LATENCY_MS);
   await ready;
+  demoStore.getState().completeOnboarding();
 });
 afterEach(() => {
   FLAGS.simulateErrors = false;

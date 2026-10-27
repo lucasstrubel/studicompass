@@ -4,6 +4,7 @@ import type { Notification } from "@/domain/types";
 export const notifications: Notification[] = [
   {
     id: "n-01",
+    createdAt: "2027-01-25T18:00:00+01:00",
     type: "decision",
     href: "/entscheidung/e-stat-ws26",
     text: {
@@ -17,6 +18,7 @@ export const notifications: Notification[] = [
   },
   {
     id: "n-02",
+    createdAt: "2027-01-22T14:05:00+01:00",
     type: "inbox",
     href: "/postfach?eintrag=i-02",
     text: {
@@ -29,6 +31,7 @@ export const notifications: Notification[] = [
   },
   {
     id: "n-03",
+    createdAt: "2027-01-22T09:30:00+01:00",
     type: "milestone",
     href: "/verlauf",
     text: {
@@ -42,6 +45,7 @@ export const notifications: Notification[] = [
   },
   {
     id: "n-04",
+    createdAt: "2027-01-20T08:00:00+01:00",
     type: "deadline",
     href: "/fristen",
     text: {
