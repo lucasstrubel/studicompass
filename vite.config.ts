@@ -30,5 +30,7 @@ export default defineConfig({
     // Vitest empties every .css import, ?raw included; the token test reads globals.css?raw as text.
     // Vite and @tailwindcss/vite skip ?raw requests, so the file content arrives unchanged.
     css: { include: [/[?&]raw\b/] },
+    // Full-app tests render the whole shell; under parallel load 5 s was too tight (P3-04).
+    testTimeout: 15_000,
   },
 });
