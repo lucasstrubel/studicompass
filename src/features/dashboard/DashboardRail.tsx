@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { ChannelBadge } from "@/components/common/ChannelBadge";
+import { CitationList } from "@/components/common/CitationList";
 import { Countdown } from "@/components/common/Countdown";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ResourceBoundary } from "@/components/common/ResourceBoundary";
@@ -24,6 +25,7 @@ import {
   selectInbox,
   selectNextDeadline,
   selectRecentGrades,
+  selectRulesById,
 } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 
@@ -48,7 +50,7 @@ export function NextDeadline({ className }: { className?: string }) {
         Nächste Frist
       </h2>
       <ResourceBoundary
-        services={[...CHANNELS]}
+        services={[...CHANNELS, "rules"]}
         skeleton={
           <Skeleton
             role="status"
@@ -65,6 +67,7 @@ export function NextDeadline({ className }: { className?: string }) {
 
 function NextDeadlineCard() {
   const deadline = useDemoStore(selectNextDeadline);
+  const rules = useDemoStore(selectRulesById);
   if (!deadline)
     return (
       <EmptyState
@@ -87,6 +90,9 @@ function NextDeadlineCard() {
           {formatDateTime(due)}
         </p>
         <ChannelBadge channel={deadline.channel} className="mt-3" />
+        {deadline.examId && rules["DR-5"] && (
+          <CitationList className="mt-3" citations={[rules["DR-5"].citation]} />
+        )}
         <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
           {deadline.examId && (
             <Link
@@ -186,12 +192,6 @@ function RecentGrades() {
 function AssistantTeaser() {
   const navigate = useNavigate();
   const [question, setQuestion] = useState("");
-  const catalog = useDemoStore(
-    (state) => state.resources.assistant.data?.catalog,
-  );
-  const suggestions = SUGGESTED_QUESTIONS.flatMap(
-    (id) => catalog?.find((entry) => entry.id === id) ?? [],
-  );
 
   return (
     <>
@@ -220,20 +220,45 @@ function AssistantTeaser() {
           <Send aria-hidden="true" />
         </Button>
       </form>
-      <ul className="mt-3 space-y-2">
-        {suggestions.map((entry) => (
-          <li key={entry.id}>
-            <Link
-              to={`/assistent?frage=${entry.id}`}
-              className="flex items-start justify-between gap-2 rounded-lg border bg-card p-3 text-meta hover:bg-muted"
-            >
-              {entry.question}
-              <ArrowRight className="size-4 shrink-0" aria-hidden="true" />
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <div className="mt-3">
+        <ResourceBoundary
+          services={["assistant"]}
+          skeleton={
+            <Skeleton
+              role="status"
+              aria-label="Vorschlagsfragen werden geladen"
+              className="h-28 bg-card"
+            />
+          }
+        >
+          {() => <SuggestedQuestions />}
+        </ResourceBoundary>
+      </div>
     </>
+  );
+}
+
+function SuggestedQuestions() {
+  const catalog = useDemoStore(
+    (state) => state.resources.assistant.data?.catalog,
+  );
+  const suggestions = SUGGESTED_QUESTIONS.flatMap(
+    (id) => catalog?.find((entry) => entry.id === id) ?? [],
+  );
+  return (
+    <ul className="space-y-2">
+      {suggestions.map((entry) => (
+        <li key={entry.id}>
+          <Link
+            to={`/assistent?frage=${entry.id}`}
+            className="flex items-start justify-between gap-2 rounded-lg border bg-card p-3 text-meta hover:bg-muted"
+          >
+            {entry.question}
+            <ArrowRight className="size-4 shrink-0" aria-hidden="true" />
+          </Link>
+        </li>
+      ))}
+    </ul>
   );
 }
 

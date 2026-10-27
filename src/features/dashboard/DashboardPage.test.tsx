@@ -74,7 +74,9 @@ describe("Übersicht (KONZEPT §8 S1, §10.4)", () => {
     renderOverview();
 
     const modules = region("Dieses Semester (WS 2026/27)");
-    expect(within(modules).getAllByRole("listitem")).toHaveLength(5);
+    expect(within(modules).getAllByRole("heading", { level: 3 })).toHaveLength(
+      5,
+    );
     expect(modules).toHaveTextContent("Übungsblätter 5/12");
     expect(modules).toHaveTextContent("nur im WS");
 
@@ -121,6 +123,19 @@ describe("Übersicht (KONZEPT §8 S1, §10.4)", () => {
     expect(screen.queryByText(/Simulierte Abmeldung/)).not.toBeInTheDocument();
   });
 
+  it("cites the sources of the withdrawal deadline and the offering labels (Beispiel)", () => {
+    renderOverview();
+    const deadline = screen.getAllByRole("region", {
+      name: "Nächste Frist",
+    })[0];
+    expect(deadline).toHaveTextContent(
+      "Quelle: SPO WirtschaftsinformatikBeispiel",
+    );
+    expect(region("Dieses Semester (WS 2026/27)")).toHaveTextContent(
+      "Quelle: Modulhandbuch WirtschaftsinformatikBeispiel",
+    );
+  });
+
   it("keeps the mobile order: Studienstand, Jetzt wichtig, Nächste Frist, Dieses Semester, Meilenstein", () => {
     renderOverview();
     const main = screen.getByRole("main");
@@ -155,6 +170,9 @@ describe("Übersicht (KONZEPT §8 S1, §10.4)", () => {
     expect(
       screen.getAllByText("POS konnte nicht geladen werden").length,
     ).toBeGreaterThan(0);
+    expect(
+      screen.getByRole("button", { name: "Assistent erneut laden" }),
+    ).toBeInTheDocument();
 
     FLAGS.simulateErrors = false;
     for (const name of ["Regelwerk erneut laden", "POS erneut laden"])

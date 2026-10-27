@@ -67,7 +67,11 @@ export function EctsHistory() {
         className="mt-3 aspect-auto h-56 w-full"
         aria-hidden="true"
       >
-        <ComposedChart data={points} margin={{ left: -16, right: 12, top: 8 }}>
+        <ComposedChart
+          accessibilityLayer={false}
+          data={points}
+          margin={{ left: -16, right: 12, top: 8 }}
+        >
           <CartesianGrid vertical={false} />
           <XAxis
             dataKey="term"

@@ -1,6 +1,8 @@
 import { BookOpen, Check, Undo2 } from "lucide-react";
 import { Link } from "react-router";
 import { ChannelBadge } from "@/components/common/ChannelBadge";
+import { CitationList } from "@/components/common/CitationList";
+import type { Citation } from "@/domain/types";
 import { DemoBadge } from "@/components/common/DemoBadge";
 import { Card, CardContent } from "@/components/ui/card";
 import { format } from "@/domain/terms";
@@ -11,6 +13,13 @@ import { ModuleIllustration } from "./ModuleIllustration";
 import { moduleArt } from "./module-art";
 
 const OFFERING_LABELS = { WS: "nur im WS", SS: "nur im SS" } as const;
+
+// Source of the offering labels ("nur im WS"); unchecked until P0-02 (INHALTE §2).
+const OFFERING_SOURCE: Citation = {
+  document: "Modulhandbuch Wirtschaftsinformatik",
+  summary: "Angebotsturnus der Module",
+  verified: false,
+};
 
 function ModuleCard({
   item,
@@ -139,6 +148,7 @@ export function SemesterModules() {
       <p className="mt-3 flex flex-wrap items-center gap-2 text-meta text-muted-foreground">
         Kanäle: <ChannelBadge channel="pos" /> <ChannelBadge channel="moodle" />
       </p>
+      <CitationList className="mt-2" citations={[OFFERING_SOURCE]} />
     </>
   );
 }
