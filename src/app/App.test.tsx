@@ -8,7 +8,7 @@ describe("App", () => {
     render(<App />);
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "Übersicht" }),
+      screen.getByRole("heading", { level: 1, name: /^Guten Abend/ }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Navigation öffnen" }),

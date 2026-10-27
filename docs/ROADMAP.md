@@ -184,7 +184,8 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch (ursprünglich `feat
 - **AK:** alle Zustände in `/_ui` sichtbar; Status nie nur über Farbe; Icon-Buttons mit `aria-label`.
 
 ### P3-02 [Claude] Übersicht (S1) – US-03, US-04, US-05, US-07
-- [ ] Hauptspalte und rechte Spalte laut KONZEPT §8 S1, Reihenfolge = Priorität
+- [x] Hauptspalte und rechte Spalte laut KONZEPT §8 S1, Reihenfolge = Priorität
+- Hinweis: „Jetzt wichtig“ zeigt nur Benachrichtigungen vom Typ Entscheidung mit offener Frist und Sonderregel (Entscheidung von Lucas am 27.10.); der ECTS-Verlauf (Niedrig) ist enthalten und lädt Recharts getrennt.
 - **AK:** Werte aus Store/Domäne (48 / Soll 60 / Knapp; Prognose 78 von 90); Studienstand, Ampel und „Jetzt wichtig“ bei 1440×900 ohne Scrollen sichtbar (Q-1); Skeletons; Fehlerzustand je Kanal; mobile Reihenfolge laut §8.
 
 ### P3-03 [Claude] Folgen-Check (S4) inkl. simulierter Abmeldung – US-06, US-07, US-08

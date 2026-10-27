@@ -78,7 +78,7 @@ Abhängigkeiten nur in diese Richtung: UI → Store/Selektoren → Domain; Store
 
 ## UI- und Inhaltsregeln
 - Designrevision P1-07: Referenz 1 bestimmt Ästhetik, kompakte Karten und lokale Linienillustrationen. Referenz 2 liefert ausschließlich die Farbpalette. Topnavigation und Hamburger-Overlay statt permanenter Sidebar und mobiler Tab-Leiste (KONZEPT §7, §12.1).
-- Die Übersicht enthält bis P3-02 eine gekennzeichnete Designvorschau mit isolierter, typisierter Präsentations-Fixture aus INHALTE; keine Domänenberechnung oder direkten Data-Imports.
+- Die Übersicht liest seit P3-02 alle Werte über Store-Selektoren (`src/store/selectors.ts`); Lade- und Fehlerzustände je Kanal über `ResourceBoundary`.
 - UI auf Deutsch mit Du-Ansprache; Code, Bezeichner und Commits auf Englisch; Dokumentation (README, CHANGELOG, `docs/`) auf Deutsch. Begriffe laut Glossar (KONZEPT §14) – insbesondere **Quelle** (Beleg) ≠ **Kanal** (Herkunftssystem).
 - Farben **nur über Tokens** aus `src/styles/globals.css` (Werte: KONZEPT §12.2). Keine Hex-Werte in Komponenten.
 - Terrakotta (`--accent`) ist Markenfarbe, **nie** Statusfarbe und nie Text auf hellem Grund (dort `--accent-strong`). Text auf Terrakotta-Flächen in `--accent-foreground` (Tinte). Neutrale Hover- und Auswahlflächen (Menüs, Listen) sind `bg-muted`, nicht `bg-accent`. Bringt eine neue shadcn-Komponente `bg-accent` als Hover mit, beim Hinzufügen umstellen.
