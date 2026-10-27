@@ -1,6 +1,8 @@
 import type {
   AcademicState,
+  Consequence,
   Deadline,
+  DecisionOutcome,
   ExamRecord,
   InboxItem,
   Module,
@@ -18,7 +20,7 @@ import {
 import { gradeAverage } from "@/domain/grades";
 import { projectPlan } from "@/domain/projection";
 import { trafficLight } from "@/domain/rules";
-import { compare, semesterNumber } from "@/domain/terms";
+import { compare, next, semesterNumber } from "@/domain/terms";
 import type { DemoState } from "./demo-store";
 
 function academicState(state: DemoState): AcademicState | null {
@@ -289,3 +291,102 @@ export const selectImportantDecisions = memoize(importantDecisions);
 export const selectRecentGrades = memoize(recentGrades);
 export const selectMilestone = memoize(milestone);
 export const selectRulesById = memoize(rulesById);
+
+export type DecisionView =
+  | { kind: "unknown" }
+  | { kind: "settled"; exam: ExamRecord; module: Module }
+  | { kind: "blocked"; exam: ExamRecord; module: Module; reason: string }
+  | {
+      kind: "ready";
+      exam: ExamRecord;
+      module: Module;
+      outcomes: DecisionOutcome[];
+      /** Hints of the current plan that apply whatever Niklas decides (e.g. DR-10 load). */
+      baseHints: Consequence[];
+      hint: string | null;
+      regularGraduationTerm: Term;
+      confirmed: boolean;
+    };
+
+function decisionView(state: DemoState, examId: string): DecisionView {
+  const academic = selectAcademicState(state);
+  const program = state.resources.pos.data?.program;
+  const plan = selectBasePlan(state);
+  if (!academic || !program || !plan) return { kind: "unknown" };
+  const exam = academic.exams.find((entry) => entry.id === examId);
+  const module = academic.modules.find((entry) => entry.id === exam?.moduleId);
+  if (!exam || !module) return { kind: "unknown" };
+  if (
+    exam.status !== "registered" ||
+    compare(exam.term, academic.currentTerm) !== 0
+  )
+    return { kind: "settled", exam, module };
+  let outcomes: DecisionOutcome[];
+  try {
+    outcomes = compareDecision(academic, exam.id);
+  } catch (error) {
+    return {
+      kind: "blocked",
+      exam,
+      module,
+      reason: error instanceof Error ? error.message : String(error),
+    };
+  }
+  let regularGraduationTerm = academic.student.startTerm;
+  for (let semester = 1; semester < program.regularSemesters; semester++)
+    regularGraduationTerm = next(regularGraduationTerm);
+  const hint = state.resources.rules.data?.decisionHints.find(
+    (item) => item.examId === exam.id,
+  );
+  return {
+    kind: "ready",
+    exam,
+    module,
+    outcomes,
+    // Only hints that no option changes; e.g. the DR-10 load differs when withdrawing Marketing (48 vs. 42).
+    baseHints: plan.consequences.filter(
+      (hint) =>
+        !outcomes.some((outcome) =>
+          outcome.consequences.some((item) => item.id === hint.id),
+        ),
+    ),
+    hint: hint ? hint.text[state.hintTone] : null,
+    regularGraduationTerm,
+    confirmed: state.confirmedExamIds.includes(exam.id),
+  };
+}
+
+const decisionCache = new WeakMap<DemoState, Map<string, DecisionView>>();
+
+/** Folgen-Check of one exam (KONZEPT §8 S4); cached per store state and exam, like the other selectors. */
+export function selectDecision(state: DemoState, examId: string): DecisionView {
+  let byExam = decisionCache.get(state);
+  if (!byExam) {
+    byExam = new Map();
+    decisionCache.set(state, byExam);
+  }
+  let view = byExam.get(examId);
+  if (!view) {
+    view = decisionView(state, examId);
+    byExam.set(examId, view);
+  }
+  return view;
+}
+
+/**
+ * The exam whose simulated decision "Rückgängig" would reverse: the one decision between the snapshot and
+ * the current state. Undo controls of other exams must not call undo (P3-03 review).
+ */
+export function selectUndoableExamId(state: DemoState): string | null {
+  const saved = state.snapshot;
+  if (!saved) return null;
+  const changed = [
+    ...state.withdrawnExamIds.filter(
+      (id) => !saved.withdrawnExamIds.includes(id),
+    ),
+    ...state.confirmedExamIds.filter(
+      (id) => !saved.confirmedExamIds.includes(id),
+    ),
+  ];
+  return changed.length === 1 ? changed[0] : null;
+}

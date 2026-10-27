@@ -20,7 +20,7 @@ export const LATENCY_MS = 500;
 export const FLAGS = { simulateErrors: false };
 
 /** Increment whenever the dummy data changes to discard older persisted demo states. */
-export const DATA_VERSION = 1;
+export const DATA_VERSION = 2;
 export const DEMO_STORAGE_KEY = `${APP_NAME.toLowerCase()}:demo`;
 
 /**
