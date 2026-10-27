@@ -14,6 +14,7 @@ Primäre Persona: **Niklas Brandt**, 20, Wirtschaftsinformatik, 3. Semester, Neb
 | `docs/KONZEPT.md` | Was gebaut wird: Scope, Screens, Hero-Flow, Domänenmodell, Regeln, Testorakel, Design-Tokens, Glossar |
 | `docs/INHALTE.md` | Alle Dummy-Inhalte (Module, Prüfungen, Fristen, Postfach, Regeln, Assistent) |
 | `docs/TESTPLAN.md` | Evaluation in Phase 5 |
+| `docs/PRODUCT.md` | Kurzfassung auf einer Seite (Persona, Zweck, Grenzen, Prinzipien) für Gestaltungsarbeit – nicht verbindlich, bei Widerspruch gilt KONZEPT |
 | `docs/PROMPTS.md` | Prompt-Vorlagen für Lucas (für dich nur Kontext) |
 | `docs/referenzen/` | `referenz-1-dashboard.png` = Layout-Orientierung (Abweichungen in KONZEPT §12.1) · `referenz-2-warm-ink.png` = Farbwelt (Werte in KONZEPT §12.2). Nicht pixelgenau nachbauen. Nur lokal vorhanden: fremde Designs, im öffentlichen Repo per `.gitignore` ausgeschlossen |
 | `AGENTS.md` | Regeln für Codex (Review und delegierte Aufgaben). Für Claude Code nur bei Bedarf relevant, z. B. für die Brief-Vorlage – die Reviewer-Rolle dort gilt nicht für dich |
