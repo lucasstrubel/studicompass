@@ -425,3 +425,32 @@ export function projectPlan(
   plan.consequences = severityOrder(plan.consequences);
   return plan;
 }
+
+/**
+ * Terms a what-if may move an unpassed module to (KONZEPT §8 S2, US-10): after the current term, not before
+ * its curriculum slot and only when the module is offered then (DR-4) – the same checks projectPlan applies.
+ * Returns the first `count` such terms; passed modules cannot be moved.
+ */
+export function allowedMoveTerms(
+  state: AcademicState,
+  moduleId: string,
+  count = 4,
+): Term[] {
+  const module = state.modules.find((item) => item.id === moduleId);
+  if (!module || passedModuleRecords(state.exams).has(moduleId)) return [];
+  const earliest = curriculumTerm(
+    state.student.startTerm,
+    module.plannedSemester,
+  );
+  const terms: Term[] = [];
+  let term = next(state.currentTerm);
+  while (terms.length < count) {
+    if (
+      compare(term, earliest) >= 0 &&
+      (module.offering === "BOTH" || module.offering === term.season)
+    )
+      terms.push(term);
+    term = next(term);
+  }
+  return terms;
+}

@@ -42,7 +42,7 @@ import {
 import { demoStore } from "@/store/demo-store";
 import { useDemoStore } from "@/store/use-demo-store";
 import { ComparisonTable } from "./ComparisonTable";
-import { rulesForModule } from "./offering";
+import { rulesForModule } from "@/lib/offering-rule";
 
 /**
  * Toast after a simulated decision, with "Rückgängig" for 8 s (US-08). The undo only applies while this

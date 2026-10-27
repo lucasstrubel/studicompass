@@ -6,6 +6,7 @@ import type { RouteHandle } from "@/components/layout/route-handle";
 import { DashboardPage } from "@/features/dashboard/DashboardPage";
 import { DashboardRail } from "@/features/dashboard/DashboardRail";
 import { DecisionPage } from "@/features/decision/DecisionPage";
+import { PlannerPage } from "@/features/planner/PlannerPage";
 import { OnboardingPage } from "@/features/onboarding/OnboardingPage";
 
 type PageRoute = RouteObject & { handle: RouteHandle };
@@ -25,7 +26,11 @@ const shellRoutes: PageRoute[] = [
     Component: DashboardPage,
     handle: { title: "Übersicht", rightRail: DashboardRail, ownHeader: true },
   },
-  { path: "verlauf", ...titleOnly("Studienverlauf") },
+  {
+    path: "verlauf",
+    Component: PlannerPage,
+    handle: { title: "Studienverlauf", ownHeader: true },
+  },
   { path: "module", ...titleOnly("Module & Noten") },
   { path: "module/:moduleId", ...titleOnly("Module & Noten") },
   { path: "postfach", ...titleOnly("Postfach") },
