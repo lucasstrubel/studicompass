@@ -11,11 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { CitationList } from "@/components/common/CitationList";
 import { useDemoStore } from "@/store/use-demo-store";
-import { demoStore } from "@/store/demo-store";
-import {
-  selectAssistantMatch,
-  selectAssistantPersonal,
-} from "@/store/assistant-selectors";
+import { selectAssistantPersonal } from "@/store/assistant-selectors";
 import type { AssistantEntry, Office } from "@/domain/types";
 import { selectAcademicState } from "@/store/selectors";
 import { semesterNumber } from "@/domain/terms";
@@ -153,50 +149,36 @@ export function AssistantChat({
   const academic = useDemoStore(selectAcademicState);
   const offices = useDemoStore((state) => state.resources.rules.data?.offices);
   const messages = useDemoStore((state) => state.assistantThread);
+  // The answer is prepared in the store, so it arrives even if the window closes in between.
+  const pending = useDemoStore((state) => state.assistantPending !== null);
+  const askAssistant = useDemoStore((state) => state.askAssistant);
   const [question, setQuestion] = useState("");
-  const [pending, setPending] = useState(false);
   const [draftQuestion, setDraftQuestion] = useState<string | null>(null);
   const [copyStatus, setCopyStatus] = useState("");
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const input = useRef<HTMLInputElement>(null);
   const latest = useRef<HTMLElement>(null);
   const initial = useRef("");
+  const answered = useRef(messages.length);
   const inputId = useId();
   const module = pos?.modules.find((item) => item.id === moduleId);
   function ask(text: string, id?: string) {
-    if (!text.trim() || timer.current) return;
-    setPending(true);
+    if (!text.trim() || pending) return;
     setQuestion("");
-    timer.current = setTimeout(() => {
-      demoStore.getState().appendAssistantMessage({
-        question: text.trim(),
-        id: id ?? selectAssistantMatch(demoStore.getState(), text),
-      });
-      setPending(false);
-      timer.current = null;
-      input.current?.focus();
-    }, 800);
+    askAssistant(text, id);
   }
   useEffect(() => {
     if (!initialQuestion || initial.current === initialQuestion || !data)
       return;
-    if (timer.current) clearTimeout(timer.current);
-    timer.current = null;
     initial.current = initialQuestion;
     const entry = data.catalog.find((item) => item.id === initialQuestion);
-    ask(entry?.question ?? initialQuestion, entry?.id);
+    askAssistant(entry?.question ?? initialQuestion, entry?.id);
     // The URL is an entry action; later store changes must not resubmit it.
-  }, [initialQuestion, data]);
-  useEffect(
-    () => () => {
-      if (timer.current) clearTimeout(timer.current);
-      timer.current = null;
-      initial.current = "";
-    },
-    [],
-  );
-  // In the window the conversation scrolls; a new answer is brought into view.
+  }, [initialQuestion, data, askAssistant]);
+  // A new answer returns the focus to the input; in the window it is also scrolled into view.
   useEffect(() => {
+    if (messages.length <= answered.current) return;
+    answered.current = messages.length;
+    input.current?.focus();
     if (panel) latest.current?.scrollIntoView?.({ block: "start" });
   }, [panel, messages.length]);
   if (!data) return null;

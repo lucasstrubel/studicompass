@@ -81,6 +81,25 @@ describe("assistant button and window (P5-06)", () => {
     );
   });
 
+  it("keeps a question that is still being answered when the window closes", async () => {
+    renderApp("/");
+    fireEvent.click(launcher());
+    fireEvent.click(
+      within(assistantWindow()).getByRole("button", {
+        name: "Wie viele ECTS fehlen mir noch?",
+      }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Assistent schließen" }),
+    );
+    await act(() => vi.advanceTimersByTimeAsync(800));
+
+    fireEvent.click(launcher());
+    expect(within(assistantWindow()).getByRole("log")).toHaveTextContent(
+      "Wie viele ECTS fehlen mir noch?",
+    );
+  });
+
   it("closes on navigation and continues the conversation on the assistant page", async () => {
     const router = renderApp("/");
     fireEvent.click(launcher());

@@ -42,8 +42,9 @@ export function AssistantLauncher() {
       open={open}
       onOpenChange={(next) => (next ? openWindow() : setOpen(false))}
     >
+      {/* Button and bubble sit at z-20, below the top bar (z-30), so the open menu panel covers them. */}
       {hint && !open && (
-        <div className="fixed right-6 bottom-24 z-40 w-64 max-w-[calc(100vw-3rem)] motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-2 motion-safe:duration-300">
+        <div className="fixed right-6 bottom-24 z-20 w-64 max-w-[calc(100vw-3rem)] motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-2 motion-safe:duration-300">
           <div className="panel-shadow relative rounded-2xl border bg-card p-3 pr-10">
             <button
               type="button"
@@ -77,7 +78,7 @@ export function AssistantLauncher() {
         <Button
           aria-label="Assistent öffnen"
           aria-describedby={hint && !open ? HINT_ID : undefined}
-          className="panel-shadow fixed right-6 bottom-6 z-40 size-14 rounded-full bg-accent text-accent-foreground hover:bg-accent/90"
+          className="panel-shadow fixed right-6 bottom-6 z-20 size-14 rounded-full bg-accent text-accent-foreground hover:bg-accent/90"
         >
           <MessageCircleQuestionMark className="size-6" aria-hidden="true" />
         </Button>

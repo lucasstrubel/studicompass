@@ -7,7 +7,7 @@ import {
   LATENCY_MS,
 } from "@/config/demo";
 import { createMockServices } from "@/services/mock";
-import { createDemoStore } from "./demo-store";
+import { ASSISTANT_DELAY_MS, createDemoStore } from "./demo-store";
 import {
   selectAcademicState,
   selectDeadlines,
@@ -207,19 +207,36 @@ describe("P2-05: simulations and persistence", () => {
   it("keeps one assistant conversation in memory only and clears it on reset (P5-06)", async () => {
     const store = makeStore();
     await store.getState().hydrate();
-    store.getState().appendAssistantMessage({
+    vi.useFakeTimers();
+    store.getState().askAssistant("Wann wird Statistik angeboten?", "A-08");
+    // One question at a time: a second one while the first is pending is ignored.
+    store.getState().askAssistant("Ausland?");
+    expect(store.getState().assistantPending).toEqual({
       question: "Wann wird Statistik angeboten?",
       id: "A-08",
     });
-    store.getState().appendAssistantMessage({ question: "Ausland?", id: null });
+    expect(store.getState().assistantThread).toEqual([]);
+    await vi.advanceTimersByTimeAsync(ASSISTANT_DELAY_MS);
+    store
+      .getState()
+      .askAssistant("  Kann ich Statistik im Ausland schreiben?  ");
+    await vi.advanceTimersByTimeAsync(ASSISTANT_DELAY_MS);
+    expect(store.getState().assistantPending).toBeNull();
     expect(store.getState().assistantThread).toEqual([
       { question: "Wann wird Statistik angeboten?", id: "A-08" },
-      { question: "Ausland?", id: null },
+      // Free text is matched; a special case leads to the fallback (id null, KONZEPT §11).
+      { question: "Kann ich Statistik im Ausland schreiben?", id: null },
     ]);
     expect(localStorage.getItem(DEMO_STORAGE_KEY)).not.toContain("Ausland");
     expect(makeStore().getState().assistantThread).toEqual([]);
-    await store.getState().resetDemo();
+
+    // A reset drops the conversation and a pending question.
+    store.getState().askAssistant("Wie viele ECTS fehlen mir noch?", "A-06");
+    const reset = store.getState().resetDemo();
+    await vi.advanceTimersByTimeAsync(ASSISTANT_DELAY_MS);
+    await reset;
     expect(store.getState().assistantThread).toEqual([]);
+    expect(store.getState().assistantPending).toBeNull();
   });
 
   it("ignores an obsolete response when reset races with hydration", async () => {
