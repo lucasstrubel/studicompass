@@ -23,6 +23,8 @@ const SCREENS = [
   { name: "assistent-wartet", path: "/assistent?frage=A-04" },
   { name: "einstellungen", path: "/einstellungen" },
   { name: "benachrichtigungen", path: "/module" },
+  { name: "navigation", path: "/module" },
+  { name: "folgen-check-assistent", path: "/entscheidung/e-stat-ws26" },
   { name: "onboarding-1", path: "/start" },
   { name: "onboarding-2", path: "/start" },
   { name: "onboarding-3", path: "/start" },
@@ -100,11 +102,26 @@ for (const screen of SCREENS)
       }
       if (screen.name === "benachrichtigungen")
         await page.getByRole("button", { name: /^Benachrichtigungen/ }).click();
+      if (screen.name === "navigation")
+        await page.getByRole("button", { name: "Navigation öffnen" }).click();
+      if (screen.name === "folgen-check-assistent") {
+        await page.getByRole("button", { name: "Assistent öffnen" }).click();
+        const assistant = page.getByRole("dialog", { name: "Assistent" });
+        await assistant
+          .getByRole("button", {
+            name: "Was passiert, wenn ich Statistik schiebe?",
+          })
+          .click();
+        await expect(assistant.getByRole("log")).toContainText("KI-Antwort");
+      }
       await page.evaluate(() => document.fonts.ready);
       await page.screenshot({
         path: `docs/screens/${screen.name}-${viewport.name}.png`,
-        fullPage: !["postfach-detail", "benachrichtigungen"].includes(
-          screen.name,
-        ),
+        fullPage: ![
+          "postfach-detail",
+          "benachrichtigungen",
+          "navigation",
+          "folgen-check-assistent",
+        ].includes(screen.name),
       });
     });
