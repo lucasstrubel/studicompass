@@ -76,6 +76,11 @@ describe("AppShell", () => {
     ).toBeInTheDocument();
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
   });
+  it("leaves out its h1 when the page renders its own header", () => {
+    renderShell({ title: "Folgen-Check", ownHeader: true });
+    expect(screen.queryByRole("heading", { level: 1 })).not.toBeInTheDocument();
+  });
+
   it("omits an empty right column", () => {
     renderShell();
     expect(screen.queryByRole("complementary")).not.toBeInTheDocument();

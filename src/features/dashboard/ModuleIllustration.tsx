@@ -1,7 +1,8 @@
-import type { PreviewModule } from "./dashboard-preview";
+export type IllustrationKind =
+  "chart" | "database" | "books" | "process" | "globe";
 
 /** Original local line art; decorative because the adjacent module heading names the subject. */
-export function ModuleIllustration({ kind }: { kind: PreviewModule["art"] }) {
+export function ModuleIllustration({ kind }: { kind: IllustrationKind }) {
   return (
     <svg
       viewBox="0 0 88 88"
