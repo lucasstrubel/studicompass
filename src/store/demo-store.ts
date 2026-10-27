@@ -53,12 +53,20 @@ interface Preferences {
   jobHoursPerWeek: number;
 }
 
+/** One question in the assistant conversation; id = catalog entry, null = fallback (KONZEPT §11). */
+export interface AssistantMessage {
+  question: string;
+  id: string | null;
+}
+
 export interface DemoState extends Preferences {
   setChannelConnected: (channel: Channel, connected: boolean) => Promise<void>;
   setNotificationType: (type: Notification["type"], enabled: boolean) => void;
   resources: Resources;
   snapshot: SimulationSnapshot | null;
   whatIf: PlanOverride[];
+  /** Shared by the assistant page and the assistant window; in memory only, never persisted. */
+  assistantThread: AssistantMessage[];
   hydrate: () => Promise<void>;
   retry: (service: ServiceKey) => Promise<void>;
   markRead: (id: string) => void;
@@ -69,6 +77,7 @@ export interface DemoState extends Preferences {
   confirmAttend: (id: string) => boolean;
   setWhatIf: (overrides: PlanOverride[]) => void;
   clearWhatIf: () => void;
+  appendAssistantMessage: (message: AssistantMessage) => void;
   setHintTone: (tone: HintTone) => void;
   completeOnboarding: (preferences?: {
     goalRegularTime: boolean;
@@ -204,7 +213,7 @@ function readSnapshot(value: unknown): SimulationSnapshot | null {
   };
 }
 
-/** Persist user changes and the undo point, never fixture copies, loading state, or what-if. */
+/** Persist user changes and the undo point, never fixture copies, loading state, what-if, or the assistant conversation. */
 function readPersisted(
   value: unknown,
 ): Preferences & { snapshot: SimulationSnapshot | null } {
@@ -289,6 +298,7 @@ export function createDemoStore(
           resources: emptyResources(),
           snapshot: null,
           whatIf: [],
+          assistantThread: [],
           hydrate: async () => {
             await Promise.all(SERVICE_KEYS.map((key) => load(key)));
           },
@@ -397,6 +407,10 @@ export function createDemoStore(
             set({ whatIf: structuredClone(overrides) });
           },
           clearWhatIf: () => set({ whatIf: [] }),
+          appendAssistantMessage: (message) =>
+            set((state) => ({
+              assistantThread: [...state.assistantThread, message],
+            })),
           setHintTone: (hintTone) => set({ hintTone }),
           completeOnboarding(preferences) {
             if (
@@ -416,6 +430,7 @@ export function createDemoStore(
               resources: emptyResources(),
               snapshot: null,
               whatIf: [],
+              assistantThread: [],
             });
             await get().hydrate();
           },

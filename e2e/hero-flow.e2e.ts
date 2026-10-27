@@ -110,3 +110,26 @@ test("keeps the page within the viewport width", async ({ page }) => {
     expect(overflow, path).toBe(false);
   }
 });
+
+test("asks the assistant in place from the Folgen-Check (P5-06)", async ({
+  page,
+}) => {
+  await page.goto("/entscheidung/e-stat-ws26");
+  await page.getByRole("button", { name: "Assistent öffnen" }).click();
+  const assistant = page.getByRole("dialog", { name: "Assistent" });
+  await assistant
+    .getByRole("textbox", { name: "Deine Frage" })
+    .fill("Was passiert, wenn ich Statistik schiebe?");
+  await assistant.getByRole("button", { name: "Frage stellen" }).click();
+  await expect(
+    assistant.getByRole("log").getByRole("list", { name: "Quellen" }),
+  ).toBeVisible();
+  await assistant.getByRole("button", { name: "Assistent schließen" }).click();
+  await expect(assistant).toHaveCount(0);
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Statistik – antreten oder abmelden?",
+    }),
+  ).toBeVisible();
+});

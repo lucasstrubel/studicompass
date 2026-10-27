@@ -11,7 +11,8 @@ export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <TooltipProvider>
       {children}
-      <Toaster />
+      {/* Toasts sit above the assistant button at the bottom right (P5-06). */}
+      <Toaster offset={{ bottom: "6rem" }} mobileOffset={{ bottom: "6rem" }} />
     </TooltipProvider>
   );
 }

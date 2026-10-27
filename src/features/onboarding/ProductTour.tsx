@@ -22,7 +22,7 @@ const STEPS = [
   },
   {
     title: "Dein Assistent",
-    text: "Stelle eine Frage oder wähle einen Vorschlag. Jede Antwort nennt Quellen oder sagt offen, wenn eine eindeutige Regel fehlt.",
+    text: "Stelle eine Frage oder wähle einen Vorschlag – hier oder auf jeder Seite über den Button unten rechts. Jede Antwort nennt Quellen oder sagt offen, wenn eine eindeutige Regel fehlt.",
     target: "inhalt",
   },
 ];

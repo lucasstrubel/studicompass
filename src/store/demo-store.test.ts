@@ -204,6 +204,24 @@ describe("P2-05: simulations and persistence", () => {
     });
   });
 
+  it("keeps one assistant conversation in memory only and clears it on reset (P5-06)", async () => {
+    const store = makeStore();
+    await store.getState().hydrate();
+    store.getState().appendAssistantMessage({
+      question: "Wann wird Statistik angeboten?",
+      id: "A-08",
+    });
+    store.getState().appendAssistantMessage({ question: "Ausland?", id: null });
+    expect(store.getState().assistantThread).toEqual([
+      { question: "Wann wird Statistik angeboten?", id: "A-08" },
+      { question: "Ausland?", id: null },
+    ]);
+    expect(localStorage.getItem(DEMO_STORAGE_KEY)).not.toContain("Ausland");
+    expect(makeStore().getState().assistantThread).toEqual([]);
+    await store.getState().resetDemo();
+    expect(store.getState().assistantThread).toEqual([]);
+  });
+
   it("ignores an obsolete response when reset races with hydration", async () => {
     const services = createMockServices({ latencyMs: 0 });
     const originalLoad = services.pos.load;
