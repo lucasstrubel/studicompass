@@ -11,7 +11,8 @@ import { useDemoStore } from "@/store/use-demo-store";
 
 /**
  * "Jetzt wichtig" (KONZEPT §8 S1 no. 2, US-07): at most two decisions where a special rule applies, text in
- * the chosen hint tone. Terracotta surface with ink text and ink focus ring in light mode (§12.2).
+ * the chosen hint tone. Soft terracotta tint with a terracotta edge and ink text (§12.2, P5-06): marked as
+ * important without outshining the study progress next to it.
  */
 export function ImportantCard() {
   const decisions = useDemoStore(selectImportantDecisions);
@@ -50,10 +51,13 @@ export function ImportantCard() {
   return (
     <section
       aria-labelledby="important"
-      className="h-full rounded-xl border border-accent-strong bg-accent p-5 text-accent-foreground [--ring:var(--accent-foreground)] dark:border-border dark:bg-accent-soft dark:text-accent-soft-foreground dark:[--ring:var(--accent-strong)]"
+      className="h-full rounded-xl border border-l-4 border-l-accent bg-accent-soft p-5 text-foreground"
     >
       <h2 id="important" className="flex items-center gap-2 text-card-title">
-        <CalendarClock className="size-4" aria-hidden="true" />
+        <CalendarClock
+          className="size-4 text-accent-strong"
+          aria-hidden="true"
+        />
         Jetzt wichtig
       </h2>
       <ul className="mt-3 space-y-5">
@@ -76,7 +80,6 @@ export function ImportantCard() {
               </p>
               <CitationList
                 className="mt-3"
-                muted={false}
                 citations={decision.ruleIds.flatMap((id) =>
                   rules[id] ? [rules[id].citation] : [],
                 )}

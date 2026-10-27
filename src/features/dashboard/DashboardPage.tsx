@@ -38,7 +38,11 @@ function OverviewHeader() {
   );
 }
 
-/** Übersicht (KONZEPT §8 S1): main column in priority order; the right column is DashboardRail. */
+/**
+ * Übersicht (KONZEPT §8 S1): Studienstand and Jetzt wichtig, below them the ECTS-Verlauf (Lucas, P5-06), then
+ * this semester and the milestone; on small screens the next deadline follows Jetzt wichtig. The right
+ * column is DashboardRail.
+ */
 export function DashboardPage() {
   return (
     <div className="space-y-6">
@@ -75,6 +79,39 @@ export function DashboardPage() {
         </ResourceBoundary>
       </div>
       <NextDeadline className="xl:hidden" />
+      <section aria-labelledby="ects-history" className="rounded-xl border p-5">
+        <h2 id="ects-history" className="text-section-title">
+          ECTS-Verlauf
+        </h2>
+        <p className="mt-1 text-meta text-muted-foreground">
+          Kumuliert je Semester; das laufende Semester als Prognose, wenn du
+          alle angemeldeten Prüfungen bestehst.
+        </p>
+        <ResourceBoundary
+          services={["pos"]}
+          skeleton={
+            <Skeleton
+              role="status"
+              className="mt-3 h-48"
+              aria-label="ECTS-Verlauf wird geladen"
+            />
+          }
+        >
+          {() => (
+            <Suspense
+              fallback={
+                <Skeleton
+                  role="status"
+                  className="mt-3 h-48"
+                  aria-label="ECTS-Verlauf wird geladen"
+                />
+              }
+            >
+              <EctsHistory />
+            </Suspense>
+          )}
+        </ResourceBoundary>
+      </section>
       <section aria-labelledby="semester-modules">
         <ResourceBoundary
           services={["pos"]}
@@ -108,32 +145,6 @@ export function DashboardPage() {
           }
         >
           {() => <MilestoneCard />}
-        </ResourceBoundary>
-      </section>
-      <section aria-labelledby="ects-history" className="rounded-xl border p-5">
-        <ResourceBoundary
-          services={["pos"]}
-          skeleton={
-            <Skeleton
-              role="status"
-              className="h-64"
-              aria-label="ECTS-Verlauf wird geladen"
-            />
-          }
-        >
-          {() => (
-            <Suspense
-              fallback={
-                <Skeleton
-                  role="status"
-                  className="h-64"
-                  aria-label="ECTS-Verlauf wird geladen"
-                />
-              }
-            >
-              <EctsHistory />
-            </Suspense>
-          )}
         </ResourceBoundary>
       </section>
     </div>

@@ -33,7 +33,10 @@ interface Point {
   target: number;
 }
 
-/** ECTS-Verlauf (KONZEPT §8 S1 no. 5, low priority): cumulative actual vs. target up to this semester. */
+/**
+ * Chart and value table of the ECTS-Verlauf (KONZEPT §8 S1 no. 3): cumulative actual vs. target up to this
+ * semester. The section heading lives on the page, so it shows while this lazy chunk loads.
+ */
 export function EctsHistory() {
   const plan = useDemoStore(selectBasePlan);
   const academic = useDemoStore(selectAcademicState);
@@ -54,17 +57,10 @@ export function EctsHistory() {
   });
 
   return (
-    <>
-      <h2 id="ects-history" className="text-section-title">
-        ECTS-Verlauf
-      </h2>
-      <p className="mt-1 text-meta text-muted-foreground">
-        Kumuliert je Semester; das laufende Semester als Prognose, wenn du alle
-        angemeldeten Prüfungen bestehst.
-      </p>
+    <div className="mt-3 grid gap-4 xl:grid-cols-[minmax(0,1fr)_15rem] xl:items-center">
       <ChartContainer
         config={CHART_CONFIG}
-        className="mt-3 aspect-auto h-56 w-full"
+        className="aspect-auto h-48 w-full"
         aria-hidden="true"
       >
         <ComposedChart
@@ -113,7 +109,7 @@ export function EctsHistory() {
           />
         </ComposedChart>
       </ChartContainer>
-      <table className="mt-3 w-full text-meta tabular-nums">
+      <table className="w-full text-meta tabular-nums">
         <caption className="sr-only">ECTS je Semester</caption>
         <thead className="text-muted-foreground">
           <tr>
@@ -142,6 +138,6 @@ export function EctsHistory() {
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
 }

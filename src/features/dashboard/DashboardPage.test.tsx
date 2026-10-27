@@ -137,13 +137,14 @@ describe("Übersicht (KONZEPT §8 S1, §10.4)", () => {
     );
   });
 
-  it("keeps the mobile order: Studienstand, Jetzt wichtig, Nächste Frist, Dieses Semester, Meilenstein", () => {
+  it("keeps the order: Studienstand, Jetzt wichtig, (mobile: Nächste Frist), ECTS-Verlauf, Dieses Semester, Meilenstein", () => {
     renderOverview();
     const main = screen.getByRole("main");
     const order = [
       "Dein Studienstand",
       "Jetzt wichtig",
       "Nächste Frist",
+      "ECTS-Verlauf",
       "Dieses Semester (WS 2026/27)",
       "Praxissemester · WS 2027/28",
     ].map((name) =>
