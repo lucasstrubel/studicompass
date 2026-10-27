@@ -1,4 +1,4 @@
-import type { Citation, Module, Rule } from "@/domain/types";
+import type { Citation, Consequence, Module, Rule } from "@/domain/types";
 
 const OFFERING_TEXT = {
   WS: "nur im Wintersemester",
@@ -49,4 +49,22 @@ export function generalOfferingRule(rule: Rule | undefined): Rule {
     officeId: rule?.officeId,
     params: {},
   };
+}
+
+/** Sources of a projected consequence; DR-4 consequences ("offering-<moduleId>") cite their own module. */
+export function consequenceCitations(
+  consequence: Consequence,
+  modules: Module[],
+  rules: Record<string, Rule>,
+): Citation[] {
+  if (!consequence.ruleId) return [];
+  if (consequence.ruleId === "DR-4") {
+    const module = modules.find(
+      (item) => consequence.id === `offering-${item.id}`,
+    );
+    if (module) return [offeringRule(module, rules["DR-4"]).citation];
+    return [generalOfferingRule(rules["DR-4"]).citation];
+  }
+  const rule = rules[consequence.ruleId];
+  return rule ? [rule.citation] : [];
 }

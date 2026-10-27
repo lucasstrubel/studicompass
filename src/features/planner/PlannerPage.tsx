@@ -8,6 +8,7 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { PageHeader } from "@/components/common/PageHeader";
 import { ResourceBoundary } from "@/components/common/ResourceBoundary";
 import { StatusBadge } from "@/components/common/StatusBadge";
+import { WithdrawalNotice } from "@/components/common/WithdrawalNotice";
 import {
   Accordion,
   AccordionContent,
@@ -17,9 +18,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
-import { allowedMoveTerms } from "@/domain/projection";
+import { allowedMoveTerms, projectPlan } from "@/domain/projection";
 import { compare, format, next } from "@/domain/terms";
-import { generalOfferingRule } from "@/lib/offering-rule";
+import { consequenceCitations, generalOfferingRule } from "@/lib/offering-rule";
 import type { PlanOverride, Term } from "@/domain/types";
 import {
   selectAcademicState,
@@ -30,7 +31,7 @@ import {
 import { useDemoStore } from "@/store/use-demo-store";
 import { Timeline } from "./Timeline";
 
-const PLAN_RULES = ["DR-4", "DR-6", "DR-7"];
+const PLAN_RULES = ["DR-4", "DR-6", "DR-7", "DR-10"];
 
 function PlannerContent() {
   const timeline = useDemoStore(selectTimeline);
@@ -60,6 +61,35 @@ function PlannerContent() {
         : [],
   );
 
+  const jobHours = academic.student.jobHoursPerWeek;
+  const loadCitation = rules["DR-10"]?.citation;
+
+  /**
+   * Terms the menu offers: allowed by DR-4 and actually reached with the other active moves – a milestone
+   * shift can push a module later than an earlier target (P3-04 review).
+   */
+  const moveTargets = (moduleId: string): Term[] => {
+    const others = whatIf.filter((item) => item.moduleId !== moduleId);
+    const now = plan.modules.find((item) => item.moduleId === moduleId)?.term;
+    return allowedMoveTerms(academic, moduleId, 8)
+      .filter((term) => {
+        if (now && compare(now, term) === 0) return false;
+        try {
+          const result = projectPlan(academic, [
+            ...others,
+            { moduleId, action: "move", term },
+          ]);
+          const placed = result.modules.find(
+            (item) => item.moduleId === moduleId,
+          )?.term;
+          return placed !== undefined && compare(placed, term) === 0;
+        } catch {
+          return false;
+        }
+      })
+      .slice(0, 4);
+  };
+
   const move = (moduleId: string, term: Term) => {
     const overrides: PlanOverride[] = [
       ...whatIf.filter((item) => item.moduleId !== moduleId),
@@ -84,7 +114,9 @@ function PlannerContent() {
         description={
           basePlan.graduationTerm ? (
             <p className="text-foreground">
-              Voraussichtlicher Abschluss:{" "}
+              {timeline.simulating
+                ? "Echter Plan ohne Simulation – voraussichtlicher Abschluss: "
+                : "Voraussichtlicher Abschluss: "}
               <span className="font-semibold">
                 {format(basePlan.graduationTerm)}
               </span>{" "}
@@ -98,6 +130,7 @@ function PlannerContent() {
           )
         }
       />
+      <WithdrawalNotice />
       {goalRegularTime && (
         <p className="flex flex-wrap items-center gap-2 rounded-xl border bg-card p-3 text-body">
           <Target className="size-4 shrink-0" aria-hidden="true" />
@@ -140,6 +173,7 @@ function PlannerContent() {
           >
             <div className="flex flex-wrap items-center gap-3">
               <DemoBadge variant="simulation" className="bg-card" />
+              <StatusBadge status={plan.trafficLight} />
               <p className="flex-1 text-body">
                 Abschluss in der Simulation:{" "}
                 <span className="font-semibold">
@@ -163,11 +197,11 @@ function PlannerContent() {
                   <li key={consequence.id}>
                     <ConsequenceItem
                       consequence={consequence}
-                      citations={
-                        consequence.ruleId && rules[consequence.ruleId]
-                          ? [rules[consequence.ruleId].citation]
-                          : []
-                      }
+                      citations={consequenceCitations(
+                        consequence,
+                        academic.modules,
+                        rules,
+                      )}
                     />
                   </li>
                 ))}
@@ -196,8 +230,12 @@ function PlannerContent() {
             terms={timeline.terms}
             currentTerm={academic.currentTerm}
             simulation={simulation}
-            moveTargets={(moduleId) => allowedMoveTerms(academic, moduleId)}
+            canMove={(moduleId) =>
+              allowedMoveTerms(academic, moduleId, 1).length > 0
+            }
+            moveTargets={moveTargets}
             onMove={move}
+            load={{ jobHours, citation: loadCitation }}
           />
         )}
         <p className="text-meta text-muted-foreground">

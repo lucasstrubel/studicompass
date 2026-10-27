@@ -16,7 +16,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Term } from "@/domain/types";
+import type { Citation, Term } from "@/domain/types";
+import { CitationList } from "@/components/common/CitationList";
 import { format } from "@/domain/terms";
 import { formatGrade } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -68,25 +69,46 @@ const MILESTONES: Record<TimelineTerm["milestones"][number], string> = {
 /** Limit above which a semester counts as heavy (DR-10). */
 const LOAD_LIMIT = 36;
 
+/** Menu entries, computed only while the menu is open (each target is checked with a projection). */
+function MoveTargets({
+  targets,
+  onMove,
+}: {
+  targets: () => Term[];
+  onMove: (term: Term) => void;
+}) {
+  const terms = targets();
+  if (terms.length === 0)
+    return (
+      <DropdownMenuItem disabled>
+        Kein späteres Semester ändert den Plan
+      </DropdownMenuItem>
+    );
+  return terms.map((term) => (
+    <DropdownMenuItem key={format(term)} onSelect={() => onMove(term)}>
+      {format(term)}
+    </DropdownMenuItem>
+  ));
+}
+
 function ModuleChip({
   item,
   simulation,
+  canMove,
   moveTargets,
   onMove,
 }: {
   item: TimelineModule;
   simulation: boolean;
-  moveTargets: Term[];
+  canMove: boolean;
+  moveTargets: () => Term[];
   onMove: (term: Term) => void;
 }) {
   const { module, status } = item;
   const { label, Icon, className } = STATUS[status];
   // Milestones follow from the rules (DR-6) and are not moved by hand.
   const movable =
-    simulation &&
-    status !== "passed" &&
-    !module.isMilestone &&
-    moveTargets.length > 0;
+    simulation && status !== "passed" && !module.isMilestone && canMove;
   return (
     <li
       data-moved={item.movedFrom ? "true" : undefined}
@@ -145,14 +167,7 @@ function ModuleChip({
                 <DropdownMenuLabel>
                   Verschieben nach … (zulässig laut Angebot, DR-4)
                 </DropdownMenuLabel>
-                {moveTargets.map((term) => (
-                  <DropdownMenuItem
-                    key={format(term)}
-                    onSelect={() => onMove(term)}
-                  >
-                    {format(term)}
-                  </DropdownMenuItem>
-                ))}
+                <MoveTargets targets={moveTargets} onMove={onMove} />
               </DropdownMenuContent>
             </DropdownMenu>
           )}
@@ -170,14 +185,19 @@ export function Timeline({
   terms,
   currentTerm,
   simulation,
+  canMove,
   moveTargets,
   onMove,
+  load,
 }: {
   terms: TimelineTerm[];
   currentTerm: Term;
   simulation: boolean;
+  canMove: (moduleId: string) => boolean;
   moveTargets: (moduleId: string) => Term[];
   onMove: (moduleId: string, term: Term) => void;
+  /** DR-10 context: job hours and the rule's source. */
+  load: { jobHours: number; citation?: Citation };
 }) {
   return (
     <ol className="grid gap-3 xl:auto-cols-[minmax(0,1fr)] xl:grid-flow-col xl:gap-2">
@@ -221,13 +241,17 @@ export function Timeline({
               </ul>
             )}
             {heavy && (
-              <p className="flex items-start gap-1 text-meta text-status-tight-foreground">
-                <TriangleAlert
-                  className="mt-0.5 size-3.5 shrink-0"
-                  aria-hidden="true"
-                />
-                Hohe Belastung: {item.ects} ECTS
-              </p>
+              <div className="space-y-1">
+                <p className="flex items-start gap-1 text-meta text-status-tight-foreground">
+                  <TriangleAlert
+                    className="mt-0.5 size-3.5 shrink-0"
+                    aria-hidden="true"
+                  />
+                  Hohe Belastung: {item.ects} ECTS bei {load.jobHours} Std.
+                  Nebenjob pro Woche
+                </p>
+                {load.citation && <CitationList citations={[load.citation]} />}
+              </div>
             )}
             <ul className="flex flex-col gap-2">
               {item.modules.map((entry) => (
@@ -235,7 +259,8 @@ export function Timeline({
                   key={entry.module.id}
                   item={entry}
                   simulation={simulation}
-                  moveTargets={moveTargets(entry.module.id)}
+                  canMove={canMove(entry.module.id)}
+                  moveTargets={() => moveTargets(entry.module.id)}
                   onMove={(term) => onMove(entry.module.id, term)}
                 />
               ))}
