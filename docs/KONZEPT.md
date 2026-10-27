@@ -525,10 +525,6 @@ Nur helles Design (Entscheidung von Lucas am 27.10.2026, P5-06). Kontrastrevisio
 | `--accent-foreground` | `#1A1917` | Text auf Terrakotta | **5,6:1** (Weiß auf Terrakotta nur 3,1:1 → nur ab 24 px) |
 | `--accent-strong` | `#A4492E` | Links, Akzenttext, Fokusring | 5,6:1 / 5,9:1 |
 | `--accent-soft` / `--accent-soft-foreground` | `#F7E4DD` / `#9A4128` | zurückhaltende Hervorhebungen / Text darauf | 5,4:1 |
-| `--sidebar` | `#1A1917` | Sidebar | – |
-| `--sidebar-foreground` | `#D9D6CF` | Sidebar-Text | 12,1:1 |
-| `--sidebar-muted` | `#A4A29B` | inaktive Einträge | 6,9:1 |
-| `--sidebar-active` | `#2B2926` + 3-px-Balken `--accent` | aktiver Eintrag (zusätzlich fett) | Balken 4,7:1, Text 10,0:1 |
 
 **Statusfarben** – getrennt vom Markenakzent; immer mit Icon und Text
 

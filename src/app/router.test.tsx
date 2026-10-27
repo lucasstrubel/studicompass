@@ -23,7 +23,8 @@ function renderApp(path: string) {
   return router;
 }
 
-const menu = () => within(screen.getByRole("dialog", { name: APP_NAME }));
+const menu = () =>
+  within(screen.getByRole("dialog", { name: "Alle Bereiche" }));
 async function openMenu(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole("button", { name: "Navigation öffnen" }));
 }
@@ -152,7 +153,6 @@ describe("keyboard", () => {
     await user.tab(); // skip link
     await user.tab(); // hamburger
     await user.keyboard("{Enter}");
-    await user.tab(); // hamburger close -> close button
     await user.tab(); // close button -> Übersicht
     await user.tab(); // Studienverlauf
     expect(menu().getByRole("link", { name: "Studienverlauf" })).toHaveFocus();

@@ -142,10 +142,6 @@ const DOCUMENTED_PAIRS: [string, string, number][] = [
   ["--accent-strong", "--background", 5.6],
   ["--accent-strong", "--card", 5.9],
   ["--accent-soft-foreground", "--accent-soft", 5.4],
-  ["--sidebar-foreground", "--sidebar", 12.1],
-  ["--sidebar-muted", "--sidebar", 6.9],
-  ["--accent", "--sidebar-active", 4.7],
-  ["--sidebar-foreground", "--sidebar-active", 10.0],
   ["--status-on-track", "--card", 3.7],
   ["--status-on-track-foreground", "--card", 5.8],
   ["--status-on-track-foreground", "--status-on-track-soft", 5.0],
@@ -180,8 +176,8 @@ function matchesDocumented(ratio: number, documented: number): boolean {
 
 describe("design tokens (KONZEPT §12.2)", () => {
   it("every token has the value from the KONZEPT tables", () => {
-    // 18 base tokens plus 3 per status; fails if the tables can no longer be read.
-    expect(KONZEPT_TOKENS.size).toBe(30);
+    // 14 base tokens plus 3 per status; fails if the tables can no longer be read.
+    expect(KONZEPT_TOKENS.size).toBe(26);
     for (const [name, value] of KONZEPT_TOKENS) {
       expect(token(name), name).toBe(value);
     }
@@ -208,12 +204,6 @@ describe("design tokens (KONZEPT §12.2)", () => {
         contrast(token("--accent-strong"), token(surface)),
         `link on ${surface}`,
       ).toBeGreaterThanOrEqual(4.5);
-    }
-    for (const surface of ["--sidebar", "--sidebar-active"]) {
-      expect(
-        contrast(token("--sidebar-ring"), token(surface)),
-        `sidebar focus ring on ${surface}`,
-      ).toBeGreaterThanOrEqual(3);
     }
     // Button and badge "destructive": tint 10 % at rest and 15 % on hover (button.tsx, badge.tsx).
     for (const surface of ["--background", "--card"]) {

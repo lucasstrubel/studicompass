@@ -5,7 +5,6 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { AppProviders } from "@/app/providers";
 import { AppShell } from "@/components/layout/AppShell";
 import type { RouteHandle } from "@/components/layout/route-handle";
-import { APP_NAME } from "@/config/demo";
 
 function renderShell(handle: RouteHandle = { title: "Übersicht" }) {
   const router = createMemoryRouter([
@@ -57,7 +56,7 @@ function hoverSupport() {
   vi.stubGlobal("PointerEvent", TestPointerEvent);
 }
 const trigger = () => screen.getByRole("button", { name: "Navigation öffnen" });
-const fullMenu = () => screen.getByRole("dialog", { name: APP_NAME });
+const fullMenu = () => screen.getByRole("dialog", { name: "Alle Bereiche" });
 const advance = (ms: number) =>
   act(() => {
     vi.advanceTimersByTime(ms);
@@ -171,7 +170,7 @@ describe("hamburger disclosure", () => {
     trigger().focus();
     await user.keyboard("{Enter}");
     const close = within(fullMenu()).getByRole("button", {
-      name: "Navigation einklappen",
+      name: "Navigation schließen",
     });
     expect(close).toHaveFocus();
     await user.tab({ shift: true });
@@ -187,11 +186,11 @@ describe("hamburger disclosure", () => {
     );
     expect(trigger()).toHaveFocus();
   });
-  it("dismisses the pinned sheet on an outside pointer action", async () => {
+  it("dismisses the pinned menu on an outside pointer action", async () => {
     const user = userEvent.setup();
     renderShell();
     await user.click(trigger());
-    const overlay = document.querySelector('[data-slot="sheet-overlay"]');
+    const overlay = document.querySelector('[data-slot="navigation-overlay"]');
     expect(overlay).not.toBeNull();
     if (overlay) await user.click(overlay);
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();

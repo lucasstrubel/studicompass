@@ -348,14 +348,6 @@ export function UiShowcasePage() {
               </div>
             ))}
           </div>
-          {/* Dark overlay menu tokens from the P1-07 navigation revision. */}
-          <div className="flex max-w-64 flex-col gap-1 rounded-xl bg-sidebar p-2 text-sidebar-foreground">
-            <span className="rounded-r-lg border-l-3 border-sidebar-primary bg-sidebar-active px-3 py-2 font-semibold">
-              Übersicht
-            </span>
-            <span className="px-3 py-2 text-sidebar-muted">Studienverlauf</span>
-            <span className="px-3 py-2 text-sidebar-muted">Postfach</span>
-          </div>
         </Section>
 
         <Section name="typografie">
