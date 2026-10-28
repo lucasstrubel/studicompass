@@ -5,6 +5,7 @@ import { expect, test } from "@playwright/test";
 
 const SCREENS = [
   { name: "uebersicht", path: "/" },
+  { name: "assistent-hinweis", path: "/" },
   { name: "folgen-check-statistik", path: "/entscheidung/e-stat-ws26" },
   { name: "folgen-check-marketing", path: "/entscheidung/e-mkt-ws26" },
   { name: "studienverlauf", path: "/verlauf" },
@@ -89,8 +90,12 @@ for (const screen of SCREENS)
         await expect(
           page.getByText("Verbunden (Demo)", { exact: true }),
         ).toHaveCount(4);
-      if (screen.name.startsWith("assistent-") && screen.name !== "assistent")
+      if (screen.path.startsWith("/assistent?"))
         await expect(page.getByRole("log")).toContainText("KI-Antwort");
+      // The speech bubble introduces the assistant once per demo state (P5-07); only its own view shows it.
+      const hint = page.getByRole("button", { name: "Hinweis ausblenden" });
+      if (screen.name === "assistent-hinweis") await expect(hint).toBeVisible();
+      else if (await hint.isVisible()) await hint.click();
       if (screen.name === "assistent-wartet") {
         await page.clock.install({ time: clockTime });
         await page.clock.pauseAt(clockTime);
@@ -115,9 +120,12 @@ for (const screen of SCREENS)
         await expect(assistant.getByRole("log")).toContainText("KI-Antwort");
       }
       await page.evaluate(() => document.fonts.ready);
+      // The pointer stays where the last click happened; move it away so no hover style shows.
+      await page.mouse.move(0, 0);
       await page.screenshot({
         path: `docs/screens/${screen.name}-${viewport.name}.png`,
         fullPage: ![
+          "assistent-hinweis",
           "postfach-detail",
           "benachrichtigungen",
           "navigation",

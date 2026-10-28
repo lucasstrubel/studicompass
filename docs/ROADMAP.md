@@ -286,6 +286,15 @@ Vor den Nutzertests, damit sie den neuen Stand sehen. Entscheidungen von Lucas: 
 - [x] Dark Mode vollständig entfernt (Code, Tokens, Tests, Screenshots, Doku); US-19 gestrichen
 - **AK:** keine Hex-Werte außerhalb `globals.css`; Farbfamilie ≥ 3:1 zu Seite, Karte und Track; Menü und Assistent-Fenster per Tastatur bedienbar (Fokus hinein und zurück); keine horizontale Scrollleiste 360–1920 px; Assistent-Button verdeckt weder Seitenende noch Toasts; `npm run check` und `npm run e2e` grün; Screenshots neu (1440×900, 390×844).
 
+### P5-07 [Claude] Abgleich mit Apples Designprinzipien (Auftrag von Lucas, 28.10.2026)
+Vor den Nutzertests, damit niemand mit einer verdeckenden Sprechblase startet. Bewertung und Befunde: [P5-07-designprinzipien.md](reviews/P5-07-designprinzipien.md). Entscheidungen von Lucas: Ergebnis festhalten, vorab nur testrelevante Punkte beheben; Sprechblase einmal je Demo-Stand.
+- [x] Alle Screens gegen die acht Prinzipien geprüft; Befunde DP-1 bis DP-10 dokumentiert, offene in der [Befundliste](evaluation/P5-auswertung.md), neue Ideen im Ideenparkplatz
+- [x] Sprechblase einmal je Demo-Stand, erst nach dem Onboarding: verschwindet beim Schließen, Öffnen, ersten Scrollen oder Seitenwechsel und kommt erst nach „Demo zurücksetzen“ wieder (DP-1)
+- [x] „Warum?“-Schalter mit mindestens 24 px Trefferhöhe, ohne das Layout zu verschieben (DP-2)
+- [x] Profil-Avatar mit Initialen (KONZEPT A-6, DP-8)
+- [x] Codex-Review: ein Major bestätigt und behoben (Sprechblase kam nach Neuladen ohne Interaktion wieder) → [P5-07.md](reviews/P5-07.md)
+- **AK:** Sprechblase erscheint nach Neuladen nicht erneut und verdeckt nach dem ersten Scrollen oder Seitenwechsel nichts mehr; „Warum?“ reagiert auch 4 px neben dem Text (E2E); Avatar zeigt „NB“; `npm run check` und `npm run e2e` grün; Screenshots neu (1440×900, 390×844), die Sprechblase zeigt nur noch `assistent-hinweis`.
+
 **Gate M5 (Mi 04.11. abends):** Top-Befunde behoben · Testergebnisse dokumentiert.
 
 Stand: Agenteninspektion, technische Iteration und Testvorbereitung erledigt. Echte Sitzungen, nutzerbasierte Endauswertung und Präsentationsergebnisse stehen aus. **M5 bleibt offen; kein Tag gesetzt.**

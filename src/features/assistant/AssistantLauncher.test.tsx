@@ -1,4 +1,11 @@
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AppProviders } from "@/app/providers";
@@ -25,6 +32,15 @@ function renderApp(path: string) {
   return router;
 }
 
+/** jsdom does not scroll: set the position and report it like the browser would. */
+function scrollWindowTo(y: number) {
+  Object.defineProperty(window, "scrollY", { value: y, configurable: true });
+  fireEvent.scroll(window);
+}
+afterEach(() => {
+  Object.defineProperty(window, "scrollY", { value: 0, configurable: true });
+});
+
 const launcher = () => screen.getByRole("button", { name: "Assistent öffnen" });
 const assistantWindow = () => screen.getByRole("dialog", { name: "Assistent" });
 
@@ -42,6 +58,58 @@ describe("assistant button and window (P5-06)", () => {
       screen.queryByText(/Ich antworte mit Quelle/),
     ).not.toBeInTheDocument();
     expect(launcher()).toBeInTheDocument();
+  });
+
+  it("retires the speech bubble on a deliberate scroll, not on a small jump (P5-07)", () => {
+    renderApp("/");
+    scrollWindowTo(30);
+    expect(screen.getByText(/Ich antworte mit Quelle/)).toBeInTheDocument();
+    scrollWindowTo(80);
+    expect(
+      screen.queryByText(/Ich antworte mit Quelle/),
+    ).not.toBeInTheDocument();
+  });
+
+  it("does not show the speech bubble again after a reload without any interaction (P5-07)", () => {
+    renderApp("/");
+    expect(screen.getByText(/Ich antworte mit Quelle/)).toBeInTheDocument();
+    cleanup();
+    renderApp("/");
+    expect(
+      screen.queryByText(/Ich antworte mit Quelle/),
+    ).not.toBeInTheDocument();
+  });
+
+  it("keeps the speech bubble for after the onboarding (P5-07)", async () => {
+    // A fresh visitor: nothing is rendered yet, so no act() is needed.
+    demoStore.setState({ onboardingComplete: false });
+    const router = renderApp("/");
+    // The overview hands over to the onboarding; the bubble must not count as shown yet.
+    expect(router.state.location.pathname).toBe("/start");
+    act(() => demoStore.getState().completeOnboarding());
+    await act(() => router.navigate("/"));
+    expect(screen.getByText(/Ich antworte mit Quelle/)).toBeInTheDocument();
+  });
+
+  it("shows the speech bubble once per demo state (P5-07)", async () => {
+    renderApp("/");
+    fireEvent.click(screen.getByRole("button", { name: "Hinweis ausblenden" }));
+    // A reload mounts the shell again; the bubble stays away.
+    cleanup();
+    const router = renderApp("/");
+    expect(
+      screen.queryByText(/Ich antworte mit Quelle/),
+    ).not.toBeInTheDocument();
+    // "Demo zurücksetzen" leads through the onboarding; the next session starts with the bubble.
+    await act(async () => {
+      const reset = demoStore.getState().resetDemo();
+      await vi.advanceTimersByTimeAsync(LATENCY_MS);
+      await reset;
+    });
+    expect(router.state.location.pathname).toBe("/start");
+    act(() => demoStore.getState().completeOnboarding());
+    await act(() => router.navigate("/"));
+    expect(screen.getByText(/Ich antworte mit Quelle/)).toBeInTheDocument();
   });
 
   it("is not shown on the assistant page itself", () => {

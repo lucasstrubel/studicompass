@@ -11,18 +11,24 @@ import {
 import { NavigationMenu } from "@/components/layout/NavigationMenu";
 import { TOP_NAV_ITEMS } from "@/components/layout/navigation";
 import { APP_NAME } from "@/config/demo";
-
 import { NotificationsButton } from "@/features/notifications/NotificationsButton";
+import { useDemoStore } from "@/store/use-demo-store";
 
-/** Avatar menu; initials and name follow with the student data from the store (P2-05, KONZEPT A-6). */
+/** Avatar menu with the student's initials (KONZEPT A-6); the icon stands in while the POS data loads. */
 function ProfileMenu() {
+  const initials = useDemoStore((state) => {
+    const student = state.resources.pos.data?.student;
+    return student
+      ? `${student.firstName.charAt(0)}${student.lastName.charAt(0)}`
+      : null;
+  });
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" aria-label="Profil">
           <Avatar>
-            <AvatarFallback>
-              <UserRound className="size-5" />
+            <AvatarFallback className="text-meta font-semibold text-foreground">
+              {initials ?? <UserRound className="size-5" />}
             </AvatarFallback>
           </Avatar>
         </Button>
