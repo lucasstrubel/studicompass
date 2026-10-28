@@ -84,6 +84,12 @@ describe("AppShell", () => {
     renderShell();
     expect(screen.queryByRole("complementary")).not.toBeInTheDocument();
   });
+
+  it("shows the student's initials in the profile button (KONZEPT A-6)", async () => {
+    renderShell();
+    const profile = screen.getByRole("button", { name: "Profil" });
+    expect(await within(profile).findByText("NB")).toBeInTheDocument();
+  });
 });
 
 describe("hamburger disclosure", () => {
