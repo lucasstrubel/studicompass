@@ -288,10 +288,11 @@ Vor den Nutzertests, damit sie den neuen Stand sehen. Entscheidungen von Lucas: 
 
 ### P5-07 [Claude] Abgleich mit Apples Designprinzipien (Auftrag von Lucas, 28.10.2026)
 Vor den Nutzertests, damit niemand mit einer verdeckenden Sprechblase startet. Bewertung und Befunde: [P5-07-designprinzipien.md](reviews/P5-07-designprinzipien.md). Entscheidungen von Lucas: Ergebnis festhalten, vorab nur testrelevante Punkte beheben; Sprechblase einmal je Demo-Stand.
-- [ ] Alle Screens gegen die acht Prinzipien geprüft; Befunde DP-1 bis DP-10 dokumentiert, offene in der [Befundliste](evaluation/P5-auswertung.md), neue Ideen im Ideenparkplatz
-- [ ] Sprechblase einmal je Demo-Stand: verschwindet beim Schließen, Öffnen, ersten Scrollen oder Seitenwechsel und kommt erst nach „Demo zurücksetzen“ wieder (DP-1)
-- [ ] „Warum?“-Schalter mit mindestens 24 px Trefferhöhe, ohne das Layout zu verschieben (DP-2)
-- [ ] Profil-Avatar mit Initialen (KONZEPT A-6, DP-8)
+- [x] Alle Screens gegen die acht Prinzipien geprüft; Befunde DP-1 bis DP-10 dokumentiert, offene in der [Befundliste](evaluation/P5-auswertung.md), neue Ideen im Ideenparkplatz
+- [x] Sprechblase einmal je Demo-Stand, erst nach dem Onboarding: verschwindet beim Schließen, Öffnen, ersten Scrollen oder Seitenwechsel und kommt erst nach „Demo zurücksetzen“ wieder (DP-1)
+- [x] „Warum?“-Schalter mit mindestens 24 px Trefferhöhe, ohne das Layout zu verschieben (DP-2)
+- [x] Profil-Avatar mit Initialen (KONZEPT A-6, DP-8)
+- [x] Codex-Review: ein Major bestätigt und behoben (Sprechblase kam nach Neuladen ohne Interaktion wieder) → [P5-07.md](reviews/P5-07.md)
 - **AK:** Sprechblase erscheint nach Neuladen nicht erneut und verdeckt nach dem ersten Scrollen oder Seitenwechsel nichts mehr; „Warum?“ reagiert auch 4 px neben dem Text (E2E); Avatar zeigt „NB“; `npm run check` und `npm run e2e` grün; Screenshots neu (1440×900, 390×844), die Sprechblase zeigt nur noch `assistent-hinweis`.
 
 **Gate M5 (Mi 04.11. abends):** Top-Befunde behoben · Testergebnisse dokumentiert.
