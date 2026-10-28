@@ -100,6 +100,9 @@ Ehrliche Einschränkung zu P4: Echte Sonderfälle stehen per Definition oft nich
 - Mehrsprachigkeit
 - Dunkles Design (für die Produktdemo entfernt, Entscheidung von Lucas am 27.10.2026, P5-06; zuvor US-19)
 - Sicht für Prüfungsamt/Studienberatung (zweite Persona)
+- „Als ungelesen markieren“ in Postfach und Benachrichtigungen; „Alle als gelesen markieren“ mit Rückgängig (P5-07, DP-6)
+- Ermutigende Rückmeldung nach „Ich trete an“, z. B. Prüfungstermin und passendes Hilfsangebot – ohne zu lenken (P5-07, DP-10)
+- Favicon mit dem Kompass-Logo statt leerem Tab-Symbol (P5-07, DP-8)
 
 > Claude Code: Neue Ideen hier als Zeile ergänzen – nicht bauen.
 
@@ -182,7 +185,7 @@ Ehrliche Einschränkung zu P4: Echte Sonderfälle stehen per Definition oft nich
 - Alle Bereiche einschließlich Assistent, Fristen und Einstellungen in einem 280 px breiten hellen Panel direkt unter dem Hamburger: weiße Fläche, rundum abgerundet, feiner Rahmen, weicher Schatten. Die Seite dahinter bleibt sichtbar und scharf (kein Abdunkeln, keine Unschärfe). Keine permanente Sidebar, keine Verschiebung des Inhalts. Aktiver Link mit Fläche `--muted`, Fettung und Icon in Terrakotta.
 - Maus mit Hover-Unterstützung: nach 150 ms Vorschau öffnen; beim Wechsel zwischen Trigger und Menü offen halten; nach 250 ms außerhalb schließen, sofern kein Tastaturfokus darin liegt. Klick fixiert dasselbe Panel als Radix-Dialog; Touch und Tastatur öffnen explizit. Schließen über Trigger/Schließen, Außenklick, Escape oder Navigation; explizites Menü mit Fokusführung und Fokusrückgabe. Routenwechsel schließt auch die Vorschau.
 - Ein semantischer Seitentitel im Inhaltsbereich. Bestehende Routen bleiben unverändert. Nur helles Design (P5-06).
-- **Assistent-Button** (P5-06): runder Terrakotta-Button unten rechts auf jeder Seite der App außer `/assistent`. Beim Aufruf stellt eine Sprechblase ihn vor („Hallo Niklas! Fragen zur Prüfungsordnung? Ich antworte mit Quelle.“); sie verschwindet beim Schließen, beim Öffnen des Assistenten oder beim ersten Seitenwechsel. Der Button öffnet das Assistent-Fenster (§8 S5). Toasts und das Seitenende halten Abstand zum Button.
+- **Assistent-Button** (P5-06, P5-07): runder Terrakotta-Button unten rechts auf jeder Seite der App außer `/assistent`. Eine Sprechblase stellt ihn einmal je Demo-Stand vor („Hallo Niklas! Fragen zur Prüfungsordnung? Ich antworte mit Quelle.“), also beim ersten Aufruf nach dem Onboarding bzw. nach „Demo zurücksetzen“. Sie verschwindet beim Schließen, beim Öffnen des Assistenten, beim ersten Scrollen (mehr als 40 px) oder beim ersten Seitenwechsel und erscheint nach Neuladen nicht wieder – so verdeckt sie keine Inhalte, sobald man arbeitet (P5-07). Der Button öffnet das Assistent-Fenster (§8 S5). Toasts und das Seitenende halten Abstand zum Button.
 
 **Einstiege in den Folgen-Check:** „Jetzt wichtig“-Karte (S1) · Modulkarte und Moduldetail (S1, S3) · Benachrichtigung (S8) · Assistentenantwort (S5) · Studienverlauf (S2)
 
@@ -468,6 +471,7 @@ Vereinfachung, die im UI benannt wird: Die Prognose verteilt Module nicht indivi
 - Persistenz mit Versionsnummer; ändert sich die Datenversion, wird der gespeicherte Demo-Stand verworfen. „Demo zurücksetzen“ stellt den Ausgangszustand her.
 - Phase 4 (von Lucas bestätigt): Kanalverbindungen und Benachrichtigungstypen werden lokal gespeichert. Trennen stoppt weitere Aktualisierungen und behält bereits geladene Daten im Sitzungsspeicher; nach Neuladen lädt ein getrennter Kanal erst beim Wiederverbinden. Benachrichtigungstypen filtern das Glocken-Sheet, die wichtigen Hinweise auf der Übersicht bleiben erhalten.
 - Datenversion 3 ergänzt Benachrichtigungszeitpunkte und Einstellungen additiv; die Migration aus Version 2 erhält vorhandene Einstellungen und simulierte Entscheidungen. Ältere Datenversionen werden weiterhin zurückgesetzt. Nur ein erster Aufruf der Übersicht ohne abgeschlossenes Onboarding führt nach `/start`; andere Deep-Links bleiben erreichbar. Überspringen schließt die Einrichtung mit Standardwerten ab.
+- P5-07: Lokal gespeichert wird auch, ob die Sprechblase des Assistent-Buttons schon gezeigt wurde (§7); „Demo zurücksetzen“ zeigt sie wieder. Das Feld ergänzt Datenversion 3 additiv, ein Versionssprung ist nicht nötig.
 
 ---
 
