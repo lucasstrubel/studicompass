@@ -77,3 +77,20 @@ test("P5: T5 Marketing ohne Meilensteinverschiebung", async ({
     consequences.getByRole("list", { name: "Quellen" }),
   ).toBeVisible();
 });
+
+test("P5-07: „Warum?“ reagiert auch knapp neben dem Text", async ({ page }) => {
+  await page.goto("/entscheidung/e-stat-ws26");
+  await page.getByRole("button", { name: "Hinweis ausblenden" }).click();
+  for (const name of [
+    "Warum? – Status",
+    "Warum? – Praxissemester verschiebt sich",
+  ]) {
+    const why = page.getByRole("button", { name, exact: true });
+    await why.scrollIntoViewIfNeeded();
+    const box = await why.boundingBox();
+    if (!box) throw new Error(`${name} ist nicht sichtbar`);
+    // 4 px above the 18 px text line: still inside the hit area of at least 24 px.
+    await page.mouse.click(box.x + box.width / 2, box.y - 4);
+    await expect(why).toHaveAttribute("aria-expanded", "true");
+  }
+});

@@ -116,12 +116,13 @@ function WhyButton({
   onToggle: () => void;
 }) {
   return (
+    // The invisible ::after enlarges the hit area to 30 px without moving the layout (P5-07).
     <button
       type="button"
       aria-expanded={open}
       aria-controls={controls}
       onClick={onToggle}
-      className="inline-flex items-center gap-1 rounded-sm text-meta font-normal text-accent-strong hover:underline"
+      className="relative inline-flex items-center gap-1 rounded-sm text-meta font-normal text-accent-strong after:absolute after:-inset-x-1 after:-inset-y-1.5 hover:underline"
     >
       Warum?
       <span className="sr-only"> – {label}</span>
