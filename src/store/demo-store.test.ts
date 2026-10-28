@@ -243,7 +243,7 @@ describe("P2-05: simulations and persistence", () => {
     const store = makeStore();
     await store.getState().hydrate();
     expect(store.getState().assistantHintSeen).toBe(false);
-    store.getState().dismissAssistantHint();
+    store.getState().markAssistantHintSeen();
     expect(store.getState().assistantHintSeen).toBe(true);
     // A reload keeps the bubble away; a reset brings it back for the next test session.
     expect(makeStore().getState().assistantHintSeen).toBe(true);

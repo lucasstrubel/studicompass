@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Maximize2, MessageCircleQuestionMark, X } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { Dialog as DialogPrimitive } from "radix-ui";
 import { ResourceBoundary } from "@/components/common/ResourceBoundary";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { demoStore } from "@/store/demo-store";
 import { useDemoStore } from "@/store/use-demo-store";
 import { AssistantChat } from "./AssistantChat";
 
@@ -21,38 +22,44 @@ export function AssistantLauncher() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const [pageKey, setPageKey] = useState(location.key);
-  const mountKey = useRef(location.key);
-  const hintSeen = useDemoStore((state) => state.assistantHintSeen);
-  const dismissHint = useDemoStore((state) => state.dismissAssistantHint);
+  // The store only remembers that the bubble was shown; whether it is still visible is local.
+  const [hintVisible, setHintVisible] = useState(
+    () => !demoStore.getState().assistantHintSeen,
+  );
+  const markHintSeen = useDemoStore((state) => state.markAssistantHintSeen);
+  const onboardingComplete = useDemoStore((state) => state.onboardingComplete);
   const firstName = useDemoStore(
     (state) => state.resources.pos.data?.student.firstName,
   );
   const onAssistantPage = location.pathname === "/assistent";
-  const hint = !hintSeen && !open && !onAssistantPage;
+  // Only after the onboarding: before it, the overview renders the shell for a moment and then redirects.
+  const hint = hintVisible && onboardingComplete && !open && !onAssistantPage;
 
   // A page change closes the window (e.g. "Folgen-Check öffnen" in an answer) and retires the bubble.
   if (location.key !== pageKey) {
     setPageKey(location.key);
     setOpen(false);
+    setHintVisible(false);
   }
-  // The bubble state lives in the store, which must not change while rendering.
+  // Showing it once per demo state is enough; a reload does not bring it back.
   useEffect(() => {
-    if (location.key !== mountKey.current) dismissHint();
-  }, [location.key, dismissHint]);
+    if (hint) markHintSeen();
+  }, [hint, markHintSeen]);
   // Once people start working on the page, the bubble gets out of the way.
   useEffect(() => {
     if (!hint) return;
     const start = window.scrollY;
     const onScroll = () => {
-      if (Math.abs(window.scrollY - start) > HINT_SCROLL_PX) dismissHint();
+      if (Math.abs(window.scrollY - start) > HINT_SCROLL_PX)
+        setHintVisible(false);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [hint, dismissHint]);
+  }, [hint]);
   if (onAssistantPage) return null;
 
   const openWindow = () => {
-    dismissHint();
+    setHintVisible(false);
     setOpen(true);
   };
 
@@ -81,7 +88,7 @@ export function AssistantLauncher() {
               size="icon-xs"
               aria-label="Hinweis ausblenden"
               className="absolute top-2 right-2"
-              onClick={dismissHint}
+              onClick={() => setHintVisible(false)}
             >
               <X />
             </Button>

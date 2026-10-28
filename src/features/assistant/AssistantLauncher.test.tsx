@@ -70,6 +70,27 @@ describe("assistant button and window (P5-06)", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("does not show the speech bubble again after a reload without any interaction (P5-07)", () => {
+    renderApp("/");
+    expect(screen.getByText(/Ich antworte mit Quelle/)).toBeInTheDocument();
+    cleanup();
+    renderApp("/");
+    expect(
+      screen.queryByText(/Ich antworte mit Quelle/),
+    ).not.toBeInTheDocument();
+  });
+
+  it("keeps the speech bubble for after the onboarding (P5-07)", async () => {
+    // A fresh visitor: nothing is rendered yet, so no act() is needed.
+    demoStore.setState({ onboardingComplete: false });
+    const router = renderApp("/");
+    // The overview hands over to the onboarding; the bubble must not count as shown yet.
+    expect(router.state.location.pathname).toBe("/start");
+    act(() => demoStore.getState().completeOnboarding());
+    await act(() => router.navigate("/"));
+    expect(screen.getByText(/Ich antworte mit Quelle/)).toBeInTheDocument();
+  });
+
   it("shows the speech bubble once per demo state (P5-07)", async () => {
     renderApp("/");
     fireEvent.click(screen.getByRole("button", { name: "Hinweis ausblenden" }));

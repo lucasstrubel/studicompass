@@ -79,8 +79,8 @@ test("P5: T5 Marketing ohne Meilensteinverschiebung", async ({
 });
 
 test("P5-07: „Warum?“ reagiert auch knapp neben dem Text", async ({ page }) => {
+  // A deep link before the onboarding shows no speech bubble (P5-07).
   await page.goto("/entscheidung/e-stat-ws26");
-  await page.getByRole("button", { name: "Hinweis ausblenden" }).click();
   for (const name of [
     "Warum? – Status",
     "Warum? – Praxissemester verschiebt sich",

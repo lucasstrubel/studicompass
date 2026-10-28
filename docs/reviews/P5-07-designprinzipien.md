@@ -30,7 +30,7 @@ Ein Befund hätte die Nutzertests beeinflusst und ist behoben (DP-1): Die Sprech
 | Familiarity – auf Bekanntem aufbauen | ✅ weitgehend | Bekannte Dashboard-Muster (Topnavigation, Menü, Glocke, Profil, Karten). Radix-Bausteine verhalten sich wie gewohnt (Escape, Fokusfalle, Fokusrückgabe). Einheitliche Badges (Status immer mit Icon + Text + Farbe, Kanal) und Quellenlisten; Begriffe nach Glossar (Quelle ≠ Kanal). Rückmeldung über Skeletons, Sync-Stand, Toasts und „Antwort wird vorbereitet …“ | DP-5, DP-8 (Avatar behoben) |
 | Flexibility – für alle und jede Situation | 🟡 teilweise | Kernflow per Tastatur (E2E), Skip-Link, Fokusführung, aria-Labels. Kontraste AA per Test, Reduced Motion. Typografie in rem, folgt also der Schriftgröße des Browsers. 360–1920 px ohne Überlauf; Hover-Menü auch per Klick, Touch und Tastatur | DP-2 (teilweise behoben), DP-3, DP-9 |
 | Simplicity – klar und direkt | 🟡 teilweise | StudiCompass warnt nur, wenn eine Sonderregel greift; das beugt Hinweis-Müdigkeit vor (KONZEPT §1). Disziplin beim Umfang (Ideenparkplatz, Kürzungsliste). Studienstand und „Jetzt wichtig“ sind bei 1440×900 ohne Scrollen sichtbar (Q-1, gemessen in P5). Kurze Sätze, Fakten zuerst (§12.5) | DP-4, DP-5 |
-| Craft – Sorgfalt im Detail | 🟡 teilweise | Design-Tokens mit Kontrasttests, Typo-Skala, `tabular-nums`, Bewegung 150–200 ms. 242 Unit-Tests, E2E-Tests und ein Screenshot-Skript. Zwei Designrevisionen (P1-07, P5-06), Codex-Review je Task | DP-1 (Screenshots, behoben), DP-3, DP-8, DP-9 |
+| Craft – Sorgfalt im Detail | 🟡 teilweise | Design-Tokens mit Kontrasttests, Typo-Skala, `tabular-nums`, Bewegung 150–200 ms. 244 Unit-Tests, E2E-Tests und ein Screenshot-Skript. Zwei Designrevisionen (P1-07, P5-06), Codex-Review je Task | DP-1 (Screenshots, behoben), DP-3, DP-8, DP-9 |
 | Delight – menschlich gestalten | 🟡 teilweise | Begrüßung nach Tageszeit mit Namen, „Hallo Niklas!“. Warme Palette mit Farbfamilie, eigene Linienillustrationen, wählbarer Hinweis-Stil („Direkt“: „Morgen um 23:59 ist Schluss.“) | DP-10 |
 
 Bewusste Abweichungen ohne Befund:
@@ -57,12 +57,13 @@ Schwere nach TESTPLAN: 0 kein Problem · 1 kosmetisch · 2 gering · 3 schwer ·
 ## Umgesetzt in P5-07
 
 - **DP-1 Sprechblase:**
-  - Sie erscheint einmal je Demo-Stand: beim ersten Aufruf nach dem Onboarding bzw. nach „Demo zurücksetzen“, also in jeder Testsitzung.
-  - Sie verschwindet beim Schließen, beim Öffnen des Assistenten, beim ersten Scrollen (mehr als 40 px) oder beim ersten Seitenwechsel. Nach Neuladen kommt sie nicht wieder.
-  - Die Schwelle verhindert, dass schon das Zurücksetzen der Scrollposition beim Seitenwechsel sie schließt.
-  - Gespeichert wird das in der Einstellung `assistantHintSeen` (additiv, Datenversion bleibt 3).
+  - Sie erscheint einmal je Demo-Stand: beim ersten Aufruf nach dem Onboarding bzw. nach „Demo zurücksetzen“, also in jeder Testsitzung. Vor abgeschlossenem Onboarding (etwa bei einem Deep-Link) erscheint sie nicht.
+  - Sie verschwindet beim Schließen, beim Öffnen des Assistenten, beim ersten Scrollen (mehr als 40 px) oder beim ersten Seitenwechsel.
+  - Schon das Anzeigen zählt: Nach Neuladen kommt sie nicht wieder, auch ohne vorherige Interaktion (Codex-Befund, [P5-07.md](P5-07.md)).
+  - Die Scroll-Schwelle verhindert, dass schon das Zurücksetzen der Scrollposition beim Seitenwechsel sie schließt.
+  - Gespeichert wird das Anzeigen in der Einstellung `assistantHintSeen` (additiv, Datenversion bleibt 3); ob sie gerade sichtbar ist, steht nur im Komponentenzustand.
   - Das Screenshot-Skript blendet die Sprechblase aus; nur die Ansicht `assistent-hinweis` zeigt sie. Vor jeder Aufnahme bewegt es die Maus aus dem Bild, damit keine Hover-Zustände auf den Folien landen.
 - **DP-2 „Warum?“:** Ein unsichtbares Pseudo-Element vergrößert die Trefferfläche auf ca. 30 px Höhe, ohne das Layout zu verschieben. Ein E2E-Test klickt 4 px neben den Text, auf Desktop und mobil.
 - **DP-8 Avatar:** Der Avatar zeigt die Initialen aus den POS-Daten („NB“) und während des Ladens das bisherige Icon.
 
-Nachweise: `npm run check` (242 Tests), `npm run e2e`, neue Screenshots und das Codex-Review stehen in [P5-07.md](P5-07.md) und im PR.
+Nachweise (`npm run check`, `npm run e2e`, Screenshots) und das Codex-Review stehen in [P5-07.md](P5-07.md) und im PR.

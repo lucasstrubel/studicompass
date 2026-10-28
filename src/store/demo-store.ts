@@ -52,7 +52,7 @@ interface Preferences {
   onboardingComplete: boolean;
   goalRegularTime: boolean;
   jobHoursPerWeek: number;
-  /** The assistant's speech bubble appears once per demo state (P5-07); a reset shows it again. */
+  /** The assistant's speech bubble was shown; it appears once per demo state (P5-07), a reset shows it again. */
   assistantHintSeen: boolean;
 }
 
@@ -87,7 +87,7 @@ export interface DemoState extends Preferences {
   clearWhatIf: () => void;
   /** Asks a catalog question (id) or free text; ignored while another answer is pending. */
   askAssistant: (question: string, id?: string) => void;
-  dismissAssistantHint: () => void;
+  markAssistantHintSeen: () => void;
   setHintTone: (tone: HintTone) => void;
   completeOnboarding: (preferences?: {
     goalRegularTime: boolean;
@@ -436,7 +436,7 @@ export function createDemoStore(
               }));
             }, ASSISTANT_DELAY_MS);
           },
-          dismissAssistantHint: () => set({ assistantHintSeen: true }),
+          markAssistantHintSeen: () => set({ assistantHintSeen: true }),
           setHintTone: (hintTone) => set({ hintTone }),
           completeOnboarding(preferences) {
             if (
