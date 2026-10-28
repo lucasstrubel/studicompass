@@ -52,6 +52,8 @@ interface Preferences {
   onboardingComplete: boolean;
   goalRegularTime: boolean;
   jobHoursPerWeek: number;
+  /** The assistant's speech bubble appears once per demo state (P5-07); a reset shows it again. */
+  assistantHintSeen: boolean;
 }
 
 /** Typing indicator of the assistant (KONZEPT §8 S5: 0.6–1.2 s). */
@@ -85,6 +87,7 @@ export interface DemoState extends Preferences {
   clearWhatIf: () => void;
   /** Asks a catalog question (id) or free text; ignored while another answer is pending. */
   askAssistant: (question: string, id?: string) => void;
+  dismissAssistantHint: () => void;
   setHintTone: (tone: HintTone) => void;
   completeOnboarding: (preferences?: {
     goalRegularTime: boolean;
@@ -110,6 +113,7 @@ function defaultPreferences(): Preferences {
     onboardingComplete: false,
     goalRegularTime: true,
     jobHoursPerWeek: 15,
+    assistantHintSeen: false,
   };
 }
 function emptyResource<T>(): LoadState<T> {
@@ -209,6 +213,7 @@ function readPreferences(value: unknown): Preferences {
       value.jobHoursPerWeek <= 168
         ? value.jobHoursPerWeek
         : defaults.jobHoursPerWeek,
+    assistantHintSeen: value.assistantHintSeen === true,
   };
 }
 
@@ -431,6 +436,7 @@ export function createDemoStore(
               }));
             }, ASSISTANT_DELAY_MS);
           },
+          dismissAssistantHint: () => set({ assistantHintSeen: true }),
           setHintTone: (hintTone) => set({ hintTone }),
           completeOnboarding(preferences) {
             if (

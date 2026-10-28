@@ -239,6 +239,18 @@ describe("P2-05: simulations and persistence", () => {
     expect(store.getState().assistantPending).toBeNull();
   });
 
+  it("shows the assistant speech bubble once per demo state (P5-07)", async () => {
+    const store = makeStore();
+    await store.getState().hydrate();
+    expect(store.getState().assistantHintSeen).toBe(false);
+    store.getState().dismissAssistantHint();
+    expect(store.getState().assistantHintSeen).toBe(true);
+    // A reload keeps the bubble away; a reset brings it back for the next test session.
+    expect(makeStore().getState().assistantHintSeen).toBe(true);
+    await store.getState().resetDemo();
+    expect(store.getState().assistantHintSeen).toBe(false);
+  });
+
   it("ignores an obsolete response when reset races with hydration", async () => {
     const services = createMockServices({ latencyMs: 0 });
     const originalLoad = services.pos.load;

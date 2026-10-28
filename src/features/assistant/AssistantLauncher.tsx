@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Maximize2, MessageCircleQuestionMark, X } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { Dialog as DialogPrimitive } from "radix-ui";
@@ -9,31 +9,50 @@ import { useDemoStore } from "@/store/use-demo-store";
 import { AssistantChat } from "./AssistantChat";
 
 const HINT_ID = "assistant-hint";
+/** Scrolling this far retires the speech bubble; the scroll reset after a page change is no reason. */
+const HINT_SCROLL_PX = 40;
 
 /**
  * Assistant button at the bottom right of every shell page except the assistant page (KONZEPT §7, §8 S5;
- * P5-06): the key feature is visible right away. On arrival a speech bubble introduces it; the button opens
- * the assistant window, which continues the conversation of the assistant page.
+ * P5-06): the key feature is visible right away. A speech bubble introduces it once per demo state
+ * (P5-07); the button opens the assistant window, which continues the conversation of the assistant page.
  */
 export function AssistantLauncher() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
-  const [hint, setHint] = useState(true);
   const [pageKey, setPageKey] = useState(location.key);
+  const mountKey = useRef(location.key);
+  const hintSeen = useDemoStore((state) => state.assistantHintSeen);
+  const dismissHint = useDemoStore((state) => state.dismissAssistantHint);
   const firstName = useDemoStore(
     (state) => state.resources.pos.data?.student.firstName,
   );
+  const onAssistantPage = location.pathname === "/assistent";
+  const hint = !hintSeen && !open && !onAssistantPage;
 
   // A page change closes the window (e.g. "Folgen-Check öffnen" in an answer) and retires the bubble.
   if (location.key !== pageKey) {
     setPageKey(location.key);
     setOpen(false);
-    setHint(false);
   }
-  if (location.pathname === "/assistent") return null;
+  // The bubble state lives in the store, which must not change while rendering.
+  useEffect(() => {
+    if (location.key !== mountKey.current) dismissHint();
+  }, [location.key, dismissHint]);
+  // Once people start working on the page, the bubble gets out of the way.
+  useEffect(() => {
+    if (!hint) return;
+    const start = window.scrollY;
+    const onScroll = () => {
+      if (Math.abs(window.scrollY - start) > HINT_SCROLL_PX) dismissHint();
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [hint, dismissHint]);
+  if (onAssistantPage) return null;
 
   const openWindow = () => {
-    setHint(false);
+    dismissHint();
     setOpen(true);
   };
 
@@ -43,7 +62,7 @@ export function AssistantLauncher() {
       onOpenChange={(next) => (next ? openWindow() : setOpen(false))}
     >
       {/* Button and bubble sit at z-20, below the top bar (z-30), so the open menu panel covers them. */}
-      {hint && !open && (
+      {hint && (
         <div className="fixed right-6 bottom-24 z-20 w-64 max-w-[calc(100vw-3rem)] motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-2 motion-safe:duration-300">
           <div className="panel-shadow relative rounded-2xl border bg-card p-3 pr-10">
             <button
@@ -62,7 +81,7 @@ export function AssistantLauncher() {
               size="icon-xs"
               aria-label="Hinweis ausblenden"
               className="absolute top-2 right-2"
-              onClick={() => setHint(false)}
+              onClick={dismissHint}
             >
               <X />
             </Button>
@@ -77,7 +96,7 @@ export function AssistantLauncher() {
       <DialogPrimitive.Trigger asChild>
         <Button
           aria-label="Assistent öffnen"
-          aria-describedby={hint && !open ? HINT_ID : undefined}
+          aria-describedby={hint ? HINT_ID : undefined}
           className="panel-shadow fixed right-6 bottom-6 z-20 size-14 rounded-full bg-accent text-accent-foreground hover:bg-accent/90"
         >
           <MessageCircleQuestionMark className="size-6" aria-hidden="true" />
