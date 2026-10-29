@@ -285,3 +285,80 @@ describe("Studienverlauf (P3-06 review: focus)", () => {
     expect(document.activeElement).toBe(screen.getByRole("main"));
   });
 });
+
+describe("Studienverlauf: Orientierung (P5-10)", () => {
+  it("links every module name to its module entry (P5-F13)", () => {
+    renderPlanner();
+    expect(
+      within(semester("WS 2026/27")).getByRole("link", { name: "Statistik" }),
+    ).toHaveAttribute("href", "/module/m-stat");
+    expect(
+      within(semester("WS 2027/28")).getByRole("link", {
+        name: "Praxissemester",
+      }),
+    ).toHaveAttribute("href", "/module/m-praxis");
+  });
+
+  it("toggles the marking of a milestone's modules with the rule and its source (DR-6, DR-12)", async () => {
+    const user = userEvent.setup();
+    renderPlanner();
+    const internship = within(semester("WS 2027/28")).getByRole("button", {
+      name: "Praxissemester",
+    });
+    expect(internship).toHaveAttribute("aria-pressed", "false");
+    await user.click(internship);
+    expect(internship).toHaveAttribute("aria-pressed", "true");
+    const status = screen.getByRole("status");
+    expect(status).toHaveTextContent(
+      "Zum Praxissemester wirst du zugelassen, wenn alle Module des Grundstudiums bestanden sind.",
+    );
+    expect(within(status).getByRole("list", { name: "Quellen" })).toBeVisible();
+    // 15 foundation modules: passed ones are marked, open ones also say "noch offen".
+    expect(document.querySelectorAll("[data-marked]")).toHaveLength(15);
+    expect(semester("WS 2026/27")).toHaveTextContent(
+      "für Praxissemester · noch offen",
+    );
+    expect(semester("WS 2025/26")).toHaveTextContent("für Praxissemester");
+    expect(semester("WS 2025/26")).not.toHaveTextContent("noch offen");
+
+    // Another milestone replaces the marking; a second click clears it.
+    const thesis = within(semester("WS 2028/29")).getByRole("button", {
+      name: "Bachelorarbeit",
+    });
+    await user.click(thesis);
+    expect(document.querySelectorAll("[data-marked]")).toHaveLength(2);
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Zur Bachelorarbeit wirst du zugelassen, wenn du Praxis- und Projektsemester bestanden hast.",
+    );
+    await user.click(thesis);
+    expect(document.querySelectorAll("[data-marked]")).toHaveLength(0);
+  });
+
+  it("explains why milestone boxes stay put (P5-F18)", () => {
+    renderPlanner();
+    expect(semester("WS 2027/28")).toHaveTextContent(
+      "Fester MeilensteinRutscht automatisch nach hinten, wenn Module des Grundstudiums fehlen.",
+    );
+    expect(semester("SS 2028")).toHaveTextContent(
+      "Folgt auf das Praxissemester und rutscht mit ihm.",
+    );
+  });
+
+  it("hides completed semesters and passed modules and remembers the choice (P5-F16)", async () => {
+    const user = userEvent.setup();
+    renderPlanner();
+    await user.click(
+      screen.getByRole("switch", { name: "Abgeschlossenes ausblenden" }),
+    );
+    // WS 2025/26 and SS 2026 hold only passed modules (the open ones of SS 2026 are planned for SS 2027).
+    for (const term of [/^WS 2025\/26,/, /^SS 2026,/])
+      expect(
+        screen.queryByRole("listitem", { name: term }),
+      ).not.toBeInTheDocument();
+    expect(semester("WS 2026/27")).toBeInTheDocument();
+    expect(
+      screen.getByText(/2 abgeschlossene Semester sind ausgeblendet/),
+    ).toBeInTheDocument();
+    expect(demoStore.getState().plannerHideCompleted).toBe(true);
+  });
+});

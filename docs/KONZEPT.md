@@ -609,7 +609,7 @@ Nur helles Design (Entscheidung von Lucas am 27.10.2026, P5-06). Kontrastrevisio
 | `--accent-strong` | `#A4492E` | Links, Akzenttext, Fokusring | 5,6:1 / 5,9:1 |
 | `--accent-soft` / `--accent-soft-foreground` | `#F7E4DD` / `#9A4128` | zurückhaltende Hervorhebungen / Text darauf | 5,4:1 |
 
-**Farbfamilie** – Designrevision P5-06: Terrakotta allein wirkte monoton. Wie in Referenz 1 bekommt jedes Modul eine eigene Farbe; die ECTS-Werte (Balken und Verlauf) sind durchgehend blau. Starke Töne für Linien, Balken und Illustrationskonturen (≥ 3:1 auf Seite, Karte und Track `--muted`), weiche Töne als Fläche unter Tinte (≥ 14:1). Nie Statusfarbe: Grün, Ocker und Rot bleiben Im Plan, Knapp und Kritisch vorbehalten. Seit P5-08 nutzt auch der Meilenstein-Chip im Studienverlauf (Flagge + Text) die Farbfamilie: Fläche `--tone-violet-soft`, Text in Tinte, Flagge in `--tone-violet` (4,9:1 zur Fläche). Das zarte Terrakotta wirkte wie eine Warnung (Feedback 28.10.). Meilenstein-Boxen und die Meilenstein-Karte der Übersicht bleiben neutral.
+**Farbfamilie** – Designrevision P5-06: Terrakotta allein wirkte monoton. Wie in Referenz 1 bekommt jedes Modul eine eigene Farbe; die ECTS-Werte (Balken und Verlauf) sind durchgehend blau. Starke Töne für Linien, Balken und Illustrationskonturen (≥ 3:1 auf Seite, Karte und Track `--muted`), weiche Töne als Fläche unter Tinte (≥ 14:1). Nie Statusfarbe: Grün, Ocker und Rot bleiben Im Plan, Knapp und Kritisch vorbehalten. Seit P5-08 nutzt auch der Meilenstein-Chip im Studienverlauf (Flagge + Text) die Farbfamilie: Fläche `--tone-violet-soft`, Text in Tinte (14,6:1), Flagge in `--tone-violet` (4,9:1 zur Fläche). Das zarte Terrakotta wirkte wie eine Warnung (Feedback 28.10.). Meilenstein-Boxen und die Meilenstein-Karte der Übersicht bleiben neutral.
 
 | Token | Wert | Verwendung | Kontrast |
 |---|---|---|---|
@@ -653,7 +653,7 @@ Regeln: Terrakotta ist nie Statusfarbe. Kritisch-Rot und Terrakotta liegen im Fa
 - **Icons:** lucide-react, 20 px in der Navigation, 18 px im Text.
 - **Quellen-Fußzeile** (P5-08, Feedback 28.10.): Quellen stehen am Ende ihrer Karte bzw. ihres Abschnitts, unter den Aktionen. Eine feine Linie trennt sie ab, sie stehen kompakt in einer Zeile (`CitationList`, Variante `footer`), „Beispiel“ steht je Quelle. In aufklappbaren Erklärungen („Warum?“) bleibt die Quelle am Ende der Erklärung. Jede Aussage behält ihre Quelle in derselben Karte (Q-3).
 - **Eigener Eintrag** (P5-08): Badge statt Kanal-Badge für Termine und Prüfungsvorleistungen, die Niklas selbst einträgt; Quelle „Von dir eingetragen“.
-- **Zeitleiste** (P5-08): ab 1280 px Semesterspalten mit Mindestbreite 11rem; reicht der Platz nicht, scrollt nur die Zeitleiste horizontal (fokussierbar, beschriftet), nie die Seite (Q-5).
+- **Zeitleiste** (P5-08): ab 1280 px Semesterspalten mit Mindestbreite 11rem; reicht der Platz nicht, scrollt nur die Zeitleiste horizontal (fokussierbar, beschriftet), nie die Seite (Q-5). Lange Modulnamen und Quellen brechen an den Wortfugen (z. B. „Wirtschafts-|informatik“, `compoundParts`), weil Browser Deutsch nur mit geladenem Wörterbuch trennen.
 
 ### 12.5 Tonalität und Hinweis-Stil
 - Du-Ansprache, kurze Sätze, Fakten zuerst, konkrete Zahlen und Termine, keine Schuldzuweisung, immer „Was heißt das?“ und „Was kannst du tun?“.

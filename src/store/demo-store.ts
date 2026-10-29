@@ -54,6 +54,8 @@ interface Preferences {
   jobHoursPerWeek: number;
   /** The assistant's speech bubble was shown; it appears once per demo state (P5-07), a reset shows it again. */
   assistantHintSeen: boolean;
+  /** Planner view: hide completed semesters and passed modules (P5-10). */
+  plannerHideCompleted: boolean;
 }
 
 /** Typing indicator of the assistant (KONZEPT §8 S5: 0.6–1.2 s). */
@@ -88,6 +90,7 @@ export interface DemoState extends Preferences {
   /** Asks a catalog question (id) or free text; ignored while another answer is pending. */
   askAssistant: (question: string, id?: string) => void;
   markAssistantHintSeen: () => void;
+  setPlannerHideCompleted: (hide: boolean) => void;
   setHintTone: (tone: HintTone) => void;
   completeOnboarding: (preferences?: {
     goalRegularTime: boolean;
@@ -114,6 +117,7 @@ function defaultPreferences(): Preferences {
     goalRegularTime: true,
     jobHoursPerWeek: 15,
     assistantHintSeen: false,
+    plannerHideCompleted: false,
   };
 }
 function emptyResource<T>(): LoadState<T> {
@@ -214,6 +218,7 @@ function readPreferences(value: unknown): Preferences {
         ? value.jobHoursPerWeek
         : defaults.jobHoursPerWeek,
     assistantHintSeen: value.assistantHintSeen === true,
+    plannerHideCompleted: value.plannerHideCompleted === true,
   };
 }
 
@@ -437,6 +442,8 @@ export function createDemoStore(
             }, ASSISTANT_DELAY_MS);
           },
           markAssistantHintSeen: () => set({ assistantHintSeen: true }),
+          setPlannerHideCompleted: (plannerHideCompleted) =>
+            set({ plannerHideCompleted }),
           setHintTone: (hintTone) => set({ hintTone }),
           completeOnboarding(preferences) {
             if (

@@ -9,6 +9,7 @@ const SCREENS = [
   { name: "folgen-check-statistik", path: "/entscheidung/e-stat-ws26" },
   { name: "folgen-check-marketing", path: "/entscheidung/e-mkt-ws26" },
   { name: "studienverlauf", path: "/verlauf" },
+  { name: "studienverlauf-meilenstein", path: "/verlauf" },
   { name: "module", path: "/module" },
   { name: "modul-statistik", path: "/module/m-stat" },
   { name: "postfach", path: "/postfach" },
@@ -110,6 +111,10 @@ for (const screen of SCREENS)
       }
       if (screen.name === "benachrichtigungen")
         await page.getByRole("button", { name: /^Benachrichtigungen/ }).click();
+      if (screen.name === "studienverlauf-meilenstein")
+        await page
+          .getByRole("button", { name: "Praxissemester", exact: true })
+          .click();
       if (screen.name === "navigation")
         await page.getByRole("button", { name: "Navigation öffnen" }).click();
       if (screen.name === "folgen-check-assistent") {

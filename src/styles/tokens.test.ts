@@ -145,6 +145,9 @@ const DOCUMENTED_PAIRS: [string, string, number][] = [
   ["--accent-soft-foreground", "--accent-soft", 5.4],
   ["--tone-violet", "--card", 5.9],
   ["--tone-violet", "--muted", 4.9],
+  // Milestone chip in the planner (P5-08): flag on the soft fill, ink text on it.
+  ["--tone-violet", "--tone-violet-soft", 4.9],
+  ["--foreground", "--tone-violet-soft", 14.6],
   ["--tone-teal", "--card", 5.7],
   ["--tone-teal", "--muted", 4.7],
   ["--tone-blue", "--card", 5.8],

@@ -1,12 +1,20 @@
+import { Fragment } from "react";
 import { BookOpen } from "lucide-react";
 import type { Citation } from "@/domain/types";
+import { compoundParts } from "@/lib/compound-breaks";
 import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 function Source({ citation }: { citation: Citation }) {
   return (
     <>
-      {citation.document}
+      {/* Break long compounds at their joints in narrow columns (P5-10). */}
+      {compoundParts(citation.document).map((part, index) => (
+        <Fragment key={index}>
+          {index > 0 && <wbr />}
+          {part}
+        </Fragment>
+      ))}
       {citation.section && `, ${citation.section}`}
       {citation.asOf && ` · Stand ${formatDate(new Date(citation.asOf))}`}
     </>
@@ -59,7 +67,7 @@ export function CitationList({
         )}
       >
         <BookOpen className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
-        <div className="min-w-0">
+        <div className="min-w-0 break-words">
           {unique.length > 1 ? "Quellen: " : "Quelle: "}
           <ul aria-label="Quellen" className="inline">
             {unique.map((citation, index) => (

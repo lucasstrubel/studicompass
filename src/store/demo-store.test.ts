@@ -251,6 +251,16 @@ describe("P2-05: simulations and persistence", () => {
     expect(store.getState().assistantHintSeen).toBe(false);
   });
 
+  it("keeps the planner's 'Abgeschlossenes ausblenden' across reloads until a reset (P5-10)", async () => {
+    const store = makeStore();
+    await store.getState().hydrate();
+    expect(store.getState().plannerHideCompleted).toBe(false);
+    store.getState().setPlannerHideCompleted(true);
+    expect(makeStore().getState().plannerHideCompleted).toBe(true);
+    await store.getState().resetDemo();
+    expect(store.getState().plannerHideCompleted).toBe(false);
+  });
+
   it("ignores an obsolete response when reset races with hydration", async () => {
     const services = createMockServices({ latencyMs: 0 });
     const originalLoad = services.pos.load;

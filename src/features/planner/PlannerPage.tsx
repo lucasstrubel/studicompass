@@ -18,9 +18,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
+import { milestoneModules, type MilestoneKind } from "@/domain/milestones";
 import { compare, format, next } from "@/domain/terms";
 import { consequenceCitations, generalOfferingRule } from "@/lib/offering-rule";
-import type { PlanOverride, Term } from "@/domain/types";
+import type { Citation, PlanOverride, Term } from "@/domain/types";
 import { demoStore } from "@/store/demo-store";
 import {
   selectAcademicState,
@@ -31,9 +32,21 @@ import {
   selectTimeline,
 } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
-import { Timeline } from "./Timeline";
+import {
+  Timeline,
+  type FixedMilestoneNote,
+  type MilestoneMarking,
+} from "./Timeline";
 
 const PLAN_RULES = ["DR-4", "DR-6", "DR-7", "DR-10"];
+
+/** What the milestone toggle marks, in words (P5-10). */
+const MARKED: Record<MilestoneKind, string> = {
+  foundationEnd: "Module des Grundstudiums",
+  internship: "Module, die vor dem Praxissemester bestanden sein müssen",
+  project: "Was vor dem Projektsemester bestanden sein muss",
+  thesis: "Was vor der Bachelorarbeit bestanden sein muss",
+};
 
 function PlannerContent() {
   const timeline = useDemoStore(selectTimeline);
@@ -45,7 +58,12 @@ function PlannerContent() {
   const whatIf = useDemoStore((state) => state.whatIf);
   const setWhatIf = useDemoStore((state) => state.setWhatIf);
   const clearWhatIf = useDemoStore((state) => state.clearWhatIf);
+  const hideCompleted = useDemoStore((state) => state.plannerHideCompleted);
+  const setHideCompleted = useDemoStore(
+    (state) => state.setPlannerHideCompleted,
+  );
   const [simulation, setSimulation] = useState(whatIf.length > 0);
+  const [milestone, setMilestone] = useState<MilestoneKind | null>(null);
   const switchRef = useRef<HTMLButtonElement>(null);
   if (!timeline || !academic || !progress || !program) return null;
 
@@ -66,6 +84,60 @@ function PlannerContent() {
 
   const jobHours = academic.student.jobHoursPerWeek;
   const loadCitation = rules["DR-10"]?.citation;
+
+  // Milestone toggle (US-26): the modules that belong to the chosen milestone and the rule behind it.
+  const assignment = milestone
+    ? milestoneModules(milestone, academic.modules)
+    : null;
+  const marking: MilestoneMarking | null =
+    milestone && assignment
+      ? { kind: milestone, moduleIds: new Set(assignment.moduleIds) }
+      : null;
+  const markingRule: { summary: string; citation: Citation } | null =
+    assignment === null
+      ? null
+      : assignment.ruleId === null
+        ? {
+            summary: `Zum Grundstudium gehören die Module der Fachsemester 1–${program.foundationSemesters}.`,
+            citation: program.citation,
+          }
+        : rules[assignment.ruleId]
+          ? {
+              summary: rules[assignment.ruleId].citation.summary,
+              citation: rules[assignment.ruleId].citation,
+            }
+          : null;
+  // Milestone modules never move by hand; each box says what it depends on (feedback P5-F18).
+  const fixedNotes: Partial<Record<MilestoneKind, FixedMilestoneNote>> = {
+    internship: {
+      text: "Rutscht automatisch nach hinten, wenn Module des Grundstudiums fehlen.",
+      citation: rules["DR-6"]?.citation,
+    },
+    project: {
+      text: "Folgt auf das Praxissemester und rutscht mit ihm.",
+      citation: rules["DR-11"]?.citation,
+    },
+    thesis: {
+      text: "Folgt auf Praxis- und Projektsemester und rutscht mit ihnen.",
+      citation: rules["DR-12"]?.citation,
+    },
+  };
+
+  // "Abgeschlossenes ausblenden" (P5-10): past semesters with only passed modules disappear, the other
+  // semesters drop their passed modules.
+  const completed = (item: (typeof timeline.terms)[number]) =>
+    compare(item.term, academic.currentTerm) < 0 &&
+    item.modules.length > 0 &&
+    item.modules.every((entry) => entry.status === "passed");
+  const shownTerms = hideCompleted
+    ? timeline.terms
+        .filter((item) => !completed(item))
+        .map((item) => ({
+          ...item,
+          modules: item.modules.filter((entry) => entry.status !== "passed"),
+        }))
+    : timeline.terms;
+  const hiddenTerms = timeline.terms.length - shownTerms.length;
 
   // Read lazily from the current store state when a menu opens (the targets need projections).
   const moveTargets = (moduleId: string) =>
@@ -198,14 +270,48 @@ function PlannerContent() {
       </section>
 
       <section aria-labelledby="timeline" className="space-y-3">
-        <h2 id="timeline" className="text-section-title">
-          Semester für Semester
-          {timeline.simulating && (
-            <span className="ml-2 align-middle">
-              <DemoBadge variant="simulation" />
-            </span>
-          )}
-        </h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 id="timeline" className="text-section-title">
+            Semester für Semester
+            {timeline.simulating && (
+              <span className="ml-2 align-middle">
+                <DemoBadge variant="simulation" />
+              </span>
+            )}
+          </h2>
+          <label className="flex items-center gap-2 text-body font-medium">
+            <Switch
+              checked={hideCompleted}
+              onCheckedChange={setHideCompleted}
+            />
+            Abgeschlossenes ausblenden
+          </label>
+        </div>
+        <p className="text-meta text-muted-foreground">
+          Tipp: Ein Klick auf einen Meilenstein markiert die Module, die dazu
+          gehören.
+          {hideCompleted &&
+            hiddenTerms > 0 &&
+            ` ${hiddenTerms} abgeschlossene ${hiddenTerms === 1 ? "Semester ist" : "Semester sind"} ausgeblendet, bestandene Module ebenso.`}
+        </p>
+        {milestone && markingRule && (
+          <div
+            role="status"
+            className="rounded-xl border border-tone-violet bg-tone-violet-soft p-3 text-body"
+          >
+            <p>
+              <span className="font-semibold">
+                Markiert: {MARKED[milestone]}.
+              </span>{" "}
+              {markingRule.summary}
+            </p>
+            <CitationList
+              variant="footer"
+              className="mt-2 pt-2"
+              citations={[markingRule.citation]}
+            />
+          </div>
+        )}
         {timeline.terms.length === 0 ? (
           <EmptyState
             title="Kein Verlauf planbar"
@@ -213,13 +319,18 @@ function PlannerContent() {
           />
         ) : (
           <Timeline
-            terms={timeline.terms}
+            terms={shownTerms}
             currentTerm={academic.currentTerm}
             simulation={simulation}
             canMove={canMove}
             moveTargets={moveTargets}
             onMove={move}
             load={{ jobHours, citation: loadCitation }}
+            marking={marking}
+            onToggleMilestone={(kind) =>
+              setMilestone((current) => (current === kind ? null : kind))
+            }
+            fixedNotes={fixedNotes}
           />
         )}
         <p className="text-meta text-muted-foreground">

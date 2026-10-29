@@ -326,13 +326,13 @@ Für alle Tasks gilt: Hero-Flow, Testorakel (KONZEPT §10.4) und Spezifikationst
 - **AK:** Topbar ohne Umbruch bei 1280, 1440 und 1920 px; jede Regel- und Fristaussage behält ihre Quelle in derselben Karte (Q-3); `check`, `e2e`, Screenshots neu.
 
 #### P5-10 [Claude] Studienverlauf: Orientierung und robustes Layout (P5-F13 bis P5-F18)
-- [ ] Modulname führt zum Moduldetail, auch in der Simulation
-- [ ] Meilenstein-Chip (Flagge + Text) in Violett, als Umschalter für die zugehörigen Module:
+- [x] Modulname führt zum Moduldetail, auch in der Simulation
+- [x] Meilenstein-Chip (Flagge + Text) in Violett, als Umschalter für die zugehörigen Module:
   - Domänenfunktion mit Test; DR-11 und DR-12 in den Daten
   - Markierung mit Icon und Text, Regel mit Quelle
-- [ ] Meilenstein-Boxen sichtbar fest (Schloss, Erklärung mit Quelle)
-- [ ] Schalter „Abgeschlossenes ausblenden“ (gespeichert)
-- [ ] Spalten ab 1280 px mindestens 11rem breit; zusätzliche Spalten scrollen nur innerhalb der Zeitleiste
+- [x] Meilenstein-Boxen sichtbar fest (Schloss, Erklärung mit Quelle)
+- [x] Schalter „Abgeschlossenes ausblenden“ (gespeichert)
+- [x] Spalten ab 1280 px mindestens 11rem breit; zusätzliche Spalten scrollen nur innerhalb der Zeitleiste
 - **AK:**
   - Werte unverändert.
   - Umschalter und Links per Tastatur.
