@@ -1,6 +1,6 @@
 # Konzept – StudiCompass (Hi-Fi-Prototyp, SE2 Studienleistung III)
 
-Stand: 23.10.2026 · Arbeitstitel: **StudiCompass** · Präsentation: **Fr, 06.11.2026**
+Stand: 29.10.2026 (Feedback-Runde, P5-08) · Arbeitstitel: **StudiCompass** · Präsentation: **Fr, 06.11.2026**
 
 **Grundlagen:** Vorlesungen 01–05 (SE2, WS 26/27) · Miro-Board „PVL1“ (Persona Niklas Brandt, Value Proposition Map, Exposé, Stakeholder) · Dokument „Erkenntnisse aus der Nutzerforschung“ (5 Interviews, davon 3 mit TH-Studierenden; Umfrage n = 8).
 
@@ -19,11 +19,13 @@ Stand: 23.10.2026 · Arbeitstitel: **StudiCompass** · Präsentation: **Fr, 06.1
 | Folgen unklar – **nur bei Sonderregeln** (jährliche Module, Zulassung Praxis-/Projektsemester, Übergang Grund-/Hauptstudium); Entscheidung kurzfristig unter Druck | I1; U: 2/7 kennen Voraussetzungen kaum | mittel, gezielt | Folgen-Check mit Warnung nur dort, wo eine Sonderregel greift |
 | Kaum Planung über mehrere Semester | U: Ø 2,1/5 | mittel | Studienverlauf zeigt den Plan, ohne Planungsarbeit zu verlangen |
 | Antworten in Sonderfällen dauern Tage | I1, I2 | mittel | Assistent mit Quelle; bei Sonderfällen ehrlicher Verweis + vorbereitete Anfrage |
-| Fristen verpasst praktisch niemand | U: 8/8 ohne verpasste Frist | **schwach** | Frist nur als Widget und Liste, kein Kalender als Hauptelement |
+| Fristen verpasst praktisch niemand | U: 8/8 ohne verpasste Frist | **schwach** | Frist als Widget und Liste; Kalender nur als zweite Ansicht der Fristen, nicht auf der Übersicht (Feedback 28.10., P5-08) |
 | Vertrauen in KI gespalten | Interviews | – | Jede Antwort mit Quelle; Unsicherheit offen zeigen |
 | Organisation meist abends zu Hause am Laptop | U: 8/8 zu Hause, 6/8 Laptop | stark | Desktop-first; Kernflow trotzdem mobil bedienbar |
 
 **Gestaltungsregel daraus `[entschieden]`:** StudiCompass warnt nur, wenn eine Sonderregel greift (Angebot nur einmal im Jahr, Zulassungsvoraussetzung eines Meilensteins, Grenze offener Prüfungen). Pauschale Warnungen bei jeder Abmeldung sind durch die Daten nicht gedeckt und erzeugen Hinweis-Müdigkeit.
+
+**Feedback-Runde 28.10.2026 (P5-08) `[entschieden]`:** Team-Review und ein Nutzertest ergaben eine Sammelliste mit rund 25 Punkten (Befunde P5-F11 bis P5-F33 in `docs/evaluation/P5-auswertung.md`). Lucas hat entschieden, sie bis zur Präsentation umzusetzen (ROADMAP P5-09 bis P5-15). Wo das frühere Festlegungen ändert, steht der Vermerk „P5-08“ an der Stelle. Persona, Hero-Flow und Testorakel (§10.4) bleiben unverändert, weil alle neuen Eingaben leer starten.
 
 ---
 
@@ -47,13 +49,13 @@ Stand: 23.10.2026 · Arbeitstitel: **StudiCompass** · Präsentation: **Fr, 06.1
 
 | VPC (Miro) | Pain Reliever / Gain Creator (Miro) | Funktion im Prototyp | Screen | Stories | Test |
 |---|---|---|---|---|---|
-| P1 Infos auf viele Plattformen verteilt | Bündelt POS, Mail, Moodle & Website | Postfach mit Kanal-Badges, Filter, „Für dich wichtig“; Kanäle verbinden im Onboarding | S6, S0, S1 | US-01, US-15, US-16 | T4 |
+| P1 Infos auf viele Plattformen verteilt | Bündelt POS, Mail, Moodle & Website | Postfach mit Kanal-Badges, Filter, „Für dich wichtig“; Kanäle verbinden im Onboarding; Kurs-Links und Notizen am Modul (P5-08) | S6, S0, S1, S3 | US-01, US-15, US-16, US-23, US-24 | T4 |
 | P2 ECTS selbst ausrechnen, POS unzuverlässig | ECTS-Stand wird automatisch berechnet | Studienstand-Karte (Ist/Soll/Rückstand), Modulübersicht mit Summen | S1, S3 | US-03 | T1 |
-| P3 Folgen von Sonderregeln schwer abschätzbar | Folgen-Hinweis vor jeder Abmeldung | Folgen-Check (Vergleich der Optionen), Was-wäre-wenn im Studienverlauf | S4, S2 | US-06, US-08, US-10 | T2, T5 |
-| P4 Antworten auf Sonderfragen dauern Tage | Sofort-Antwort mit Quelle und zuständiger Stelle | Assistent; ohne eindeutige Regel: ehrlicher Hinweis + vorbereitete Anfrage an die zuständige Stelle | S5 | US-12, US-13 | T3 |
+| P3 Folgen von Sonderregeln schwer abschätzbar | Folgen-Hinweis vor jeder Abmeldung | Folgen-Check (Vergleich der Optionen), Was-wäre-wenn im Studienverlauf (Menü oder Drag & Drop); Zulassung über Prüfungsvorleistungen (P5-08) | S4, S2, S3 | US-06, US-08, US-10, US-25 | T2, T5 |
+| P4 Antworten auf Sonderfragen dauern Tage | Sofort-Antwort mit Quelle und zuständiger Stelle | Assistent; ohne eindeutige Regel: ehrlicher Hinweis + vorbereitete Anfrage an die zuständige Stelle; Anlaufstellen mit Zuständigkeiten (P5-08) | S5, S10 | US-12, US-13, US-28 | T3 |
 | P5 Prüfungsordnung schwer verständlich | (wie P4) | Kurzantwort in Alltagssprache + „Warum?“-Erklärung mit Regeltext | S5, S4 | US-12, US-14 | T3 |
-| G1 Auf einen Blick: Wo stehe ich? | Ampel Soll/Ist + Countdown zur nächsten Frist | Ampelstatus, Frist-Widget | S1 | US-03, US-05 | T1 |
-| G2 Abschluss in Regelstudienzeit | Vorschlag für den Restverlauf | Studienverlauf mit Meilensteinen und Abschlussprognose | S2 | US-04, US-09, US-11 | T5 |
+| G1 Auf einen Blick: Wo stehe ich? | Ampel Soll/Ist + Countdown zur nächsten Frist | Ampelstatus, Frist-Widget; eigene Termine und Kalenderansicht (P5-08) | S1, S7 | US-03, US-05, US-21, US-22 | T1 |
+| G2 Abschluss in Regelstudienzeit | Vorschlag für den Restverlauf | Studienverlauf mit Meilensteinen, zuordenbaren Modulen (P5-08) und Abschlussprognose | S2 | US-04, US-09, US-11, US-26 | T5 |
 | G3 Schnelle Antworten, denen man trauen kann | Quelle bei jeder Antwort | Quellenangabe (Dokument, Abschnitt, Stand) an jeder Regelaussage | S5, S4, S2 | US-12, US-14 | T3 |
 | G4 Rechtzeitige, ehrliche Hinweise mit Nachdruck | Push-Hinweise mit klarer Ansage | „Jetzt wichtig“-Karte, Benachrichtigungen, wählbarer Hinweis-Stil | S1, S8, S9 | US-07, US-18 | T2 |
 
@@ -86,8 +88,8 @@ Ehrliche Einschränkung zu P4: Echte Sonderfälle stehen per Definition oft nich
 | Priorität | Inhalt | Stories |
 |---|---|---|
 | **Hoch** | Studienstand mit Ampel und Meilenstein · Folgen-Check inkl. simulierter Abmeldung · Studienverlauf mit Prognose · Assistent mit Quellen und Fallback · Postfach · mobil bedienbarer Kernflow | US-03, US-04, US-06, US-07, US-09, US-12, US-13, US-15, US-20 |
-| **Mittel** | Onboarding mit Kanälen · Frist-Widget und Fristenliste · Rückgängig · Was-wäre-wenn · personalisierte Antwortzeile · „Für dich wichtig“ · Hinweis-Stil | US-01, US-05, US-08, US-10, US-14, US-16, US-17 (ohne Export), US-18 |
-| **Niedrig** | Ziel und Nebenjob im Onboarding mit Belastungshinweis · Restverlauf-Vorschlag · ICS-Export · Produkt-Tour · Fehler-Simulation je Kanal · ECTS-Verlaufsdiagramm | US-02, US-11, US-17 (Export) |
+| **Mittel** | Onboarding mit Kanälen · Frist-Widget und Fristenliste · Rückgängig · Was-wäre-wenn · personalisierte Antwortzeile · „Für dich wichtig“ · Hinweis-Stil · seit P5-08: eigene Termine · Prüfungsvorleistung und Zulassung · Module zum Meilenstein · Profil | US-01, US-05, US-08, US-10, US-14, US-16, US-17 (ohne Export), US-18, US-21, US-25, US-26, US-27 |
+| **Niedrig** | Ziel und Nebenjob im Onboarding mit Belastungshinweis · Restverlauf-Vorschlag · ICS-Export · Produkt-Tour · Fehler-Simulation je Kanal · ECTS-Verlaufsdiagramm · seit P5-08: Kalenderansicht · Notizen · Kurs-Links · Anlaufstellen · Drag & Drop im Was-wäre-wenn | US-02, US-11, US-17 (Export), US-22, US-23, US-24, US-28 |
 
 ### 5.2 Ideenparkplatz (bewusst nicht im Prototyp)
 
@@ -103,6 +105,10 @@ Ehrliche Einschränkung zu P4: Echte Sonderfälle stehen per Definition oft nich
 - „Als ungelesen markieren“ in Postfach und Benachrichtigungen; „Alle als gelesen markieren“ mit Rückgängig (P5-07, DP-6)
 - Ermutigende Rückmeldung nach „Ich trete an“, z. B. Prüfungstermin und passendes Hilfsangebot – ohne zu lenken (P5-07, DP-10)
 - Favicon mit dem Kompass-Logo statt leerem Tab-Symbol (P5-07, DP-8)
+- Zweite Demo-Persona im 4. Semester (längerer ECTS-Verlauf, Übergang ins Hauptstudium mit DR-7): Vorschlag aus der Feedback-Runde 28.10.; Niklas bleibt im 3. Semester (Entscheidung von Lucas, P5-08)
+- Prüfungsvorleistung mit Wirkung auf die Prognose: Eine nicht erbrachte Vorleistung zählt wie eine Abmeldung (P5-08)
+- Meilensteine im Was-wäre-wenn nach hinten verschieben, z. B. für ein Auslandssemester (P5-08)
+- Angebundene KI, die ein Anliegen der zuständigen Stelle zuordnet (Feedback 28.10.; im Prototyp über die Seite Anlaufstellen und die Katalogfrage A-09, P5-08)
 
 > Claude Code: Neue Ideen hier als Zeile ergänzen – nicht bauen.
 
@@ -125,8 +131,8 @@ Ehrliche Einschränkung zu P4: Echte Sonderfälle stehen per Definition oft nich
 | US-06 | 3 | Als Niklas möchte ich vor einer Abmeldung sehen, welche Folgen sie für spätere Semester hat, um nicht unter Druck aus dem Bauch zu entscheiden. | Hoch | P3, G2 | Vergleich laut §8 S4; nächster Termin nach DR-4; Auswirkung auf ECTS, Ampel, Meilensteine, Abschluss; jede Folge mit Regel und Quelle |
 | US-07 | 3 | Als Niklas möchte ich bei einer folgenreichen Entscheidung eine klare, ehrliche Ansage bekommen, damit ich sie ernst nehme. | Hoch | G4 | Hinweistext im gewählten Stil; Entscheidung bleibt bei Niklas; beide Optionen visuell gleich gewichtet |
 | US-08 | 3 | Als Niklas möchte ich eine (simulierte) Abmeldung rückgängig machen können. | Mittel | – | Bestätigungsdialog; Toast mit „Rückgängig“ (8 s); Zustand überall aktualisiert und wiederherstellbar |
-| US-09 | 4 | Als Niklas möchte ich meinen Studienverlauf bis zum Abschluss sehen, um zu erkennen, ob ich in der Regelstudienzeit bleibe. | Hoch | G2 | 7 Semester mit Modulen, Status, ECTS; Meilensteine; Abschlussprognose |
-| US-10 | 4 | Als Niklas möchte ich ausprobieren, was passiert, wenn ich ein Modul verschiebe. | Mittel | P3 | Verschieben nur in zulässige Semester (DR-4); Neuberechnung; als Simulation gekennzeichnet; verwerfbar |
+| US-09 | 4 | Als Niklas möchte ich meinen Studienverlauf bis zum Abschluss sehen, um zu erkennen, ob ich in der Regelstudienzeit bleibe. | Hoch | G2 | 7 Semester mit Modulen, Status, ECTS; Meilensteine; Abschlussprognose; seit P5-08: Modulname führt zum Moduldetail, Abgeschlossenes ausblendbar |
+| US-10 | 4 | Als Niklas möchte ich ausprobieren, was passiert, wenn ich ein Modul verschiebe. | Mittel | P3 | Verschieben nur in zulässige Semester (DR-4); Neuberechnung; als Simulation gekennzeichnet; verwerfbar; seit P5-08: Ergebnis als Dialog ohne Scrollen, zusätzlich Drag & Drop (Niedrig) |
 | US-11 | 4 | Als Niklas möchte ich einen Vorschlag für meinen Restverlauf bekommen. | Niedrig | G2 | Vorschlag, der die Regeln einhält; übernehmbar in die Simulation |
 | US-12 | 5 | Als Niklas möchte ich Fragen zur Prüfungsordnung stellen und eine kurze Antwort mit Quelle bekommen, damit ich ihr vertrauen kann. | Hoch | P5, G3 | Antwortkarte laut §11; mind. 8 Fragen abgedeckt; Quelle und zuständige Stelle in jeder Antwort |
 | US-13 | 5 | Als Niklas möchte ich erfahren, wenn der Assistent etwas nicht sicher weiß, und direkt an die zuständige Stelle verwiesen werden. | Hoch | P4 | Fallback-Antwort; „Anfrage vorbereiten“ mit kopierbarem Text |
@@ -137,6 +143,14 @@ Ehrliche Einschränkung zu P4: Echte Sonderfälle stehen per Definition oft nich
 | US-18 | 6 | Als Niklas möchte ich den Ton der Hinweise einstellen (sachlich oder direkt). | Mittel | G4 | Einstellung wirkt auf Übersicht, Folgen-Check, Benachrichtigungen |
 | US-19 | – | ~~Als Niklas möchte ich zwischen hellem und dunklem Design wählen.~~ **Gestrichen** (P5-06): für die Produktdemo nur das helle Design, Entscheidung von Lucas am 27.10.2026 | – | – | – |
 | US-20 | – | Als Niklas möchte ich den Kernflow auch am Smartphone bedienen können. | Hoch | – | S1 und S4 ab 360 px vollständig bedienbar |
+| US-21 | 6 | Als Niklas möchte ich eigene Termine eintragen und bearbeiten, etwa Abgaben für Studienleistungen, damit alle Fristen an einem Ort stehen. | Mittel | G1, P1 | Titel, Datum, optional Uhrzeit, Art, optional Modul; bearbeiten und löschen; nicht vor dem Demo-Datum; erscheint in Fristen, Kalender und „Nächste Frist“ mit Badge „Eigener Eintrag“ (P5-08) |
+| US-22 | 6 | Als Niklas möchte ich meine Fristen und Prüfungstermine in einer Monatsansicht sehen. | Niedrig | G1 | Umschalter Liste/Kalender auf der Fristen-Seite; Start im Monat von `DEMO_NOW`; ein ausgewählter Tag zeigt seine Einträge (P5-08) |
+| US-23 | 2 | Als Niklas möchte ich mir zu jedem Modul Notizen machen. | Niedrig | P1 | Notizfeld im Moduldetail; speichert lokal; „Demo zurücksetzen“ leert es (P5-08) |
+| US-24 | 2 | Als Niklas möchte ich vom Modul direkt zum Moodle-Kurs und zu eigenen Links springen, etwa zur Website der Lehrenden. | Niedrig | P1 | Moodle-Link automatisch (im Prototyp ein Hinweis), eigene Adresse festlegbar; eigene Links nur mit http(s), öffnen in neuem Tab (P5-08) |
+| US-25 | 3 | Als Niklas möchte ich die Prüfungsvorleistungen meiner Module eintragen und ihren Stand pflegen, um zu sehen, ob ich zur Prüfung zugelassen bin. | Mittel | P3, G1 | Prüfungsvorleistung mit Stand offen / erbracht / nicht erbracht; Zulassung mit Quelle (DR-13) in Moduldetail, Modulliste, Modulkarten und Folgen-Check; Prognose unverändert (P5-08) |
+| US-26 | 4 | Als Niklas möchte ich sehen, welche Module zu einem Meilenstein gehören. | Mittel | G2, P3 | Meilenstein-Chip als Umschalter; markiert die zugehörigen Module mit Icon und Text (DR-6, DR-11, DR-12); Regel mit Quelle (P5-08) |
+| US-27 | 1 | Als Niklas möchte ich im Onboarding mein Profil anlegen und es später bearbeiten. | Mittel | – | Vor- und Nachname aus dem POS vorbelegt, im Onboarding und in den Einstellungen änderbar; wirkt auf Begrüßung, Avatar und Anfrage-Entwürfe; keine Login- oder Passwortfelder (P5-08) |
+| US-28 | 5 | Als Niklas möchte ich auf einen Blick sehen, welche Stelle wofür zuständig ist. | Niedrig | P4 | Seite Anlaufstellen mit Zuständigkeiten, Kontakt, Sprechzeiten und passenden Fragen; der Assistent verweist darauf (P5-08) |
 
 ### 6.2 Qualitätsanforderungen
 
@@ -172,17 +186,18 @@ Ehrliche Einschränkung zu P4: Echte Sonderfälle stehen per Definition oft nich
 | Module & Noten | `/module`, `/module/:moduleId` | ja |
 | Postfach | `/postfach` (Detail über `?eintrag=<id>`) | ja |
 | Assistent | `/assistent` (optional `?frage=<id oder Freitext>`, `?module=<id>`; bisheriges `?modul=` bleibt kompatibel) | ja |
-| Fristen | `/fristen` | ja |
+| Fristen | `/fristen` (Kalender über `?ansicht=kalender`) | ja |
+| Anlaufstellen | `/anlaufstellen` (Sprungziel je Stelle `#<id>`) | ja |
 | Folgen-Check | `/entscheidung/:examId` | nein (Einstiege siehe unten) |
-| Einstellungen | `/einstellungen` | Hamburger-Menü |
+| Einstellungen | `/einstellungen` (Profil unter `#profil`) | Profilmenü; unter 1280 px auch im Hamburger-Menü |
 | Onboarding | `/start` | nein |
 | Nicht gefunden | `*` | nein |
 
-**Breakpoints und Navigation (Designrevision P1-07, überarbeitet in P5-06)**
-- Desktop ≥ 1280 px: eingerückter App-Rahmen mit 24 px Außenabstand, maximal 1600 px breit, abgerundeten Ecken und dezentem Schatten. Topbar mit Hamburger, Marke, Übersicht, Studienverlauf, Module & Noten, Postfach, Glocke und ganz rechts Profil. Kein Demo-Datum in der Topbar (P5-06): Das Testszenario nennt den 25. Januar. Hauptbereich plus rechte Spalte 320 px.
+**Breakpoints und Navigation (Designrevision P1-07, überarbeitet in P5-06 und P5-08)**
+- Desktop ≥ 1280 px: eingerückter App-Rahmen mit 24 px Außenabstand, maximal 1600 px breit, abgerundeten Ecken und dezentem Schatten. Topbar mit Marke, allen Bereichen (Übersicht, Studienverlauf, Module & Noten, Fristen, Postfach, Assistent, Anlaufstellen), Glocke und ganz rechts Profil. Kein Hamburger (P5-08, Feedback 28.10.: Er wiederholte die Topbar); Einstellungen und „Profil bearbeiten“ im Profilmenü. Kein Demo-Datum in der Topbar (P5-06): Das Testszenario nennt den 25. Januar. Hauptbereich plus rechte Spalte 320 px.
 - Tablet 768–1279 px: gleicher Rahmen, Navigation über Hamburger; rechte Spalte unter dem Hauptbereich.
 - Mobil < 768 px: bildschirmfüllend, einzeilige Topbar mit Hamburger, Marke, Glocke und Profil; keine untere Tab-Leiste.
-- Alle Bereiche einschließlich Assistent, Fristen und Einstellungen in einem 280 px breiten hellen Panel direkt unter dem Hamburger: weiße Fläche, rundum abgerundet, feiner Rahmen, weicher Schatten. Die Seite dahinter bleibt sichtbar und scharf (kein Abdunkeln, keine Unschärfe). Keine permanente Sidebar, keine Verschiebung des Inhalts. Aktiver Link mit Fläche `--muted`, Fettung und Icon in Terrakotta.
+- Unter 1280 px stehen alle Bereiche einschließlich Assistent, Fristen, Anlaufstellen und Einstellungen in einem 280 px breiten hellen Panel direkt unter dem Hamburger: weiße Fläche, rundum abgerundet, feiner Rahmen, weicher Schatten. Die Seite dahinter bleibt sichtbar und scharf (kein Abdunkeln, keine Unschärfe). Keine permanente Sidebar, keine Verschiebung des Inhalts. Aktiver Link mit Fläche `--muted`, Fettung und Icon in Terrakotta.
 - Maus mit Hover-Unterstützung: nach 150 ms Vorschau öffnen; beim Wechsel zwischen Trigger und Menü offen halten; nach 250 ms außerhalb schließen, sofern kein Tastaturfokus darin liegt. Klick fixiert dasselbe Panel als Radix-Dialog; Touch und Tastatur öffnen explizit. Schließen über Trigger/Schließen, Außenklick, Escape oder Navigation; explizites Menü mit Fokusführung und Fokusrückgabe. Routenwechsel schließt auch die Vorschau.
 - Ein semantischer Seitentitel im Inhaltsbereich. Bestehende Routen bleiben unverändert. Nur helles Design (P5-06).
 - **Assistent-Button** (P5-06, P5-07): runder Terrakotta-Button unten rechts auf jeder Seite der App außer `/assistent`. Eine Sprechblase stellt ihn einmal je Demo-Stand vor („Hallo Niklas! Fragen zur Prüfungsordnung? Ich antworte mit Quelle.“), also beim ersten Aufruf nach dem Onboarding bzw. nach „Demo zurücksetzen“; vor abgeschlossenem Onboarding (etwa bei einem Deep-Link) erscheint sie nicht. Sie verschwindet beim Schließen, beim Öffnen des Assistenten, beim ersten Scrollen (mehr als 40 px) oder beim ersten Seitenwechsel. Schon das Anzeigen zählt: Nach Neuladen erscheint sie nicht wieder. So verdeckt sie keine Inhalte, sobald man arbeitet (P5-07). Der Button öffnet das Assistent-Fenster (§8 S5). Toasts und das Seitenende halten Abstand zum Button.
@@ -203,6 +218,9 @@ flowchart LR
   assistent --> check
   dash --> fristen["/fristen Fristen"]
   dash --> settings["/einstellungen Einstellungen"]
+  verlauf --> detail
+  dash --> anlaufstellen["/anlaufstellen Anlaufstellen"]
+  assistent --> anlaufstellen
 ```
 
 ---
@@ -211,13 +229,13 @@ flowchart LR
 
 Jeder Screen hat Lade-, Leer- und Fehlerzustand. Werte in Beispielen entsprechen §10.4.
 
-### S0 Onboarding `/start` (US-01, US-02, US-18)
+### S0 Onboarding `/start` (US-01, US-02, US-18, US-27)
 1. **Willkommen:** Name/Logo, Nutzenversprechen in einem Satz („Dein Studium auf einen Blick – und die Folgen deiner Entscheidungen, bevor du sie triffst.“), Button „Mit Hochschul-Login anmelden (Demo)“, Link „Demo ohne Einrichtung starten“.
 2. **Kanäle verbinden:** vier Karten (POS, Moodle, Hochschul-Mail, TH-Website) mit Schalter → kurze Verbindungsanimation → „verbunden“. Hinweis: „StudiCompass liest nur. Änderungen machst du weiterhin in den Originalsystemen.“ + Datenschutz-Kurzinfo.
-3. **Dein Studium:** aus dem POS übernommene Werte zur Bestätigung (Studiengang, SPO-Version, Fachsemester) – vorbelegt; Ziel „Abschluss in Regelstudienzeit“ (an); Nebenjob in Std./Woche (Slider, 15).
+3. **Dein Profil** (bis P5-08 „Dein Studium“; Feedback 28.10.: „Benutzer anlegen“): Vorname und Nachname, aus dem POS vorbelegt und änderbar (Pflicht, höchstens 40 Zeichen; keine E-Mail-, Login- oder Passwortfelder); aus dem POS übernommene Werte zur Bestätigung (Studiengang, SPO-Version, Fachsemester); Ziel „Abschluss in Regelstudienzeit“ (an); Nebenjob in Std./Woche (Slider, 15).
 4. **Hinweis-Stil:** „Sachlich“ oder „Direkt“, je mit Beispieltext.
-- Fortschritt 1/4 … 4/4, Zurück jederzeit, Überspringen.
-- Danach Übersicht; optional Produkt-Tour mit 3 Schritten (Studienstand → Jetzt wichtig → Assistent), abbrechbar.
+- Fortschritt 1/4 … 4/4, Zurück jederzeit, Überspringen. Seit P5-08 behält „Überspringen“ ab Schritt 2 die bisherigen Eingaben (Befund P5-F08); nur „Demo ohne Einrichtung starten“ in Schritt 1 nimmt die Standardwerte.
+- Danach Übersicht; Produkt-Tour mit 3 Schritten (Studienstand → Jetzt wichtig → Assistent), seit P5-08 standardmäßig angehakt, abwählbar und abbrechbar. „Demo ohne Einrichtung starten“ startet ohne Tour (Testplan).
 
 ### S1 Übersicht `/` (US-03, US-04, US-05, US-07, US-15)
 **Kopf:** „Guten Abend, Niklas“ · Chip „3. Semester · WS 2026/27“; Glocke mit Zähler und Profil-Menü in der Topbar.
@@ -225,29 +243,49 @@ Jeder Screen hat Lade-, Leer- und Fehlerzustand. Werte in Beispielen entsprechen
 **Hauptspalte** (Reihenfolge = Priorität; den ECTS-Verlauf hat Lucas in P5-06 direkt unter die erste Reihe gesetzt):
 1. **Studienstand** (Hero): „48 ECTS“ groß, „von 210“; Fortschrittsbalken mit Soll-Markierung bei 60; Ampel „Knapp“ + „12 ECTS hinter dem Regelverlauf (Soll nach 2 Semestern: 60)“; Prognose „Ende dieses Semesters: 78 von 90 – wenn du alle angemeldeten Prüfungen bestehst“; Link „Wie wird das berechnet?“ (Popover mit DR-1, DR-2); Button „Studienverlauf ansehen“.
 2. **Jetzt wichtig** (zart getönte Karte `--accent-soft` mit Terrakotta-Kante links, Text in Tinte; höchstens 2 Einträge, nur bei Sonderregel): „Statistik: Abmeldung nur noch bis morgen, 23:59 Uhr“ · Folge in einem Satz (Text je Hinweis-Stil, §12.5) · Countdown · Button „Folgen prüfen“ → S4.
-3. *(Niedrig)* **ECTS-Verlauf** in voller Breite: Flächendiagramm Ist vs. Soll je Semester, das laufende Semester als Prognose (blau wie der Studienstand-Balken, §12.2); ab 1280 px Wertetabelle rechts daneben.
-4. **Dieses Semester (WS 2026/27):** fünf Modulkarten im Raster (wie Referenz 1), jede in ihrer Modulfarbe (Illustration, Moodle-Balken; §12.2): Titel, Prüfungstermin, Status „Angemeldet“, Moodle-Fortschritt (z. B. „Übungsblätter 5/12“), Label „nur im WS“ bei jährlichem Angebot, Link zum Moduldetail.
+3. *(Niedrig)* **ECTS-Verlauf** in voller Breite: Flächendiagramm Ist vs. Soll je Semester ab dem Punkt „Studienbeginn“ mit 0 ECTS (P5-08), das laufende Semester als Prognose (blau wie der Studienstand-Balken, §12.2). Beim Überfahren zeigt ein Tooltip Ist bzw. Prognose, Soll und Differenz, z. B. „12 ECTS unter Soll“ (P5-08). Ab 1280 px steht rechts daneben die Wertetabelle mit Spalte Differenz.
+4. **Dieses Semester (WS 2026/27):** fünf Modulkarten im Raster (wie Referenz 1), jede in ihrer Modulfarbe (Illustration, Moodle-Balken; §12.2): Titel, Prüfungstermin, Status „Angemeldet“, Moodle-Fortschritt (z. B. „Übungsblätter 5/12“), Label „nur im WS“ bei jährlichem Angebot, Link zum Moduldetail; sobald eine Prüfungsvorleistung eingetragen ist, auch die Zulassung (S3, P5-08).
 5. **Nächster Meilenstein:** „Praxissemester · WS 2027/28“ · Bedingung (DR-6) mit Quelle · „Noch offen: 7 Module des Grundstudiums (5 davon in diesem Semester angemeldet)“ · „Erreichbar, wenn du Programmieren 2 und Wirtschaftsprivatrecht im SS 2027 bestehst“.
 
-**Rechte Spalte:** Nächste Frist mit Countdown · Neu im Postfach (3 relevante Einträge mit Kanal-Badge) · Letzte Noten (3 Einträge mit Noten-Badge, wie Referenz 1) · „Frag den Assistenten“ (Eingabefeld + 2 Vorschlagsfragen).
+**Rechte Spalte:** Nächste Frist mit Countdown (seit P5-08 auch eigene Termine mit Badge „Eigener Eintrag“) · Neu im Postfach (3 relevante Einträge mit Kanal-Badge) · Letzte Noten (3 Einträge mit Noten-Badge, wie Referenz 1) · „Frag den Assistenten“ (Eingabefeld + 2 Vorschlagsfragen).
 
 **Mobil:** Studienstand → Jetzt wichtig → Nächste Frist → ECTS-Verlauf → Dieses Semester → Meilenstein → Rest.
 
-### S2 Studienverlauf `/verlauf` (US-04, US-09, US-10, US-11)
+### S2 Studienverlauf `/verlauf` (US-04, US-09, US-10, US-11, US-26)
 - **Kopf:** Abschlussprognose („Voraussichtlicher Abschluss: WS 2028/29 – in Regelstudienzeit“) + Ampel + Ziel aus dem Onboarding.
-- **Zeitleiste** Semester 1–7 (Desktop: Spalten; mobil: Liste): Term, Fachsemester, ECTS-Summe (geplant/erreicht), Modul-Chips mit Status (Icon + Text), Angebots-Label (WS/SS/jedes Semester); *(Niedrig)* Belastungshinweis > 36 ECTS.
-- **Meilensteine** als Marker: Grenze Grund-/Hauptstudium, Praxissemester (5), Projektsemester (6), Bachelorarbeit (7).
-- **Was-wäre-wenn** *(Mittel)*: Schalter „Simulation“; Menü „Verschieben nach …“ an jedem offenen Modul (nur zulässige Terms laut DR-4); Neuberechnung; geänderte Elemente hervorgehoben; Banner mit Folgen + „Simulation verwerfen“; durchgehend als Simulation gekennzeichnet.
+- **Zeitleiste** Semester 1–7 (Desktop: Spalten; mobil: Liste): Term, Fachsemester, ECTS-Summe (geplant/erreicht), Modul-Boxen mit Status (Icon + Text), Angebots-Label (WS/SS/jedes Semester); *(Niedrig)* Belastungshinweis > 36 ECTS. Seit P5-08 führt der Modulname zum Moduldetail (S3), auch in der Simulation. Die Spalten haben ab 1280 px eine Mindestbreite von 11rem; reicht der Platz nicht, etwa nach Verschiebungen, scrollt nur die Zeitleiste horizontal (Feedback 28.10.: „Wenn Boxen verschoben werden, bricht alles“).
+- **Abgeschlossenes ausblenden** (P5-08): Ein Schalter blendet vergangene Semester aus, in denen alle Module bestanden sind, und in den übrigen Semestern die bestandenen Module; Hinweis „n Semester ausgeblendet“. Die Einstellung wird gespeichert.
+- **Meilensteine** als Marker: Grenze Grund-/Hauptstudium, Praxissemester (5), Projektsemester (6), Bachelorarbeit (7). Seit P5-08:
+  - Der Marker ist ein Chip mit Flagge und Text in Violett (§12.2).
+  - Ein Klick schaltet die Markierung der zugehörigen Module um (`aria-pressed`): Ende Grundstudium → Module des Grundstudiums (Studienverlaufsplan); Praxissemester → Module des Grundstudiums (DR-6); Projektsemester → Praxissemester (DR-11); Bachelorarbeit → Praxis- und Projektsemester (DR-12).
+  - Markierte Module tragen Flaggen-Icon und Text („für Praxissemester“), offene zusätzlich „noch offen“. Die Regel steht mit Quelle darunter.
+  - Die Meilenstein-Boxen selbst sind fest: Schloss-Icon, „Fester Meilenstein“ und ein Satz, wovon sie abhängen, mit Quelle (Feedback 28.10.: „Praxissemester ist nicht verschiebbar“).
+- **Was-wäre-wenn** *(Mittel)*: Schalter „Simulation“; Menü „Verschieben nach …“ an jedem offenen Modul (nur zulässige Terms laut DR-4); Neuberechnung; geänderte Elemente hervorgehoben; durchgehend als Simulation gekennzeichnet. Seit P5-08:
+  - Nach jeder Verschiebung öffnet ein Ergebnis-Dialog (Feedback 28.10.: Scrollen war ungünstig). Er zeigt Abschluss und Praxissemester (echt → simuliert), Status, mitverschobene Module und Folgen mit Quelle. Aktionen: „Weiter simulieren“, „Verschiebung zurücknehmen“, „Simulation verwerfen“.
+  - Ein kompakter Simulationsstatus bleibt oben sichtbar, mit „Folgen ansehen“ und „Verwerfen“.
+  - *(Niedrig)* Zusätzlich Drag & Drop mit Maus und Touch, nur bei eingeschalteter Simulation. Beim Ziehen sind zulässige Semester hervorgehoben, unzulässige gedimmt mit Grund („nur WS“). Meilensteine und bestandene Module bleiben fest. Das Menü bleibt der Weg per Tastatur.
 - **„Welche Regeln gelten?“** – aufklappbar: DR-4, DR-6, DR-7 mit Quellen.
 
-### S3 Module & Noten `/module`, `/module/:moduleId` (US-03)
+### S3 Module & Noten `/module`, `/module/:moduleId` (US-03, US-23, US-24, US-25)
 - **Kennzahlen:** ECTS gesamt (48), Notenschnitt (2,4 nach DR-9), bestandene Module (8), offene Grundstudiums-Prüfungen.
-- **Liste** gruppiert nach Semester: Modul, ECTS, Angebot, Status, Note, Versuch.
+- **Liste** gruppiert nach Semester: Modul, ECTS, Angebot, Status, Note, Versuch. Seit P5-08 (Feedback 28.10.: zu viel Scrollen) gilt:
+  - kompakt eine Zeile je Modul
+  - ab eingetragener Prüfungsvorleistung zusätzlich die Zulassung
+  - Semester aufklappbar mit Zusammenfassung, z. B. „5 Module · 30 ECTS · alle bestanden“
+  - standardmäßig offen sind nur Semester mit offenen Modulen bis zum aktuellen; dazu „Alle aufklappen“
 - **Detail:** Modulsteckbrief (Inhalt in 1–2 Sätzen, Prüfungsform, Angebot – Quelle Modulhandbuch), Prüfung (Termin, Raum, Status, Abmeldefrist mit Countdown), Moodle-Fortschritt; Aktionen „Folgen einer Abmeldung prüfen“ → S4 und „Frage zu diesem Modul stellen“ → S5 mit Kontext.
+- **Detail rechts** (P5-08, ab 1024 px zweispaltig):
+  - **Kurs-Links:** „Moodle-Kurs öffnen“ automatisch mit dem Hinweis „Im echten Betrieb öffnet sich der Moodle-Kurs …“; eine eigene Adresse lässt sich festlegen. Eigene Links mit Bezeichnung und http(s)-Adresse lassen sich anlegen, bearbeiten und entfernen; sie öffnen in einem neuen Tab.
+  - **Notizen** je Modul: speichern automatisch, höchstens 2000 Zeichen.
+- **Prüfungsvorleistung** (P5-08, nur Module mit Prüfung im aktuellen Semester):
+  - Einträge mit „Was?“, optionaler Frist und Stand (offen / erbracht / nicht erbracht) anlegen, ändern und löschen.
+  - Zulassung: „Zur Prüfung zugelassen“ (alle erbracht), „Zulassung offen“ oder „Nicht zugelassen“ (eine nicht erbracht); jeweils Icon, Text und Farbe, Quelle DR-13.
+  - Nur Anzeige: Prognose und Folgen-Check rechnen unverändert.
 
 ### S4 Folgen-Check `/entscheidung/:examId` (US-06, US-07, US-08) – Hero
 - **Kopf:** „Statistik – antreten oder abmelden?“ · Fristchip „Abmeldung bis Di, 26.01., 23:59 · noch 1 Tag, 4 Std.“ · Hinweistext im gewählten Stil.
 - **Ziel-Zeile:** „Dein Ziel: Abschluss in Regelstudienzeit (WS 2028/29)“.
+- **Zulassung** (P5-08): Ist für das Modul eine Prüfungsvorleistung eingetragen, steht darunter die Zulassung (S3, DR-13). Vergleich und Folgen bleiben unverändert.
 - **Vergleich** (Desktop: Tabelle; mobil: Umschalter je Option, gleiche Zeilen):
 
 | Kriterium | Antreten & bestehen | Antreten & nicht bestehen | Abmelden |
@@ -269,7 +307,7 @@ Jeder Screen hat Lade-, Leer- und Fehlerzustand. Werte in Beispielen entsprechen
 
 ### S5 Assistent `/assistent` (US-12, US-13, US-14)
 - **Leerer Zustand:** kurze Begrüßung, 6 Vorschlagsfragen als Chips, Hinweis „Antworten stützen sich auf SPO und Modulhandbuch. Verbindlich ist das Prüfungsamt.“
-- **Antwortkarte** (Aufbau §11), Tipp-Indikator 0,6–1,2 s.
+- **Antwortkarte** (Aufbau §11), Tipp-Indikator 0,6–1,2 s; seit P5-08 verlinkt die zuständige Stelle auf die Anlaufstellen (S10).
 - **Fallback** bei fehlender Zuordnung oder Sonderfall + „Anfrage vorbereiten“ (Dialog mit kopierbarem Text).
 - **Kontext:** Aufruf aus einem Modul → Chip „bezogen auf: Statistik“.
 - **Assistent-Fenster** (P5-06): Der Assistent-Button (§7) öffnet auf jeder Seite ein kompaktes Fenster unten rechts (mobil bildschirmfüllend) mit Vorschlagsfragen, denselben Antwortkarten samt Quellen, Fallback und „Anfrage vorbereiten“; Eingabe unten fixiert. Fenster und Seite teilen sich einen Gesprächsverlauf (nur im Speicher, „Demo zurücksetzen“ leert ihn). „Auf der Assistent-Seite öffnen“ führt den Verlauf auf `/assistent` fort; ein Seitenwechsel schließt das Fenster.
@@ -282,15 +320,33 @@ Jeder Screen hat Lade-, Leer- und Fehlerzustand. Werte in Beispielen entsprechen
 - Detail als Sheet (mobil Vollbild): Text, „Im Original öffnen“ (Hinweis: „Im echten Betrieb öffnet sich Moodle.“), „Als gelesen markieren“.
 - Sync-Status je Kanal („Moodle · aktualisiert vor 12 Min.“).
 
-### S7 Fristen `/fristen` (US-05, US-17)
+### S7 Fristen `/fristen` (US-05, US-17, US-21, US-22)
+- Seit P5-08 ein Reiter in der Topbar mit Umschalter Liste/Kalender (`?ansicht=kalender`).
 - Gruppen: Diese Woche · Nächste 30 Tage · Später. Je Frist: Titel, Datum/Uhrzeit, Countdown, Typ, Kanal, Modul, Link (bei Abmeldefristen → Folgen-Check).
 - *(Niedrig)* „Zum Kalender hinzufügen“ (ICS je Frist oder alle).
+- **Eigene Termine** (P5-08):
+  - „Termin hinzufügen“ mit Titel, Datum, optional Uhrzeit, Art (Abgabe, Studienleistung, Termin, Sonstiges) und optional Modul; nicht vor dem Demo-Datum.
+  - Badge „Eigener Eintrag“ statt Kanal, Quelle „Von dir eingetragen“; bearbeiten und löschen.
+  - Prüfungsvorleistungen mit Frist erscheinen automatisch.
+  - Eigene Einträge zählen für „Nächste Frist“ (S1) und den ICS-Export.
+- *(Niedrig)* **Kalender** (P5-08):
+  - Monatsraster Mo–So, Start im Monat von `DEMO_NOW`, Vor/Zurück/„Heute“.
+  - Zeigt Fristen, eigene Termine, Fristen von Prüfungsvorleistungen und Prüfungstermine.
+  - Tage mit Einträgen sind auswählbar und listen ihre Einträge mit Links (Folgen prüfen, Zum Modul, Bearbeiten); mobil Punkte statt Titel.
 
 ### S8 Benachrichtigungen (Glocke → Sheet) (US-07, US-18)
 Liste mit Typ-Icon, Text im gewählten Hinweis-Stil, Zeit, Ziel-Link; „Alle als gelesen markieren“.
 
-### S9 Einstellungen `/einstellungen` (US-18)
-Hinweis-Stil (mit Vorschau) · Benachrichtigungen je Typ · verbundene Kanäle (Status, „Verbindung trennen“ simuliert) · Demo: „Demo zurücksetzen“, „Onboarding erneut starten“, Hinweis zum Prototyp.
+### S9 Einstellungen `/einstellungen` (US-18, US-27)
+Profil (P5-08: Vorname, Nachname, Ziel, Nebenjob; Sprungziel `#profil`, erreichbar über „Profil bearbeiten“ im Profilmenü) · Hinweis-Stil (mit Vorschau) · Benachrichtigungen je Typ · verbundene Kanäle (Status, „Verbindung trennen“ simuliert) · Demo: „Demo zurücksetzen“, „Onboarding erneut starten“, Hinweis zum Prototyp.
+
+### S10 Anlaufstellen `/anlaufstellen` (US-28) *(Niedrig)*
+Neu in P5-08 (Feedback 28.10.: „KI oder Tab, der die richtige Stelle findet“).
+- Je zuständige Stelle eine Karte mit Sprungziel `#<id>`: Name, „Zuständig für“ (INHALTE §8), Kontakt, Sprechzeiten.
+- Passende Fragen als Links in den Assistenten: die Katalogeinträge, die die Stelle als zuständig nennen.
+- Lade- und Fehlerzustand über den Regelwerk-Service.
+- Der Assistent beantwortet „An wen wende ich mich …?“ (A-09) und verlinkt hierher.
+- Keine echte KI-Anbindung (R-1, R-6; Ideenparkplatz).
 
 ### 404
 „Diese Seite gibt es nicht.“ + Button „Zur Übersicht“.
@@ -351,7 +407,7 @@ interface Citation {
   asOf?: string;               // ISO-Datum
   verified: boolean;           // false ⇒ UI zeigt "Beispiel"
 }
-interface Office { id: string; name: string; email: string; hours?: string }
+interface Office { id: string; name: string; email: string; hours?: string; topics?: string[] }  // topics: „Zuständig für“ (S10, P5-08)
 
 interface Module {
   id: string; title: string; ects: number;
@@ -373,6 +429,14 @@ interface Student {
 interface Deadline { id: string; title: string; dueAt: string; type: string; channel: Channel; moduleId?: string; examId?: string }
 interface InboxItem { id: string; channel: Channel; sender: string; subject: string; preview: string; body: string; receivedAt: string; read: boolean; relevance: 'high' | 'normal'; moduleId?: string }
 interface Rule { id: string; title: string; citation: Citation; officeId?: string; params: Record<string, number | string> }
+
+// Eigene Einträge von Niklas (P5-08): nur lokal im Store gespeichert, keine Kanal-Daten
+type CourseworkStatus = 'open' | 'done' | 'failed';                 // offen / erbracht / nicht erbracht
+interface Coursework { id: string; moduleId: string; title: string; dueAt?: string; status: CourseworkStatus }  // Prüfungsvorleistung
+type ExamAdmission = 'none' | 'open' | 'admitted' | 'notAdmitted';  // Zulassung zur Prüfung (DR-13)
+interface PersonalDeadline { id: string; title: string; dueAt: string; kind: 'submission' | 'coursework' | 'appointment' | 'other'; moduleId?: string }
+interface CourseLink { id: string; label: string; url: string }     // nur http(s)
+interface ProfileName { firstName: string; lastName: string }       // ersetzt den Namen aus dem POS in der Anzeige
 
 type TrafficLight = 'onTrack' | 'tight' | 'critical';
 type Severity = 'info' | 'tight' | 'critical';
@@ -410,6 +474,11 @@ interface DecisionOutcome {
 | DR-8 | **Versuche:** höchstens 3 Versuche je Prüfung; „nicht bestanden“ zählt als Versuch, Abmeldung nicht. | `[Annahme]` |
 | DR-9 | **Notenschnitt:** nach ECTS gewichteter Durchschnitt der bestandenen Module; nach der ersten Nachkommastelle abgeschnitten, nicht gerundet. | `[Annahme]` |
 | DR-10 | **Belastung:** mehr als 36 geplante ECTS in einem Semester → Hinweis „hohe Belastung“ (mit Nebenjob-Stunden). | `[Annahme]` Gestaltungsentscheidung, Niedrig |
+| DR-11 | **Zulassung Projektsemester:** Das Praxissemester ist bestanden, bevor das Projektsemester beginnt. | `[Annahme]` Beispielregel (P5-08); nur Anzeige (Module zum Meilenstein, S2) |
+| DR-12 | **Zulassung Bachelorarbeit:** Praxis- und Projektsemester sind bestanden, bevor die Bachelorarbeit beginnt. | `[Annahme]` Beispielregel (P5-08); nur Anzeige (S2) |
+| DR-13 | **Prüfungsvorleistung:** Sieht ein Modul eine Prüfungsvorleistung vor, ist die Prüfung erst nach erbrachter Vorleistung zulässig. | `[Annahme]` Beispielregel (P5-08); nur Anzeige der Zulassung (S3, S4) |
+
+DR-11 bis DR-13 fließen nicht in die Prognose (§10.5) ein. Ihre Reihenfolge (Projektsemester nach dem Praxissemester, Bachelorarbeit nach beiden) stimmt mit der Prognose überein.
 
 Solange eine Regel nicht in SPO/Modulhandbuch geprüft ist (P0-02), gilt `verified: false` und das UI zeigt „Beispiel“.
 
@@ -470,8 +539,15 @@ Vereinfachung, die im UI benannt wird: Die Prognose verteilt Module nicht indivi
 - Simulierte Aktionen speichern vorher einen Snapshot; „Rückgängig“ stellt ihn wieder her.
 - Persistenz mit Versionsnummer; ändert sich die Datenversion, wird der gespeicherte Demo-Stand verworfen. „Demo zurücksetzen“ stellt den Ausgangszustand her.
 - Phase 4 (von Lucas bestätigt): Kanalverbindungen und Benachrichtigungstypen werden lokal gespeichert. Trennen stoppt weitere Aktualisierungen und behält bereits geladene Daten im Sitzungsspeicher; nach Neuladen lädt ein getrennter Kanal erst beim Wiederverbinden. Benachrichtigungstypen filtern das Glocken-Sheet, die wichtigen Hinweise auf der Übersicht bleiben erhalten.
-- Datenversion 3 ergänzt Benachrichtigungszeitpunkte und Einstellungen additiv; die Migration aus Version 2 erhält vorhandene Einstellungen und simulierte Entscheidungen. Ältere Datenversionen werden weiterhin zurückgesetzt. Nur ein erster Aufruf der Übersicht ohne abgeschlossenes Onboarding führt nach `/start`; andere Deep-Links bleiben erreichbar. Überspringen schließt die Einrichtung mit Standardwerten ab.
+- Datenversion 3 ergänzt Benachrichtigungszeitpunkte und Einstellungen additiv; die Migration aus Version 2 erhält vorhandene Einstellungen und simulierte Entscheidungen. Ältere Datenversionen werden weiterhin zurückgesetzt. Nur ein erster Aufruf der Übersicht ohne abgeschlossenes Onboarding führt nach `/start`; andere Deep-Links bleiben erreichbar. „Demo ohne Einrichtung starten“ schließt die Einrichtung mit Standardwerten ab; „Überspringen“ ab Schritt 2 behält seit P5-08 die bisherigen Eingaben (Befund P5-F08).
 - P5-07: Lokal gespeichert wird auch, ob die Sprechblase des Assistent-Buttons schon gezeigt wurde (§7); „Demo zurücksetzen“ zeigt sie wieder. Das Feld ergänzt Datenversion 3 additiv, ein Versionssprung ist nicht nötig.
+- P5-08 (Feedback-Runde): Lokal gespeichert werden außerdem die eigenen Einträge (§10.1) und die Ansicht „Abgeschlossenes ausblenden“ im Studienverlauf:
+  - Profilname
+  - Notizen und Kurs-Links je Modul
+  - Prüfungsvorleistungen
+  - eigene Termine
+
+  Die Felder ergänzen Datenversion 3 additiv (wie in P5-07); „Demo zurücksetzen“ leert sie. Im Startzustand gibt es keine eigenen Einträge, deshalb bleiben Testorakel (§10.4), Hero-Flow und Testaufgaben unverändert. Eigene Einträge ändern keine Prognose. Der Profilname ersetzt Vor- und Nachname aus dem POS nur in der Anzeige (Begrüßung, Avatar, Anfrage-Entwürfe).
 
 ---
 
@@ -485,13 +561,13 @@ Vereinfachung, die im UI benannt wird: Die Prognose verteilt Module nicht indivi
 1. Kurzantwort (1–2 Sätze, Kernaussage fett)
 2. „Für dich heißt das: …“ – aus aktuellen Daten über einen benannten Resolver (z. B. `nextWithdrawalDeadline`, `openFoundationModules`)
 3. Details (aufklappbar)
-4. Quellen (Dokument, Abschnitt, Stand; „Beispiel“, falls unbestätigt)
-5. Zuständige Stelle (Name, Kontakt, Sprechzeiten)
-6. Aktionen (z. B. „Folgen-Check öffnen“) und 2–3 Anschlussfragen
+4. Zuständige Stelle (Name, Kontakt, Sprechzeiten; seit P5-08 mit Link zu den Anlaufstellen, S10)
+5. Aktionen (z. B. „Folgen-Check öffnen“) und 2–3 Anschlussfragen
+6. Quellen (Dokument, Abschnitt, Stand; „Beispiel“, falls unbestätigt) als Fußzeile der Karte (§12.4); bis P5-08 an Position 4
 
 **Fallback:** „Dazu finde ich in SPO und Modulhandbuch keine eindeutige Regel.“ + zuständige Stelle + „Anfrage vorbereiten“ (vorformulierter, kopierbarer Text mit Name, Studiengang, Fachsemester, Frage – nichts wird gesendet).
 
-Katalog: `docs/INHALTE.md` §10.
+Katalog: `docs/INHALTE.md` §10 (A-01 bis A-09, F-01).
 
 ---
 
@@ -533,11 +609,11 @@ Nur helles Design (Entscheidung von Lucas am 27.10.2026, P5-06). Kontrastrevisio
 | `--accent-strong` | `#A4492E` | Links, Akzenttext, Fokusring | 5,6:1 / 5,9:1 |
 | `--accent-soft` / `--accent-soft-foreground` | `#F7E4DD` / `#9A4128` | zurückhaltende Hervorhebungen / Text darauf | 5,4:1 |
 
-**Farbfamilie** – Designrevision P5-06: Terrakotta allein wirkte monoton. Wie in Referenz 1 bekommt jedes Modul eine eigene Farbe; die ECTS-Werte (Balken und Verlauf) sind durchgehend blau. Starke Töne für Linien, Balken und Illustrationskonturen (≥ 3:1 auf Seite, Karte und Track `--muted`), weiche Töne als Fläche unter Tinte (≥ 14:1). Nie Statusfarbe: Grün, Ocker und Rot bleiben Im Plan, Knapp und Kritisch vorbehalten.
+**Farbfamilie** – Designrevision P5-06: Terrakotta allein wirkte monoton. Wie in Referenz 1 bekommt jedes Modul eine eigene Farbe; die ECTS-Werte (Balken und Verlauf) sind durchgehend blau. Starke Töne für Linien, Balken und Illustrationskonturen (≥ 3:1 auf Seite, Karte und Track `--muted`), weiche Töne als Fläche unter Tinte (≥ 14:1). Nie Statusfarbe: Grün, Ocker und Rot bleiben Im Plan, Knapp und Kritisch vorbehalten. Seit P5-08 nutzt auch der Meilenstein-Chip im Studienverlauf (Flagge + Text) die Farbfamilie: Fläche `--tone-violet-soft`, Text in Tinte, Flagge in `--tone-violet` (4,9:1 zur Fläche). Das zarte Terrakotta wirkte wie eine Warnung (Feedback 28.10.). Meilenstein-Boxen und die Meilenstein-Karte der Übersicht bleiben neutral.
 
 | Token | Wert | Verwendung | Kontrast |
 |---|---|---|---|
-| `--tone-violet` / `--tone-violet-soft` | `#6A55B5` / `#ECE8F7` | Statistik, Mathematik 2 | 5,9:1 Karte · 4,9:1 Track |
+| `--tone-violet` / `--tone-violet-soft` | `#6A55B5` / `#ECE8F7` | Statistik, Mathematik 2; Meilenstein-Chip im Studienverlauf (P5-08) | 5,9:1 Karte · 4,9:1 Track · 4,9:1 auf der eigenen weichen Fläche |
 | `--tone-teal` / `--tone-teal-soft` | `#1E7369` / `#DCEFEA` | Datenbanken, Kosten- und Leistungsrechnung | 5,7:1 Karte · 4,7:1 Track |
 | `--tone-blue` / `--tone-blue-soft` | `#3466A8` / `#E2EBF7` | ECTS (Studienstand-Balken, ECTS-Verlauf), Software Engineering 1, Betriebssysteme und Rechnernetze | 5,8:1 Karte · 4,8:1 Track |
 | `--tone-plum` / `--tone-plum-soft` | `#9C4675` / `#F5E3EC` | Geschäftsprozessmanagement | 5,9:1 Karte · 4,9:1 Track |
@@ -575,6 +651,9 @@ Regeln: Terrakotta ist nie Statusfarbe. Kritisch-Rot und Terrakotta liegen im Fa
 - **Umschalter (ToggleGroup, Tabs):** die gewählte Option ist eine Tintenfläche (`--primary` mit `--primary-foreground`), nicht nur `--muted` – sonst ist die Auswahl kaum sichtbar.
 - **PageHeader:** Seiten mit eigenem Kopf (Meta-Chips, Aktionen) rendern ihre `h1` selbst; die Route setzt dafür `ownHeader` im Handle.
 - **Icons:** lucide-react, 20 px in der Navigation, 18 px im Text.
+- **Quellen-Fußzeile** (P5-08, Feedback 28.10.): Quellen stehen am Ende ihrer Karte bzw. ihres Abschnitts, unter den Aktionen. Eine feine Linie trennt sie ab, sie stehen kompakt in einer Zeile (`CitationList`, Variante `footer`), „Beispiel“ steht je Quelle. In aufklappbaren Erklärungen („Warum?“) bleibt die Quelle am Ende der Erklärung. Jede Aussage behält ihre Quelle in derselben Karte (Q-3).
+- **Eigener Eintrag** (P5-08): Badge statt Kanal-Badge für Termine und Prüfungsvorleistungen, die Niklas selbst einträgt; Quelle „Von dir eingetragen“.
+- **Zeitleiste** (P5-08): ab 1280 px Semesterspalten mit Mindestbreite 11rem; reicht der Platz nicht, scrollt nur die Zeitleiste horizontal (fokussierbar, beschriftet), nie die Seite (Q-5).
 
 ### 12.5 Tonalität und Hinweis-Stil
 - Du-Ansprache, kurze Sätze, Fakten zuerst, konkrete Zahlen und Termine, keine Schuldzuweisung, immer „Was heißt das?“ und „Was kannst du tun?“.
@@ -599,13 +678,13 @@ Regeln: Terrakotta ist nie Statusfarbe. Kritisch-Rot und Terrakotta liegen im Fa
 | Steuerbarkeit | Folgen-Check erzwingt keine Entscheidung; Simulationen jederzeit verwerfbar; Assistent per Vorschlag oder Freitext; Zurück überall |
 | Erwartungskonformität | bekannte Dashboard-Muster (Topnavigation, aufklappbares Menü, Karten, Glocke) wie Referenz 1; konsistente Komponenten; deutsche Datums- und Zahlformate; Begriffe laut Glossar |
 | Fehlertoleranz | Bestätigung vor folgenreicher Aktion; Rückgängig-Toast; Fallback statt erfundener Antwort; Fehlerzustand je Kanal mit Stand der letzten Aktualisierung |
-| Individualisierbarkeit | Hinweis-Stil; Benachrichtigungstypen (Hell/Dunkel für die Produktdemo gestrichen, P5-06) – abgegrenzt von **Personalisierung** („Für dich wichtig“ ordnet das System selbst) |
+| Individualisierbarkeit | Hinweis-Stil; Benachrichtigungstypen; seit P5-08 Profil, Notizen, Kurs-Links, eigene Termine, Prüfungsvorleistungen und „Abgeschlossenes ausblenden“ (Hell/Dunkel für die Produktdemo gestrichen, P5-06) – abgegrenzt von **Personalisierung** („Für dich wichtig“ ordnet das System selbst) |
 | Lernförderlichkeit | Onboarding und kurze Tour; Vorschlagsfragen; Erklärungen direkt am Ort der Information |
 
 ### 13.2 Weitere Prinzipien aus VL05
 - **Nielsen:** #1 Systemstatus (Skeletons, Sync-Stand) · #3 Kontrolle (Rückgängig, Simulation verwerfen) · #5 Fehlervermeidung (Folgen-Check vor der Abmeldung) · #6 Wiedererkennen statt Erinnern (Vorschlagsfragen, Ziel-Zeile) · #9 Fehler erkennen und beheben (Fehlerzustände mit Ausweg) · #10 Hilfe (Assistent, „Warum?“).
 - **Mentales Modell:** Das UI bildet nicht das POS-Datenmodell ab (Prüfungsnummern, Leistungslisten), sondern Niklas' Fragen: „Was fehlt mir bis zum Praxissemester?“, „Was passiert, wenn …?“. Semestersicht folgt dem Studienverlaufsplan, den Studierende kennen.
-- **Affordance:** Karten mit Pfeil oder Button wirken klickbar; keine Drag-and-Drop-Interaktion, die man erraten müsste.
+- **Affordance:** Karten mit Pfeil oder Button wirken klickbar. Drag & Drop gibt es nur als zusätzlichen Weg im Was-wäre-wenn (P5-08, Feedback 28.10.): Bei eingeschalteter Simulation sind Module sichtbar ziehbar, zulässige Semester werden beim Ziehen hervorgehoben, und das Menü „Verschieben nach …“ bleibt der Weg per Tastatur. Sonst gibt es keine Drag-and-Drop-Interaktion, die man erraten müsste.
 - **Seven Stages of Action:** siehe §9.
 
 ---
@@ -634,6 +713,10 @@ Regeln: Terrakotta ist nie Statusfarbe. Kritisch-Rot und Terrakotta liegen im Fa
 | **Quelle** | Beleg einer Aussage (Dokument, Abschnitt, Stand) | `Citation` |
 | **Kanal** | Herkunftssystem einer Information (POS, Moodle, Mail, Website) | `Channel` |
 | Zuständige Stelle | Prüfungsamt, Praktikantenamt, Studienberatung, Studiendekanat | `Office` |
+| Anlaufstellen | Seite mit allen zuständigen Stellen und ihren Zuständigkeiten (S10) | `OfficesPage` |
+| Prüfungsvorleistung | Leistung, die vor der Prüfung erbracht sein muss, z. B. Übungsblätter oder ein Testat | `Coursework` |
+| Zulassung | ob Niklas eine Prüfung ablegen darf (alle Prüfungsvorleistungen erbracht, DR-13) | `ExamAdmission` |
+| Eigener Eintrag | Termin oder Prüfungsvorleistung, die Niklas selbst einträgt; ohne Kanal | `PersonalDeadline` |
 | Postfach | gebündelte Nachrichten aller Kanäle | `Inbox` |
 | Hinweis-Stil | sachlich / direkt | `hintTone` `'neutral'` / `'direct'` |
 | Demo-Zeit | feste „Jetzt“-Zeit des Prototyps | `DEMO_NOW` |
@@ -653,3 +736,4 @@ Regeln: Terrakotta ist nie Statusfarbe. Kritisch-Rot und Terrakotta liegen im Fa
 | A-5 | Name „StudiCompass“ ist Arbeitstitel; im selben Themenfeld existieren bereits „Studienkompass“ (Förderprogramm mit App) und „StudyCompass“ (Frankfurt UAS). | P0-01 |
 | A-6 | Persona-Bild: im Prototyp Initialen-Avatar statt Foto (keine Lizenzfrage, kein Bildplatzhalter). | entschieden |
 | A-7 | Stakeholder für die Ausblick-Folie ergänzen: IT/Rechenzentrum (Schnittstellen), Datenschutz, Praktikantenamt, Studienberatung. | P6-03 |
+| A-8 | Die Zuständigkeiten der Stellen (INHALTE §8) und die Regeln DR-11 bis DR-13 sind Beispiele (P5-08). | P0-02 |

@@ -1,6 +1,6 @@
 # Roadmap – StudiCompass Prototyp
 
-Zeitraum: Fr, 23.10. – Fr, 06.11.2026 (Präsentation) · Stand: 26.10.2026 (v3: Zeitplan nach Verzug in Phase 1 neu gesetzt, Kürzungs-Checkpoints, Reviews startet Claude Code)
+Zeitraum: Fr, 23.10. – Fr, 06.11.2026 (Präsentation) · Stand: 29.10.2026 (v4: Feedback-Runde P5-08 bis P5-15 mit eigener Kürzungsliste; v3 vom 26.10.: Zeitplan nach Verzug in Phase 1 neu gesetzt, Kürzungs-Checkpoints, Reviews startet Claude Code)
 
 ## So wird mit dieser Roadmap gearbeitet
 - Reihenfolge einhalten. Jede Phase endet mit einem **Gate**; die nächste Phase beginnt erst, wenn das Gate erfüllt ist. **Ausnahme:** Phase 1 hängt nicht von Inhalten ab und läuft parallel zu Phase 0 – Gate M0 muss erst vor P2-03 erfüllt sein.
@@ -19,7 +19,7 @@ Zeitraum: Fr, 23.10. – Fr, 06.11.2026 (Präsentation) · Stand: 26.10.2026 (v3
 | 2 Domäne & Daten | Mi 28.10. – Do 29.10. | Typen, Dummy-Daten, Services, Store, Regeln + Tests | M2 |
 | 3 Kern-Flows | Fr 30.10. – So 01.11. | Übersicht, Folgen-Check, Studienverlauf | M3 Durchstich |
 | 4 Ergänzung | So 01.11. – Mo 02.11. | Assistent, Postfach, Module, Fristen, Onboarding, Einstellungen | M4 Feature-complete |
-| 5 Test & Iteration | Di 03.11. – Mi 04.11. | Evaluation, Top-Fixes | M5 |
+| 5 Test & Iteration | Di 03.11. – Mi 04.11. (Feedback-Runde ab Do 29.10.) | Evaluation, Top-Fixes, Feedback-Runde P5-08 bis P5-15 | M5 |
 | 6 Release | Do 05.11. | Release-Kandidat, Demo-Skript, Generalprobe | M6 |
 | Präsentation | Fr 06.11. | | |
 
@@ -294,6 +294,145 @@ Vor den Nutzertests, damit niemand mit einer verdeckenden Sprechblase startet. B
 - [x] Profil-Avatar mit Initialen (KONZEPT A-6, DP-8)
 - [x] Codex-Review: ein Major bestätigt und behoben (Sprechblase kam nach Neuladen ohne Interaktion wieder) → [P5-07.md](reviews/P5-07.md)
 - **AK:** Sprechblase erscheint nach Neuladen nicht erneut und verdeckt nach dem ersten Scrollen oder Seitenwechsel nichts mehr; „Warum?“ reagiert auch 4 px neben dem Text (E2E); Avatar zeigt „NB“; `npm run check` und `npm run e2e` grün; Screenshots neu (1440×900, 390×844), die Sprechblase zeigt nur noch `assistent-hinweis`.
+
+### Feedback-Runde (Team-Review und Nutzertest, 28.10.2026)
+
+Grundlage:
+- Sammelliste von Team-Review und Nutzertest, als Befunde P5-F11 bis P5-F33 in der [Befundliste](evaluation/P5-auswertung.md).
+- Lucas hat am 28.10. entschieden, sie bis zur Präsentation umzusetzen.
+- Entscheidungen und Konzeptänderungen stehen in KONZEPT (Vermerk „P5-08“).
+
+Für alle Tasks gilt: Hero-Flow, Testorakel (KONZEPT §10.4) und Spezifikationstests bleiben unverändert, und alle neuen Eingaben starten leer. Jeder Task durchläuft den üblichen Zyklus (Branch, `npm run check`, `npm run e2e`, Sichtprüfung 1440×900 und 390×844, Codex-Review, PR, Merge nach Lucas' OK).
+
+#### P5-08 [Claude] Feedback ins Konzept (nur Doku)
+- [x] Befunde P5-F11 bis P5-F33 in die Befundliste eingetragen; Schwere, Häufigkeit und Protokollbezug trägt das Team nach
+- [x] KONZEPT angepasst:
+  - §1 (Kalender als zweite Ansicht)
+  - §3 und §5 (US-21 bis US-28, Ideenparkplatz)
+  - §7 (Navigation ohne Hamburger ab 1280 px)
+  - §8 (S0–S5, S7, S9, neu S10 Anlaufstellen)
+  - §10 (Typen, DR-11 bis DR-13, Persistenz)
+  - §11 (Quellen als Fußzeile)
+  - §12 (Meilenstein-Chip, Quellen-Fußzeile, Zeitleiste)
+  - §13 (Drag & Drop) und §14 (Glossar)
+- [x] INHALTE: DR-11 bis DR-13, „Zuständig für“ je Stelle, Katalogfrage A-09
+- [x] CLAUDE.md: Navigation, Farbfamilie, Quellen-Fußzeile
+- [x] Lucas hat die neuen Texte am 29.10. freigegeben (DR-11 bis DR-13, Zuständigkeiten, A-09)
+- **AK:** keine Widersprüche zwischen KONZEPT, INHALTE, ROADMAP und CLAUDE.md; neue Texte freigegeben.
+
+#### P5-09 [Claude] Navigation und Quellen-Fußzeilen (P5-F26 Reiter, P5-F27, P5-F31)
+- [ ] Ab 1280 px kein Hamburger. Die Topbar zeigt alle Bereiche: Übersicht, Studienverlauf, Module & Noten, Fristen, Postfach, Assistent (Anlaufstellen ab P5-15). Einstellungen über das Profilmenü; unter 1280 px bleibt das Menü-Panel unverändert.
+- [ ] `CitationList` mit Variante `footer`; Quellen als letzte Zeile jeder Karte, unter den Aktionen. In „Warum?“ bleibt die Quelle am Ende der Erklärung.
+- **AK:** Topbar ohne Umbruch bei 1280, 1440 und 1920 px; jede Regel- und Fristaussage behält ihre Quelle in derselben Karte (Q-3); `check`, `e2e`, Screenshots neu.
+
+#### P5-10 [Claude] Studienverlauf: Orientierung und robustes Layout (P5-F13 bis P5-F18)
+- [ ] Modulname führt zum Moduldetail, auch in der Simulation
+- [ ] Meilenstein-Chip (Flagge + Text) in Violett, als Umschalter für die zugehörigen Module:
+  - Domänenfunktion mit Test; DR-11 und DR-12 in den Daten
+  - Markierung mit Icon und Text, Regel mit Quelle
+- [ ] Meilenstein-Boxen sichtbar fest (Schloss, Erklärung mit Quelle)
+- [ ] Schalter „Abgeschlossenes ausblenden“ (gespeichert)
+- [ ] Spalten ab 1280 px mindestens 11rem breit; zusätzliche Spalten scrollen nur innerhalb der Zeitleiste
+- **AK:**
+  - Werte unverändert.
+  - Umschalter und Links per Tastatur.
+  - Markierung nie nur über Farbe.
+  - Keine Seiten-Scrollleiste 360–1920 px.
+  - Bei 9 Spalten bleibt jede Box mindestens 11rem breit.
+
+#### P5-11 [Claude] Was-wäre-wenn: Ergebnis-Dialog und Drag & Drop (P5-F19, P5-F20)
+- [ ] Nach jeder Verschiebung ein Ergebnis-Dialog:
+  - Inhalt: Abschluss und Praxissemester (echt → simuliert), Status, mitverschobene Module, Folgen mit Quelle
+  - Aktionen: „Weiter simulieren“, „Verschiebung zurücknehmen“, „Simulation verwerfen“
+- [ ] Kompakter Simulationsstatus bleibt oben sichtbar
+- [ ] Drag & Drop (`@dnd-kit/core`):
+  - nur bei eingeschalteter Simulation
+  - zulässige Semester beim Ziehen hervorgehoben, unzulässige mit Grund gedimmt
+  - Menü bleibt für die Tastatur
+- **AK:**
+  - Ergebnis ohne Scrollen sichtbar.
+  - Drag mit Maus und Touch (E2E).
+  - Marketing → SS 2027 ergibt über Menü und Drag dieselben Werte (Szenario D).
+
+#### P5-12 [Claude] ECTS-Verlauf und Module & Noten (P5-F11, P5-F12, P5-F21 bis P5-F23)
+- [ ] ECTS-Verlauf:
+  - Startpunkt „Studienbeginn“ mit 0
+  - Tooltip mit Ist bzw. Prognose, Soll und Differenz
+  - Tabellenspalte Differenz
+- [ ] Modulliste kompakt in einer Zeile je Modul; Semester aufklappbar mit Zusammenfassung
+- [ ] Moduldetail ab 1024 px zweispaltig:
+  - Kurs-Links: Moodle automatisch (Hinweis), eigene Adresse, eigene http(s)-Links
+  - Notizen je Modul
+- **AK:**
+  - Liste bei 1440×900 deutlich kürzer.
+  - Notizen und Links überstehen Neuladen, „Demo zurücksetzen“ leert sie.
+  - Die App sendet keine Requests.
+  - Alles per Tastatur bedienbar.
+
+#### P5-13 [Claude] Prüfungsvorleistungen und eigene Termine (P5-F24, P5-F25)
+- [ ] Prüfungsvorleistungen für Module mit Prüfung im aktuellen Semester:
+  - Stand offen / erbracht / nicht erbracht
+  - Zulassung als Domänenfunktion mit Test, angezeigt mit Quelle DR-13 in Moduldetail, Modulliste, Modulkarten und Folgen-Check
+- [ ] Eigene Termine anlegen, bearbeiten, löschen (nicht vor dem Demo-Datum):
+  - Badge „Eigener Eintrag“
+  - Prüfungsvorleistungen mit Frist erscheinen als Frist
+- [ ] Gemeinsamer Selektor für Kanal-Fristen, eigene Termine und Fristen von Prüfungsvorleistungen; „Nächste Frist“ und ICS-Export berücksichtigen eigene Einträge
+- **AK:**
+  - Startzustand ohne Einträge, „Nächste Frist“ bleibt „Abmeldung Statistik“.
+  - Ein Eintrag für morgen 10:00 erscheint unter „Diese Woche“ und als „Nächste Frist“.
+  - Einträge überstehen Neuladen, „Demo zurücksetzen“ leert sie.
+
+#### P5-14 [Claude] Kalenderansicht (P5-F26 Kalender)
+- [ ] Umschalter Liste/Kalender auf der Fristen-Seite (`?ansicht=kalender`)
+- [ ] Monatsraster Mo–So ab dem Monat von `DEMO_NOW`, Vor/Zurück/„Heute“; Fristen, eigene Termine und Prüfungstermine; ausgewählter Tag listet seine Einträge mit Links
+- **AK:**
+  - 26.01. (Abmeldung Statistik) und 27.01. (Prüfung Statistik) sichtbar.
+  - Bedienbar per Tastatur und Touch.
+  - Keine Scrollleiste bei 360 px.
+
+#### P5-15 [Claude] Profil, Onboarding und Anlaufstellen (P5-F28 bis P5-F30, P5-F32)
+- [ ] Onboarding-Schritt „Dein Profil“:
+  - Vor- und Nachname, aus dem POS vorbelegt, Pflicht, höchstens 40 Zeichen
+  - keine E-Mail-, Login- oder Passwortfelder
+- [ ] Produkt-Tour standardmäßig angehakt; „Überspringen“ ab Schritt 2 behält die Eingaben (P5-F08)
+- [ ] Einstellungen: Abschnitt „Profil“ (Name, Ziel, Nebenjob); Profilmenü „Profil bearbeiten“. Der Name wirkt auf Begrüßung, Sprechblase, Avatar und Anfrage-Entwürfe.
+- [ ] Seite Anlaufstellen (`/anlaufstellen`, S10) in Topbar und Menü; Zuständige Stelle im Assistenten verlinkt dorthin; Katalogfrage A-09
+- **AK:**
+  - Namensänderung wirkt sofort überall, übersteht Neuladen; „Demo zurücksetzen“ stellt Niklas wieder her.
+  - Onboarding per Tastatur.
+  - Anlaufstellen mit Lade- und Fehlerzustand.
+  - Topbar ohne Umbruch bei 1280 px.
+
+#### Kürzungsliste der Feedback-Runde
+Von oben nach unten streichen, wenn die Zeit knapp wird:
+1. Drag & Drop (Ergebnis-Dialog und Menü bleiben)
+2. Katalogfrage A-09 (die Seite Anlaufstellen bleibt)
+3. Kalenderansicht (die Liste mit eigenen Terminen bleibt)
+4. Seite Anlaufstellen
+5. Eigene Kurs-Links (der Moodle-Hinweis bleibt)
+
+**Nie streichen:** Hero-Flow sowie die Punkte aus dem Nutzertest:
+- Navigation
+- Modul-Links im Studienverlauf
+- Layout der Zeitleiste
+- Ergebnis-Dialog
+- kompakte Modulliste
+
+**Checkpoints:**
+- P5-11 nicht bis Sa 31.10., 12:00 gemergt → Punkt 1 streichen.
+- P5-13 nicht bis Mo 02.11., 12:00 gemergt → Punkte 2 und 3 streichen.
+
+**Zeitplan:**
+
+| Tag | Aufgabe |
+|---|---|
+| Do 29.10. | P5-08 und P5-09 |
+| Fr 30.10. | P5-10 und P5-11 |
+| Sa 31.10. | P5-12 |
+| So 01.11. | P5-13 |
+| Mo 02.11. | P5-14 |
+| Di 03.11. | P5-15 |
+| Mi 04.11. | Puffer und Phasen-Review (`--base m4`) |
 
 **Gate M5 (Mi 04.11. abends):** Top-Befunde behoben · Testergebnisse dokumentiert.
 
