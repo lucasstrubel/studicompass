@@ -44,6 +44,13 @@ import {
 
 const PLAN_RULES = ["DR-4", "DR-6", "DR-7", "DR-10"];
 
+/** The last move plus the simulation before it, so "zurücknehmen" restores exactly that step (P5-11 review). */
+interface MoveRecord extends LastMove {
+  before: PlanOverride[];
+  /** Term of every module in the plan shown before the move. */
+  termsBefore: Map<string, Term>;
+}
+
 /** What the milestone toggle marks, in words (P5-10). */
 const MARKED: Record<MilestoneKind, string> = {
   foundationEnd: "Module des Grundstudiums",
@@ -70,7 +77,7 @@ function PlannerContent() {
   const [milestone, setMilestone] = useState<MilestoneKind | null>(null);
   // Result dialog after each move (P5-11); it reports on the last move and can be reopened.
   const [resultOpen, setResultOpen] = useState(false);
-  const [lastMove, setLastMove] = useState<LastMove | null>(null);
+  const [lastMove, setLastMove] = useState<MoveRecord | null>(null);
   // Where the keyboard focus goes when the dialog closes: the moved module's menu or the switch.
   const focusAfterClose = useRef<string | null>(null);
   const switchRef = useRef<HTMLButtonElement>(null);
@@ -155,6 +162,10 @@ function PlannerContent() {
     selectCanMove(demoStore.getState(), moduleId);
 
   const move = (moduleId: string, term: Term) => {
+    const before = whatIf;
+    const termsBefore = new Map(
+      plan.modules.map((item) => [item.moduleId, item.term]),
+    );
     const overrides: PlanOverride[] = [
       ...whatIf.filter((item) => item.moduleId !== moduleId),
       { moduleId, action: "move", term },
@@ -166,7 +177,13 @@ function PlannerContent() {
       return;
     }
     const module = academic.modules.find((item) => item.id === moduleId);
-    setLastMove({ moduleId, title: module?.title ?? moduleId, term });
+    setLastMove({
+      moduleId,
+      title: module?.title ?? moduleId,
+      term,
+      before,
+      termsBefore,
+    });
     focusAfterClose.current = moduleId;
     setResultOpen(true);
   };
@@ -186,8 +203,7 @@ function PlannerContent() {
   };
   const undoMove = () => {
     if (!lastMove) return;
-    const rest = whatIf.filter((item) => item.moduleId !== lastMove.moduleId);
-    if (rest.length > 0) setWhatIf(rest);
+    if (lastMove.before.length > 0) setWhatIf(lastMove.before);
     else clearWhatIf();
     setLastMove(null);
     setResultOpen(false);
@@ -200,18 +216,19 @@ function PlannerContent() {
       : null;
     (trigger ?? switchRef.current)?.focus();
   };
-  // Modules that moved along with the last move, e.g. after a milestone shift (feedback "bricht alles").
-  const baseTerms = new Map(
-    basePlan.modules.map((item) => [item.moduleId, item.term]),
-  );
+  // Modules that moved along with the last move, e.g. after a milestone shift (feedback "bricht alles"):
+  // effective terms before and after that move, including modules moved earlier by hand (P5-11 review).
+  // Without a recorded move the dialog compares with the real plan.
+  const termsBefore =
+    lastMove?.termsBefore ??
+    new Map(basePlan.modules.map((item) => [item.moduleId, item.term]));
   const shifted = plan.modules
     .filter((item) => {
-      const before = baseTerms.get(item.moduleId);
+      const before = termsBefore.get(item.moduleId);
       return (
         item.moduleId !== lastMove?.moduleId &&
         before !== undefined &&
-        compare(before, item.term) !== 0 &&
-        !whatIf.some((override) => override.moduleId === item.moduleId)
+        compare(before, item.term) !== 0
       );
     })
     .flatMap((item) => {

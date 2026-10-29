@@ -459,4 +459,47 @@ describe("Was-wäre-wenn: Ergebnis-Dialog (P5-11)", () => {
     expect(draggable).not.toContain("Praxissemester");
     expect(draggable).not.toContain("Mathematik 1");
   });
+
+  it("takes back exactly the last step when the same module moves twice (P5-11 review)", async () => {
+    const user = userEvent.setup();
+    renderPlanner();
+    await user.click(screen.getByRole("switch", { name: "Simulation" }));
+    await user.click(
+      screen.getByRole("button", { name: "Marketing verschieben" }),
+    );
+    await user.click(screen.getByRole("menuitem", { name: "SS 2027" }));
+    await continueSimulating(user);
+    const first = structuredClone(demoStore.getState().whatIf);
+    await user.click(
+      screen.getByRole("button", { name: "Marketing verschieben" }),
+    );
+    await user.click(screen.getByRole("menuitem", { name: "WS 2027/28" }));
+    await user.click(
+      screen.getByRole("button", { name: "Verschiebung zurücknehmen" }),
+    );
+    expect(demoStore.getState().whatIf).toEqual(first);
+  });
+
+  it("lists modules the rules push further, even if moved by hand before (P5-11 review)", async () => {
+    const user = userEvent.setup();
+    renderPlanner();
+    await user.click(screen.getByRole("switch", { name: "Simulation" }));
+    await user.click(
+      screen.getByRole("button", { name: "IT-Sicherheit verschieben" }),
+    );
+    await user.click(screen.getByRole("menuitem", { name: "WS 2028/29" }));
+    await continueSimulating(user);
+    await user.click(
+      screen.getByRole("button", { name: "Statistik verschieben" }),
+    );
+    await user.click(screen.getByRole("menuitem", { name: "WS 2028/29" }));
+    const dialog = screen.getByRole("dialog", {
+      name: "Simulation: Statistik → WS 2028/29",
+    });
+    expect(
+      within(dialog)
+        .getByText(/^Mit verschoben:/)
+        .closest("p"),
+    ).toHaveTextContent("IT-Sicherheit");
+  });
 });
