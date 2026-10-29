@@ -2,7 +2,11 @@ import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { Menu, X } from "lucide-react";
 import { NavLink } from "react-router";
 import { Dialog as DialogPrimitive } from "radix-ui";
-import { NAV_ITEMS, SETTINGS_ITEM } from "@/components/layout/navigation";
+import {
+  DESKTOP_QUERY,
+  NAV_ITEMS,
+  SETTINGS_ITEM,
+} from "@/components/layout/navigation";
 import { Button } from "@/components/ui/button";
 import { APP_NAME } from "@/config/demo";
 
@@ -85,6 +89,21 @@ export function NavigationMenu() {
     },
     [],
   );
+
+  // From 1280 px the wrapper hides the menu, but an open modal dialog would keep its focus trap and
+  // pointer lock on the now visible top bar; close it when the window grows past the breakpoint (P5-09).
+  useEffect(() => {
+    const desktop = window.matchMedia(DESKTOP_QUERY);
+    const onChange = (event: MediaQueryListEvent) => {
+      if (event.matches) {
+        clearTimeout(openTimer.current);
+        clearTimeout(closeTimer.current);
+        setMode(null);
+      }
+    };
+    desktop.addEventListener("change", onChange);
+    return () => desktop.removeEventListener("change", onChange);
+  }, []);
 
   useEffect(() => {
     if (mode !== "preview") return;
