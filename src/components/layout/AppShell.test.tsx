@@ -85,6 +85,23 @@ describe("AppShell", () => {
     expect(screen.queryByRole("complementary")).not.toBeInTheDocument();
   });
 
+  it("lists every area in the top bar and hides the hamburger from 1280 px (P5-09)", () => {
+    renderShell();
+    const links = within(
+      screen.getByRole("navigation", { name: "Hauptnavigation" }),
+    ).getAllByRole("link");
+    expect(links.map((link) => link.textContent)).toEqual([
+      "Übersicht",
+      "Studienverlauf",
+      "Module & Noten",
+      "Fristen",
+      "Postfach",
+      "Assistent",
+    ]);
+    // jsdom applies no media queries, so the breakpoint is checked on the wrapper class.
+    expect(trigger().closest(".xl\\:hidden")).not.toBeNull();
+  });
+
   it("shows the student's initials in the profile button (KONZEPT A-6)", async () => {
     renderShell();
     const profile = screen.getByRole("button", { name: "Profil" });

@@ -78,18 +78,18 @@ export function ImportantCard() {
                   className="font-semibold"
                 />
               </p>
-              <CitationList
-                className="mt-3"
-                citations={decision.ruleIds.flatMap((id) =>
-                  rules[id] ? [rules[id].citation] : [],
-                )}
-              />
               <Button asChild className="mt-4">
                 <Link to={`/entscheidung/${decision.exam.id}`}>
                   Folgen prüfen
                   <ArrowRight aria-hidden="true" />
                 </Link>
               </Button>
+              <CitationList
+                variant="footer"
+                citations={decision.ruleIds.flatMap((id) =>
+                  rules[id] ? [rules[id].citation] : [],
+                )}
+              />
             </li>
           );
         })}

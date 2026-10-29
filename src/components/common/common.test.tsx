@@ -59,6 +59,37 @@ describe("EctsProgress", () => {
 });
 
 describe("CitationList", () => {
+  it("shows one compact footer line with every source and its Beispiel label (P5-09)", () => {
+    render(
+      <CitationList
+        variant="footer"
+        citations={[
+          {
+            document: "SPO Wirtschaftsinformatik",
+            summary: "",
+            verified: false,
+          },
+          {
+            document: "Modulhandbuch",
+            section: "Modul Statistik",
+            summary: "",
+            verified: true,
+          },
+          {
+            document: "SPO Wirtschaftsinformatik",
+            summary: "",
+            verified: false,
+          },
+        ]}
+      />,
+    );
+    const list = screen.getByRole("list", { name: "Quellen" });
+    expect(list.parentElement).toHaveTextContent(
+      "Quellen: SPO WirtschaftsinformatikBeispiel · Modulhandbuch, Modul Statistik",
+    );
+    expect(screen.getAllByRole("listitem")).toHaveLength(2);
+  });
+
   it("labels unverified sources as Beispiel and shows checked sections", () => {
     render(
       <CitationList

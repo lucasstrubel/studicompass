@@ -91,9 +91,6 @@ function NextDeadlineCard() {
           {formatDateTime(due)}
         </p>
         <ChannelBadge channel={deadline.channel} className="mt-3" />
-        {deadline.examId && rules["DR-5"] && (
-          <CitationList className="mt-3" citations={[rules["DR-5"].citation]} />
-        )}
         <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
           {deadline.examId && (
             <Link
@@ -112,6 +109,9 @@ function NextDeadlineCard() {
             <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
         </div>
+        {deadline.examId && rules["DR-5"] && (
+          <CitationList variant="footer" citations={[rules["DR-5"].citation]} />
+        )}
       </CardContent>
     </Card>
   );

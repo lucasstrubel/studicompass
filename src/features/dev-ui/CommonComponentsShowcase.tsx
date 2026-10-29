@@ -145,6 +145,10 @@ export function CommonComponentsShowcase() {
 
       <Section name="CitationList">
         <CitationList citations={CITATIONS} />
+        <div className="rounded-xl border bg-card p-4">
+          <p className="text-body">Karte mit Quellen-Fußzeile (P5-09)</p>
+          <CitationList variant="footer" citations={CITATIONS} />
+        </div>
       </Section>
 
       <Section name="DemoBadge">

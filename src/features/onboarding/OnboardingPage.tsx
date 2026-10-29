@@ -229,6 +229,8 @@ export function OnboardingPage() {
           >
             {() => (
               <CitationList
+                variant="footer"
+                className="mt-0"
                 citations={
                   state.resources.rules.data?.rules
                     .filter((rule) =>

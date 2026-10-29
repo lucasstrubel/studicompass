@@ -97,15 +97,6 @@ export function DeadlinesPage() {
                       </div>
                       <ChannelBadge channel={deadline.channel} />
                     </div>
-                    <CitationList
-                      citations={[
-                        {
-                          document: `${CHANNEL_LABELS[deadline.channel]} – ${deadline.title} (Demodaten)`,
-                          summary: deadline.title,
-                          verified: false,
-                        },
-                      ]}
-                    />
                     <div className="flex flex-wrap gap-2">
                       {deadline.examId && (
                         <Button variant="outline" asChild>
@@ -128,6 +119,17 @@ export function DeadlinesPage() {
                         Zum Kalender hinzufügen
                       </Button>
                     </div>
+                    <CitationList
+                      variant="footer"
+                      className="mt-0"
+                      citations={[
+                        {
+                          document: `${CHANNEL_LABELS[deadline.channel]} – ${deadline.title} (Demodaten)`,
+                          summary: deadline.title,
+                          verified: false,
+                        },
+                      ]}
+                    />
                   </li>
                 );
               })}
