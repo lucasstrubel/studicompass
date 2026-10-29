@@ -183,3 +183,50 @@ test("P5-11: Drag & Drop per Touch (langes Drücken)", async ({
     page.getByRole("dialog", { name: "Simulation: Marketing → SS 2027" }),
   ).toBeVisible();
 });
+
+test("P5-12: ECTS-Verlauf startet bei 0 und zeigt die Differenz beim Überfahren", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, "Hover needs a mouse");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Demo ohne Einrichtung starten" })
+    .click();
+  const chart = page.locator(".recharts-wrapper").first();
+  await chart.scrollIntoViewIfNeeded();
+  await expect(chart).toContainText("Studienbeginn");
+  const box = await chart.boundingBox();
+  if (!box) throw new Error("Diagramm nicht gefunden");
+  // Sweep across the chart until the tooltip shows SS 2026.
+  const tooltip = page.locator(".recharts-tooltip-wrapper");
+  for (let x = box.x + 40; x < box.x + box.width; x += 15) {
+    await page.mouse.move(x, box.y + box.height / 2);
+    if ((await tooltip.textContent())?.includes("SS 2026")) break;
+  }
+  await expect(tooltip).toContainText("Ist: 48 ECTS");
+  await expect(tooltip).toContainText("Soll: 60 ECTS");
+  await expect(tooltip).toContainText("12 ECTS unter Soll");
+});
+
+test("P5-12: aktuelles Semester ohne Scrollen sichtbar, Notiz übersteht Neuladen", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, "Checks the 1440×900 view");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/module");
+  await expect(
+    page.getByRole("table", { name: "Module im 3. Fachsemester" }),
+  ).toBeInViewport({ ratio: 1 });
+  await page.getByRole("link", { name: "Statistik", exact: true }).click();
+  await page
+    .getByLabel("Notizen zum Modul")
+    .fill("Probeklausur bis Dienstag rechnen");
+  await page.getByLabel("Notizen zum Modul").blur();
+  await page.reload();
+  await expect(page.getByLabel("Notizen zum Modul")).toHaveValue(
+    "Probeklausur bis Dienstag rechnen",
+  );
+});

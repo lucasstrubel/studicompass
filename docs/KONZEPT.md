@@ -272,7 +272,7 @@ Jeder Screen hat Lade-, Leer- und Fehlerzustand. Werte in Beispielen entsprechen
   - kompakt eine Zeile je Modul
   - ab eingetragener Prüfungsvorleistung zusätzlich die Zulassung
   - Semester aufklappbar mit Zusammenfassung, z. B. „5 Module · 30 ECTS · alle bestanden“
-  - standardmäßig offen sind nur Semester mit offenen Modulen bis zum aktuellen; dazu „Alle aufklappen“
+  - standardmäßig offen ist nur das aktuelle Semester; dazu „Alle aufklappen“
 - **Detail:** Modulsteckbrief (Inhalt in 1–2 Sätzen, Prüfungsform, Angebot – Quelle Modulhandbuch), Prüfung (Termin, Raum, Status, Abmeldefrist mit Countdown), Moodle-Fortschritt; Aktionen „Folgen einer Abmeldung prüfen“ → S4 und „Frage zu diesem Modul stellen“ → S5 mit Kontext.
 - **Detail rechts** (P5-08, ab 1024 px zweispaltig):
   - **Kurs-Links:** „Moodle-Kurs öffnen“ automatisch mit dem Hinweis „Im echten Betrieb öffnet sich der Moodle-Kurs …“; eine eigene Adresse lässt sich festlegen. Eigene Links mit Bezeichnung und http(s)-Adresse lassen sich anlegen, bearbeiten und entfernen; sie öffnen in einem neuen Tab.

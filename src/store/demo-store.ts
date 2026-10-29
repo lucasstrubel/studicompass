@@ -7,10 +7,12 @@ import {
 import { DATA_VERSION, DEMO_NOW, DEMO_STORAGE_KEY } from "@/config/demo";
 import type {
   Channel,
+  CourseLink,
   HintTone,
   Notification,
   PlanOverride,
 } from "@/domain/types";
+import { parseWebUrl } from "@/lib/url";
 import { projectPlan } from "@/domain/projection";
 import { selectAcademicState } from "./selectors";
 import { selectAssistantMatch } from "./assistant-selectors";
@@ -56,7 +58,17 @@ interface Preferences {
   assistantHintSeen: boolean;
   /** Planner view: hide completed semesters and passed modules (P5-10). */
   plannerHideCompleted: boolean;
+  /** Own notes per module id (P5-12, US-23). */
+  moduleNotes: Record<string, string>;
+  /** Own course links per module id (P5-12, US-24). */
+  courseLinks: Record<string, CourseLink[]>;
+  /** Own address that replaces the simulated Moodle link of a module (P5-12). */
+  moodleUrls: Record<string, string>;
 }
+
+/** Upper bounds for own entries, so the local demo state stays small. */
+export const NOTE_MAX_LENGTH = 2000;
+export const LINK_LABEL_MAX_LENGTH = 60;
 
 /** Typing indicator of the assistant (KONZEPT §8 S5: 0.6–1.2 s). */
 export const ASSISTANT_DELAY_MS = 800;
@@ -91,6 +103,15 @@ export interface DemoState extends Preferences {
   askAssistant: (question: string, id?: string) => void;
   markAssistantHintSeen: () => void;
   setPlannerHideCompleted: (hide: boolean) => void;
+  setModuleNote: (moduleId: string, text: string) => void;
+  /** Adds or updates a course link; returns false for an invalid label or address. */
+  saveCourseLink: (
+    moduleId: string,
+    link: { id?: string; label: string; url: string },
+  ) => boolean;
+  removeCourseLink: (moduleId: string, id: string) => void;
+  /** Sets the own Moodle address (false if invalid); null returns to the simulated link. */
+  setMoodleUrl: (moduleId: string, url: string | null) => boolean;
   setHintTone: (tone: HintTone) => void;
   completeOnboarding: (preferences?: {
     goalRegularTime: boolean;
@@ -118,6 +139,9 @@ function defaultPreferences(): Preferences {
     jobHoursPerWeek: 15,
     assistantHintSeen: false,
     plannerHideCompleted: false,
+    moduleNotes: {},
+    courseLinks: {},
+    moodleUrls: {},
   };
 }
 function emptyResource<T>(): LoadState<T> {
@@ -219,7 +243,41 @@ function readPreferences(value: unknown): Preferences {
         : defaults.jobHoursPerWeek,
     assistantHintSeen: value.assistantHintSeen === true,
     plannerHideCompleted: value.plannerHideCompleted === true,
+    ...readOwnEntries(value),
   };
+}
+
+/** A course link as stored; anything else (old shapes, unsafe addresses) is dropped. */
+function readCourseLink(value: unknown): CourseLink | null {
+  if (!isRecord(value)) return null;
+  const { id, label, url } = value;
+  if (typeof id !== "string" || typeof label !== "string") return null;
+  const safe = typeof url === "string" ? parseWebUrl(url) : null;
+  const text = label.trim().slice(0, LINK_LABEL_MAX_LENGTH);
+  return safe && text ? { id, label: text, url: safe } : null;
+}
+
+function readOwnEntries(value: Record<string, unknown>) {
+  const notes: Record<string, string> = {};
+  if (isRecord(value.moduleNotes))
+    for (const [id, text] of Object.entries(value.moduleNotes))
+      if (typeof text === "string" && text.trim())
+        notes[id] = text.slice(0, NOTE_MAX_LENGTH);
+  const links: Record<string, CourseLink[]> = {};
+  if (isRecord(value.courseLinks))
+    for (const [id, list] of Object.entries(value.courseLinks)) {
+      const valid = Array.isArray(list)
+        ? list.flatMap((item) => readCourseLink(item) ?? [])
+        : [];
+      if (valid.length > 0) links[id] = valid;
+    }
+  const moodle: Record<string, string> = {};
+  if (isRecord(value.moodleUrls))
+    for (const [id, url] of Object.entries(value.moodleUrls)) {
+      const safe = typeof url === "string" ? parseWebUrl(url) : null;
+      if (safe) moodle[id] = safe;
+    }
+  return { moduleNotes: notes, courseLinks: links, moodleUrls: moodle };
 }
 
 function readSnapshot(value: unknown): SimulationSnapshot | null {
@@ -444,6 +502,48 @@ export function createDemoStore(
           markAssistantHintSeen: () => set({ assistantHintSeen: true }),
           setPlannerHideCompleted: (plannerHideCompleted) =>
             set({ plannerHideCompleted }),
+          setModuleNote(moduleId, text) {
+            const notes = { ...get().moduleNotes };
+            if (text.trim()) notes[moduleId] = text.slice(0, NOTE_MAX_LENGTH);
+            else delete notes[moduleId];
+            set({ moduleNotes: notes });
+          },
+          saveCourseLink(moduleId, link) {
+            const url = parseWebUrl(link.url);
+            const label = link.label.trim();
+            if (!url || !label || label.length > LINK_LABEL_MAX_LENGTH)
+              return false;
+            const list = get().courseLinks[moduleId] ?? [];
+            const saved = { id: link.id ?? crypto.randomUUID(), label, url };
+            set({
+              courseLinks: {
+                ...get().courseLinks,
+                [moduleId]: link.id
+                  ? list.map((item) => (item.id === link.id ? saved : item))
+                  : [...list, saved],
+              },
+            });
+            return true;
+          },
+          removeCourseLink(moduleId, id) {
+            const list = (get().courseLinks[moduleId] ?? []).filter(
+              (item) => item.id !== id,
+            );
+            const links = { ...get().courseLinks, [moduleId]: list };
+            if (list.length === 0) delete links[moduleId];
+            set({ courseLinks: links });
+          },
+          setMoodleUrl(moduleId, input) {
+            const urls = { ...get().moodleUrls };
+            if (input === null) delete urls[moduleId];
+            else {
+              const url = parseWebUrl(input);
+              if (!url) return false;
+              urls[moduleId] = url;
+            }
+            set({ moodleUrls: urls });
+            return true;
+          },
           setHintTone: (hintTone) => set({ hintTone }),
           completeOnboarding(preferences) {
             if (

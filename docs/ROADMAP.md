@@ -355,12 +355,12 @@ Für alle Tasks gilt: Hero-Flow, Testorakel (KONZEPT §10.4) und Spezifikationst
   - Marketing → SS 2027 ergibt über Menü und Drag dieselben Werte (Szenario D).
 
 #### P5-12 [Claude] ECTS-Verlauf und Module & Noten (P5-F11, P5-F12, P5-F21 bis P5-F23)
-- [ ] ECTS-Verlauf:
+- [x] ECTS-Verlauf:
   - Startpunkt „Studienbeginn“ mit 0
   - Tooltip mit Ist bzw. Prognose, Soll und Differenz
   - Tabellenspalte Differenz
-- [ ] Modulliste kompakt in einer Zeile je Modul; Semester aufklappbar mit Zusammenfassung
-- [ ] Moduldetail ab 1024 px zweispaltig:
+- [x] Modulliste kompakt in einer Zeile je Modul; Semester aufklappbar mit Zusammenfassung, nur das aktuelle offen
+- [x] Moduldetail ab 1024 px zweispaltig:
   - Kurs-Links: Moodle automatisch (Hinweis), eigene Adresse, eigene http(s)-Links
   - Notizen je Modul
 - **AK:**
