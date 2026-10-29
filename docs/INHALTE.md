@@ -193,7 +193,7 @@ Abschnitt nur eintragen, wenn geprüft. Ungeprüft zeigt das UI „Beispiel“ u
 
 DR-3 und DR-10 sind Gestaltungsregeln von StudiCompass, keine SPO-Regeln (Quelle: „StudiCompass – Berechnungsregel“).
 
-DR-11 bis DR-13 (P5-08, formuliert von Claude Code, Freigabe durch Lucas) sind Beispielregeln. Sie dienen nur der Anzeige: DR-11 und DR-12 markieren die Module zum Meilenstein im Studienverlauf, DR-13 begründet die Zulassung. Die Prognose rechnet nicht mit ihnen.
+DR-11 bis DR-13 (P5-08, formuliert von Claude Code, von Lucas am 29.10.2026 freigegeben) sind Beispielregeln. Sie dienen nur der Anzeige: DR-11 und DR-12 markieren die Module zum Meilenstein im Studienverlauf, DR-13 begründet die Zulassung. Die Prognose rechnet nicht mit ihnen.
 
 ---
 
@@ -206,7 +206,7 @@ DR-11 bis DR-13 (P5-08, formuliert von Claude Code, Freigabe durch Lucas) sind B
 | o-sb | Studienberatung | studienberatung@hochschule.example | nach Vereinbarung | Studienplanung · Studieren mit Nebenjob · Fragen zum Studienverlauf · Studiengangwechsel |
 | o-sd | Studiendekanat Wirtschaftsinformatik | studiendekanat-wi@hochschule.example | Mi 13–15 Uhr | Wahlpflichtmodule · Anerkennung von Leistungen · Fragen zu SPO und Modulhandbuch · Angebot der Module |
 
-Die Spalte „Zuständig für“ (P5-08, formuliert von Claude Code, Freigabe durch Lucas) ist ein Beispiel; sie füllt die Seite Anlaufstellen (KONZEPT S10). Passende Fragen ergeben sich aus dem Katalog (§10): Je Stelle sind es die Einträge, die sie als zuständig nennen.
+Die Spalte „Zuständig für“ (P5-08, formuliert von Claude Code, von Lucas am 29.10.2026 freigegeben) ist ein Beispiel; sie füllt die Seite Anlaufstellen (KONZEPT S10). Passende Fragen ergeben sich aus dem Katalog (§10): Je Stelle sind es die Einträge, die sie als zuständig nennen.
 
 ---
 
@@ -310,7 +310,7 @@ Die ersten sechs Einträge sind die Vorschlagsfragen im leeren Zustand.
 - **Für dich:** Wenn du dieses Semester nicht antrittst, ist der nächste Termin im WS 2027/28.
 - **Quellen:** DR-4 · **Zuständig:** o-sd
 
-### A-09 Zuständige Stelle finden (P5-08, formuliert von Claude Code, Freigabe durch Lucas)
+### A-09 Zuständige Stelle finden (P5-08, formuliert von Claude Code, von Lucas am 29.10.2026 freigegeben)
 - **Frage:** An wen wende ich mich mit meiner Frage?
 - **Schlüsselwörter:** zuständig, zuständige stelle, an wen, wende ich mich, ansprechpartner, ansprechperson, anlaufstelle, kontakt, wer hilft
 - **Kurzantwort:** **Das hängt vom Thema ab:** Prüfungen, Fristen und Zulassungen klärt das Prüfungsamt, das Praxissemester das Praktikantenamt, deine Studienplanung die Studienberatung und Wahlpflichtmodule das Studiendekanat.

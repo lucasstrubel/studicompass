@@ -317,7 +317,7 @@ Für alle Tasks gilt: Hero-Flow, Testorakel (KONZEPT §10.4) und Spezifikationst
   - §13 (Drag & Drop) und §14 (Glossar)
 - [x] INHALTE: DR-11 bis DR-13, „Zuständig für“ je Stelle, Katalogfrage A-09
 - [x] CLAUDE.md: Navigation, Farbfamilie, Quellen-Fußzeile
-- [ ] Lucas gibt die neuen Texte frei (DR-11 bis DR-13, Zuständigkeiten, A-09)
+- [x] Lucas hat die neuen Texte am 29.10. freigegeben (DR-11 bis DR-13, Zuständigkeiten, A-09)
 - **AK:** keine Widersprüche zwischen KONZEPT, INHALTE, ROADMAP und CLAUDE.md; neue Texte freigegeben.
 
 #### P5-09 [Claude] Navigation und Quellen-Fußzeilen (P5-F26 Reiter, P5-F27, P5-F31)
