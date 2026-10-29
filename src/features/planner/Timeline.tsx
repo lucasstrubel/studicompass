@@ -3,11 +3,12 @@ import {
   CircleCheck,
   Clock,
   Flag,
+  Lock,
   MoveRight,
   RotateCcw,
   TriangleAlert,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +20,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { Citation, Term } from "@/domain/types";
 import { CitationList } from "@/components/common/CitationList";
+import type { MilestoneKind } from "@/domain/milestones";
 import { format } from "@/domain/terms";
+import { compoundParts } from "@/lib/compound-breaks";
 import { formatGrade } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type {
@@ -60,12 +63,32 @@ const OFFERING = {
   BOTH: "jedes Semester",
 } as const;
 
-const MILESTONES: Record<TimelineTerm["milestones"][number], string> = {
+const MILESTONES: Record<MilestoneKind, string> = {
   foundationEnd: "Ende Grundstudium",
   internship: "Praxissemester",
   project: "Projektsemester",
   thesis: "Bachelorarbeit",
 };
+
+/** Label of a module marked by the milestone toggle (P5-10). */
+const MARKS: Record<MilestoneKind, string> = {
+  foundationEnd: "gehört zum Grundstudium",
+  internship: "für Praxissemester",
+  project: "für Projektsemester",
+  thesis: "für Bachelorarbeit",
+};
+
+/** Modules the active milestone toggle marks (KONZEPT §8 S2, P5-10). */
+export interface MilestoneMarking {
+  kind: MilestoneKind;
+  moduleIds: ReadonlySet<string>;
+}
+
+/** Why a milestone module stays put in the what-if, with the rule's source. */
+export interface FixedMilestoneNote {
+  text: string;
+  citation?: Citation;
+}
 
 /** Limit above which a semester counts as heavy (DR-10). */
 const LOAD_LIMIT = 36;
@@ -98,12 +121,18 @@ function ModuleChip({
   canMove,
   moveTargets,
   onMove,
+  mark,
+  fixedNote,
 }: {
   item: TimelineModule;
   simulation: boolean;
   canMove: boolean;
   moveTargets: () => Term[];
   onMove: (term: Term) => void;
+  /** Set while a milestone toggle marks this module. */
+  mark: MilestoneKind | null;
+  /** Set for milestone modules, which the what-if never moves. */
+  fixedNote?: FixedMilestoneNote;
 }) {
   const { module, status } = item;
   const { label, Icon, className } = STATUS[status];
@@ -115,16 +144,29 @@ function ModuleChip({
   return (
     <li
       data-moved={item.movedFrom ? "true" : undefined}
+      data-marked={mark ? "true" : undefined}
       className={cn(
         "rounded-lg border bg-card p-2.5 text-meta",
         item.movedFrom && "border-2 border-dashed border-status-info",
+        mark && "border-l-4 border-l-tone-violet",
       )}
     >
       <p
         className="font-semibold break-words hyphens-auto text-foreground"
         lang="de"
       >
-        {module.title}
+        <Link
+          to={`/module/${module.id}`}
+          className="rounded-sm underline-offset-2 hover:underline"
+        >
+          {/* Break long compounds at their joints, not before the last letter (P5-10). */}
+          {compoundParts(module.title).map((part, index) => (
+            <Fragment key={index}>
+              {index > 0 && <wbr />}
+              {part}
+            </Fragment>
+          ))}
+        </Link>
       </p>
       <p className="text-muted-foreground tabular-nums">{module.ects} ECTS</p>
       <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5">
@@ -137,6 +179,34 @@ function ModuleChip({
           {OFFERING[module.offering]}
         </span>
       </p>
+      {mark && (
+        <p className="mt-1 flex items-start gap-1 font-semibold text-foreground">
+          <Flag
+            className="mt-0.5 size-3.5 shrink-0 text-tone-violet"
+            aria-hidden="true"
+          />
+          <span>
+            {MARKS[mark]}
+            {status !== "passed" && " · noch offen"}
+          </span>
+        </p>
+      )}
+      {fixedNote && (
+        <div className="mt-1">
+          <p className="flex items-center gap-1 font-semibold text-foreground">
+            <Lock className="size-3.5 shrink-0" aria-hidden="true" />
+            Fester Meilenstein
+          </p>
+          <p className="text-muted-foreground">{fixedNote.text}</p>
+          {fixedNote.citation && (
+            <CitationList
+              variant="footer"
+              className="mt-2 pt-2"
+              citations={[fixedNote.citation]}
+            />
+          )}
+        </div>
+      )}
       {item.movedFrom && (
         <p className="mt-1 text-status-info-foreground">
           Simulation: verschoben aus {format(item.movedFrom)}
@@ -207,6 +277,9 @@ export function Timeline({
   moveTargets,
   onMove,
   load,
+  marking,
+  onToggleMilestone,
+  fixedNotes,
 }: {
   terms: TimelineTerm[];
   currentTerm: Term;
@@ -216,6 +289,9 @@ export function Timeline({
   onMove: (moduleId: string, term: Term) => void;
   /** DR-10 context: job hours and the rule's source. */
   load: { jobHours: number; citation?: Citation };
+  marking: MilestoneMarking | null;
+  onToggleMilestone: (kind: MilestoneKind) => void;
+  fixedNotes: Partial<Record<MilestoneKind, FixedMilestoneNote>>;
 }) {
   // A moved module re-renders in another semester column, so its old menu trigger is gone. Return the
   // keyboard focus to the module's new trigger (P3-06 review).
@@ -231,82 +307,110 @@ export function Timeline({
     return () => cancelAnimationFrame(frame);
   }, [focusModuleId, terms]);
 
+  // From xl the semesters are columns of at least 11rem; extra columns (e.g. after a move) scroll inside
+  // the timeline instead of squeezing the boxes (P5-10, feedback: "Wenn Boxen verschoben werden, bricht alles").
   return (
-    <ol className="grid gap-3 xl:auto-cols-[minmax(0,1fr)] xl:grid-flow-col xl:gap-2">
-      {terms.map((item) => {
-        const current =
-          item.term.season === currentTerm.season &&
-          item.term.year === currentTerm.year;
-        const heavy = item.ects > LOAD_LIMIT;
-        return (
-          <li
-            key={format(item.term)}
-            aria-label={`${format(item.term)}, ${item.semester}. Fachsemester`}
-            aria-current={current ? "step" : undefined}
-            className={cn(
-              "flex min-w-0 flex-col gap-2 rounded-xl border p-3",
-              current ? "border-foreground bg-card" : "bg-muted",
-            )}
-          >
-            <div>
-              <p className="text-card-title">{format(item.term)}</p>
-              <p className="text-meta text-muted-foreground">
-                {item.semester}. Fachsemester
-                {current && " · aktuell"}
-              </p>
-              <p className="mt-1 text-meta tabular-nums">
-                {item.ects} ECTS geplant
-                {item.earnedEcts > 0 && ` · ${item.earnedEcts} erreicht`}
-              </p>
-            </div>
-            {item.milestones.length > 0 && (
-              <ul className="flex flex-wrap gap-1">
-                {item.milestones.map((kind) => (
-                  <li
-                    key={kind}
-                    className="inline-flex items-center gap-1 rounded-full bg-accent-soft px-2 py-0.5 text-meta text-accent-soft-foreground"
-                  >
-                    <Flag className="size-3" aria-hidden="true" />
-                    {MILESTONES[kind]}
-                  </li>
+    <div
+      role="region"
+      aria-label="Zeitleiste, horizontal scrollbar"
+      tabIndex={0}
+      className="focus-visible:-outline-offset-2 xl:overflow-x-auto xl:pb-2"
+    >
+      <ol className="grid gap-3 xl:auto-cols-[minmax(11rem,1fr)] xl:grid-flow-col xl:gap-2">
+        {terms.map((item) => {
+          const current =
+            item.term.season === currentTerm.season &&
+            item.term.year === currentTerm.year;
+          const heavy = item.ects > LOAD_LIMIT;
+          return (
+            <li
+              key={format(item.term)}
+              aria-label={`${format(item.term)}, ${item.semester}. Fachsemester`}
+              aria-current={current ? "step" : undefined}
+              className={cn(
+                "flex min-w-0 flex-col gap-2 rounded-xl border p-3",
+                current ? "border-foreground bg-card" : "bg-muted",
+              )}
+            >
+              <div>
+                <p className="text-card-title">{format(item.term)}</p>
+                <p className="text-meta text-muted-foreground">
+                  {item.semester}. Fachsemester
+                  {current && " · aktuell"}
+                </p>
+                <p className="mt-1 text-meta tabular-nums">
+                  {item.ects} ECTS geplant
+                  {item.earnedEcts > 0 && ` · ${item.earnedEcts} erreicht`}
+                </p>
+              </div>
+              {item.milestones.length > 0 && (
+                <ul className="flex flex-wrap gap-1">
+                  {item.milestones.map((kind) => (
+                    <li key={kind}>
+                      {/* Toggle: marks the modules that belong to the milestone (P5-10, US-26). */}
+                      <button
+                        type="button"
+                        aria-pressed={marking?.kind === kind}
+                        title="Zugehörige Module markieren"
+                        className="inline-flex items-center gap-1 rounded-full border border-transparent bg-tone-violet-soft px-2 py-0.5 text-meta text-foreground hover:border-tone-violet aria-pressed:border-tone-violet aria-pressed:font-semibold"
+                        onClick={() => onToggleMilestone(kind)}
+                      >
+                        <Flag
+                          className="size-3 text-tone-violet"
+                          aria-hidden="true"
+                        />
+                        {MILESTONES[kind]}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {heavy && (
+                <p className="flex items-start gap-1 text-meta text-status-tight-foreground">
+                  <TriangleAlert
+                    className="mt-0.5 size-3.5 shrink-0"
+                    aria-hidden="true"
+                  />
+                  Hohe Belastung: {item.ects} ECTS bei {load.jobHours} Std.
+                  Nebenjob pro Woche
+                </p>
+              )}
+              <ul className="flex flex-col gap-2">
+                {item.modules.map((entry) => (
+                  <ModuleChip
+                    key={entry.module.id}
+                    item={entry}
+                    simulation={simulation}
+                    canMove={canMove(entry.module.id)}
+                    moveTargets={() => moveTargets(entry.module.id)}
+                    onMove={(term) => {
+                      setFocusModuleId(entry.module.id);
+                      onMove(entry.module.id, term);
+                    }}
+                    mark={
+                      marking?.moduleIds.has(entry.module.id)
+                        ? marking.kind
+                        : null
+                    }
+                    fixedNote={
+                      entry.module.isMilestone
+                        ? fixedNotes[entry.module.isMilestone]
+                        : undefined
+                    }
+                  />
                 ))}
               </ul>
-            )}
-            {heavy && (
-              <p className="flex items-start gap-1 text-meta text-status-tight-foreground">
-                <TriangleAlert
-                  className="mt-0.5 size-3.5 shrink-0"
-                  aria-hidden="true"
+              {heavy && load.citation && (
+                <CitationList
+                  variant="footer"
+                  className="mt-auto"
+                  citations={[load.citation]}
                 />
-                Hohe Belastung: {item.ects} ECTS bei {load.jobHours} Std.
-                Nebenjob pro Woche
-              </p>
-            )}
-            <ul className="flex flex-col gap-2">
-              {item.modules.map((entry) => (
-                <ModuleChip
-                  key={entry.module.id}
-                  item={entry}
-                  simulation={simulation}
-                  canMove={canMove(entry.module.id)}
-                  moveTargets={() => moveTargets(entry.module.id)}
-                  onMove={(term) => {
-                    setFocusModuleId(entry.module.id);
-                    onMove(entry.module.id, term);
-                  }}
-                />
-              ))}
-            </ul>
-            {heavy && load.citation && (
-              <CitationList
-                variant="footer"
-                className="mt-auto"
-                citations={[load.citation]}
-              />
-            )}
-          </li>
-        );
-      })}
-    </ol>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </div>
   );
 }

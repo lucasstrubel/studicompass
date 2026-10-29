@@ -54,3 +54,41 @@ test("P5-09: Quellen stehen als Fußzeile unter den Aktionen der Karte", async (
   const box = await sources.boundingBox();
   expect(box?.y ?? 0).toBeGreaterThan((action?.y ?? 0) + (action?.height ?? 0));
 });
+
+test("P5-10: Modulname führt zum Moduleintrag, Meilenstein markiert seine Module", async ({
+  page,
+}) => {
+  await page.goto("/verlauf");
+  const current = page.getByRole("listitem", { name: /^WS 2026\/27,/ });
+  await page
+    .getByRole("button", { name: "Praxissemester", exact: true })
+    .click();
+  await expect(page.locator("[data-marked]")).toHaveCount(15);
+  await expect(current).toContainText("für Praxissemester · noch offen");
+  await current.getByRole("link", { name: "Statistik", exact: true }).click();
+  await expect(page).toHaveURL(/\/module\/m-stat$/);
+});
+
+test("P5-10: nach Verschiebungen bleiben die Boxen breit, nur die Zeitleiste scrollt", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, "Columns exist from 1280 px");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/verlauf");
+  await page.getByRole("switch", { name: "Simulation" }).click();
+  await page.getByRole("button", { name: "Kolloquium verschieben" }).click();
+  await page.getByRole("menuitem").last().click();
+  const columns = page
+    .getByRole("region", { name: /^Zeitleiste/ })
+    .getByRole("listitem", { name: /Fachsemester$/ });
+  expect(await columns.count()).toBeGreaterThanOrEqual(9);
+  for (const box of await columns.all())
+    expect((await box.boundingBox())?.width ?? 0).toBeGreaterThanOrEqual(176);
+  const overflow = await page.evaluate(
+    () =>
+      document.documentElement.scrollWidth -
+      document.documentElement.clientWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(0);
+});
