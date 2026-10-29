@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { FlaskConical, Target, X } from "lucide-react";
+import { FlaskConical, ListChecks, Target, X } from "lucide-react";
 import { toast } from "sonner";
 import { CitationList } from "@/components/common/CitationList";
 import { ConsequenceItem } from "@/components/common/ConsequenceItem";
@@ -33,6 +33,10 @@ import {
 } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 import {
+  SimulationResultDialog,
+  type LastMove,
+} from "./SimulationResultDialog";
+import {
   Timeline,
   type FixedMilestoneNote,
   type MilestoneMarking,
@@ -64,6 +68,11 @@ function PlannerContent() {
   );
   const [simulation, setSimulation] = useState(whatIf.length > 0);
   const [milestone, setMilestone] = useState<MilestoneKind | null>(null);
+  // Result dialog after each move (P5-11); it reports on the last move and can be reopened.
+  const [resultOpen, setResultOpen] = useState(false);
+  const [lastMove, setLastMove] = useState<LastMove | null>(null);
+  // Where the keyboard focus goes when the dialog closes: the moved module's menu or the switch.
+  const focusAfterClose = useRef<string | null>(null);
   const switchRef = useRef<HTMLButtonElement>(null);
   if (!timeline || !academic || !progress || !program) return null;
 
@@ -154,14 +163,63 @@ function PlannerContent() {
       setWhatIf(overrides);
     } catch {
       toast.error("Diese Verschiebung ist laut Angebot nicht zulässig.");
+      return;
     }
+    const module = academic.modules.find((item) => item.id === moduleId);
+    setLastMove({ moduleId, title: module?.title ?? moduleId, term });
+    focusAfterClose.current = moduleId;
+    setResultOpen(true);
   };
   const stopSimulation = () => {
     clearWhatIf();
     setSimulation(false);
-    // The discard button disappears with the banner; keep the keyboard focus on the switch (P3-06).
+    setLastMove(null);
+    // The discard button disappears with the status; keep the keyboard focus on the switch (P3-06).
     switchRef.current?.focus();
   };
+  const discardFromDialog = () => {
+    focusAfterClose.current = null;
+    setResultOpen(false);
+    clearWhatIf();
+    setSimulation(false);
+    setLastMove(null);
+  };
+  const undoMove = () => {
+    if (!lastMove) return;
+    const rest = whatIf.filter((item) => item.moduleId !== lastMove.moduleId);
+    if (rest.length > 0) setWhatIf(rest);
+    else clearWhatIf();
+    setLastMove(null);
+    setResultOpen(false);
+  };
+  const restoreFocus = (event: Event) => {
+    event.preventDefault();
+    const moduleId = focusAfterClose.current;
+    const trigger = moduleId
+      ? document.querySelector<HTMLElement>(`[data-move-trigger="${moduleId}"]`)
+      : null;
+    (trigger ?? switchRef.current)?.focus();
+  };
+  // Modules that moved along with the last move, e.g. after a milestone shift (feedback "bricht alles").
+  const baseTerms = new Map(
+    basePlan.modules.map((item) => [item.moduleId, item.term]),
+  );
+  const shifted = plan.modules
+    .filter((item) => {
+      const before = baseTerms.get(item.moduleId);
+      return (
+        item.moduleId !== lastMove?.moduleId &&
+        before !== undefined &&
+        compare(before, item.term) !== 0 &&
+        !whatIf.some((override) => override.moduleId === item.moduleId)
+      );
+    })
+    .flatMap((item) => {
+      const module = academic.modules.find(
+        (candidate) => candidate.id === item.moduleId,
+      );
+      return module ? [module.title] : [];
+    });
 
   return (
     <div className="space-y-6">
@@ -224,50 +282,88 @@ function PlannerContent() {
             Simulation
           </label>
         </div>
-        {timeline.simulating && (
-          <div
-            role="status"
-            className="space-y-3 rounded-xl border border-status-info bg-status-info-soft p-3 text-status-info-foreground"
-          >
-            <div className="flex flex-wrap items-center gap-3">
-              <DemoBadge variant="simulation" className="bg-card" />
-              <StatusBadge status={plan.trafficLight} />
-              <p className="flex-1 text-body">
-                Abschluss in der Simulation:{" "}
-                <span className="font-semibold">
-                  {plan.graduationTerm
-                    ? format(plan.graduationTerm)
-                    : "nicht planbar"}
-                </span>
-                {basePlan.graduationTerm &&
-                  ` (echter Plan: ${format(basePlan.graduationTerm)})`}
-                {plan.internshipTerm &&
-                  ` · Praxissemester ${format(plan.internshipTerm)}`}
-              </p>
-              <Button variant="outline" size="sm" onClick={stopSimulation}>
-                <X aria-hidden="true" />
-                Simulation verwerfen
-              </Button>
-            </div>
-            {plan.consequences.length > 0 && (
-              <ul className="space-y-2 text-foreground">
-                {plan.consequences.map((consequence) => (
-                  <li key={consequence.id}>
-                    <ConsequenceItem
-                      consequence={consequence}
-                      citations={consequenceCitations(
-                        consequence,
-                        academic.modules,
-                        rules,
-                      )}
-                    />
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
+        <p className="text-meta text-muted-foreground">
+          {simulation
+            ? "Ziehe ein offenes Modul in ein anderes Semester oder nutze „Verschieben“. Danach siehst du sofort, was sich ändert."
+            : "Schalte die Simulation ein, um Module zu verschieben."}
+        </p>
       </section>
+
+      {timeline.simulating && (
+        // Stays at the top while scrolling through the semesters (P5-11, feedback: scrolling was awkward).
+        <div
+          role="status"
+          aria-label="Simulationsstatus"
+          className="panel-shadow sticky top-2 z-10 flex flex-wrap items-center gap-3 rounded-xl border border-status-info bg-status-info-soft p-3 text-status-info-foreground"
+        >
+          <DemoBadge variant="simulation" className="bg-card" />
+          <StatusBadge status={plan.trafficLight} />
+          <p className="min-w-0 flex-1 text-body">
+            Abschluss in der Simulation:{" "}
+            <span className="font-semibold">
+              {plan.graduationTerm
+                ? format(plan.graduationTerm)
+                : "nicht planbar"}
+            </span>
+            {basePlan.graduationTerm &&
+              ` (echter Plan: ${format(basePlan.graduationTerm)})`}
+            {plan.internshipTerm &&
+              ` · Praxissemester ${format(plan.internshipTerm)}`}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="bg-card"
+              onClick={() => {
+                focusAfterClose.current = null;
+                setResultOpen(true);
+              }}
+            >
+              <ListChecks aria-hidden="true" />
+              Folgen ansehen
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="bg-card"
+              onClick={stopSimulation}
+            >
+              <X aria-hidden="true" />
+              Simulation verwerfen
+            </Button>
+          </div>
+        </div>
+      )}
+      <SimulationResultDialog
+        open={resultOpen && timeline.simulating}
+        onOpenChange={setResultOpen}
+        move={lastMove}
+        plan={plan}
+        basePlan={basePlan}
+        shifted={shifted}
+        consequences={
+          plan.consequences.length > 0 && (
+            <ul className="space-y-2">
+              {plan.consequences.map((consequence) => (
+                <li key={consequence.id}>
+                  <ConsequenceItem
+                    consequence={consequence}
+                    citations={consequenceCitations(
+                      consequence,
+                      academic.modules,
+                      rules,
+                    )}
+                  />
+                </li>
+              ))}
+            </ul>
+          )
+        }
+        onUndoMove={undoMove}
+        onDiscard={discardFromDialog}
+        onCloseAutoFocus={restoreFocus}
+      />
 
       <section aria-labelledby="timeline" className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -297,6 +393,7 @@ function PlannerContent() {
         {milestone && markingRule && (
           <div
             role="status"
+            aria-label="Markierte Module"
             className="rounded-xl border border-tone-violet bg-tone-violet-soft p-3 text-body"
           >
             <p>

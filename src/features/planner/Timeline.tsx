@@ -3,12 +3,26 @@ import {
   CircleCheck,
   Clock,
   Flag,
+  GripVertical,
   Lock,
   MoveRight,
   RotateCcw,
   TriangleAlert,
 } from "lucide-react";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useRef, useState, type ReactNode } from "react";
+import {
+  DndContext,
+  DragOverlay,
+  MouseSensor,
+  TouchSensor,
+  useDraggable,
+  useDroppable,
+  useSensor,
+  useSensors,
+  type Announcements,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,7 +32,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Citation, Term } from "@/domain/types";
+import type { Citation, Offering, Term } from "@/domain/types";
 import { CitationList } from "@/components/common/CitationList";
 import type { MilestoneKind } from "@/domain/milestones";
 import { format } from "@/domain/terms";
@@ -141,22 +155,42 @@ function ModuleChip({
   // Milestones follow from the rules (DR-6) and are not moved by hand.
   const movable =
     simulation && status !== "passed" && !module.isMilestone && canMove;
+  // Drag & drop is an extra way for mouse and touch (P5-11); the keyboard keeps the menu, so the
+  // keyboard attributes of dnd-kit are left out.
+  const { setNodeRef, listeners, isDragging } = useDraggable({
+    id: module.id,
+    disabled: !movable,
+    data: { title: module.title, offering: module.offering },
+  });
   return (
     <li
+      ref={setNodeRef}
+      {...(movable ? listeners : {})}
       data-moved={item.movedFrom ? "true" : undefined}
       data-marked={mark ? "true" : undefined}
+      data-draggable={movable ? "true" : undefined}
       className={cn(
         "rounded-lg border bg-card p-2.5 text-meta",
         item.movedFrom && "border-2 border-dashed border-status-info",
         mark && "border-l-4 border-l-tone-violet",
+        movable && "cursor-grab touch-manipulation",
+        isDragging && "opacity-40",
       )}
     >
       <p
-        className="font-semibold break-words hyphens-auto text-foreground"
+        className="flex items-start gap-1 font-semibold break-words hyphens-auto text-foreground"
         lang="de"
       >
+        {movable && (
+          <GripVertical
+            className="mt-0.5 size-3.5 shrink-0 text-muted-foreground"
+            aria-hidden="true"
+          />
+        )}
         <Link
           to={`/module/${module.id}`}
+          // A native link drag would swallow the pointer moves of the module drag.
+          draggable={movable ? false : undefined}
           className="rounded-sm underline-offset-2 hover:underline"
         >
           {/* Break long compounds at their joints, not before the last letter (P5-10). */}
@@ -239,7 +273,7 @@ function ModuleChip({
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="start"
-                // After a move the trigger sits in another column; Timeline moves the focus there itself.
+                // After a move the trigger sits in another column; the result dialog returns the focus.
                 onCloseAutoFocus={(event) => {
                   if (!moved.current) return;
                   moved.current = false;
@@ -263,6 +297,86 @@ function ModuleChip({
       )}
     </li>
   );
+}
+
+type DropState = "allowed" | "blocked" | "origin" | null;
+
+/** One semester; a drop target while a module is dragged (P5-11). */
+function SemesterColumn({
+  item,
+  current,
+  dropState,
+  blockedReason,
+  children,
+}: {
+  item: TimelineTerm;
+  current: boolean;
+  dropState: DropState;
+  blockedReason: string;
+  children: ReactNode;
+}) {
+  const { setNodeRef, isOver } = useDroppable({
+    id: format(item.term),
+    data: { term: item.term },
+  });
+  return (
+    <li
+      ref={setNodeRef}
+      aria-label={`${format(item.term)}, ${item.semester}. Fachsemester`}
+      aria-current={current ? "step" : undefined}
+      data-drop={dropState ?? undefined}
+      className={cn(
+        "flex min-w-0 flex-col gap-2 rounded-xl border p-3",
+        current ? "border-foreground bg-card" : "bg-muted",
+        dropState === "allowed" &&
+          "border-status-info bg-status-info-soft ring-2 ring-status-info",
+        dropState === "allowed" && isOver && "ring-4",
+        dropState === "blocked" && "opacity-50",
+      )}
+    >
+      {dropState === "allowed" && (
+        <p className="text-meta font-semibold text-status-info-foreground">
+          Hier ablegen
+        </p>
+      )}
+      {dropState === "blocked" && (
+        <p className="text-meta text-muted-foreground">{blockedReason}</p>
+      )}
+      {children}
+    </li>
+  );
+}
+
+interface ActiveDrag {
+  moduleId: string;
+  title: string;
+  offering: Offering;
+  /** Terms the menu would offer too: allowed by DR-4 and actually reached (selectMoveTargets). */
+  targets: Term[];
+}
+
+function blockedReason(drag: ActiveDrag, term: Term) {
+  if (drag.offering !== "BOTH" && drag.offering !== term.season)
+    return `Nicht zulässig: ${OFFERING[drag.offering]}`;
+  return "Ändert den Plan hier nicht";
+}
+
+/** Screen reader texts for pointer and touch drags; the keyboard uses the menu instead. */
+function announcements(title: (id: string | number) => string): Announcements {
+  return {
+    onDragStart: ({ active }) =>
+      `${title(active.id)} aufgenommen. Zulässige Semester sind hervorgehoben.`,
+    onDragOver: ({ active, over }) =>
+      over
+        ? `${title(active.id)} über ${String(over.id)}.`
+        : `${title(active.id)} über keinem Semester.`,
+    onDragEnd: ({ active, over }) =>
+      over
+        ? `${title(active.id)} über ${String(over.id)} losgelassen.`
+        : `${title(active.id)} nicht abgelegt.`,
+    onDragCancel: ({ active }) =>
+      `Verschieben von ${title(active.id)} abgebrochen.`,
+  };
 }
 
 /**
@@ -293,124 +407,171 @@ export function Timeline({
   onToggleMilestone: (kind: MilestoneKind) => void;
   fixedNotes: Partial<Record<MilestoneKind, FixedMilestoneNote>>;
 }) {
-  // A moved module re-renders in another semester column, so its old menu trigger is gone. Return the
-  // keyboard focus to the module's new trigger (P3-06 review).
-  const [focusModuleId, setFocusModuleId] = useState<string | null>(null);
-  useEffect(() => {
-    if (!focusModuleId) return;
-    const frame = requestAnimationFrame(() => {
-      document
-        .querySelector<HTMLElement>(`[data-move-trigger="${focusModuleId}"]`)
-        ?.focus();
-      setFocusModuleId(null);
+  const [drag, setDrag] = useState<ActiveDrag | null>(null);
+  // Mouse after 8 px, touch after a short press, so clicks, links and scrolling keep working.
+  const sensors = useSensors(
+    useSensor(MouseSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 250, tolerance: 8 },
+    }),
+  );
+  const titleOf = (id: string | number) =>
+    terms
+      .flatMap((item) => item.modules)
+      .find((entry) => entry.module.id === id)?.module.title ?? String(id);
+  const onDragStart = ({ active }: DragStartEvent) => {
+    const entry = terms
+      .flatMap((item) => item.modules)
+      .find((candidate) => candidate.module.id === active.id);
+    if (!entry) return;
+    setDrag({
+      moduleId: entry.module.id,
+      title: entry.module.title,
+      offering: entry.module.offering,
+      targets: moveTargets(entry.module.id),
     });
-    return () => cancelAnimationFrame(frame);
-  }, [focusModuleId, terms]);
+  };
+  // Only the terms the menu offers accept a drop; anything else leaves the plan as it is.
+  const onDragEnd = ({ over }: DragEndEvent) => {
+    const target = drag?.targets.find(
+      (term) => over && format(term) === String(over.id),
+    );
+    if (drag && target) onMove(drag.moduleId, target);
+    setDrag(null);
+  };
+  const dropState = (item: TimelineTerm): DropState => {
+    if (!drag) return null;
+    if (item.modules.some((entry) => entry.module.id === drag.moduleId))
+      return "origin";
+    return drag.targets.some((term) => format(term) === format(item.term))
+      ? "allowed"
+      : "blocked";
+  };
 
   // From xl the semesters are columns of at least 11rem; extra columns (e.g. after a move) scroll inside
   // the timeline instead of squeezing the boxes (P5-10, feedback: "Wenn Boxen verschoben werden, bricht alles").
   return (
-    <div
-      role="region"
-      aria-label="Zeitleiste, horizontal scrollbar"
-      tabIndex={0}
-      className="focus-visible:-outline-offset-2 xl:overflow-x-auto xl:pb-2"
+    <DndContext
+      sensors={sensors}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      onDragCancel={() => setDrag(null)}
+      accessibility={{
+        announcements: announcements(titleOf),
+        screenReaderInstructions: {
+          draggable:
+            "Ziehe das Modul mit Maus oder Finger in ein anderes Semester. Per Tastatur nutzt du „Verschieben“.",
+        },
+      }}
     >
-      <ol className="grid gap-3 xl:auto-cols-[minmax(11rem,1fr)] xl:grid-flow-col xl:gap-2">
-        {terms.map((item) => {
-          const current =
-            item.term.season === currentTerm.season &&
-            item.term.year === currentTerm.year;
-          const heavy = item.ects > LOAD_LIMIT;
-          return (
-            <li
-              key={format(item.term)}
-              aria-label={`${format(item.term)}, ${item.semester}. Fachsemester`}
-              aria-current={current ? "step" : undefined}
-              className={cn(
-                "flex min-w-0 flex-col gap-2 rounded-xl border p-3",
-                current ? "border-foreground bg-card" : "bg-muted",
-              )}
-            >
-              <div>
-                <p className="text-card-title">{format(item.term)}</p>
-                <p className="text-meta text-muted-foreground">
-                  {item.semester}. Fachsemester
-                  {current && " · aktuell"}
-                </p>
-                <p className="mt-1 text-meta tabular-nums">
-                  {item.ects} ECTS geplant
-                  {item.earnedEcts > 0 && ` · ${item.earnedEcts} erreicht`}
-                </p>
-              </div>
-              {item.milestones.length > 0 && (
-                <ul className="flex flex-wrap gap-1">
-                  {item.milestones.map((kind) => (
-                    <li key={kind}>
-                      {/* Toggle: marks the modules that belong to the milestone (P5-10, US-26). */}
-                      <button
-                        type="button"
-                        aria-pressed={marking?.kind === kind}
-                        title="Zugehörige Module markieren"
-                        className="inline-flex items-center gap-1 rounded-full border border-transparent bg-tone-violet-soft px-2 py-0.5 text-meta text-foreground hover:border-tone-violet aria-pressed:border-tone-violet aria-pressed:font-semibold"
-                        onClick={() => onToggleMilestone(kind)}
-                      >
-                        <Flag
-                          className="size-3 text-tone-violet"
-                          aria-hidden="true"
-                        />
-                        {MILESTONES[kind]}
-                      </button>
-                    </li>
+      <div
+        role="region"
+        aria-label="Zeitleiste, horizontal scrollbar"
+        tabIndex={0}
+        className="focus-visible:-outline-offset-2 xl:overflow-x-auto xl:pb-2"
+      >
+        <ol className="grid gap-3 xl:auto-cols-[minmax(11rem,1fr)] xl:grid-flow-col xl:gap-2">
+          {terms.map((item) => {
+            const current =
+              item.term.season === currentTerm.season &&
+              item.term.year === currentTerm.year;
+            const heavy = item.ects > LOAD_LIMIT;
+            return (
+              <SemesterColumn
+                key={format(item.term)}
+                item={item}
+                current={current}
+                dropState={dropState(item)}
+                blockedReason={drag ? blockedReason(drag, item.term) : ""}
+              >
+                <div>
+                  <p className="text-card-title">{format(item.term)}</p>
+                  <p className="text-meta text-muted-foreground">
+                    {item.semester}. Fachsemester
+                    {current && " · aktuell"}
+                  </p>
+                  <p className="mt-1 text-meta tabular-nums">
+                    {item.ects} ECTS geplant
+                    {item.earnedEcts > 0 && ` · ${item.earnedEcts} erreicht`}
+                  </p>
+                </div>
+                {item.milestones.length > 0 && (
+                  <ul className="flex flex-wrap gap-1">
+                    {item.milestones.map((kind) => (
+                      <li key={kind}>
+                        {/* Toggle: marks the modules that belong to the milestone (P5-10, US-26). */}
+                        <button
+                          type="button"
+                          aria-pressed={marking?.kind === kind}
+                          title="Zugehörige Module markieren"
+                          className="inline-flex items-center gap-1 rounded-full border border-transparent bg-tone-violet-soft px-2 py-0.5 text-meta text-foreground hover:border-tone-violet aria-pressed:border-tone-violet aria-pressed:font-semibold"
+                          onClick={() => onToggleMilestone(kind)}
+                        >
+                          <Flag
+                            className="size-3 text-tone-violet"
+                            aria-hidden="true"
+                          />
+                          {MILESTONES[kind]}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {heavy && (
+                  <p className="flex items-start gap-1 text-meta text-status-tight-foreground">
+                    <TriangleAlert
+                      className="mt-0.5 size-3.5 shrink-0"
+                      aria-hidden="true"
+                    />
+                    Hohe Belastung: {item.ects} ECTS bei {load.jobHours} Std.
+                    Nebenjob pro Woche
+                  </p>
+                )}
+                <ul className="flex flex-col gap-2">
+                  {item.modules.map((entry) => (
+                    <ModuleChip
+                      key={entry.module.id}
+                      item={entry}
+                      simulation={simulation}
+                      canMove={canMove(entry.module.id)}
+                      moveTargets={() => moveTargets(entry.module.id)}
+                      onMove={(term) => onMove(entry.module.id, term)}
+                      mark={
+                        marking?.moduleIds.has(entry.module.id)
+                          ? marking.kind
+                          : null
+                      }
+                      fixedNote={
+                        entry.module.isMilestone
+                          ? fixedNotes[entry.module.isMilestone]
+                          : undefined
+                      }
+                    />
                   ))}
                 </ul>
-              )}
-              {heavy && (
-                <p className="flex items-start gap-1 text-meta text-status-tight-foreground">
-                  <TriangleAlert
-                    className="mt-0.5 size-3.5 shrink-0"
-                    aria-hidden="true"
+                {heavy && load.citation && (
+                  <CitationList
+                    variant="footer"
+                    className="mt-auto"
+                    citations={[load.citation]}
                   />
-                  Hohe Belastung: {item.ects} ECTS bei {load.jobHours} Std.
-                  Nebenjob pro Woche
-                </p>
-              )}
-              <ul className="flex flex-col gap-2">
-                {item.modules.map((entry) => (
-                  <ModuleChip
-                    key={entry.module.id}
-                    item={entry}
-                    simulation={simulation}
-                    canMove={canMove(entry.module.id)}
-                    moveTargets={() => moveTargets(entry.module.id)}
-                    onMove={(term) => {
-                      setFocusModuleId(entry.module.id);
-                      onMove(entry.module.id, term);
-                    }}
-                    mark={
-                      marking?.moduleIds.has(entry.module.id)
-                        ? marking.kind
-                        : null
-                    }
-                    fixedNote={
-                      entry.module.isMilestone
-                        ? fixedNotes[entry.module.isMilestone]
-                        : undefined
-                    }
-                  />
-                ))}
-              </ul>
-              {heavy && load.citation && (
-                <CitationList
-                  variant="footer"
-                  className="mt-auto"
-                  citations={[load.citation]}
-                />
-              )}
-            </li>
-          );
-        })}
-      </ol>
-    </div>
+                )}
+              </SemesterColumn>
+            );
+          })}
+        </ol>
+      </div>
+      {/* Preview under the pointer; no drop animation, so reduced motion needs no extra case. */}
+      <DragOverlay dropAnimation={null}>
+        {drag && (
+          <div className="panel-shadow rounded-lg border bg-card p-2.5 text-meta font-semibold text-foreground">
+            {drag.title}
+            <span className="block font-normal text-muted-foreground">
+              In ein hervorgehobenes Semester ziehen
+            </span>
+          </div>
+        )}
+      </DragOverlay>
+    </DndContext>
   );
 }

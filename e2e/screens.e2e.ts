@@ -10,6 +10,7 @@ const SCREENS = [
   { name: "folgen-check-marketing", path: "/entscheidung/e-mkt-ws26" },
   { name: "studienverlauf", path: "/verlauf" },
   { name: "studienverlauf-meilenstein", path: "/verlauf" },
+  { name: "studienverlauf-ergebnis", path: "/verlauf" },
   { name: "module", path: "/module" },
   { name: "modul-statistik", path: "/module/m-stat" },
   { name: "postfach", path: "/postfach" },
@@ -115,6 +116,14 @@ for (const screen of SCREENS)
         await page
           .getByRole("button", { name: "Praxissemester", exact: true })
           .click();
+      if (screen.name === "studienverlauf-ergebnis") {
+        await page.getByRole("switch", { name: "Simulation" }).click();
+        await page
+          .getByRole("button", { name: "Statistik verschieben" })
+          .click();
+        await page.getByRole("menuitem", { name: "WS 2027/28" }).click();
+        await expect(page.getByRole("dialog")).toBeVisible();
+      }
       if (screen.name === "navigation")
         await page.getByRole("button", { name: "Navigation öffnen" }).click();
       if (screen.name === "folgen-check-assistent") {
@@ -137,6 +146,7 @@ for (const screen of SCREENS)
           "postfach-detail",
           "benachrichtigungen",
           "navigation",
+          "studienverlauf-ergebnis",
           "folgen-check-assistent",
         ].includes(screen.name),
       });
