@@ -370,13 +370,13 @@ Für alle Tasks gilt: Hero-Flow, Testorakel (KONZEPT §10.4) und Spezifikationst
   - Alles per Tastatur bedienbar.
 
 #### P5-13 [Claude] Prüfungsvorleistungen und eigene Termine (P5-F24, P5-F25)
-- [ ] Prüfungsvorleistungen für Module mit Prüfung im aktuellen Semester:
+- [x] Prüfungsvorleistungen für Module mit Prüfung im aktuellen Semester:
   - Stand offen / erbracht / nicht erbracht
   - Zulassung als Domänenfunktion mit Test, angezeigt mit Quelle DR-13 in Moduldetail, Modulliste, Modulkarten und Folgen-Check
-- [ ] Eigene Termine anlegen, bearbeiten, löschen (nicht vor dem Demo-Datum):
+- [x] Eigene Termine anlegen, bearbeiten, löschen (nicht vor dem Demo-Datum):
   - Badge „Eigener Eintrag“
   - Prüfungsvorleistungen mit Frist erscheinen als Frist
-- [ ] Gemeinsamer Selektor für Kanal-Fristen, eigene Termine und Fristen von Prüfungsvorleistungen; „Nächste Frist“ und ICS-Export berücksichtigen eigene Einträge
+- [x] Gemeinsamer Selektor für Kanal-Fristen, eigene Termine und Fristen von Prüfungsvorleistungen; „Nächste Frist“ und ICS-Export berücksichtigen eigene Einträge
 - **AK:**
   - Startzustand ohne Einträge, „Nächste Frist“ bleibt „Abmeldung Statistik“.
   - Ein Eintrag für morgen 10:00 erscheint unter „Diese Woche“ und als „Nächste Frist“.

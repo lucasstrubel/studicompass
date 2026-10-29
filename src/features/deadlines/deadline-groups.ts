@@ -1,5 +1,4 @@
 import { DEMO_TIME_ZONE } from "@/config/demo";
-import type { Deadline } from "@/domain/types";
 
 function day(value: Date) {
   return new Intl.DateTimeFormat("en-CA", {
@@ -24,7 +23,10 @@ export function deadlineInstant(value: string) {
   return `${value}T23:59:59${offset}`;
 }
 /** Calendar weeks start on Monday in the demo time zone, independently of the device. */
-export function groupDeadlines(deadlines: Deadline[], now: Date) {
+export function groupDeadlines<T extends { dueAt: string }>(
+  deadlines: T[],
+  now: Date,
+) {
   const today = day(now);
   const midnight = Date.parse(`${today}T00:00:00Z`);
   const weekday = new Date(midnight).getUTCDay();

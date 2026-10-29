@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { ChannelBadge } from "@/components/common/ChannelBadge";
+import { OwnEntryBadge } from "@/components/common/OwnEntryBadge";
 import { CitationList } from "@/components/common/CitationList";
 import { Countdown } from "@/components/common/Countdown";
 import { EmptyState } from "@/components/common/EmptyState";
@@ -90,7 +91,11 @@ function NextDeadlineCard() {
         <p className="mt-1 text-meta text-muted-foreground tabular-nums">
           {formatDateTime(due)}
         </p>
-        <ChannelBadge channel={deadline.channel} className="mt-3" />
+        {deadline.channel ? (
+          <ChannelBadge channel={deadline.channel} className="mt-3" />
+        ) : (
+          <OwnEntryBadge className="mt-3" />
+        )}
         <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
           {deadline.examId && (
             <Link

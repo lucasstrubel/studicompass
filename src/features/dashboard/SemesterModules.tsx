@@ -1,5 +1,6 @@
 import { BookOpen, Check, Undo2 } from "lucide-react";
 import { Link } from "react-router";
+import { AdmissionStatus } from "@/components/common/AdmissionStatus";
 import { ChannelBadge } from "@/components/common/ChannelBadge";
 import { CitationList } from "@/components/common/CitationList";
 import type { Citation } from "@/domain/types";
@@ -9,7 +10,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "@/domain/terms";
 import { formatDateTime } from "@/lib/format";
-import { selectCurrentExams, type CurrentExam } from "@/store/selectors";
+import {
+  selectAdmission,
+  selectCurrentExams,
+  selectRulesById,
+  type CurrentExam,
+} from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 import { ModuleIllustration } from "./ModuleIllustration";
 import { moduleArt, moduleToneStyle } from "./module-art";
@@ -34,6 +40,7 @@ function ModuleCard({
 }) {
   const { exam, module, progress } = item;
   const withdrawn = exam.status === "withdrawn";
+  const admission = useDemoStore((state) => selectAdmission(state, module.id));
   return (
     <li>
       <Card size="sm" className="h-full" style={moduleToneStyle(module.id)}>
@@ -73,6 +80,8 @@ function ModuleCard({
                 Angemeldet
               </p>
             )}
+            {/* Admission once a Prüfungsvorleistung is entered (P5-13, DR-13 cited below the grid). */}
+            <AdmissionStatus admission={admission} className="mt-1" />
             {progress ? (
               <>
                 {progress.total !== undefined &&
@@ -135,6 +144,12 @@ export function SemesterModules() {
     return status === "error" ? "error" : "loading";
   });
   const term = exams[0]?.exam.term;
+  const showsAdmission = useDemoStore((state) =>
+    exams.some((item) => selectAdmission(state, item.module.id) !== "none"),
+  );
+  const admissionRule = useDemoStore(
+    (state) => selectRulesById(state)["DR-13"],
+  );
 
   return (
     <>
@@ -168,7 +183,10 @@ export function SemesterModules() {
       <CitationList
         variant="footer"
         className="mt-3"
-        citations={[OFFERING_SOURCE]}
+        citations={[
+          OFFERING_SOURCE,
+          ...(showsAdmission && admissionRule ? [admissionRule.citation] : []),
+        ]}
       />
     </>
   );

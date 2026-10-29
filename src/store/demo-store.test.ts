@@ -275,12 +275,10 @@ describe("P2-05: simulations and persistence", () => {
     ).toBe(true);
     // Only http(s): script or mail addresses are refused.
     expect(
-      store
-        .getState()
-        .saveCourseLink("m-stat", {
-          label: "Trick",
-          url: "javascript:alert(1)",
-        }),
+      store.getState().saveCourseLink("m-stat", {
+        label: "Trick",
+        url: "javascript:alert(1)",
+      }),
     ).toBe(false);
     expect(store.getState().setMoodleUrl("m-stat", "ftp://moodle")).toBe(false);
     expect(
@@ -313,6 +311,49 @@ describe("P2-05: simulations and persistence", () => {
     await store.getState().resetDemo();
     expect(store.getState().moduleNotes).toEqual({});
     expect(store.getState().moodleUrls).toEqual({});
+  });
+
+  it("keeps Prüfungsvorleistungen and own dates until a reset and refuses invalid ones (P5-13)", async () => {
+    const store = makeStore();
+    await store.getState().hydrate();
+    expect(
+      store.getState().saveCoursework({
+        moduleId: "m-stat",
+        title: "  ",
+        status: "open",
+      }),
+    ).toBe(false);
+    expect(
+      store.getState().savePersonalDeadline({
+        title: "Abgabe",
+        dueAt: "morgen",
+        kind: "submission",
+      }),
+    ).toBe(false);
+    store.getState().saveCoursework({
+      moduleId: "m-stat",
+      title: "Testat",
+      status: "done",
+    });
+    store.getState().savePersonalDeadline({
+      title: "Abgabe Fallstudie",
+      dueAt: "2027-01-31",
+      kind: "submission",
+      moduleId: "m-mkt",
+    });
+    const reloaded = makeStore().getState();
+    expect(reloaded.coursework).toEqual([
+      expect.objectContaining({ title: "Testat", status: "done" }),
+    ]);
+    expect(reloaded.personalDeadlines).toEqual([
+      expect.objectContaining({
+        title: "Abgabe Fallstudie",
+        moduleId: "m-mkt",
+      }),
+    ]);
+    await store.getState().resetDemo();
+    expect(store.getState().coursework).toEqual([]);
+    expect(store.getState().personalDeadlines).toEqual([]);
   });
 
   it("drops stored course links with unsafe addresses (P5-12)", () => {

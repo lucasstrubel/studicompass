@@ -1,7 +1,10 @@
 import type {
   AcademicState,
+  AgendaItem,
   Consequence,
   Deadline,
+  ExamAdmission,
+  PersonalDeadlineKind,
   DecisionOutcome,
   ExamRecord,
   InboxItem,
@@ -12,6 +15,7 @@ import type {
   Term,
 } from "@/domain/types";
 import { DEMO_CURRENT_TERM, DEMO_NOW } from "@/config/demo";
+import { examAdmission } from "@/domain/coursework";
 import { compareDecision, hasSpecialRuleImpact } from "@/domain/decision";
 import {
   earnedEcts,
@@ -168,15 +172,60 @@ function currentExams(state: DemoState): CurrentExam[] {
     );
 }
 
-/** The first deadline after DEMO_NOW (US-05); a withdrawal deadline ends with the (simulated) withdrawal. */
-function nextDeadline(state: DemoState): Deadline | null {
+/** Labels of own dates (P5-13, US-21). */
+export const PERSONAL_KIND_LABELS: Record<PersonalDeadlineKind, string> = {
+  submission: "Abgabe",
+  coursework: "Studienleistung",
+  appointment: "Termin",
+  other: "Sonstiges",
+};
+
+/**
+ * Every date of the deadline list (P5-13): channel deadlines that still need an action, own dates and
+ * open Prüfungsvorleistungen with a due date, ordered like the channel deadlines.
+ */
+function agenda(state: DemoState): AgendaItem[] {
+  const channel: AgendaItem[] = selectActionableDeadlines(state).map(
+    (deadline) => ({ ...deadline, origin: "channel" }),
+  );
+  const personal: AgendaItem[] = state.personalDeadlines.map((entry) => ({
+    id: `own-${entry.id}`,
+    title: entry.title,
+    dueAt: entry.dueAt,
+    type: PERSONAL_KIND_LABELS[entry.kind],
+    origin: "personal",
+    moduleId: entry.moduleId,
+    sourceId: entry.id,
+  }));
+  const coursework: AgendaItem[] = state.coursework.flatMap((item) =>
+    item.dueAt && item.status === "open"
+      ? [
+          {
+            id: `pvl-${item.id}`,
+            title: `Prüfungsvorleistung: ${item.title}`,
+            dueAt: item.dueAt,
+            type: "Prüfungsvorleistung",
+            origin: "coursework" as const,
+            moduleId: item.moduleId,
+            sourceId: item.id,
+          },
+        ]
+      : [],
+  );
+  return [...channel, ...personal, ...coursework].sort((left, right) =>
+    left.dueAt.localeCompare(right.dueAt),
+  );
+}
+
+/** The first date after DEMO_NOW (US-05), own entries included (P5-13); a withdrawal deadline ends with the (simulated) withdrawal. */
+function nextDeadline(state: DemoState): AgendaItem | null {
   const settled = new Set(
     (selectAcademicState(state)?.exams ?? [])
       .filter((exam) => exam.status !== "registered")
       .map((exam) => exam.id),
   );
   return (
-    selectDeadlines(state).find(
+    selectAgenda(state).find(
       (deadline) =>
         new Date(deadline.dueAt) > DEMO_NOW &&
         !(deadline.examId && settled.has(deadline.examId)),
@@ -324,6 +373,7 @@ export const selectActionableDeadlines = memoize((state: DemoState) => {
       ),
   );
 });
+export const selectAgenda = memoize(agenda);
 export const selectNotifications = memoize(notifications);
 export const selectProgress = memoize(progress);
 export const selectPlan = memoize(plan);
@@ -568,4 +618,14 @@ export function selectMoveTargets(state: DemoState, moduleId: string): Term[] {
       }
     })
     .slice(0, 4);
+}
+
+/** Admission to a module's exam from the entered Prüfungsvorleistungen (DR-13, P5-13). */
+export function selectAdmission(
+  state: DemoState,
+  moduleId: string,
+): ExamAdmission {
+  return examAdmission(
+    state.coursework.filter((item) => item.moduleId === moduleId),
+  );
 }

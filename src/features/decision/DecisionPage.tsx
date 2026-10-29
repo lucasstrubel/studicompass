@@ -9,7 +9,9 @@ import {
 } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
+import { AdmissionStatus } from "@/components/common/AdmissionStatus";
 import { ChannelBadge } from "@/components/common/ChannelBadge";
+import { CitationList } from "@/components/common/CitationList";
 import { ConsequenceItem } from "@/components/common/ConsequenceItem";
 import { Countdown } from "@/components/common/Countdown";
 import { DemoBadge } from "@/components/common/DemoBadge";
@@ -33,6 +35,7 @@ import type { Consequence, ExamRecord, Module, Rule } from "@/domain/types";
 import { format } from "@/domain/terms";
 import { formatDate, formatShortDateTime } from "@/lib/format";
 import {
+  selectAdmission,
   selectDecision,
   selectInbox,
   selectRulesById,
@@ -279,6 +282,7 @@ function ReadyView({
 }) {
   const { exam, module, outcomes } = view;
   const goalRegularTime = useDemoStore((state) => state.goalRegularTime);
+  const admission = useDemoStore((state) => selectAdmission(state, module.id));
   const moduleRules = rulesForModule(module, rules);
   const withdraw = outcomes.find((outcome) => outcome.option === "withdraw");
   const fail = outcomes.find((outcome) => outcome.option === "attendFail");
@@ -316,6 +320,28 @@ function ReadyView({
             </span>
           )}
         </p>
+        {/* Admission from the entered Prüfungsvorleistungen (P5-13); the comparison stays unchanged. */}
+        {admission !== "none" && (
+          <div className="rounded-xl border bg-card p-3">
+            <AdmissionStatus admission={admission} />
+            <p className="mt-1 text-meta text-muted-foreground">
+              Der Vergleich unten geht davon aus, dass du antreten darfst.{" "}
+              <Link
+                to={`/module/${module.id}`}
+                className="rounded-sm font-semibold text-accent-strong"
+              >
+                Prüfungsvorleistung im Modul ansehen
+              </Link>
+            </p>
+            {rules["DR-13"] && (
+              <CitationList
+                variant="footer"
+                className="mt-2 pt-2"
+                citations={[rules["DR-13"].citation]}
+              />
+            )}
+          </div>
+        )}
         {view.confirmed && (
           <p className="text-meta text-muted-foreground">
             Du hast vermerkt, dass du antrittst. Du kannst trotzdem vergleichen.

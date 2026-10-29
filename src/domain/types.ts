@@ -189,6 +189,51 @@ export interface AssistantFallback {
   draft: string;
 }
 
+/** Stand of a Prüfungsvorleistung (P5-13): offen / erbracht / nicht erbracht. */
+export type CourseworkStatus = "open" | "done" | "failed";
+/** A Prüfungsvorleistung that Niklas enters for a module of the current semester (P5-13, US-25). */
+export interface Coursework {
+  id: string;
+  moduleId: string;
+  title: string;
+  /** Date only ("2027-01-29"); optional. */
+  dueAt?: string;
+  status: CourseworkStatus;
+}
+/** Whether the exam may be taken (DR-13); "none" when no Prüfungsvorleistung is entered. */
+export type ExamAdmission = "none" | "open" | "admitted" | "notAdmitted";
+
+export type PersonalDeadlineKind =
+  | "submission"
+  | "coursework"
+  | "appointment"
+  | "other";
+/** A date Niklas enters himself (P5-13, US-21); no channel. */
+export interface PersonalDeadline {
+  id: string;
+  title: string;
+  /** Date only or an ISO instant with offset, like channel deadlines. */
+  dueAt: string;
+  kind: PersonalDeadlineKind;
+  moduleId?: string;
+}
+
+/** One entry of the deadline list: channel deadlines and own entries side by side (P5-13). */
+export interface AgendaItem {
+  /** Unique within the list, e.g. "d-stat-abm", "own-…", "pvl-…". */
+  id: string;
+  title: string;
+  dueAt: string;
+  startsAt?: string;
+  type: string;
+  origin: "channel" | "personal" | "coursework";
+  channel?: Channel;
+  moduleId?: string;
+  examId?: string;
+  /** Id of the own entry or Prüfungsvorleistung, for editing. */
+  sourceId?: string;
+}
+
 /** A link to a course that Niklas adds himself (P5-12); only http(s) addresses. */
 export interface CourseLink {
   id: string;

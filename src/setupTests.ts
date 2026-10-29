@@ -32,3 +32,12 @@ window.matchMedia = (query: string): MediaQueryList => ({
   removeListener: () => undefined,
   dispatchEvent: () => false,
 });
+
+// jsdom has no pointer capture; sonner calls it when a toast button is pressed.
+for (const [name, value] of [
+  ["setPointerCapture", () => undefined],
+  ["releasePointerCapture", () => undefined],
+  ["hasPointerCapture", () => false],
+] as const)
+  if (!(name in Element.prototype))
+    Object.defineProperty(Element.prototype, name, { value });

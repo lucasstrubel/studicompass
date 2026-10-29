@@ -11,7 +11,9 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { format, next, semesterNumber } from "@/domain/terms";
-import type { ExamRecord, Module, Term } from "@/domain/types";
+import { AdmissionStatus } from "@/components/common/AdmissionStatus";
+import { examAdmission } from "@/domain/coursework";
+import type { ExamAdmission, ExamRecord, Module, Term } from "@/domain/types";
 import { formatGrade } from "@/lib/format";
 import {
   moduleRecord,
@@ -56,7 +58,13 @@ function summary(rows: Row[]) {
   return `${rows.length} ${rows.length === 1 ? "Modul" : "Module"} · ${ects} ECTS · ${status}`;
 }
 
-function SemesterTable({ group }: { group: SemesterGroup }) {
+function SemesterTable({
+  group,
+  admissionOf,
+}: {
+  group: SemesterGroup;
+  admissionOf: (moduleId: string) => ExamAdmission;
+}) {
   return (
     <table className="w-full text-body">
       <caption className="sr-only">
@@ -118,6 +126,7 @@ function SemesterTable({ group }: { group: SemesterGroup }) {
               {/* Phones: status and grade as a line of their own, so no column is cut off (P5-12 review). */}
               <span className="mt-0.5 flex flex-wrap items-center gap-x-3 sm:hidden">
                 <ExamStatusLabel exam={exam} />
+                <AdmissionStatus admission={admissionOf(module.id)} short />
                 {exam?.grade !== undefined && (
                   <span className="text-meta font-semibold tabular-nums">
                     Note {formatGrade(exam.grade)}
@@ -136,6 +145,11 @@ function SemesterTable({ group }: { group: SemesterGroup }) {
             </td>
             <td className="hidden py-2 pr-3 whitespace-nowrap sm:table-cell">
               <ExamStatusLabel exam={exam} />
+              <AdmissionStatus
+                admission={admissionOf(module.id)}
+                short
+                className="flex"
+              />
             </td>
             <td className="hidden py-2 text-right font-semibold tabular-nums sm:table-cell">
               {exam?.grade !== undefined ? formatGrade(exam.grade) : "–"}
@@ -157,6 +171,10 @@ export function ModuleList() {
   const program = useDemoStore((state) => state.resources.pos.data?.program);
   const rules = useDemoStore(selectRulesById);
   const passed = useDemoStore(selectPassedModuleCount);
+  const coursework = useDemoStore((state) => state.coursework);
+  const admissionOf = (moduleId: string) =>
+    examAdmission(coursework.filter((item) => item.moduleId === moduleId));
+  const showsAdmission = coursework.length > 0;
   const groups: SemesterGroup[] = academic
     ? [...new Set(academic.modules.map((module) => module.plannedSemester))]
         .sort((a, b) => a - b)
@@ -212,8 +230,8 @@ export function ModuleList() {
           className="mt-3"
           citations={[
             program.citation,
-            ...["DR-1", "DR-9"].flatMap((id) =>
-              rules[id] ? [rules[id].citation] : [],
+            ...["DR-1", "DR-9", ...(showsAdmission ? ["DR-13"] : [])].flatMap(
+              (id) => (rules[id] ? [rules[id].citation] : []),
             ),
           ]}
         />
@@ -265,7 +283,7 @@ export function ModuleList() {
                   </span>
                 </AccordionTrigger>
                 <AccordionContent className="px-4">
-                  <SemesterTable group={group} />
+                  <SemesterTable group={group} admissionOf={admissionOf} />
                 </AccordionContent>
               </AccordionItem>
             ))}

@@ -12,6 +12,7 @@ import { selectModuleRecord } from "@/store/module-selectors";
 import { selectRulesById } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 import { CourseLinks } from "./CourseLinks";
+import { CourseworkCard } from "./CourseworkCard";
 import { ExamStatusLabel } from "./ExamStatusLabel";
 import { ModuleNotes } from "./ModuleNotes";
 import { OFFERING } from "./module-labels";
@@ -42,6 +43,12 @@ export function ModuleDetail({ id }: { id: string }) {
         }
       />
     );
+  // Prüfungsvorleistungen belong to modules taken this semester (P5-13, US-25).
+  const thisSemester =
+    exam !== null &&
+    (exam.status === "registered" || exam.status === "withdrawn") &&
+    exam.term.year === DEMO_CURRENT_TERM.year &&
+    exam.term.season === DEMO_CURRENT_TERM.season;
   const canDecide =
     exam?.status === "registered" &&
     exam.term.year === DEMO_CURRENT_TERM.year &&
@@ -114,6 +121,13 @@ export function ModuleDetail({ id }: { id: string }) {
               ]}
             />
           </section>
+          {thisSemester && (
+            <CourseworkCard
+              key={`pvl-${module.id}`}
+              moduleId={module.id}
+              title={module.title}
+            />
+          )}
           <ResourceBoundary
             services={["moodle"]}
             skeleton={

@@ -347,3 +347,35 @@ describe("Folgen-Check (P3-06 review)", () => {
     ).toBeInTheDocument();
   });
 });
+
+describe("Folgen-Check: Zulassung (P5-13)", () => {
+  it("shows the admission from an entered Prüfungsvorleistung and keeps the comparison", () => {
+    act(() => {
+      demoStore.getState().saveCoursework({
+        moduleId: "m-stat",
+        title: "8 von 12 Übungsblättern",
+        status: "failed",
+      });
+    });
+    renderCheck("e-stat-ws26");
+    expect(
+      screen.getByText("Nicht zugelassen: Prüfungsvorleistung nicht erbracht"),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("link", {
+        name: "Prüfungsvorleistung im Modul ansehen",
+      }),
+    ).toHaveAttribute("href", "/module/m-stat");
+    // The comparison (KONZEPT §10.4) is untouched.
+    expect(screen.getAllByText("SS 2029").length).toBeGreaterThan(0);
+  });
+
+  it("shows nothing while no Prüfungsvorleistung is entered", () => {
+    renderCheck("e-stat-ws26");
+    expect(
+      screen.queryByText(
+        /Zur Prüfung zugelassen|Zulassung offen|Nicht zugelassen/,
+      ),
+    ).not.toBeInTheDocument();
+  });
+});

@@ -157,4 +157,17 @@ export const rules: Rule[] = [
     officeId: "o-pa",
     params: {},
   },
+  {
+    id: "DR-13",
+    title:
+      "Sieht ein Modul eine Prüfungsvorleistung vor, wirst du zur Prüfung erst zugelassen, wenn du sie erbracht hast.",
+    citation: {
+      document: "Modulhandbuch Wirtschaftsinformatik",
+      summary:
+        "Sieht ein Modul eine Prüfungsvorleistung vor, wirst du zur Prüfung erst zugelassen, wenn du sie erbracht hast.",
+      verified: false,
+    },
+    officeId: "o-pa",
+    params: {},
+  },
 ];

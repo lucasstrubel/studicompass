@@ -247,3 +247,44 @@ test("P5-12: Modulliste am Handy ohne abgeschnittene Werte", async ({
   );
   expect(tableBox?.width ?? 999).toBeLessThanOrEqual(390);
 });
+
+test("P5-13: eigener Termin morgen 10:00 erscheint in den Fristen und als nächste Frist", async ({
+  page,
+}) => {
+  await page.goto("/fristen");
+  await page.getByRole("button", { name: "Termin hinzufügen" }).click();
+  const dialog = page.getByRole("dialog", { name: "Termin hinzufügen" });
+  await dialog.getByLabel("Titel").fill("Lerngruppe Statistik");
+  await dialog.getByLabel("Datum").fill("2027-01-26");
+  await dialog.getByLabel("Uhrzeit (optional)").fill("10:00");
+  await dialog.getByLabel("Art").selectOption("appointment");
+  await dialog.getByRole("button", { name: "Speichern" }).click();
+  await expect(
+    page
+      .getByRole("region", { name: "Diese Woche" })
+      .getByRole("heading", { name: "Lerngruppe Statistik" }),
+  ).toBeVisible();
+  await page.reload();
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Demo ohne Einrichtung starten" })
+    .click();
+  const next = page.getByRole("region", { name: "Nächste Frist" }).first();
+  await expect(next).toContainText("Lerngruppe Statistik");
+  await expect(next).toContainText("Eigener Eintrag");
+});
+
+test("P5-13: Prüfungsvorleistung erbracht → zur Prüfung zugelassen", async ({
+  page,
+}) => {
+  await page.goto("/module/m-stat");
+  const card = page.getByRole("region", { name: "Prüfungsvorleistung" });
+  await card
+    .getByRole("button", { name: "Prüfungsvorleistung eintragen" })
+    .click();
+  await card.getByLabel("Was ist zu erbringen?").fill("Testat");
+  await card.getByRole("button", { name: "Eintragen" }).click();
+  await expect(card).toContainText("Zulassung offen");
+  await card.getByLabel("Stand von Testat").selectOption("done");
+  await expect(card).toContainText("Zur Prüfung zugelassen");
+});

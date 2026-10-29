@@ -13,6 +13,7 @@ const SCREENS = [
   { name: "studienverlauf-ergebnis", path: "/verlauf" },
   { name: "module", path: "/module" },
   { name: "modul-statistik", path: "/module/m-stat" },
+  { name: "modul-pruefungsvorleistung", path: "/module/m-stat" },
   { name: "postfach", path: "/postfach" },
   { name: "postfach-detail", path: "/postfach?eintrag=i-02" },
   { name: "assistent", path: "/assistent" },
@@ -23,6 +24,7 @@ const SCREENS = [
   },
   { name: "fristen", path: "/fristen" },
   { name: "fristen-laden", path: "/fristen" },
+  { name: "fristen-eigener-termin", path: "/fristen" },
   { name: "assistent-wartet", path: "/assistent?frage=A-04" },
   { name: "einstellungen", path: "/einstellungen" },
   { name: "benachrichtigungen", path: "/module" },
@@ -123,6 +125,28 @@ for (const screen of SCREENS)
           .click();
         await page.getByRole("menuitem", { name: "WS 2027/28" }).click();
         await expect(page.getByRole("dialog")).toBeVisible();
+      }
+      if (screen.name === "modul-pruefungsvorleistung") {
+        const card = page.getByRole("region", { name: "Prüfungsvorleistung" });
+        await card
+          .getByRole("button", { name: "Prüfungsvorleistung eintragen" })
+          .click();
+        await card
+          .getByLabel("Was ist zu erbringen?")
+          .fill("8 von 12 Übungsblättern");
+        await card.getByLabel("Frist (optional)").fill("2027-01-26");
+        await card.getByRole("button", { name: "Eintragen" }).click();
+        await card.scrollIntoViewIfNeeded();
+      }
+      if (screen.name === "fristen-eigener-termin") {
+        await page.getByRole("button", { name: "Termin hinzufügen" }).click();
+        const dialog = page.getByRole("dialog");
+        await dialog.getByLabel("Titel").fill("Lerngruppe Statistik");
+        await dialog.getByLabel("Datum").fill("2027-01-26");
+        await dialog.getByLabel("Uhrzeit (optional)").fill("10:00");
+        await dialog.getByLabel("Art").selectOption("appointment");
+        await dialog.getByRole("button", { name: "Speichern" }).click();
+        await expect(dialog).toHaveCount(0);
       }
       if (screen.name === "navigation")
         await page.getByRole("button", { name: "Navigation öffnen" }).click();

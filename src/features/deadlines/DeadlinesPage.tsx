@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { Link } from "react-router";
+import { Pencil, Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChannelBadge } from "@/components/common/ChannelBadge";
@@ -7,20 +10,52 @@ import { CHANNEL_LABELS } from "@/components/common/labels";
 import { Countdown } from "@/components/common/Countdown";
 import { CitationList } from "@/components/common/CitationList";
 import { EmptyState } from "@/components/common/EmptyState";
+import { OwnEntryBadge } from "@/components/common/OwnEntryBadge";
 import { useDemoStore } from "@/store/use-demo-store";
-import { selectActionableDeadlines } from "@/store/selectors";
+import { selectAgenda } from "@/store/selectors";
 import { DEMO_NOW } from "@/config/demo";
+import type { AgendaItem, Citation, PersonalDeadline } from "@/domain/types";
 import { formatDate, formatDateTime } from "@/lib/format";
 import { downloadDeadlines } from "@/lib/ics";
-
+import { DeadlineDialog } from "./DeadlineDialog";
 import { deadlineInstant, groupDeadlines } from "./deadline-groups";
 import { CHANNELS } from "@/services/types";
 
+/** Source of an own entry: Niklas himself, so no "Beispiel" label (KONZEPT §12.4). */
+const OWN_SOURCE: Citation = {
+  document: "Von dir eingetragen",
+  summary: "Eigener Eintrag",
+  verified: true,
+};
+
+function source(item: AgendaItem): Citation {
+  return item.channel
+    ? {
+        document: `${CHANNEL_LABELS[item.channel]} – ${item.title} (Demodaten)`,
+        summary: item.title,
+        verified: false,
+      }
+    : OWN_SOURCE;
+}
+
+/**
+ * Fristen (KONZEPT §8 S7): channel deadlines, own dates and Prüfungsvorleistungen with a due date, grouped
+ * relative to DEMO_NOW (P5-13, US-21). Own dates can be added, edited and deleted here.
+ */
 export function DeadlinesPage() {
-  const deadlines = useDemoStore(selectActionableDeadlines);
+  const agenda = useDemoStore(selectAgenda);
   const pos = useDemoStore((state) => state.resources.pos.data);
   const resources = useDemoStore((state) => state.resources);
   const connected = useDemoStore((state) => state.connectedChannels);
+  const personal = useDemoStore((state) => state.personalDeadlines);
+  const savePersonalDeadline = useDemoStore(
+    (state) => state.savePersonalDeadline,
+  );
+  const removePersonalDeadline = useDemoStore(
+    (state) => state.removePersonalDeadline,
+  );
+  // null: closed; "new": add; otherwise the own entry being edited.
+  const [dialog, setDialog] = useState<PersonalDeadline | "new" | null>(null);
   const loading = CHANNELS.some(
     (channel) =>
       connected[channel] &&
@@ -30,8 +65,19 @@ export function DeadlinesPage() {
   const incomplete = CHANNELS.some(
     (channel) => resources[channel].data === null,
   );
-  const groups = groupDeadlines(deadlines, DEMO_NOW);
+  const groups = groupDeadlines(agenda, DEMO_NOW);
   const future = groups.flatMap((group) => group.items);
+
+  const remove = (entry: PersonalDeadline) => {
+    removePersonalDeadline(entry.id);
+    toast(`Termin gelöscht: ${entry.title}`, {
+      action: {
+        label: "Rückgängig",
+        onClick: () => savePersonalDeadline(entry),
+      },
+    });
+  };
+
   return (
     <div className="space-y-5">
       <ChannelStatus />
@@ -48,13 +94,19 @@ export function DeadlinesPage() {
           getrennte Kanäle in den Einstellungen erneut.
         </p>
       )}
-      <Button
-        variant="outline"
-        disabled={future.length === 0}
-        onClick={() => downloadDeadlines(future)}
-      >
-        Alle Fristen zum Kalender hinzufügen
-      </Button>
+      <div className="flex flex-wrap gap-2">
+        <Button onClick={() => setDialog("new")}>
+          <Plus aria-hidden="true" />
+          Termin hinzufügen
+        </Button>
+        <Button
+          variant="outline"
+          disabled={future.length === 0}
+          onClick={() => downloadDeadlines(future)}
+        >
+          Alle Fristen zum Kalender hinzufügen
+        </Button>
+      </div>
       {groups.map((group) => (
         <section key={group.title} aria-label={group.title}>
           <h2 className="mb-3 text-section-title">{group.title}</h2>
@@ -74,6 +126,10 @@ export function DeadlinesPage() {
                 const module = pos?.modules.find(
                   (module) => module.id === moduleId,
                 );
+                const own =
+                  deadline.origin === "personal"
+                    ? personal.find((entry) => entry.id === deadline.sourceId)
+                    : undefined;
                 return (
                   <li
                     key={deadline.id}
@@ -95,7 +151,11 @@ export function DeadlinesPage() {
                           {module && ` · ${module.title}`}
                         </p>
                       </div>
-                      <ChannelBadge channel={deadline.channel} />
+                      {deadline.channel ? (
+                        <ChannelBadge channel={deadline.channel} />
+                      ) : (
+                        <OwnEntryBadge />
+                      )}
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {deadline.examId && (
@@ -107,8 +167,31 @@ export function DeadlinesPage() {
                       )}
                       {!deadline.examId && moduleId && (
                         <Button variant="outline" asChild>
-                          <Link to={`/module/${moduleId}`}>Zum Modul</Link>
+                          <Link to={`/module/${moduleId}`}>
+                            {deadline.origin === "coursework"
+                              ? "Prüfungsvorleistung im Modul"
+                              : "Zum Modul"}
+                          </Link>
                         </Button>
+                      )}
+                      {own && (
+                        <>
+                          <Button
+                            variant="outline"
+                            onClick={() => setDialog(own)}
+                          >
+                            <Pencil aria-hidden="true" />
+                            Bearbeiten
+                          </Button>
+                          <Button
+                            variant="outline"
+                            aria-label={`${own.title} löschen`}
+                            onClick={() => remove(own)}
+                          >
+                            <Trash2 aria-hidden="true" />
+                            Löschen
+                          </Button>
+                        </>
                       )}
                       <Button
                         variant="outline"
@@ -122,13 +205,7 @@ export function DeadlinesPage() {
                     <CitationList
                       variant="footer"
                       className="mt-0"
-                      citations={[
-                        {
-                          document: `${CHANNEL_LABELS[deadline.channel]} – ${deadline.title} (Demodaten)`,
-                          summary: deadline.title,
-                          verified: false,
-                        },
-                      ]}
+                      citations={[source(deadline)]}
                     />
                   </li>
                 );
@@ -139,6 +216,17 @@ export function DeadlinesPage() {
       ))}
       {future.length === 0 && !loading && !incomplete && (
         <EmptyState title="Keine anstehenden Fristen" />
+      )}
+      {dialog && (
+        <DeadlineDialog
+          key={dialog === "new" ? "new" : dialog.id}
+          open
+          onOpenChange={(open) => {
+            if (!open) setDialog(null);
+          }}
+          entry={dialog === "new" ? undefined : dialog}
+          onSaved={(title) => toast(`Termin gespeichert: ${title}`)}
+        />
       )}
     </div>
   );

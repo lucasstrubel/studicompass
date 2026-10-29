@@ -100,6 +100,50 @@ describe("Module & Noten kompakt (P5-12)", () => {
   });
 });
 
+describe("Prüfungsvorleistung (P5-13)", () => {
+  it("is entered for modules of this semester and drives the admission (DR-13)", async () => {
+    await renderAt("/module/m-stat");
+    const user = userEvent.setup();
+    const card = screen.getByRole("region", { name: "Prüfungsvorleistung" });
+    expect(card).toHaveTextContent(
+      "Für Statistik ist keine Prüfungsvorleistung eingetragen.",
+    );
+    await user.click(
+      within(card).getByRole("button", {
+        name: "Prüfungsvorleistung eintragen",
+      }),
+    );
+    await user.type(
+      within(card).getByLabelText("Was ist zu erbringen?"),
+      "8 von 12 Übungsblättern",
+    );
+    await user.click(within(card).getByRole("button", { name: "Eintragen" }));
+    expect(card).toHaveTextContent(
+      "Zulassung offen: Prüfungsvorleistung noch nicht erbracht",
+    );
+    expect(
+      within(card).getByRole("list", { name: "Quellen" }),
+    ).toHaveTextContent("Modulhandbuch Wirtschaftsinformatik");
+    await user.selectOptions(
+      within(card).getByLabelText("Stand von 8 von 12 Übungsblättern"),
+      "erbracht",
+    );
+    expect(card).toHaveTextContent("Zur Prüfung zugelassen");
+    await user.selectOptions(
+      within(card).getByLabelText("Stand von 8 von 12 Übungsblättern"),
+      "nicht erbracht",
+    );
+    expect(card).toHaveTextContent("Nicht zugelassen");
+  });
+
+  it("is not offered for modules without an exam this semester", async () => {
+    await renderAt("/module/m-gwi");
+    expect(
+      screen.queryByRole("region", { name: "Prüfungsvorleistung" }),
+    ).not.toBeInTheDocument();
+  });
+});
+
 describe("Moduldetail: Kurs-Links und Notizen (P5-12)", () => {
   it("shows the Moodle handover as a hint and keeps an own address", async () => {
     await renderAt("/module/m-stat");

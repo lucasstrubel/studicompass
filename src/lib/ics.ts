@@ -1,5 +1,5 @@
 import { APP_NAME, DEMO_NOW } from "@/config/demo";
-import type { Deadline } from "@/domain/types";
+import type { AgendaItem, Deadline } from "@/domain/types";
 import { CHANNEL_LABELS } from "@/components/common/labels";
 
 function escapeText(value: string) {
@@ -41,7 +41,7 @@ function followingDay(value: string) {
 }
 
 /** RFC 5545: timed deadlines are UTC instants; date-only deadlines are inclusive all-day events. */
-export function deadlinesToIcs(deadlines: Deadline[]): string {
+export function deadlinesToIcs(deadlines: (Deadline | AgendaItem)[]): string {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
@@ -67,7 +67,11 @@ export function deadlinesToIcs(deadlines: Deadline[]): string {
     else lines.push(`DTSTART:${utc(deadline.dueAt)}`);
     lines.push(
       `SUMMARY:${escapeText(deadline.title)}`,
-      `DESCRIPTION:${escapeText(`Beispiel – ${APP_NAME} Demo. Kanal: ${CHANNEL_LABELS[deadline.channel]}. Verbindlich sind die Angaben im Originalsystem.`)}`,
+      `DESCRIPTION:${escapeText(
+        deadline.channel
+          ? `Beispiel – ${APP_NAME} Demo. Kanal: ${CHANNEL_LABELS[deadline.channel]}. Verbindlich sind die Angaben im Originalsystem.`
+          : `Eigener Eintrag in ${APP_NAME} (Demo).`,
+      )}`,
       "TRANSP:TRANSPARENT",
       "END:VEVENT",
     );
@@ -76,7 +80,7 @@ export function deadlinesToIcs(deadlines: Deadline[]): string {
 }
 
 export function downloadDeadlines(
-  deadlines: Deadline[],
+  deadlines: (Deadline | AgendaItem)[],
   filename = "studienfristen.ics",
 ) {
   const url = URL.createObjectURL(

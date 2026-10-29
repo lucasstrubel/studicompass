@@ -7,6 +7,8 @@ import {
   selectCurrentExams,
   selectImportantDecisions,
   selectMilestone,
+  selectAdmission,
+  selectAgenda,
   selectNextDeadline,
   selectRecentGrades,
   selectUndoableExamId,
@@ -183,5 +185,42 @@ describe("selectUndoableExamId", () => {
     expect(selectUndoableExamId(store.getState())).toBe("e-mkt-ws26");
     store.getState().undo();
     expect(selectUndoableExamId(store.getState())).toBeNull();
+  });
+
+  it("adds own dates and open Prüfungsvorleistungen to the agenda and the next deadline (P5-13)", async () => {
+    const store = createDemoStore(createMockServices({ latencyMs: 0 }));
+    await store.getState().hydrate();
+    store.getState().savePersonalDeadline({
+      title: "Lerngruppe Statistik",
+      dueAt: "2027-01-26T10:00:00+01:00",
+      kind: "appointment",
+      moduleId: "m-stat",
+    });
+    store.getState().saveCoursework({
+      moduleId: "m-stat",
+      title: "8 von 12 Übungsblättern",
+      dueAt: "2027-01-27",
+      status: "open",
+    });
+    const agenda = selectAgenda(store.getState());
+    expect(agenda.map((item) => item.origin)).toContain("personal");
+    expect(agenda.find((item) => item.origin === "coursework")?.title).toBe(
+      "Prüfungsvorleistung: 8 von 12 Übungsblättern",
+    );
+    // Tomorrow 10:00 comes before the Statistik withdrawal deadline at 23:59.
+    expect(selectNextDeadline(store.getState())?.title).toBe(
+      "Lerngruppe Statistik",
+    );
+    expect(selectAdmission(store.getState(), "m-stat")).toBe("open");
+    // An achieved Prüfungsvorleistung leaves the agenda and admits to the exam.
+    const [item] = store.getState().coursework;
+    store.getState().saveCoursework({ ...item, status: "done" });
+    expect(
+      selectAgenda(store.getState()).some(
+        (entry) => entry.origin === "coursework",
+      ),
+    ).toBe(false);
+    expect(selectAdmission(store.getState(), "m-stat")).toBe("admitted");
+    expect(selectAdmission(store.getState(), "m-db")).toBe("none");
   });
 });

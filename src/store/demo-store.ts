@@ -8,8 +8,12 @@ import { DATA_VERSION, DEMO_NOW, DEMO_STORAGE_KEY } from "@/config/demo";
 import type {
   Channel,
   CourseLink,
+  Coursework,
+  CourseworkStatus,
   HintTone,
   Notification,
+  PersonalDeadline,
+  PersonalDeadlineKind,
   PlanOverride,
 } from "@/domain/types";
 import { parseWebUrl } from "@/lib/url";
@@ -64,11 +68,41 @@ interface Preferences {
   courseLinks: Record<string, CourseLink[]>;
   /** Own address that replaces the simulated Moodle link of a module (P5-12). */
   moodleUrls: Record<string, string>;
+  /** Prüfungsvorleistungen Niklas enters for modules of the current semester (P5-13, US-25). */
+  coursework: Coursework[];
+  /** Dates Niklas enters himself (P5-13, US-21). */
+  personalDeadlines: PersonalDeadline[];
 }
 
 /** Upper bounds for own entries, so the local demo state stays small. */
 export const NOTE_MAX_LENGTH = 2000;
 export const LINK_LABEL_MAX_LENGTH = 60;
+export const ENTRY_TITLE_MAX_LENGTH = 80;
+
+const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
+const INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/;
+const COURSEWORK_STATUSES: CourseworkStatus[] = ["open", "done", "failed"];
+const PERSONAL_KINDS: PersonalDeadlineKind[] = [
+  "submission",
+  "coursework",
+  "appointment",
+  "other",
+];
+
+function validTitle(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    value.trim().length > 0 &&
+    value.trim().length <= ENTRY_TITLE_MAX_LENGTH
+  );
+}
+function validDueAt(value: unknown, dateOnly = false): value is string {
+  return (
+    typeof value === "string" &&
+    (DATE_ONLY.test(value) || (!dateOnly && INSTANT.test(value))) &&
+    !Number.isNaN(Date.parse(value))
+  );
+}
 
 /** Typing indicator of the assistant (KONZEPT §8 S5: 0.6–1.2 s). */
 export const ASSISTANT_DELAY_MS = 800;
@@ -112,6 +146,14 @@ export interface DemoState extends Preferences {
   removeCourseLink: (moduleId: string, id: string) => void;
   /** Sets the own Moodle address (false if invalid); null returns to the simulated link. */
   setMoodleUrl: (moduleId: string, url: string | null) => boolean;
+  /** Adds or updates a Prüfungsvorleistung; false for an invalid title or date. */
+  saveCoursework: (item: Omit<Coursework, "id"> & { id?: string }) => boolean;
+  removeCoursework: (id: string) => void;
+  /** Adds or updates an own date; false for an invalid title or date (the form checks the demo time). */
+  savePersonalDeadline: (
+    entry: Omit<PersonalDeadline, "id"> & { id?: string },
+  ) => boolean;
+  removePersonalDeadline: (id: string) => void;
   setHintTone: (tone: HintTone) => void;
   completeOnboarding: (preferences?: {
     goalRegularTime: boolean;
@@ -142,6 +184,8 @@ function defaultPreferences(): Preferences {
     moduleNotes: {},
     courseLinks: {},
     moodleUrls: {},
+    coursework: [],
+    personalDeadlines: [],
   };
 }
 function emptyResource<T>(): LoadState<T> {
@@ -277,7 +321,58 @@ function readOwnEntries(value: Record<string, unknown>) {
       const safe = typeof url === "string" ? parseWebUrl(url) : null;
       if (safe) moodle[id] = safe;
     }
-  return { moduleNotes: notes, courseLinks: links, moodleUrls: moodle };
+  const coursework = Array.isArray(value.coursework)
+    ? value.coursework.flatMap((item: unknown): Coursework[] => {
+        if (!isRecord(item)) return [];
+        const { id, moduleId, title, dueAt, status } = item;
+        if (
+          typeof id !== "string" ||
+          typeof moduleId !== "string" ||
+          !validTitle(title) ||
+          !COURSEWORK_STATUSES.includes(status as CourseworkStatus) ||
+          (dueAt !== undefined && !validDueAt(dueAt, true))
+        )
+          return [];
+        return [
+          {
+            id,
+            moduleId,
+            title: title.trim(),
+            status: status as CourseworkStatus,
+            ...(dueAt ? { dueAt } : {}),
+          },
+        ];
+      })
+    : [];
+  const personal = Array.isArray(value.personalDeadlines)
+    ? value.personalDeadlines.flatMap((item: unknown): PersonalDeadline[] => {
+        if (!isRecord(item)) return [];
+        const { id, title, dueAt, kind, moduleId } = item;
+        if (
+          typeof id !== "string" ||
+          !validTitle(title) ||
+          !validDueAt(dueAt) ||
+          !PERSONAL_KINDS.includes(kind as PersonalDeadlineKind)
+        )
+          return [];
+        return [
+          {
+            id,
+            title: title.trim(),
+            dueAt,
+            kind: kind as PersonalDeadlineKind,
+            ...(typeof moduleId === "string" ? { moduleId } : {}),
+          },
+        ];
+      })
+    : [];
+  return {
+    moduleNotes: notes,
+    courseLinks: links,
+    moodleUrls: moodle,
+    coursework,
+    personalDeadlines: personal,
+  };
 }
 
 function readSnapshot(value: unknown): SimulationSnapshot | null {
@@ -533,6 +628,57 @@ export function createDemoStore(
             if (list.length === 0) delete links[moduleId];
             set({ courseLinks: links });
           },
+          saveCoursework(item) {
+            if (
+              !validTitle(item.title) ||
+              (item.dueAt !== undefined && !validDueAt(item.dueAt, true))
+            )
+              return false;
+            const saved: Coursework = {
+              id: item.id ?? crypto.randomUUID(),
+              moduleId: item.moduleId,
+              title: item.title.trim(),
+              status: item.status,
+              ...(item.dueAt ? { dueAt: item.dueAt } : {}),
+            };
+            // An unknown id (e.g. undo after deleting) adds the entry again.
+            const list = get().coursework;
+            set({
+              coursework: list.some((entry) => entry.id === saved.id)
+                ? list.map((entry) => (entry.id === saved.id ? saved : entry))
+                : [...list, saved],
+            });
+            return true;
+          },
+          removeCoursework: (id) =>
+            set({
+              coursework: get().coursework.filter((item) => item.id !== id),
+            }),
+          savePersonalDeadline(entry) {
+            if (!validTitle(entry.title) || !validDueAt(entry.dueAt))
+              return false;
+            const saved: PersonalDeadline = {
+              id: entry.id ?? crypto.randomUUID(),
+              title: entry.title.trim(),
+              dueAt: entry.dueAt,
+              kind: entry.kind,
+              ...(entry.moduleId ? { moduleId: entry.moduleId } : {}),
+            };
+            // An unknown id (e.g. undo after deleting) adds the entry again.
+            const list = get().personalDeadlines;
+            set({
+              personalDeadlines: list.some((item) => item.id === saved.id)
+                ? list.map((item) => (item.id === saved.id ? saved : item))
+                : [...list, saved],
+            });
+            return true;
+          },
+          removePersonalDeadline: (id) =>
+            set({
+              personalDeadlines: get().personalDeadlines.filter(
+                (item) => item.id !== id,
+              ),
+            }),
           setMoodleUrl(moduleId, input) {
             const urls = { ...get().moodleUrls };
             if (input === null) delete urls[moduleId];
