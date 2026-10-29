@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -186,5 +186,14 @@ describe("Moduldetail: Kurs-Links und Notizen (P5-12)", () => {
     expect(demoStore.getState().moduleNotes["m-stat"]).toBe(
       "Probeklausur rechnen",
     );
+  });
+
+  it("keeps a note typed right before leaving the page (P5-12 review)", async () => {
+    await renderAt("/module/m-stat");
+    const user = userEvent.setup();
+    await user.type(screen.getByLabelText("Notizen zum Modul"), "Blatt 12");
+    // Leave before the save delay ends.
+    cleanup();
+    expect(demoStore.getState().moduleNotes["m-stat"]).toBe("Blatt 12");
   });
 });

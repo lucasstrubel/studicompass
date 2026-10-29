@@ -85,10 +85,16 @@ function SemesterTable({ group }: { group: SemesterGroup }) {
           >
             Versuch
           </th>
-          <th scope="col" className="py-1.5 pr-3 text-left font-medium">
+          <th
+            scope="col"
+            className="hidden py-1.5 pr-3 text-left font-medium sm:table-cell"
+          >
             Status
           </th>
-          <th scope="col" className="py-1.5 text-right font-medium">
+          <th
+            scope="col"
+            className="hidden py-1.5 text-right font-medium sm:table-cell"
+          >
             Note
           </th>
         </tr>
@@ -109,6 +115,15 @@ function SemesterTable({ group }: { group: SemesterGroup }) {
                 {OFFERING[module.offering]}
                 {exam?.attempt ? ` · Versuch ${exam.attempt}` : ""}
               </span>
+              {/* Phones: status and grade as a line of their own, so no column is cut off (P5-12 review). */}
+              <span className="mt-0.5 flex flex-wrap items-center gap-x-3 sm:hidden">
+                <ExamStatusLabel exam={exam} />
+                {exam?.grade !== undefined && (
+                  <span className="text-meta font-semibold tabular-nums">
+                    Note {formatGrade(exam.grade)}
+                  </span>
+                )}
+              </span>
             </th>
             <td className="hidden py-2 pr-3 text-right tabular-nums sm:table-cell">
               {module.ects}
@@ -119,10 +134,10 @@ function SemesterTable({ group }: { group: SemesterGroup }) {
             <td className="hidden py-2 pr-3 text-meta tabular-nums md:table-cell">
               {exam?.attempt ?? "–"}
             </td>
-            <td className="py-2 pr-3 whitespace-nowrap">
+            <td className="hidden py-2 pr-3 whitespace-nowrap sm:table-cell">
               <ExamStatusLabel exam={exam} />
             </td>
-            <td className="py-2 text-right font-semibold tabular-nums">
+            <td className="hidden py-2 text-right font-semibold tabular-nums sm:table-cell">
               {exam?.grade !== undefined ? formatGrade(exam.grade) : "–"}
             </td>
           </tr>

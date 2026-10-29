@@ -12,14 +12,23 @@ export function ModuleNotes({ moduleId }: { moduleId: string }) {
   const [text, setText] = useState(stored);
   const [saved, setSaved] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  // Text typed but not yet saved; leaving the page saves it (P5-12 review: Browser-Zurück within 600 ms).
+  const pending = useRef<string | null>(null);
   const id = useId();
 
   const save = (value: string) => {
     clearTimeout(timer.current);
+    pending.current = null;
     setModuleNote(moduleId, value);
     setSaved(true);
   };
-  useEffect(() => () => clearTimeout(timer.current), []);
+  useEffect(
+    () => () => {
+      clearTimeout(timer.current);
+      if (pending.current !== null) setModuleNote(moduleId, pending.current);
+    },
+    [moduleId, setModuleNote],
+  );
 
   return (
     <section className="rounded-xl border bg-card p-4" aria-labelledby={id}>
@@ -42,6 +51,7 @@ export function ModuleNotes({ moduleId }: { moduleId: string }) {
           const value = event.target.value;
           setText(value);
           setSaved(false);
+          pending.current = value;
           clearTimeout(timer.current);
           timer.current = setTimeout(() => save(value), SAVE_DELAY_MS);
         }}

@@ -151,8 +151,13 @@ export function ModuleDetail({ id }: { id: string }) {
           </div>
         </div>
         <aside aria-label="Deine Ergänzungen" className="space-y-5">
-          <CourseLinks moduleId={module.id} title={module.title} />
-          <ModuleNotes moduleId={module.id} />
+          {/* Keyed by module: switching modules must not carry over drafts or open forms. */}
+          <CourseLinks
+            key={`links-${module.id}`}
+            moduleId={module.id}
+            title={module.title}
+          />
+          <ModuleNotes key={`notes-${module.id}`} moduleId={module.id} />
         </aside>
       </div>
     </div>

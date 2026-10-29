@@ -230,3 +230,20 @@ test("P5-12: aktuelles Semester ohne Scrollen sichtbar, Notiz übersteht Neulade
     "Probeklausur bis Dienstag rechnen",
   );
 });
+
+test("P5-12: Modulliste am Handy ohne abgeschnittene Werte", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(!isMobile, "Phone layout");
+  await page.goto("/module");
+  const table = page.getByRole("table", { name: "Module im 3. Fachsemester" });
+  const tableBox = await table.boundingBox();
+  const status = table.getByText("Angemeldet").first();
+  await expect(status).toBeVisible();
+  const statusBox = await status.boundingBox();
+  expect((statusBox?.x ?? 0) + (statusBox?.width ?? 0)).toBeLessThanOrEqual(
+    (tableBox?.x ?? 0) + (tableBox?.width ?? 0),
+  );
+  expect(tableBox?.width ?? 999).toBeLessThanOrEqual(390);
+});
