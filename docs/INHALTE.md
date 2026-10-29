@@ -91,6 +91,8 @@ Ab Fachsemester 5 sind im Beispiel alle Module jedes Semester belegbar. Das häl
 | Hinweis-Stil (Standard) | direkt |
 | Hochschul-Mail | niklas.brandt@stud.hochschule.example |
 
+Vor- und Nachname lassen sich seit P5-08 im Onboarding und in den Einstellungen ändern. Startwert und Stand nach „Demo zurücksetzen“ ist Niklas Brandt.
+
 ---
 
 ## 4 Prüfungen (Kanal POS)
@@ -185,19 +187,26 @@ Abschnitt nur eintragen, wenn geprüft. Ungeprüft zeigt das UI „Beispiel“ u
 | DR-7 | Prüfungen des Hauptstudiums darfst du nur ablegen, wenn höchstens drei Prüfungen des Grundstudiums offen sind. | SPO Wirtschaftsinformatik (Hinweis aus Interview I1) | | nein | o-pa |
 | DR-8 | Jede Prüfung kannst du höchstens dreimal ablegen. | SPO Wirtschaftsinformatik | | nein | o-pa |
 | DR-9 | Dein Notenschnitt ist der nach ECTS gewichtete Durchschnitt; berücksichtigt wird nur die erste Nachkommastelle. | SPO Wirtschaftsinformatik | | nein | o-pa |
+| DR-11 | Zum Projektsemester wirst du zugelassen, wenn du das Praxissemester bestanden hast. | SPO Wirtschaftsinformatik | | nein | o-pa |
+| DR-12 | Zur Bachelorarbeit wirst du zugelassen, wenn du Praxis- und Projektsemester bestanden hast. | SPO Wirtschaftsinformatik | | nein | o-pa |
+| DR-13 | Sieht ein Modul eine Prüfungsvorleistung vor, wirst du zur Prüfung erst zugelassen, wenn du sie erbracht hast. | Modulhandbuch Wirtschaftsinformatik | | nein | o-pa |
 
 DR-3 und DR-10 sind Gestaltungsregeln von StudiCompass, keine SPO-Regeln (Quelle: „StudiCompass – Berechnungsregel“).
+
+DR-11 bis DR-13 (P5-08, formuliert von Claude Code, Freigabe durch Lucas) sind Beispielregeln. Sie dienen nur der Anzeige: DR-11 und DR-12 markieren die Module zum Meilenstein im Studienverlauf, DR-13 begründet die Zulassung. Die Prognose rechnet nicht mit ihnen.
 
 ---
 
 ## 8 Zuständige Stellen
 
-| ID | Name | Kontakt | Sprechzeiten |
-|---|---|---|---|
-| o-pa | Prüfungsamt | pruefungsamt@hochschule.example | Mo–Do 9–12 Uhr |
-| o-prakt | Praktikantenamt | praktikantenamt@hochschule.example | Di und Do 10–12 Uhr |
-| o-sb | Studienberatung | studienberatung@hochschule.example | nach Vereinbarung |
-| o-sd | Studiendekanat Wirtschaftsinformatik | studiendekanat-wi@hochschule.example | Mi 13–15 Uhr |
+| ID | Name | Kontakt | Sprechzeiten | Zuständig für (P5-08) |
+|---|---|---|---|---|
+| o-pa | Prüfungsamt | pruefungsamt@hochschule.example | Mo–Do 9–12 Uhr | An- und Abmeldung zu Prüfungen · Rücktritt mit Attest · Prüfungsversuche · Zulassung zu Prüfungen, Projektsemester und Bachelorarbeit · Notenbescheinigungen |
+| o-prakt | Praktikantenamt | praktikantenamt@hochschule.example | Di und Do 10–12 Uhr | Zulassung zum Praxissemester · Suche und Anerkennung der Praxisstelle · Praxisbericht |
+| o-sb | Studienberatung | studienberatung@hochschule.example | nach Vereinbarung | Studienplanung · Studieren mit Nebenjob · Fragen zum Studienverlauf · Studiengangwechsel |
+| o-sd | Studiendekanat Wirtschaftsinformatik | studiendekanat-wi@hochschule.example | Mi 13–15 Uhr | Wahlpflichtmodule · Anerkennung von Leistungen · Fragen zu SPO und Modulhandbuch · Angebot der Module |
+
+Die Spalte „Zuständig für“ (P5-08, formuliert von Claude Code, Freigabe durch Lucas) ist ein Beispiel; sie füllt die Seite Anlaufstellen (KONZEPT S10). Passende Fragen ergeben sich aus dem Katalog (§10): Je Stelle sind es die Einträge, die sie als zuständig nennen.
 
 ---
 
@@ -301,6 +310,14 @@ Die ersten sechs Einträge sind die Vorschlagsfragen im leeren Zustand.
 - **Für dich:** Wenn du dieses Semester nicht antrittst, ist der nächste Termin im WS 2027/28.
 - **Quellen:** DR-4 · **Zuständig:** o-sd
 
+### A-09 Zuständige Stelle finden (P5-08, formuliert von Claude Code, Freigabe durch Lucas)
+- **Frage:** An wen wende ich mich mit meiner Frage?
+- **Schlüsselwörter:** zuständig, zuständige stelle, an wen, wende ich mich, ansprechpartner, ansprechperson, anlaufstelle, kontakt, wer hilft
+- **Kurzantwort:** **Das hängt vom Thema ab:** Prüfungen, Fristen und Zulassungen klärt das Prüfungsamt, das Praxissemester das Praktikantenamt, deine Studienplanung die Studienberatung und Wahlpflichtmodule das Studiendekanat.
+- **Details:** Alle Stellen mit Zuständigkeiten, Kontakt und Sprechzeiten stehen unter Anlaufstellen. Bei Sonderfällen hilft „Anfrage vorbereiten“.
+- **Quelle:** Website der Hochschule, Seite „Ansprechpartner“ (Beispiel) · **Zuständig:** o-pa, o-prakt, o-sb, o-sd
+- **Aktion:** Anlaufstellen öffnen · **Anschluss:** A-01, A-03
+
 ### F-01 Fallback (Sonderfall)
 - **Demo-Frage für die Präsentation:** Kann ich das Praxissemester im Ausland machen und Statistik trotzdem im Winter schreiben?
 - **Antwort:** Dazu finde ich in SPO und Modulhandbuch keine eindeutige Regel. Das ist ein Sonderfall – verbindlich beantworten kann ihn das Praktikantenamt.
@@ -313,3 +330,5 @@ Die ersten sechs Einträge sind die Vorschlagsfragen im leeren Zustand.
 >
 > Viele Grüße
 > Niklas Brandt
+
+Seit P5-08 steht in der Signatur der Name aus dem Profil (Startwert Niklas Brandt).
