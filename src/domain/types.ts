@@ -189,6 +189,13 @@ export interface AssistantFallback {
   draft: string;
 }
 
+/** A link to a course that Niklas adds himself (P5-12); only http(s) addresses. */
+export interface CourseLink {
+  id: string;
+  label: string;
+  url: string;
+}
+
 export interface MoodleProgress {
   moduleId: string;
   label: string;

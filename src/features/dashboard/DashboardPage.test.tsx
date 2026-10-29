@@ -216,3 +216,24 @@ describe("Übersicht (P3-06 review)", () => {
     expect(modules).not.toHaveTextContent("nicht verfügbar");
   });
 });
+
+describe("ECTS-Verlauf (P5-12)", () => {
+  it("lists the gap to the target per semester in the value table", async () => {
+    vi.useRealTimers();
+    renderOverview();
+    const table = await screen.findByRole(
+      "table",
+      { name: "ECTS je Semester" },
+      { timeout: 5000 },
+    );
+    const rows = within(table)
+      .getAllByRole("row")
+      .map((row) => row.textContent);
+    expect(rows).toEqual([
+      "SemesterIst / PrognoseSollDifferenz",
+      "WS 2025/263030±0",
+      "SS 20264860−12",
+      "WS 2026/2778 (Prognose)90−12",
+    ]);
+  });
+});
