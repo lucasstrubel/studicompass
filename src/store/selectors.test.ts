@@ -223,4 +223,18 @@ describe("selectUndoableExamId", () => {
     expect(selectAdmission(store.getState(), "m-stat")).toBe("admitted");
     expect(selectAdmission(store.getState(), "m-db")).toBe("none");
   });
+
+  it("counts a date-only own entry until the end of its day (P5-13 review)", async () => {
+    const store = createDemoStore(createMockServices({ latencyMs: 0 }));
+    await store.getState().hydrate();
+    // Demo time is 25.01.2027, 19:30; an all-day entry for today is still ahead.
+    store.getState().savePersonalDeadline({
+      title: "Lernplan schreiben",
+      dueAt: "2027-01-25",
+      kind: "other",
+    });
+    expect(selectNextDeadline(store.getState())?.title).toBe(
+      "Lernplan schreiben",
+    );
+  });
 });

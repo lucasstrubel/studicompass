@@ -40,12 +40,15 @@ export function DeadlineDialog({
   onOpenChange,
   entry,
   onSaved,
+  returnFocus,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   /** The entry to edit; undefined adds a new one. */
   entry?: PersonalDeadline;
   onSaved: (title: string) => void;
+  /** The button that opened the dialog; it gets the focus back (P5-13 review, no Radix trigger). */
+  returnFocus?: () => HTMLElement | null;
 }) {
   const id = useId();
   const academic = useDemoStore(selectAcademicState);
@@ -99,7 +102,15 @@ export function DeadlineDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent
+        className="sm:max-w-lg"
+        onCloseAutoFocus={(event) => {
+          const target = returnFocus?.();
+          if (!target?.isConnected) return;
+          event.preventDefault();
+          target.focus();
+        }}
+      >
         <DialogHeader>
           <DialogTitle className="text-section-title">
             {entry ? "Termin bearbeiten" : "Termin hinzufügen"}

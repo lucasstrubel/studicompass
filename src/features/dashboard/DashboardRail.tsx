@@ -8,6 +8,7 @@ import {
 import { Link, useNavigate } from "react-router";
 import { ChannelBadge } from "@/components/common/ChannelBadge";
 import { OwnEntryBadge } from "@/components/common/OwnEntryBadge";
+import { deadlineInstant } from "@/lib/zoned-time";
 import { CitationList } from "@/components/common/CitationList";
 import { Countdown } from "@/components/common/Countdown";
 import { EmptyState } from "@/components/common/EmptyState";
@@ -77,7 +78,9 @@ function NextDeadlineCard() {
         description="Neue Fristen aus POS, Moodle, Mail und Website erscheinen hier."
       />
     );
-  const due = new Date(deadline.dueAt);
+  // A date-only deadline runs until the end of its day and shows no time (P5-13 review).
+  const dateOnly = deadline.dueAt.length === 10;
+  const due = new Date(deadlineInstant(deadline.dueAt));
   return (
     <Card size="sm">
       <CardContent>
@@ -86,10 +89,13 @@ function NextDeadlineCard() {
         </p>
         <h3 className="text-card-title">{deadline.title}</h3>
         <p className="mt-2 text-body">
-          <Countdown until={deadline.dueAt} className="font-semibold" />
+          <Countdown
+            until={deadlineInstant(deadline.dueAt)}
+            className="font-semibold"
+          />
         </p>
         <p className="mt-1 text-meta text-muted-foreground tabular-nums">
-          {formatDateTime(due)}
+          {dateOnly ? formatDate(due) : formatDateTime(due)}
         </p>
         {deadline.channel ? (
           <ChannelBadge channel={deadline.channel} className="mt-3" />

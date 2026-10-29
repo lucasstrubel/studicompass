@@ -26,6 +26,7 @@ import { gradeAverage } from "@/domain/grades";
 import { allowedMoveTerms, projectPlan } from "@/domain/projection";
 import { trafficLight } from "@/domain/rules";
 import { compare, next, semesterNumber } from "@/domain/terms";
+import { deadlineInstant } from "@/lib/zoned-time";
 import type { DemoState } from "./demo-store";
 
 function academicState(state: DemoState): AcademicState | null {
@@ -212,8 +213,11 @@ function agenda(state: DemoState): AgendaItem[] {
         ]
       : [],
   );
-  return [...channel, ...personal, ...coursework].sort((left, right) =>
-    left.dueAt.localeCompare(right.dueAt),
+  // A date-only entry counts until the end of its day (P5-13 review).
+  return [...channel, ...personal, ...coursework].sort(
+    (left, right) =>
+      Date.parse(deadlineInstant(left.dueAt)) -
+      Date.parse(deadlineInstant(right.dueAt)),
   );
 }
 
@@ -227,7 +231,7 @@ function nextDeadline(state: DemoState): AgendaItem | null {
   return (
     selectAgenda(state).find(
       (deadline) =>
-        new Date(deadline.dueAt) > DEMO_NOW &&
+        Date.parse(deadlineInstant(deadline.dueAt)) > DEMO_NOW.getTime() &&
         !(deadline.examId && settled.has(deadline.examId)),
     ) ?? null
   );

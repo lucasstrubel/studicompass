@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -56,6 +56,15 @@ export function DeadlinesPage() {
   );
   // null: closed; "new": add; otherwise the own entry being edited.
   const [dialog, setDialog] = useState<PersonalDeadline | "new" | null>(null);
+  // The button that opened the dialog, to return the keyboard focus there.
+  const opener = useRef<HTMLElement | null>(null);
+  const openDialog = (
+    target: PersonalDeadline | "new",
+    button: HTMLElement,
+  ) => {
+    opener.current = button;
+    setDialog(target);
+  };
   const loading = CHANNELS.some(
     (channel) =>
       connected[channel] &&
@@ -95,7 +104,7 @@ export function DeadlinesPage() {
         </p>
       )}
       <div className="flex flex-wrap gap-2">
-        <Button onClick={() => setDialog("new")}>
+        <Button onClick={(event) => openDialog("new", event.currentTarget)}>
           <Plus aria-hidden="true" />
           Termin hinzufügen
         </Button>
@@ -178,7 +187,9 @@ export function DeadlinesPage() {
                         <>
                           <Button
                             variant="outline"
-                            onClick={() => setDialog(own)}
+                            onClick={(event) =>
+                              openDialog(own, event.currentTarget)
+                            }
                           >
                             <Pencil aria-hidden="true" />
                             Bearbeiten
@@ -226,6 +237,7 @@ export function DeadlinesPage() {
           }}
           entry={dialog === "new" ? undefined : dialog}
           onSaved={(title) => toast(`Termin gespeichert: ${title}`)}
+          returnFocus={() => opener.current}
         />
       )}
     </div>

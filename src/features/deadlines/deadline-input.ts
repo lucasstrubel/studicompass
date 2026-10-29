@@ -1,24 +1,11 @@
-import { DEMO_TIME_ZONE } from "@/config/demo";
+import { zonedInstant } from "@/lib/zoned-time";
 import { deadlineInstant } from "./deadline-groups";
 
 export const DEADLINE_TITLE_MAX_LENGTH = 80;
 
-/** UTC offset of a German calendar day, e.g. "+01:00" in winter. */
-function offsetOn(date: string) {
-  return (
-    new Intl.DateTimeFormat("en", {
-      timeZone: DEMO_TIME_ZONE,
-      timeZoneName: "longOffset",
-    })
-      .formatToParts(new Date(`${date}T12:00:00Z`))
-      .find((part) => part.type === "timeZoneName")
-      ?.value.replace("GMT", "") || "+00:00"
-  );
-}
-
 /** Form values → stored due date: date only without a time, otherwise an instant in German time. */
 export function toDueAt(date: string, time: string) {
-  return time ? `${date}T${time}:00${offsetOn(date)}` : date;
+  return time ? zonedInstant(date, time) : date;
 }
 
 /** Stored due date → form values (date and optional time, as written in German time). */

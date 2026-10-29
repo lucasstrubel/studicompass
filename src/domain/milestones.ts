@@ -1,7 +1,8 @@
 import type { Module } from "./types";
 
 /** Milestone markers of the planner (KONZEPT §8 S2). */
-export type MilestoneKind = "foundationEnd" | "internship" | "project" | "thesis";
+export type MilestoneKind =
+  "foundationEnd" | "internship" | "project" | "thesis";
 
 export interface MilestoneModules {
   /** Rule that defines the assignment; null for the end of the foundation phase (study plan). */

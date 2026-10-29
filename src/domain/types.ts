@@ -204,10 +204,7 @@ export interface Coursework {
 export type ExamAdmission = "none" | "open" | "admitted" | "notAdmitted";
 
 export type PersonalDeadlineKind =
-  | "submission"
-  | "coursework"
-  | "appointment"
-  | "other";
+  "submission" | "coursework" | "appointment" | "other";
 /** A date Niklas enters himself (P5-13, US-21); no channel. */
 export interface PersonalDeadline {
   id: string;

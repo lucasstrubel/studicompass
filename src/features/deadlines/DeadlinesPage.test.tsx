@@ -143,6 +143,12 @@ it("P5-13: legt einen eigenen Termin an, prüft das Datum und löscht ihn mit R�
   await user.selectOptions(within(dialog).getByLabelText("Art"), "Termin");
   await user.click(within(dialog).getByRole("button", { name: "Speichern" }));
 
+  // The keyboard focus returns to the button that opened the dialog (P5-13 review).
+  await vi.waitFor(() =>
+    expect(
+      screen.getByRole("button", { name: "Termin hinzufügen" }),
+    ).toHaveFocus(),
+  );
   const week = screen.getByRole("region", { name: "Diese Woche" });
   const entry = within(week)
     .getByRole("heading", { name: "Lerngruppe Statistik" })
