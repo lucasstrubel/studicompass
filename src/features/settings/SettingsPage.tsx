@@ -68,6 +68,8 @@ export function SettingsPage() {
         )}
         {preview && (
           <CitationList
+            variant="footer"
+            className="mt-0"
             citations={
               state.resources.rules.data?.rules
                 .filter((rule) => preview.ruleIds.includes(rule.id))

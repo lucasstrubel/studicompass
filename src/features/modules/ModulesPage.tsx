@@ -103,6 +103,8 @@ function List() {
         ))}
       </dl>
       <CitationList
+        variant="footer"
+        className="mt-0"
         citations={[
           program.citation,
           ...["DR-1", "DR-9"].flatMap((id) =>
@@ -175,6 +177,8 @@ function Detail({ id }: { id: string }) {
         </p>
         {module.lecturer && <p className="text-body">{module.lecturer}</p>}
         <CitationList
+          variant="footer"
+          className="mt-0"
           citations={[offeringRule(module, rules["DR-4"]).citation]}
         />
       </section>
@@ -205,6 +209,8 @@ function Detail({ id }: { id: string }) {
           </p>
         )}
         <CitationList
+          variant="footer"
+          className="mt-0"
           citations={[
             {
               document: "POS – Prüfungsdaten (Demodaten)",

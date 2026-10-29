@@ -321,8 +321,8 @@ Für alle Tasks gilt: Hero-Flow, Testorakel (KONZEPT §10.4) und Spezifikationst
 - **AK:** keine Widersprüche zwischen KONZEPT, INHALTE, ROADMAP und CLAUDE.md; neue Texte freigegeben.
 
 #### P5-09 [Claude] Navigation und Quellen-Fußzeilen (P5-F26 Reiter, P5-F27, P5-F31)
-- [ ] Ab 1280 px kein Hamburger. Die Topbar zeigt alle Bereiche: Übersicht, Studienverlauf, Module & Noten, Fristen, Postfach, Assistent (Anlaufstellen ab P5-15). Einstellungen über das Profilmenü; unter 1280 px bleibt das Menü-Panel unverändert.
-- [ ] `CitationList` mit Variante `footer`; Quellen als letzte Zeile jeder Karte, unter den Aktionen. In „Warum?“ bleibt die Quelle am Ende der Erklärung.
+- [x] Ab 1280 px kein Hamburger. Die Topbar zeigt alle Bereiche: Übersicht, Studienverlauf, Module & Noten, Fristen, Postfach, Assistent (Anlaufstellen ab P5-15). Einstellungen über das Profilmenü; unter 1280 px bleibt das Menü-Panel unverändert.
+- [x] `CitationList` mit Variante `footer`; Quellen als letzte Zeile jeder Karte, unter den Aktionen. In „Warum?“ bleibt die Quelle am Ende der Erklärung.
 - **AK:** Topbar ohne Umbruch bei 1280, 1440 und 1920 px; jede Regel- und Fristaussage behält ihre Quelle in derselben Karte (Q-3); `check`, `e2e`, Screenshots neu.
 
 #### P5-10 [Claude] Studienverlauf: Orientierung und robustes Layout (P5-F13 bis P5-F18)

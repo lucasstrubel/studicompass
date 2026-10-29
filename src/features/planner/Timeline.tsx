@@ -273,17 +273,14 @@ export function Timeline({
               </ul>
             )}
             {heavy && (
-              <div className="space-y-1">
-                <p className="flex items-start gap-1 text-meta text-status-tight-foreground">
-                  <TriangleAlert
-                    className="mt-0.5 size-3.5 shrink-0"
-                    aria-hidden="true"
-                  />
-                  Hohe Belastung: {item.ects} ECTS bei {load.jobHours} Std.
-                  Nebenjob pro Woche
-                </p>
-                {load.citation && <CitationList citations={[load.citation]} />}
-              </div>
+              <p className="flex items-start gap-1 text-meta text-status-tight-foreground">
+                <TriangleAlert
+                  className="mt-0.5 size-3.5 shrink-0"
+                  aria-hidden="true"
+                />
+                Hohe Belastung: {item.ects} ECTS bei {load.jobHours} Std.
+                Nebenjob pro Woche
+              </p>
             )}
             <ul className="flex flex-col gap-2">
               {item.modules.map((entry) => (
@@ -300,6 +297,13 @@ export function Timeline({
                 />
               ))}
             </ul>
+            {heavy && load.citation && (
+              <CitationList
+                variant="footer"
+                className="mt-auto"
+                citations={[load.citation]}
+              />
+            )}
           </li>
         );
       })}

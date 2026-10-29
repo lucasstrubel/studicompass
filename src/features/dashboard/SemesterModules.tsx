@@ -165,7 +165,11 @@ export function SemesterModules() {
       <p className="mt-3 flex flex-wrap items-center gap-2 text-meta text-muted-foreground">
         Kanäle: <ChannelBadge channel="pos" /> <ChannelBadge channel="moodle" />
       </p>
-      <CitationList className="mt-2" citations={[OFFERING_SOURCE]} />
+      <CitationList
+        variant="footer"
+        className="mt-3"
+        citations={[OFFERING_SOURCE]}
+      />
     </>
   );
 }

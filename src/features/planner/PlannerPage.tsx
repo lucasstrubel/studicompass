@@ -240,7 +240,11 @@ function PlannerContent() {
                 <li key={rule.id}>{rule.citation.summary}</li>
               ))}
             </ul>
-            <CitationList citations={planRules.map((rule) => rule.citation)} />
+            <CitationList
+              variant="footer"
+              className="mt-0"
+              citations={planRules.map((rule) => rule.citation)}
+            />
           </AccordionContent>
         </AccordionItem>
       </Accordion>

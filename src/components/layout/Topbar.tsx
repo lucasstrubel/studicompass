@@ -50,7 +50,10 @@ export function Topbar() {
   const location = useLocation();
   return (
     <header className="relative z-30 flex flex-wrap items-center gap-x-3 gap-y-2 border-b bg-card px-4 py-3 md:px-6">
-      <NavigationMenu key={location.key} />
+      {/* Below 1280 px only; above, the top bar lists every area (P5-09). */}
+      <div className="xl:hidden">
+        <NavigationMenu key={location.key} />
+      </div>
       <Link
         to="/"
         aria-label={APP_NAME + " – Übersicht"}

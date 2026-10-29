@@ -86,7 +86,6 @@ function Answer({
           <p className="mt-2">{entry.details}</p>
         </details>
       )}
-      <CitationList citations={sources.map((rule) => rule.citation)} />
       <div>
         <Subheading className="font-semibold">Zuständig</Subheading>
         {offices.map((office) => (
@@ -121,6 +120,11 @@ function Answer({
               ),
           )}
       </div>
+      <CitationList
+        variant="footer"
+        className="mt-0"
+        citations={sources.map((rule) => rule.citation)}
+      />
     </article>
   );
 }

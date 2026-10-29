@@ -9,7 +9,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-/** Desktop top links start at 1280 px; the hamburger is always available. */
+/** From 1280 px every area sits in the top bar and the hamburger is hidden (P5-09). */
 export const DESKTOP_QUERY = "(min-width: 80rem)";
 
 export interface NavItem {
@@ -34,13 +34,13 @@ export const NAV_ITEMS: readonly NavItem[] = [
     icon: Route,
   },
   { to: "/module", label: "Module & Noten", icon: BookOpen },
+  { to: "/fristen", label: "Fristen", icon: CalendarClock },
   { to: "/postfach", label: "Postfach", icon: Inbox },
   {
     to: "/assistent",
     label: "Assistent",
     icon: MessageCircleQuestionMark,
   },
-  { to: "/fristen", label: "Fristen", icon: CalendarClock },
 ];
 
 /** Settings in the full menu; there is no login/logout. */
@@ -50,5 +50,5 @@ export const SETTINGS_ITEM: NavItem = {
   icon: Settings,
 };
 
-/** Primary desktop links; the full menu provides every destination. */
-export const TOP_NAV_ITEMS = NAV_ITEMS.slice(0, 4);
+/** Desktop links: every area, so the top bar replaces the hamburger menu from 1280 px (P5-09). */
+export const TOP_NAV_ITEMS = NAV_ITEMS;

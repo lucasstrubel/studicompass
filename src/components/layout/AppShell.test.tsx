@@ -85,6 +85,52 @@ describe("AppShell", () => {
     expect(screen.queryByRole("complementary")).not.toBeInTheDocument();
   });
 
+  it("lists every area in the top bar and hides the hamburger from 1280 px (P5-09)", () => {
+    renderShell();
+    const links = within(
+      screen.getByRole("navigation", { name: "Hauptnavigation" }),
+    ).getAllByRole("link");
+    expect(links.map((link) => link.textContent)).toEqual([
+      "Übersicht",
+      "Studienverlauf",
+      "Module & Noten",
+      "Fristen",
+      "Postfach",
+      "Assistent",
+    ]);
+    // jsdom applies no media queries, so the breakpoint is checked on the wrapper class.
+    expect(trigger().closest(".xl\\:hidden")).not.toBeNull();
+  });
+
+  it("closes an open menu when the window grows past 1280 px (P5-09 review)", async () => {
+    const listeners: ((event: MediaQueryListEvent) => void)[] = [];
+    vi.spyOn(window, "matchMedia").mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: (_type: string, listener: unknown) => {
+        if (query === "(min-width: 80rem)")
+          listeners.push(listener as (event: MediaQueryListEvent) => void);
+      },
+      removeEventListener: () => undefined,
+      addListener: () => undefined,
+      removeListener: () => undefined,
+      dispatchEvent: () => false,
+    }));
+    const user = userEvent.setup();
+    renderShell();
+    await user.click(trigger());
+    expect(fullMenu()).toBeInTheDocument();
+    act(() => {
+      for (const listener of listeners)
+        listener({ matches: true } as MediaQueryListEvent);
+    });
+    expect(
+      screen.queryByRole("dialog", { name: "Alle Bereiche" }),
+    ).not.toBeInTheDocument();
+    expect(document.body.style.pointerEvents).not.toBe("none");
+  });
+
   it("shows the student's initials in the profile button (KONZEPT A-6)", async () => {
     renderShell();
     const profile = screen.getByRole("button", { name: "Profil" });

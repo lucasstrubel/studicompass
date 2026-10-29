@@ -36,7 +36,10 @@ const VIEWPORTS = [
   { name: "390", width: 390, height: 844 },
 ];
 for (const screen of SCREENS)
-  for (const viewport of VIEWPORTS)
+  for (const viewport of VIEWPORTS.filter(
+    // From 1280 px the top bar lists every area and there is no menu to open (P5-09).
+    (item) => screen.name !== "navigation" || item.name === "390",
+  ))
     test(`${screen.name} ${viewport.name}`, async ({ page }) => {
       const loadingDeadlines = screen.name === "fristen-laden";
       const clockTime = new Date("2027-01-25T18:30:00Z");
