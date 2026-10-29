@@ -341,11 +341,11 @@ Für alle Tasks gilt: Hero-Flow, Testorakel (KONZEPT §10.4) und Spezifikationst
   - Bei 9 Spalten bleibt jede Box mindestens 11rem breit.
 
 #### P5-11 [Claude] Was-wäre-wenn: Ergebnis-Dialog und Drag & Drop (P5-F19, P5-F20)
-- [ ] Nach jeder Verschiebung ein Ergebnis-Dialog:
+- [x] Nach jeder Verschiebung ein Ergebnis-Dialog:
   - Inhalt: Abschluss und Praxissemester (echt → simuliert), Status, mitverschobene Module, Folgen mit Quelle
   - Aktionen: „Weiter simulieren“, „Verschiebung zurücknehmen“, „Simulation verwerfen“
-- [ ] Kompakter Simulationsstatus bleibt oben sichtbar
-- [ ] Drag & Drop (`@dnd-kit/core`):
+- [x] Kompakter Simulationsstatus bleibt oben sichtbar
+- [x] Drag & Drop (`@dnd-kit/core`):
   - nur bei eingeschalteter Simulation
   - zulässige Semester beim Ziehen hervorgehoben, unzulässige mit Grund gedimmt
   - Menü bleibt für die Tastatur

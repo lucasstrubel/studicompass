@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
 // Feedback round of 28.10.2026 (ROADMAP P5-09 ff.): checks that need a real layout engine.
 
@@ -79,6 +79,7 @@ test("P5-10: nach Verschiebungen bleiben die Boxen breit, nur die Zeitleiste scr
   await page.getByRole("switch", { name: "Simulation" }).click();
   await page.getByRole("button", { name: "Kolloquium verschieben" }).click();
   await page.getByRole("menuitem").last().click();
+  await page.getByRole("button", { name: "Weiter simulieren" }).click();
   const columns = page
     .getByRole("region", { name: /^Zeitleiste/ })
     .getByRole("listitem", { name: /Fachsemester$/ });
@@ -91,4 +92,94 @@ test("P5-10: nach Verschiebungen bleiben die Boxen breit, nur die Zeitleiste scr
       document.documentElement.clientWidth,
   );
   expect(overflow).toBeLessThanOrEqual(0);
+});
+
+const column = (page: Page, term: RegExp) =>
+  page.getByRole("listitem", { name: term });
+const marketing = (page: Page) =>
+  page.locator("[data-draggable]").filter({
+    has: page.getByRole("link", { name: "Marketing", exact: true }),
+  });
+
+test("P5-11: Drag & Drop mit der Maus ergibt dieselben Werte wie das Menü (Szenario D)", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, "Mouse drag on the desktop columns");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/verlauf");
+  await page.getByRole("switch", { name: "Simulation" }).click();
+  const target = column(page, /^SS 2027,/);
+  // Mouse events only reach what is on screen; the SS 2027 column runs alongside at the same height.
+  await marketing(page).scrollIntoViewIfNeeded();
+  const from = await marketing(page).boundingBox();
+  const to = await target.boundingBox();
+  if (!from || !to) throw new Error("Boxen nicht gefunden");
+  await page.mouse.move(from.x + 20, from.y + 10);
+  await page.mouse.down();
+  await page.mouse.move(from.x + 40, from.y + 30, { steps: 5 });
+  await expect(target).toHaveAttribute("data-drop", "allowed");
+  await expect(column(page, /^WS 2027\/28,/)).toHaveAttribute(
+    "data-drop",
+    "allowed",
+  );
+  await page.mouse.move(to.x + to.width / 2, from.y + 10, { steps: 15 });
+  await page.mouse.up();
+  const dialog = page.getByRole("dialog", {
+    name: "Simulation: Marketing → SS 2027",
+  });
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole("button", { name: "Weiter simulieren" }).click();
+  const status = page.getByRole("status", { name: "Simulationsstatus" });
+  const byDrag = await status.textContent();
+  await expect(target).toContainText("48 ECTS geplant");
+  await expect(status).toContainText("Abschluss in der Simulation: WS 2028/29");
+
+  // Same move through the menu.
+  await status.getByRole("button", { name: "Simulation verwerfen" }).click();
+  await page.getByRole("switch", { name: "Simulation" }).click();
+  await page.getByRole("button", { name: "Marketing verschieben" }).click();
+  await page.getByRole("menuitem", { name: "SS 2027" }).click();
+  await page.getByRole("button", { name: "Weiter simulieren" }).click();
+  await expect(status).toHaveText(byDrag ?? "");
+  await expect(target).toContainText("48 ECTS geplant");
+});
+
+test("P5-11: Drag & Drop per Touch (langes Drücken)", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(!isMobile, "Touch drag on the phone layout");
+  await page.goto("/verlauf");
+  await page.getByRole("switch", { name: "Simulation" }).click();
+  const chip = marketing(page);
+  await chip.scrollIntoViewIfNeeded();
+  await page.evaluate(() => window.scrollBy(0, 250));
+  const from = await chip.boundingBox();
+  const to = await column(page, /^SS 2027,/).boundingBox();
+  if (!from || !to) throw new Error("Boxen nicht gefunden");
+  const client = await page.context().newCDPSession(page);
+  const touch = (
+    type: "touchStart" | "touchMove" | "touchEnd",
+    x: number,
+    y: number,
+  ) =>
+    client.send("Input.dispatchTouchEvent", {
+      type,
+      touchPoints: type === "touchEnd" ? [] : [{ x, y }],
+    });
+  const start = { x: from.x + 20, y: from.y + 10 };
+  const end = { x: to.x + to.width / 2, y: to.y + 20 };
+  await touch("touchStart", start.x, start.y);
+  await page.waitForTimeout(400);
+  for (let step = 1; step <= 12; step++)
+    await touch(
+      "touchMove",
+      start.x + ((end.x - start.x) * step) / 12,
+      start.y + ((end.y - start.y) * step) / 12,
+    );
+  await touch("touchEnd", end.x, end.y);
+  await expect(
+    page.getByRole("dialog", { name: "Simulation: Marketing → SS 2027" }),
+  ).toBeVisible();
 });
