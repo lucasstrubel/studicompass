@@ -9,37 +9,72 @@ import { APP_NAME, DEMO_CURRENT_TERM } from "@/config/demo";
 import { semesterNumber } from "@/domain/terms";
 import { useDemoStore } from "@/store/use-demo-store";
 import { CHANNELS } from "@/services/types";
+import type { ProfileName } from "@/domain/types";
+import { selectProfileName } from "@/store/selectors";
+import { ProfileFields } from "@/features/profile/ProfileFields";
+import {
+  profileErrors,
+  type ProfileErrors,
+} from "@/features/profile/profile-input";
 
-const STEPS = [
-  "Willkommen",
-  "Kanäle verbinden",
-  "Dein Studium",
-  "Hinweis-Stil",
-];
+const STEPS = ["Willkommen", "Kanäle verbinden", "Dein Profil", "Hinweis-Stil"];
 
 export function OnboardingPage() {
   const state = useDemoStore((state) => state);
   const [step, setStep] = useState(0);
   const [goal, setGoal] = useState(state.goalRegularTime);
   const [hours, setHours] = useState(state.jobHoursPerWeek);
-  const [tour, setTour] = useState(false);
+  const [tour, setTour] = useState(true);
+  const name = useDemoStore(selectProfileName);
+  const profileLoading =
+    !state.resources.pos.data &&
+    (state.resources.pos.status === "loading" ||
+      state.resources.pos.status === "idle");
+  // Only edited name fields override POS; a late load may still fill untouched fields.
+  const [draft, setDraft] = useState<Partial<ProfileName>>({});
+  const [errors, setErrors] = useState<ProfileErrors>({});
+  const profile = {
+    firstName: name?.firstName ?? "",
+    lastName: name?.lastName ?? "",
+    ...draft,
+    goalRegularTime: goal,
+    jobHoursPerWeek: hours,
+  };
   const title = useRef<HTMLHeadingElement>(null);
   const navigate = useNavigate();
   useEffect(() => {
     title.current?.focus();
   }, [step]);
-  function finish(skip = false) {
-    if (skip) {
+  function validProfile() {
+    const found = profileErrors(profile);
+    setErrors(found);
+    return Object.keys(found).length === 0;
+  }
+  function finish(demo = false) {
+    if (demo) {
       state.setHintTone("direct");
       for (const channel of CHANNELS)
         if (!state.connectedChannels[channel])
           void state.setChannelConnected(channel, true);
+      state.completeOnboarding({
+        goalRegularTime: true,
+        jobHoursPerWeek: 15,
+        profileName: null,
+      });
+      void navigate("/", { replace: true });
+      return;
     }
-    state.completeOnboarding({
-      goalRegularTime: skip ? true : goal,
-      jobHoursPerWeek: skip ? 15 : hours,
-    });
-    void navigate(!skip && tour ? "/?tour=1" : "/", { replace: true });
+    if (profileLoading) {
+      setStep(2);
+      return;
+    }
+    if (!validProfile()) {
+      setStep(2);
+      return;
+    }
+    if (!state.saveProfile(profile)) return;
+    state.completeOnboarding();
+    void navigate(tour ? "/?tour=1" : "/", { replace: true });
   }
   return (
     <main className="mx-auto flex min-h-dvh max-w-2xl flex-col justify-center gap-5 px-4 py-8">
@@ -145,28 +180,26 @@ export function OnboardingPage() {
               </div>
             )}
           </ResourceBoundary>
-          <label className="flex items-center gap-2 text-body">
-            <input
-              className="accent-primary"
-              type="checkbox"
-              checked={goal}
-              onChange={(event) => setGoal(event.target.checked)}
-            />
-            Mein Ziel: Abschluss in Regelstudienzeit
-          </label>
-          <label htmlFor="job-hours" className="text-body">
-            Nebenjob: <output className="tabular-nums">{hours}</output>{" "}
-            Std./Woche
-          </label>
-          <input
-            className="accent-primary"
-            id="job-hours"
-            type="range"
-            min={0}
-            max={40}
-            step={1}
-            value={hours}
-            onChange={(event) => setHours(Number(event.target.value))}
+          <ProfileFields
+            value={profile}
+            errors={errors}
+            onChange={(change) => {
+              if (change.firstName !== undefined)
+                setDraft((current) => ({
+                  ...current,
+                  firstName: change.firstName,
+                }));
+              if (change.lastName !== undefined)
+                setDraft((current) => ({
+                  ...current,
+                  lastName: change.lastName,
+                }));
+              if (change.goalRegularTime !== undefined)
+                setGoal(change.goalRegularTime);
+              if (change.jobHoursPerWeek !== undefined)
+                setHours(change.jobHoursPerWeek);
+              setErrors({});
+            }}
           />
         </>
       )}
@@ -259,13 +292,24 @@ export function OnboardingPage() {
           </Button>
         )}
         {step > 0 && step < 3 && (
-          <Button onClick={() => setStep(step + 1)}>Weiter</Button>
+          <Button
+            disabled={step === 2 && profileLoading}
+            onClick={() => {
+              if (step !== 2 || validProfile()) setStep(step + 1);
+            }}
+          >
+            Weiter
+          </Button>
         )}
         {step === 3 && (
           <Button onClick={() => finish()}>Einrichtung abschließen</Button>
         )}
         {step > 0 && (
-          <Button variant="ghost" onClick={() => finish(true)}>
+          <Button
+            variant="ghost"
+            disabled={step === 2 && profileLoading}
+            onClick={() => finish()}
+          >
             Überspringen
           </Button>
         )}

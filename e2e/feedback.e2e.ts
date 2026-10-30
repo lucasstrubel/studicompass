@@ -21,6 +21,7 @@ test("P5-09: ab 1280 px alle Bereiche in einer Topbar-Zeile, ohne Hamburger", as
       "Fristen",
       "Postfach",
       "Assistent",
+      "Anlaufstellen",
     ]);
     // One row: the links sit level with the profile button, so nothing wrapped.
     const header = page.getByRole("banner");

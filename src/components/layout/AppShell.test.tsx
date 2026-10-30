@@ -97,6 +97,7 @@ describe("AppShell", () => {
       "Fristen",
       "Postfach",
       "Assistent",
+      "Anlaufstellen",
     ]);
     // jsdom applies no media queries, so the breakpoint is checked on the wrapper class.
     expect(trigger().closest(".xl\\:hidden")).not.toBeNull();

@@ -22,6 +22,9 @@ test("P4: Tastatur-Onboarding, Tour und Überspringen", async ({ page }) => {
   ).toBeFocused();
   await focus("Weiter");
   await page.keyboard.press("Enter");
+  await expect(page.getByLabel("Vorname", { exact: true })).toHaveValue(
+    "Niklas",
+  );
   const slider = page.getByRole("slider");
   await slider.focus();
   await page.keyboard.press("ArrowRight");
@@ -29,7 +32,9 @@ test("P4: Tastatur-Onboarding, Tour und Überspringen", async ({ page }) => {
   await focus("Weiter");
   await page.keyboard.press("Enter");
   await page.getByRole("checkbox", { name: /Danach die Produkt-Tour/ }).focus();
-  await page.keyboard.press("Space");
+  await expect(
+    page.getByRole("checkbox", { name: /Danach die Produkt-Tour/ }),
+  ).toBeChecked();
   await focus("Einrichtung abschließen");
   await page.keyboard.press("Enter");
   await expect(page.getByRole("dialog")).toContainText("Dein Studienstand");
@@ -67,7 +72,7 @@ test("P4: Postfach-Deep-Link, Gelesenstatus nach Neuladen und Browser-Zurück", 
   await expect(page.getByRole("dialog")).toHaveCount(0);
 });
 
-test("P4: alle acht Fragen, Fallback, Kontext und ICS-Download", async ({
+test("P4/P5-15: alle neun Fragen, Fallback, Kontext und ICS-Download", async ({
   page,
 }) => {
   const questions = [
@@ -79,6 +84,7 @@ test("P4: alle acht Fragen, Fallback, Kontext und ICS-Download", async ({
     "Wie viele ECTS fehlen mir noch?",
     "Wie wird mein Notenschnitt berechnet?",
     "Wann wird Statistik angeboten?",
+    "An wen wende ich mich mit meiner Frage?",
   ];
   await page.goto("/assistent?module=m-stat");
   await expect(page.getByText("bezogen auf: Statistik")).toBeVisible();
@@ -91,7 +97,7 @@ test("P4: alle acht Fragen, Fallback, Kontext und ICS-Download", async ({
         .getByRole("heading", { name: question, exact: true }),
     ).toBeVisible();
   }
-  await expect(page.getByRole("log").getByRole("article")).toHaveCount(8);
+  await expect(page.getByRole("log").getByRole("article")).toHaveCount(9);
   await page
     .getByRole("textbox", { name: "Deine Frage" })
     .fill(
@@ -119,6 +125,8 @@ test("P4: Screens ohne Überlauf von 360 bis 1920 px", async ({ page }) => {
     "/postfach?eintrag=i-02",
     "/assistent?frage=A-02",
     "/fristen",
+    "/fristen?ansicht=kalender",
+    "/anlaufstellen",
     "/einstellungen",
   ];
   for (const path of paths) {
@@ -144,7 +152,7 @@ test("P4: alle Katalogfragen und der Sonderfall per Klick", async ({
   page,
 }) => {
   test.setTimeout(60000);
-  for (let index = 0; index < 9; index++) {
+  for (let index = 0; index < 10; index++) {
     await page.goto("/assistent");
     await expect(page.locator("[data-slot=skeleton]")).toHaveCount(0);
     if (index >= 6) {
@@ -165,7 +173,7 @@ test("P4: alle Katalogfragen und der Sonderfall per Klick", async ({
         .click();
     }
     await expect(page.getByRole("log")).toContainText("KI-Antwort");
-    if (index === 8)
+    if (index === 9)
       await expect(
         page.getByRole("button", { name: "Anfrage vorbereiten" }),
       ).toBeVisible();

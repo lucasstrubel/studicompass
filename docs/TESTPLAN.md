@@ -3,7 +3,7 @@
 Grundlage: VL01 (Test-Methoden: Usability-Test, Usability-Inspektion, Befragung) und VL05 (ISO 9241-110, Nielsen, Seven Stages of Action).
 Ziel: prüfen, ob der Prototyp die Idee **selbsterklärend** vermittelt und ob Niklas' Kernaufgaben effektiv, effizient und zufriedenstellend lösbar sind (Gebrauchstauglichkeit nach ISO 9241-11).
 
-**Stand 27.10.2026:** Agenteninspektion und technische Iteration in [P5.md](reviews/P5.md). Noch keine Tests mit Teilnehmenden durchgeführt; P5-02 und Gate M5 bleiben offen. Die Agenteninspektion ersetzt weder die unabhängige Team-Evaluation noch echte Nutzerbeobachtungen.
+**Stand 30.10.2026:** Agenteninspektion und technische Iteration in [P5.md](reviews/P5.md); zusätzlich liegt die Sammelliste aus Team-Review und Nutzertest vom 28.10. vor ([Befundliste](evaluation/P5-auswertung.md)). Die Teilnehmendenprotokolle, Häufigkeiten und Endauswertung sind noch nicht eingetragen; die geplanten 3–5 Sitzungen und Gate M5 gelten deshalb weiter als offen. Die Agenteninspektion ersetzt weder die unabhängige Team-Evaluation noch echte Nutzerbeobachtungen.
 
 **Durchführungspaket:** [Aufgabenblatt ohne Lösungen](evaluation/P5-aufgaben.md) · [Protokolle P1–P5](evaluation/P5-protokolle.md) · [Auswertung und Präsentationsvorlage](evaluation/P5-auswertung.md). Dieses Testplandokument ist für Moderation und Protokoll bestimmt und enthält Lösungshinweise. Teilnehmende erhalten nur das Aufgabenblatt.
 
@@ -109,4 +109,4 @@ Für die Zusammenführung gilt:
 - Für Nutzertestbefunde Priorität = Schweregrad (0–4) × betroffene Personen. Bei Gleichstand zuerst blockierte Kernaufgaben, dann größere Ablaufabdeckung, dann kleinere Befund-ID. Fachliche Fehler oder blockierte Kernaufgaben werden vor kosmetischen Problemen behoben.
 - Für reine Inspektionsbefunde bleibt die Nutzerhäufigkeit „nicht erhoben“; kein erfundener Score. Vorläufig nach fachlicher Auswirkung, blockierten Kernaufgaben, Schweregrad und betroffenen Abläufen priorisieren.
 - Höchstens fünf belegte Befunde in P5-04 umsetzen. Einen behobenen Inspektionsbefund im Test weiter beobachten; technische Regressionstests belegen keine verbesserte Gebrauchstauglichkeit bei Menschen.
-- Gate M5 erst nach echten Tests, dokumentierter Endauswertung und Nachprüfung der priorisierten Änderungen bewerten. Die formale M4-Abnahme und der unabhängige Gegencheck bleiben separat offen.
+- Gate M5 erst nach echten Tests, dokumentierter Endauswertung und Nachprüfung der priorisierten Änderungen bewerten. Der unabhängige P4-Gegencheck ist dokumentiert und `m4` gesetzt (ROADMAP); die späteren Änderungen der Feedback-Runde brauchen einen eigenen unabhängigen Gegencheck. Echter Kalenderimport, Screenreader und reale Geräte bleiben separat offen.

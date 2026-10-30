@@ -95,3 +95,44 @@ it("P4-01: Deep-Link antwortet auch bei StrictMode-Effektwiederholung", async ()
     "2,4 aus 8 bestandenen Modulen",
   );
 });
+
+it.each(["Sonderfall", "Freitext"])(
+  "P5-15: Anfrageentwurf verwendet den Profilnamen (%s)",
+  async (kind) => {
+    vi.useFakeTimers();
+    const ready = demoStore.getState().resetDemo();
+    await vi.advanceTimersByTimeAsync(LATENCY_MS);
+    await ready;
+    demoStore.getState().saveProfile({
+      firstName: "Alex",
+      lastName: "Muster",
+      goalRegularTime: true,
+      jobHoursPerWeek: 15,
+    });
+    const question =
+      kind === "Sonderfall"
+        ? demoStore.getState().resources.assistant.data?.fallback.question
+        : "Wie plane ich ein Urlaubssemester?";
+    render(
+      <RouterProvider
+        router={createMemoryRouter(
+          [{ path: "/assistent", Component: AssistantPage }],
+          {
+            initialEntries: [
+              `/assistent?frage=${encodeURIComponent(question ?? "")}`,
+            ],
+          },
+        )}
+      />,
+    );
+    await act(() => vi.advanceTimersByTimeAsync(800));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Anfrage vorbereiten" }),
+    );
+    const draft = screen.getByLabelText<HTMLTextAreaElement>(
+      "Dein Anfrageentwurf",
+    );
+    expect(draft.value).toContain("Viele Grüße\nAlex Muster");
+    expect(draft.value).not.toContain("Niklas Brandt");
+  },
+);

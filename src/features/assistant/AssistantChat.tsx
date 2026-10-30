@@ -13,7 +13,7 @@ import { CitationList } from "@/components/common/CitationList";
 import { useDemoStore } from "@/store/use-demo-store";
 import { selectAssistantPersonal } from "@/store/assistant-selectors";
 import type { AssistantEntry, Office } from "@/domain/types";
-import { selectAcademicState } from "@/store/selectors";
+import { selectAcademicState, selectProfileName } from "@/store/selectors";
 import { semesterNumber } from "@/domain/terms";
 import { cn } from "@/lib/utils";
 
@@ -90,7 +90,13 @@ function Answer({
         <Subheading className="font-semibold">Zuständig</Subheading>
         {offices.map((office) => (
           <p key={office.id} className="break-words">
-            {office.name} · {office.email}
+            <Link
+              to={`/anlaufstellen#${office.id}`}
+              className="text-accent-strong underline underline-offset-2"
+            >
+              {office.name}
+            </Link>{" "}
+            · {office.email}
             {office.hours && ` · ${office.hours}`}
           </p>
         ))}
@@ -123,7 +129,10 @@ function Answer({
       <CitationList
         variant="footer"
         className="mt-0"
-        citations={sources.map((rule) => rule.citation)}
+        citations={[
+          ...sources.map((rule) => rule.citation),
+          ...(entry.citations ?? []),
+        ]}
       />
     </article>
   );
@@ -151,6 +160,7 @@ export function AssistantChat({
   const data = useDemoStore((state) => state.resources.assistant.data);
   const pos = useDemoStore((state) => state.resources.pos.data);
   const academic = useDemoStore(selectAcademicState);
+  const profileName = useDemoStore(selectProfileName);
   const offices = useDemoStore((state) => state.resources.rules.data?.offices);
   const messages = useDemoStore((state) => state.assistantThread);
   // The answer is prepared in the store, so it arrives even if the window closes in between.
@@ -186,10 +196,17 @@ export function AssistantChat({
     if (panel) latest.current?.scrollIntoView?.({ block: "start" });
   }, [panel, messages.length]);
   if (!data) return null;
+  const signature = profileName
+    ? `${profileName.firstName} ${profileName.lastName}`
+    : "";
+  const fallbackDraft = data.fallback.draft.replace(
+    /\n\nViele Grüße\n[\s\S]*$/,
+    () => `\n\nViele Grüße\n${signature}`,
+  );
   const draft =
     draftQuestion === data.fallback.question
-      ? data.fallback.draft
-      : `Betreff: Frage zur Prüfungsordnung\n\nGuten Tag, ich studiere ${pos?.program.title ?? "Wirtschaftsinformatik"}${academic ? ` im ${semesterNumber(academic.currentTerm, academic.student.startTerm)}. Fachsemester` : ""}. Meine Matrikelnummer ist ${pos?.student.matriculationNo ?? "nicht verfügbar"}.\n\n${draftQuestion ?? ""}\n\nViele Grüße\n${pos?.student.firstName ?? ""} ${pos?.student.lastName ?? ""}`;
+      ? fallbackDraft
+      : `Betreff: Frage zur Prüfungsordnung\n\nGuten Tag, ich studiere ${pos?.program.title ?? "Wirtschaftsinformatik"}${academic ? ` im ${semesterNumber(academic.currentTerm, academic.student.startTerm)}. Fachsemester` : ""}. Meine Matrikelnummer ist ${pos?.student.matriculationNo ?? "nicht verfügbar"}.\n\n${draftQuestion ?? ""}\n\nViele Grüße\n${signature}`;
   const form = (
     <form
       className={cn("flex gap-2", panel ? "border-t bg-card p-3" : "flex-wrap")}
@@ -404,7 +421,13 @@ function FallbackAnswer({
       <Subheading className="font-semibold">Zuständig</Subheading>
       {offices.map((office) => (
         <p key={office.id} className="break-words">
-          {office.name} · {office.email}
+          <Link
+            to={`/anlaufstellen#${office.id}`}
+            className="text-accent-strong underline underline-offset-2"
+          >
+            {office.name}
+          </Link>{" "}
+          · {office.email}
           {office.hours && ` · ${office.hours}`}
         </p>
       ))}

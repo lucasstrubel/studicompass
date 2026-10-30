@@ -1,8 +1,9 @@
 # Roadmap – StudiCompass Prototyp
 
-Zeitraum: Fr, 23.10. – Fr, 06.11.2026 (Präsentation) · Stand: 29.10.2026 (v4: Feedback-Runde P5-08 bis P5-15 mit eigener Kürzungsliste; v3 vom 26.10.: Zeitplan nach Verzug in Phase 1 neu gesetzt, Kürzungs-Checkpoints, Reviews startet Claude Code)
+Zeitraum: Fr, 23.10. – Fr, 06.11.2026 (Präsentation) · Stand: 30.10.2026 (v4: Feedback-Runde P5-08 bis P5-15 mit eigener Kürzungsliste; Umsetzung und Git-/PR-Arbeit jetzt direkt durch Codex beauftragt)
 
 ## So wird mit dieser Roadmap gearbeitet
+- **Entscheidung von Lucas, 30.10.2026:** Diese genehmigte Roadmap und ihre Akzeptanzkriterien haben bei Widersprüchen Vorrang vor KONZEPT und INHALTE. Codex übernimmt die weitere freigegebene Umsetzung einschließlich Branches, Commits, Pushes und PR-Pflege selbst; eine Übergabe an Claude ist nicht erforderlich. Merge, Tags und Releases bleiben ausdrücklich freizugeben.
 - Reihenfolge einhalten. Jede Phase endet mit einem **Gate**; die nächste Phase beginnt erst, wenn das Gate erfüllt ist. **Ausnahme:** Phase 1 hängt nicht von Inhalten ab und läuft parallel zu Phase 0 – Gate M0 muss erst vor P2-03 erfüllt sein.
 - **Owner:** [Claude] = Claude Code · [Codex] = Codex, delegiert von Claude Code mit Brief nach `AGENTS.md` · [Team] = Gruppe · [Lucas] = Lucas allein.
 - **Pro Task:** neue Claude-Code-Unterhaltung → Plan (`/plan`) → Freigabe → Umsetzung auf eigenem Branch → `npm run check` → Sichtprüfung (1440×900 und 390×844; seit P5-06 nur hell) → Codex-Review (startet Claude Code mit `/codex-review --base main`) → Befunde abarbeiten → Checkbox abhaken → PR → Merge.
@@ -219,7 +220,7 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch (ursprünglich `feat
 
 ## Phase 4 – Ergänzung (So 01.11. – Mo 02.11.)
 
-**Umsetzungsauftrag von Lucas (27.10.2026):** Codex setzt P4-01 bis P4-08 vollständig einschließlich Fristen, ICS und Tour um. Die bisherigen Owner bleiben als ursprüngliche Planung stehen. Umsetzung und technische Eigenprüfung: `docs/reviews/P4-implementation.md`, Phasenbefunde: `docs/reviews/P4.md`. Kalenderimport in einer echten Kalender-App und unabhängiger Gegencheck bleiben separat offen; kein Merge oder Tag ohne Lucas' OK.
+**Umsetzungsauftrag von Lucas (27.10.2026):** Codex setzt P4-01 bis P4-08 vollständig einschließlich Fristen, ICS und Tour um. Die bisherigen Owner bleiben als ursprüngliche Planung stehen. Umsetzung und technische Eigenprüfung: `docs/reviews/P4-implementation.md`, Phasenbefunde: `docs/reviews/P4.md`. Der unabhängige Gegencheck wurde am 27.10. nachgeholt ([Bericht](reviews/P4-P5-gegencheck.md)); der echte Kalenderimport bleibt offen. Kein weiterer Merge oder Tag ohne Lucas' OK.
 
 ### P4-01 [Claude] Assistent (S5) – US-12, US-13, US-14
 - [x] Chat-Oberfläche, Vorschlagsfragen, Zuordnung (KONZEPT §11), Antwortkarte, Resolver für „Für dich heißt das“, Fallback mit „Anfrage vorbereiten“, Kontext-Chip
@@ -257,13 +258,13 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch (ursprünglich `feat
 
 **Gate M4 (Mo 02.11., 22:00):** alle Stories mit Priorität Hoch und Mittel umgesetzt · keine offenen Blocker oder Major-Befunde.
 
-Stand der Umsetzung: Hoch/Mittel implementiert, technische Prüfungen dokumentiert. Formale Abnahme einschließlich unabhängigem Gegencheck steht aus; `m4` wurde nicht gesetzt.
+Historischer M4-Stand, am 30.10. abgeglichen: Hoch/Mittel implementiert, unabhängiger Gegencheck vom 27.10. dokumentiert; Tag `m4` liegt auf `f33b931` (PR #19). Echter Kalenderimport, Screenreader und reale Geräte bleiben separat offen. Die neue Feedback-Runde P5-09 bis P5-15 braucht eigene Nachweise und Integration.
 
 ---
 
 ## Phase 5 – Test & Iteration (Di 03.11. – Mi 04.11.) – Details in `docs/TESTPLAN.md`
 
-**Umsetzungsauftrag von Lucas (27.10.2026):** Codex übernimmt die Agenteninspektion, behebt belegte Befunde und bereitet das Testpaket vor. Eigenprüfung und Walkthrough: [P5.md](reviews/P5.md). Dies ersetzt keine Evaluation durch unabhängige Teammitglieder oder Studierende. Der vorhandene uncommittete Phase-4-Stand bleibt erhalten; M4-Abnahme und unabhängiger Gegencheck sind weiter offen.
+**Umsetzungsauftrag von Lucas (27.10.2026):** Codex übernimmt die Agenteninspektion, behebt belegte Befunde und bereitet das Testpaket vor. Eigenprüfung und Walkthrough: [P5.md](reviews/P5.md). Dies ersetzt keine Evaluation durch unabhängige Teammitglieder oder Studierende. Der Phase-4-Stand wurde mit PR #19 integriert und als `m4` markiert; der [unabhängige Gegencheck](reviews/P4-P5-gegencheck.md) liegt vor. Gate M5 und die unabhängige Prüfung der späteren Feedback-Runde bleiben offen.
 
 - [ ] **P5-01 [Team]** Heuristische Evaluation und Cognitive Walkthrough des Hero-Flows (Di vormittags)
   - [x] Vorgelagerte Agenteninspektion aller Screens und Walkthrough dokumentiert; zwei belegte Befunde priorisiert.
@@ -385,19 +386,20 @@ Für alle Tasks gilt: Hero-Flow, Testorakel (KONZEPT §10.4) und Spezifikationst
 #### P5-14 [Codex, direkter Auftrag von Lucas] Kalenderansicht (P5-F26 Kalender)
 - [x] Umschalter Liste/Kalender auf der Fristen-Seite (`?ansicht=kalender`)
 - [x] Monatsraster Mo–So ab dem Monat von `DEMO_NOW`, Vor/Zurück/„Heute“; Fristen, eigene Termine und Prüfungstermine; ausgewählter Tag listet seine Einträge mit Links
-- Umsetzung und technische Eigenprüfung durch Codex am 30.10.2026 auf direkten Auftrag von Lucas: [P5-14](reviews/P5-14.md). Für PR #29 im eigenen Task-Zweig gesichert; Freigabe und Merge stehen aus.
+- Umsetzung und technische Eigenprüfung durch Codex am 30.10.2026 auf direkten Auftrag von Lucas: [P5-14](reviews/P5-14.md). Im gemeinsamen Integrations-PR [#29](https://github.com/lucasstrubel/studicompass/pull/29) gesichert; Freigabe und Merge stehen aus.
 - **AK:**
   - 26.01. (Abmeldung Statistik) und 27.01. (Prüfung Statistik) sichtbar.
   - Bedienbar per Tastatur und Touch.
   - Keine Scrollleiste bei 360 px.
 
-#### P5-15 [Claude] Profil, Onboarding und Anlaufstellen (P5-F28 bis P5-F30, P5-F32)
-- [ ] Onboarding-Schritt „Dein Profil“:
+#### P5-15 [Codex, direkter Auftrag von Lucas] Profil, Onboarding und Anlaufstellen (P5-F28 bis P5-F30, P5-F32)
+- [x] Onboarding-Schritt „Dein Profil“:
   - Vor- und Nachname, aus dem POS vorbelegt, Pflicht, höchstens 40 Zeichen
   - keine E-Mail-, Login- oder Passwortfelder
-- [ ] Produkt-Tour standardmäßig angehakt; „Überspringen“ ab Schritt 2 behält die Eingaben (P5-F08)
-- [ ] Einstellungen: Abschnitt „Profil“ (Name, Ziel, Nebenjob); Profilmenü „Profil bearbeiten“. Der Name wirkt auf Begrüßung, Sprechblase, Avatar und Anfrage-Entwürfe.
-- [ ] Seite Anlaufstellen (`/anlaufstellen`, S10) in Topbar und Menü; Zuständige Stelle im Assistenten verlinkt dorthin; Katalogfrage A-09
+- [x] Produkt-Tour standardmäßig angehakt; „Überspringen“ ab Schritt 2 behält die Eingaben (P5-F08)
+- [x] Einstellungen: Abschnitt „Profil“ (Name, Ziel, Nebenjob); Profilmenü „Profil bearbeiten“. Der Name wirkt auf Begrüßung, Sprechblase, Avatar und Anfrage-Entwürfe.
+- [x] Seite Anlaufstellen (`/anlaufstellen`, S10) in Topbar und Menü; Zuständige Stelle im Assistenten verlinkt dorthin; Katalogfrage A-09
+- Umsetzung und technische Eigenprüfung durch Codex am 30.10.2026 auf direkten Auftrag von Lucas: [P5-15](reviews/P5-15.md). Im gemeinsamen Integrations-PR [#29](https://github.com/lucasstrubel/studicompass/pull/29) gesichert; Freigabe und Merge stehen aus.
 - **AK:**
   - Namensänderung wirkt sofort überall, übersteht Neuladen; „Demo zurücksetzen“ stellt Niklas wieder her.
   - Onboarding per Tastatur.
@@ -437,7 +439,7 @@ Von oben nach unten streichen, wenn die Zeit knapp wird:
 
 **Gate M5 (Mi 04.11. abends):** Top-Befunde behoben · Testergebnisse dokumentiert.
 
-Stand: Agenteninspektion, technische Iteration und Testvorbereitung erledigt. Echte Sitzungen, nutzerbasierte Endauswertung und Präsentationsergebnisse stehen aus. **M5 bleibt offen; kein Tag gesetzt.**
+Stand: Feedback-Runde P5-09 bis P5-15 im [Integrations-PR #29](https://github.com/lucasstrubel/studicompass/pull/29) zusammengeführt; [Prüfnachweise und offene Abnahme](reviews/P5-integration.md). Agenteninspektion, technische Iteration und Testvorbereitung erledigt. Echte Sitzungen, nutzerbasierte Endauswertung und Präsentationsergebnisse stehen aus. **M5 bleibt offen; kein Tag gesetzt.**
 
 ---
 

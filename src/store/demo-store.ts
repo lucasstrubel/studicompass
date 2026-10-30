@@ -15,8 +15,10 @@ import type {
   PersonalDeadline,
   PersonalDeadlineKind,
   PlanOverride,
+  ProfileName,
 } from "@/domain/types";
 import { parseWebUrl } from "@/lib/url";
+import { parseProfileName } from "@/lib/profile";
 import { projectPlan } from "@/domain/projection";
 import { selectAcademicState } from "./selectors";
 import { selectAssistantMatch } from "./assistant-selectors";
@@ -48,6 +50,8 @@ interface SimulationSnapshot {
   confirmedExamIds: string[];
 }
 interface Preferences {
+  /** Optional local display name; null uses the student's name from POS (P5-15). */
+  profileName: ProfileName | null;
   connectedChannels: Record<Channel, boolean>;
   notificationTypes: Record<Notification["type"], boolean>;
   readInboxIds: string[];
@@ -155,15 +159,24 @@ export interface DemoState extends Preferences {
   ) => boolean;
   removePersonalDeadline: (id: string) => void;
   setHintTone: (tone: HintTone) => void;
+  /** Save all editable profile fields together; false leaves the current profile untouched. */
+  saveProfile: (
+    profile: ProfileName & {
+      goalRegularTime: boolean;
+      jobHoursPerWeek: number;
+    },
+  ) => boolean;
   completeOnboarding: (preferences?: {
     goalRegularTime: boolean;
     jobHoursPerWeek: number;
+    profileName?: ProfileName | null;
   }) => void;
   resetDemo: () => Promise<void>;
 }
 
 function defaultPreferences(): Preferences {
   return {
+    profileName: null,
     connectedChannels: { pos: true, moodle: true, mail: true, website: true },
     notificationTypes: {
       decision: true,
@@ -240,6 +253,7 @@ function readPreferences(value: unknown): Preferences {
   const defaults = defaultPreferences();
   if (!isRecord(value)) return defaults;
   return {
+    profileName: parseProfileName(value.profileName),
     connectedChannels: {
       pos:
         !isRecord(value.connectedChannels) ||
@@ -691,6 +705,23 @@ export function createDemoStore(
             return true;
           },
           setHintTone: (hintTone) => set({ hintTone }),
+          saveProfile(profile) {
+            const name = parseProfileName(profile);
+            if (
+              !name ||
+              !Number.isFinite(profile.jobHoursPerWeek) ||
+              profile.jobHoursPerWeek < 0 ||
+              profile.jobHoursPerWeek > 168 ||
+              typeof profile.goalRegularTime !== "boolean"
+            )
+              return false;
+            set({
+              profileName: name,
+              goalRegularTime: profile.goalRegularTime,
+              jobHoursPerWeek: profile.jobHoursPerWeek,
+            });
+            return true;
+          },
           completeOnboarding(preferences) {
             if (
               preferences &&
@@ -699,7 +730,19 @@ export function createDemoStore(
                 preferences.jobHoursPerWeek > 168)
             )
               return;
-            set({ ...preferences, onboardingComplete: true });
+            if (
+              preferences?.profileName !== undefined &&
+              preferences.profileName !== null &&
+              !parseProfileName(preferences.profileName)
+            )
+              return;
+            set({
+              ...preferences,
+              ...(preferences?.profileName !== undefined
+                ? { profileName: parseProfileName(preferences.profileName) }
+                : {}),
+              onboardingComplete: true,
+            });
           },
           async resetDemo() {
             for (const key of SERVICE_KEYS) requests[key]++;
@@ -723,7 +766,7 @@ export function createDemoStore(
         storage: createJSONStorage(() => storage),
         partialize: (state) => readPersisted(state),
         migrate: (persisted, version) =>
-          version === 2
+          version === 2 || version === 3
             ? readPersisted(persisted)
             : { ...defaultPreferences(), snapshot: null },
         merge: (persisted, current) => ({

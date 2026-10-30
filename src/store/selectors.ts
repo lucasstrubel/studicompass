@@ -363,6 +363,14 @@ function memoize<T>(selector: (state: DemoState) => T) {
 }
 
 export const selectAcademicState = memoize(academicState);
+/** Name for display only: a profile edit never rewrites POS data or academic input. */
+export const selectProfileName = memoize((state: DemoState) => {
+  if (state.profileName) return state.profileName;
+  const student = state.resources.pos.data?.student;
+  return student
+    ? { firstName: student.firstName, lastName: student.lastName }
+    : null;
+});
 export const selectInbox = memoize(inbox);
 export const selectDeadlines = memoize(deadlines);
 /** Once withdrawn, the corresponding withdrawal deadline no longer requires an action. */

@@ -8,6 +8,31 @@ import { OverviewEntry } from "./OverviewEntry";
 import { selectAcademicState, selectBasePlan } from "@/store/selectors";
 
 afterEach(() => vi.useRealTimers());
+it("P5-15: wartet auf POS, ohne früh eingegebene Namen zu überschreiben", async () => {
+  vi.useFakeTimers();
+  const ready = demoStore.getState().resetDemo();
+  render(
+    <RouterProvider
+      router={createMemoryRouter([{ path: "/", Component: OnboardingPage }])}
+    />,
+  );
+  fireEvent.click(
+    screen.getByRole("button", { name: "Mit Hochschul-Login anmelden (Demo)" }),
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Weiter" }));
+  fireEvent.change(screen.getByLabelText("Vorname"), {
+    target: { value: "Alex" },
+  });
+  expect(screen.getByRole("button", { name: "Weiter" })).toBeDisabled();
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(LATENCY_MS);
+    await ready;
+  });
+  expect(screen.getByLabelText("Vorname")).toHaveValue("Alex");
+  expect(screen.getByLabelText("Nachname")).toHaveValue("Brandt");
+  fireEvent.click(screen.getByRole("button", { name: "Weiter" }));
+  expect(screen.getByRole("heading", { name: "Hinweis-Stil" })).toBeVisible();
+});
 async function prepare() {
   vi.useFakeTimers();
   const ready = demoStore.getState().resetDemo();
@@ -55,9 +80,9 @@ it("P4-06: vier Schritte speichern Ziel, Nebenjob, Stil und Tourwahl", async () 
   fireEvent.change(screen.getByRole("slider"), { target: { value: "20" } });
   fireEvent.click(screen.getByRole("button", { name: "Weiter" }));
   fireEvent.click(screen.getByRole("radio", { name: "Sachlich" }));
-  fireEvent.click(
+  expect(
     screen.getByRole("checkbox", { name: /Danach die Produkt-Tour/ }),
-  );
+  ).toBeChecked();
   fireEvent.click(
     screen.getByRole("button", { name: "Einrichtung abschließen" }),
   );
@@ -76,4 +101,54 @@ it("P4-06: vier Schritte speichern Ziel, Nebenjob, Stil und Tourwahl", async () 
       item.detail.includes("20 Stunden"),
     ),
   ).toBe(true);
+});
+
+it("P5-15: Pflichtnamen prüfen; Überspringen behält Profil, Kanalwahl, Ziel, Nebenjob und Hinweis-Stil", async () => {
+  await prepare();
+  const router = createMemoryRouter(
+    [
+      { path: "/start", Component: OnboardingPage },
+      { path: "/", element: <p>Übersicht</p> },
+    ],
+    { initialEntries: ["/start"] },
+  );
+  render(<RouterProvider router={router} />);
+  fireEvent.click(
+    screen.getByRole("button", { name: "Mit Hochschul-Login anmelden (Demo)" }),
+  );
+  fireEvent.click(screen.getByRole("checkbox", { name: "Moodle" }));
+  fireEvent.click(screen.getByRole("button", { name: "Weiter" }));
+  expect(screen.getByLabelText("Vorname")).toHaveValue("Niklas");
+  fireEvent.change(screen.getByLabelText("Vorname"), {
+    target: { value: " " },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Weiter" }));
+  expect(screen.getByLabelText("Vorname")).toHaveFocus();
+  expect(screen.getByRole("heading", { name: "Dein Profil" })).toBeVisible();
+  fireEvent.change(screen.getByLabelText("Vorname"), {
+    target: { value: "Alex" },
+  });
+  fireEvent.change(screen.getByLabelText("Nachname"), {
+    target: { value: "Muster" },
+  });
+  fireEvent.click(
+    screen.getByLabelText("Mein Ziel: Abschluss in Regelstudienzeit"),
+  );
+  fireEvent.change(screen.getByRole("slider"), { target: { value: "20" } });
+  fireEvent.click(screen.getByRole("button", { name: "Weiter" }));
+  fireEvent.click(screen.getByRole("radio", { name: "Sachlich" }));
+  fireEvent.click(
+    screen.getByRole("checkbox", { name: /Danach die Produkt-Tour/ }),
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Überspringen" }));
+  expect(demoStore.getState()).toMatchObject({
+    profileName: { firstName: "Alex", lastName: "Muster" },
+    connectedChannels: { moodle: false },
+    goalRegularTime: false,
+    jobHoursPerWeek: 20,
+    hintTone: "neutral",
+    onboardingComplete: true,
+  });
+  expect(router.state.location.pathname).toBe("/");
+  expect(router.state.location.search).toBe("");
 });

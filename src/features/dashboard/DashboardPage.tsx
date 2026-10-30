@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { DEMO_NOW } from "@/config/demo";
 import { format, semesterNumber } from "@/domain/terms";
 import { greeting } from "@/lib/format";
-import { selectAcademicState } from "@/store/selectors";
+import { selectAcademicState, selectProfileName } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 import { NextDeadline } from "./DashboardRail";
 import { ImportantCard } from "./ImportantCard";
@@ -21,7 +21,7 @@ const EctsHistory = lazy(() =>
 
 function OverviewHeader() {
   const academic = useDemoStore(selectAcademicState);
-  const firstName = academic?.student.firstName;
+  const firstName = useDemoStore(selectProfileName)?.firstName;
   return (
     <PageHeader
       title={`${greeting(DEMO_NOW)}${firstName ? `, ${firstName}` : ""}`}

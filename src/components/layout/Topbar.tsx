@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Compass, Settings, UserRound } from "lucide-react";
 import { Link, NavLink, useLocation } from "react-router";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -13,15 +14,17 @@ import { TOP_NAV_ITEMS } from "@/components/layout/navigation";
 import { APP_NAME } from "@/config/demo";
 import { NotificationsButton } from "@/features/notifications/NotificationsButton";
 import { useDemoStore } from "@/store/use-demo-store";
+import { selectProfileName } from "@/store/selectors";
 
 /** Avatar menu with the student's initials (KONZEPT A-6); the icon stands in while the POS data loads. */
 function ProfileMenu() {
-  const initials = useDemoStore((state) => {
-    const student = state.resources.pos.data?.student;
-    return student
-      ? `${student.firstName.charAt(0)}${student.lastName.charAt(0)}`
-      : null;
-  });
+  const focusProfile = useRef(false);
+  const name = useDemoStore(selectProfileName);
+  const initials = name
+    ? `${name.firstName.charAt(0)}${name.lastName.charAt(0)}`.toLocaleUpperCase(
+        "de-DE",
+      )
+    : null;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -33,11 +36,31 @@ function ProfileMenu() {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent
+        align="end"
+        onCloseAutoFocus={(event) => {
+          if (!focusProfile.current) return;
+          // Navigation already focused the profile; closing the menu must not return to the avatar.
+          event.preventDefault();
+          document.getElementById("profil")?.focus();
+          focusProfile.current = false;
+        }}
+      >
         <DropdownMenuItem asChild>
           <Link to="/einstellungen">
             <Settings />
             Einstellungen
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          asChild
+          onSelect={() => {
+            focusProfile.current = true;
+          }}
+        >
+          <Link to="/einstellungen#profil">
+            <UserRound />
+            Profil bearbeiten
           </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -62,14 +85,17 @@ export function Topbar() {
         <Compass className="size-6 text-accent-strong" />
         <span>{APP_NAME}</span>
       </Link>
-      <nav aria-label="Hauptnavigation" className="ml-5 hidden xl:block">
+      <nav
+        aria-label="Hauptnavigation"
+        className="ml-2 hidden xl:block 2xl:ml-5"
+      >
         <ul className="flex items-center gap-1">
           {TOP_NAV_ITEMS.map((item) => (
             <li key={item.to}>
               <NavLink
                 to={item.to}
                 end={item.end}
-                className="block rounded-lg border-b-2 border-transparent px-3 py-2 text-meta text-muted-foreground hover:bg-muted hover:text-foreground aria-[current=page]:border-accent-strong aria-[current=page]:font-semibold aria-[current=page]:text-foreground"
+                className="block rounded-lg border-b-2 border-transparent px-2 py-2 text-meta whitespace-nowrap text-muted-foreground hover:bg-muted hover:text-foreground aria-[current=page]:border-accent-strong aria-[current=page]:font-semibold aria-[current=page]:text-foreground 2xl:px-3"
               >
                 {item.label}
               </NavLink>

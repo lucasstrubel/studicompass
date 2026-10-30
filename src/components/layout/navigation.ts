@@ -6,6 +6,7 @@ import {
   MessageCircleQuestionMark,
   Route,
   Settings,
+  ContactRound,
   type LucideIcon,
 } from "lucide-react";
 
@@ -41,6 +42,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
     label: "Assistent",
     icon: MessageCircleQuestionMark,
   },
+  { to: "/anlaufstellen", label: "Anlaufstellen", icon: ContactRound },
 ];
 
 /** Settings in the full menu; there is no login/logout. */

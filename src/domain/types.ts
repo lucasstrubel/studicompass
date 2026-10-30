@@ -23,6 +23,14 @@ export interface Office {
   name: string;
   email: string;
   hours?: string;
+  /** Example responsibilities from INHALTE §8 (P5-15). */
+  topics?: string[];
+}
+
+/** Local display name; the POS fixture and academic calculations remain unchanged (P5-15). */
+export interface ProfileName {
+  firstName: string;
+  lastName: string;
 }
 
 export interface Module {
@@ -175,6 +183,8 @@ export interface AssistantEntry {
   personalExample?: string;
   details?: string;
   ruleIds: string[];
+  /** Direct sources for answers such as A-09 that describe offices instead of SPO rules. */
+  citations?: Citation[];
   officeIds: string[];
   actions: AssistantAction[];
   followUpIds: string[];

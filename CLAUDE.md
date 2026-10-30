@@ -8,6 +8,9 @@ Ziel ist ein **selbsterklärender Hi-Fi-Prototyp** für die Präsentation am **F
 Primäre Persona: **Niklas Brandt**, 20, Wirtschaftsinformatik, 3. Semester, Nebenjob 15 Std./Woche.
 
 ## Verbindliche Dokumente – vor jeder Umsetzung lesen
+
+**Vorrang der genehmigten Roadmap (Lucas, 30.10.2026):** Bei Widersprüchen mit `docs/KONZEPT.md` oder `docs/INHALTE.md` gelten die genehmigte `docs/ROADMAP.md` und ihre Akzeptanzkriterien. Die abweichende Dokumentation wird nachgezogen. Lucas hat Codex direkt mit der weiteren Umsetzung einschließlich Branches, Commits, Pushes und PR-Pflege beauftragt; eine Übergabe an Claude Code ist dafür nicht erforderlich. Merges nach `main`, Tags und Releases benötigen weiterhin Lucas' ausdrückliches OK.
+
 | Datei | Inhalt |
 |---|---|
 | `docs/ROADMAP.md` | Reihenfolge, Tasks mit IDs, Akzeptanzkriterien, Owner ([Claude] / [Codex] / [Team] / [Lucas]) |

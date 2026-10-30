@@ -547,7 +547,7 @@ Vereinfachung, die im UI benannt wird: Die Prognose verteilt Module nicht indivi
   - Prüfungsvorleistungen
   - eigene Termine
 
-  Die Felder ergänzen Datenversion 3 additiv (wie in P5-07); „Demo zurücksetzen“ leert sie. Im Startzustand gibt es keine eigenen Einträge, deshalb bleiben Testorakel (§10.4), Hero-Flow und Testaufgaben unverändert. Eigene Einträge ändern keine Prognose. Der Profilname ersetzt Vor- und Nachname aus dem POS nur in der Anzeige (Begrüßung, Avatar, Anfrage-Entwürfe).
+  Die Felder wurden zu Datenversion 3 additiv ergänzt (wie in P5-07). P5-15 erhöht wegen der ergänzten Beispieldaten (Zuständigkeiten und A-09) die Datenversion auf 4; Einstellungen, Simulationen und gültige eigene Einträge aus Version 2 und 3 werden additiv übernommen. „Demo zurücksetzen“ leert sie. Im Startzustand gibt es keine eigenen Einträge, deshalb bleiben Testorakel (§10.4), Hero-Flow und Testaufgaben unverändert. Eigene Einträge ändern keine Prognose. Der Profilname ersetzt Vor- und Nachname aus dem POS nur in der Anzeige (Begrüßung, Avatar, Anfrage-Entwürfe).
 
 ---
 

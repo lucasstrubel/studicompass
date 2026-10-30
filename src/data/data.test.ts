@@ -59,7 +59,7 @@ describe("INHALTE: consistent example data", () => {
     for (const notification of notifications) {
       for (const id of notification.ruleIds) expect(ruleIds).toContain(id);
     }
-    expect(assistantCatalog).toHaveLength(8);
+    expect(assistantCatalog).toHaveLength(9);
     expect(assistantCatalog.filter((entry) => entry.suggested)).toHaveLength(6);
     expect(inbox).toHaveLength(12);
     expect(inbox.every((item) => item.body.length > item.preview.length)).toBe(

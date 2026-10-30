@@ -18,6 +18,8 @@ const SCREENS = [
   { name: "postfach-detail", path: "/postfach?eintrag=i-02" },
   { name: "assistent", path: "/assistent" },
   { name: "assistent-antwort", path: "/assistent?frage=A-02" },
+  { name: "assistent-anlaufstellen", path: "/assistent?frage=A-09" },
+  { name: "anlaufstellen", path: "/anlaufstellen" },
   {
     name: "assistent-fallback",
     path: "/assistent?frage=Kann%20ich%20Statistik%20im%20Ausland%20schreiben%3F",
@@ -75,10 +77,15 @@ for (const screen of SCREENS)
             name: "Mit Hochschul-Login anmelden (Demo)",
           })
           .click();
-        for (let step = 2; step < Number(screen.name.at(-1)); step++)
+        for (let step = 2; step < Number(screen.name.at(-1)); step++) {
+          if (step === 3)
+            await expect(
+              page.getByLabel("Vorname", { exact: true }),
+            ).toHaveValue("Niklas");
           await page
             .getByRole("button", { name: "Weiter", exact: true })
             .click();
+        }
       }
       await expect(
         page.getByRole("heading", { level: 1, includeHidden: true }),
