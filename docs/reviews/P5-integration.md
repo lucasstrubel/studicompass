@@ -32,10 +32,11 @@ Akademische Testorakel und `src/domain/*.spec.ts` bleiben unverändert. Keine ne
 ## Abschließende Prüfung
 
 - Quellstand vor der Übernahme: `npm run check` mit zwei Vitest-Workern grün (318 Tests in 47 Dateien); Browserprüfungen 49 bestanden, 9 bewusst übersprungen; 59 Screenshots.
-- Vollständiger Integrationsstand: `VITEST_MAX_WORKERS=2; npm run check` grün, **318 Tests in 47 Dateien**, Typecheck, Lint und Build bestanden. `npm run e2e -- --workers=2`: **49 bestanden, 9 bewusst übersprungen**. Keine Zeitlimits angehoben. 215 Code-, Test- und Konfigurationsdateien stimmen bytegenau mit dem bereits geprüften lokalen Quellstand überein.
+- Integrationsstand vor dem unabhängigen Review (`f979967`): `VITEST_MAX_WORKERS=2; npm run check` grün, **318 Tests in 47 Dateien**, Typecheck, Lint und Build bestanden. `npm run e2e -- --workers=2`: **49 bestanden, 9 bewusst übersprungen**. Keine Zeitlimits angehoben. 215 Code-, Test- und Konfigurationsdateien stimmen bytegenau mit dem bereits geprüften lokalen Quellstand überein.
 - `npm run screens -- --workers=2`: **59 bestanden**, alle Aufnahmen bei 1440×900 und 390×844 im vollständigen Integrationsstand erneut erstellt; Kalender, Profil und Anlaufstellen anschließend gesichtet.
-- Der separate schreibgeschützte Codex-CLI-Review wurde von der automatischen Freigabeprüfung wegen der möglichen Übertragung des vollständigen Repository-Diffs abgelehnt. Eine ausdrückliche Zustimmung von Lucas ist angefragt; der unabhängige Gegencheck bleibt bis dahin offen.
-- Bekannte Build-Warnung: Hauptbundle ca. 858 kB minifiziert / 252 kB gzip; Diagramm getrennt ca. 384 kB / 110 kB gzip (P5-F10, nicht Teil der freigegebenen Feedback-Tasks P5-09 bis P5-15).
+- Nach ausdrücklicher Zustimmung von Lucas zur Diff-Übermittlung: unabhängiger schreibgeschützter Codex-Gesamtreview mit drei bestätigten Major-Befunden (POS-Ladesperre, ausstehende Notizen bei Dokumentwechsel, nicht existierende Sommerzeit-Uhrzeit). Alle drei korrigiert; der unabhängige Nachlauf meldet keine weiteren Befunde. [Vollständiger Review und Nachprüfung](P5-PR29.md).
+- Nach den Korrekturen: `VITEST_MAX_WORKERS=2; npm run check` grün mit **325 Tests in 47 Dateien**, Typecheck, Lint und Build. Vollständiges E2E: **53 bestanden, 9 bewusst übersprungen**, einschließlich der neuen Review-Regressionen auf Desktop und mobil. `npm run screens -- --workers=2`: **61 bestanden**, einschließlich der neuen Fehleransicht bei 1440×900 und 390×844; anschließend gesichtet.
+- Bekannte Build-Warnung: Hauptbundle ca. 859 kB minifiziert / 252 kB gzip; Diagramm getrennt ca. 384 kB / 110 kB gzip (P5-F10, nicht Teil der freigegebenen Feedback-Tasks P5-09 bis P5-15).
 
 ## Offen bis zur Abnahme
 

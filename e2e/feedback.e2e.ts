@@ -226,7 +226,6 @@ test("P5-12: aktuelles Semester ohne Scrollen sichtbar, Notiz übersteht Neulade
   await page
     .getByLabel("Notizen zum Modul")
     .fill("Probeklausur bis Dienstag rechnen");
-  await page.getByLabel("Notizen zum Modul").blur();
   await page.reload();
   await expect(page.getByLabel("Notizen zum Modul")).toHaveValue(
     "Probeklausur bis Dienstag rechnen",

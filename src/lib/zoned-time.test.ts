@@ -23,4 +23,14 @@ describe("German time (P5-13 review)", () => {
       "2027-01-26T10:00:00+01:00",
     );
   });
+
+  it("rejects the nonexistent spring hour, while retaining midnight and the repeated autumn hour", () => {
+    expect(zonedInstant("2027-03-28", "02:30")).toBeNull();
+    expect(zonedInstant("2027-03-28", "00:00")).toBe(
+      "2027-03-28T00:00:00+01:00",
+    );
+    expect(zonedInstant("2027-10-31", "02:30")).toBe(
+      "2027-10-31T02:30:00+01:00",
+    );
+  });
 });

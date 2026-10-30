@@ -1,9 +1,6 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useState } from "react";
 import { NOTE_MAX_LENGTH } from "@/store/demo-store";
 import { useDemoStore } from "@/store/use-demo-store";
-
-/** Saves after a short pause while typing, and right away when the field loses focus. */
-const SAVE_DELAY_MS = 600;
 
 /** Own notes per module (P5-12, US-23): stored only in this browser, cleared by "Demo zurücksetzen". */
 export function ModuleNotes({ moduleId }: { moduleId: string }) {
@@ -11,24 +8,7 @@ export function ModuleNotes({ moduleId }: { moduleId: string }) {
   const setModuleNote = useDemoStore((state) => state.setModuleNote);
   const [text, setText] = useState(stored);
   const [saved, setSaved] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  // Text typed but not yet saved; leaving the page saves it (P5-12 review: Browser-Zurück within 600 ms).
-  const pending = useRef<string | null>(null);
   const id = useId();
-
-  const save = (value: string) => {
-    clearTimeout(timer.current);
-    pending.current = null;
-    setModuleNote(moduleId, value);
-    setSaved(true);
-  };
-  useEffect(
-    () => () => {
-      clearTimeout(timer.current);
-      if (pending.current !== null) setModuleNote(moduleId, pending.current);
-    },
-    [moduleId, setModuleNote],
-  );
 
   return (
     <section className="rounded-xl border bg-card p-4" aria-labelledby={id}>
@@ -48,15 +28,10 @@ export function ModuleNotes({ moduleId }: { moduleId: string }) {
         rows={6}
         placeholder="Z. B. Fragen für die Übung, Stoff für die Klausur …"
         onChange={(event) => {
-          const value = event.target.value;
-          setText(value);
-          setSaved(false);
-          pending.current = value;
-          clearTimeout(timer.current);
-          timer.current = setTimeout(() => save(value), SAVE_DELAY_MS);
-        }}
-        onBlur={() => {
-          if (text !== stored) save(text);
+          // Persist each edit before a hard reload or tab close can discard component state.
+          setText(event.target.value);
+          setModuleNote(moduleId, event.target.value);
+          setSaved(true);
         }}
         className="mt-3 w-full rounded-lg border border-input bg-card p-3 text-body placeholder:text-muted-foreground"
       />

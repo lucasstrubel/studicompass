@@ -28,6 +28,7 @@ const SCREENS = [
   { name: "fristen-kalender", path: "/fristen?ansicht=kalender" },
   { name: "fristen-laden", path: "/fristen" },
   { name: "fristen-eigener-termin", path: "/fristen" },
+  { name: "fristen-uhrzeitfehler", path: "/fristen" },
   { name: "assistent-wartet", path: "/assistent?frage=A-04" },
   { name: "einstellungen", path: "/einstellungen" },
   { name: "benachrichtigungen", path: "/module" },
@@ -158,6 +159,15 @@ for (const screen of SCREENS)
       }
       if (screen.name === "fristen-kalender")
         await page.getByRole("button", { name: /Di, 26.01.2027,/ }).click();
+      if (screen.name === "fristen-uhrzeitfehler") {
+        await page.getByRole("button", { name: "Termin hinzufügen" }).click();
+        const dialog = page.getByRole("dialog");
+        await dialog.getByLabel("Titel", { exact: true }).fill("Uhrzeitwechsel");
+        await dialog.getByLabel("Datum", { exact: true }).fill("2027-03-28");
+        await dialog.getByLabel("Uhrzeit (optional)").fill("02:30");
+        await dialog.getByRole("button", { name: "Speichern" }).click();
+        await expect(dialog.getByText(/Diese Uhrzeit existiert/)).toBeVisible();
+      }
       if (screen.name === "navigation")
         await page.getByRole("button", { name: "Navigation öffnen" }).click();
       if (screen.name === "folgen-check-assistent") {
@@ -182,6 +192,7 @@ for (const screen of SCREENS)
           "navigation",
           "studienverlauf-ergebnis",
           "folgen-check-assistent",
+          "fristen-uhrzeitfehler",
         ].includes(screen.name),
       });
     });

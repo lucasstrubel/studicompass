@@ -35,14 +35,19 @@ export function validateDeadline(input: DeadlineInput, now: Date) {
     errors.title = `Höchstens ${DEADLINE_TITLE_MAX_LENGTH} Zeichen.`;
   if (
     !/^\d{4}-\d{2}-\d{2}$/.test(input.date) ||
-    Number.isNaN(Date.parse(input.date))
+    Number.isNaN(Date.parse(input.date)) ||
+    new Date(input.date).toISOString().slice(0, 10) !== input.date
   )
     errors.date = "Wähle ein Datum.";
-  else if (input.time && !/^\d{2}:\d{2}$/.test(input.time))
+  else if (input.time && !/^([01]\d|2[0-3]):[0-5]\d$/.test(input.time))
     errors.time = "Gib die Uhrzeit als HH:MM ein.";
-  else if (
-    Date.parse(deadlineInstant(toDueAt(input.date, input.time))) < now.getTime()
-  )
-    errors.date = "Der Termin liegt vor dem heutigen Demo-Datum (25.01.2027).";
+  else {
+    const dueAt = toDueAt(input.date, input.time);
+    if (dueAt === null)
+      errors.time =
+        "Diese Uhrzeit existiert wegen der Zeitumstellung nicht. Wähle eine andere Uhrzeit.";
+    else if (Date.parse(deadlineInstant(dueAt)) < now.getTime())
+      errors.date = "Der Termin liegt vor dem heutigen Demo-Datum (25.01.2027).";
+  }
   return errors;
 }

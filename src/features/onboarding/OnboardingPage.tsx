@@ -27,6 +27,7 @@ export function OnboardingPage() {
   const [tour, setTour] = useState(true);
   const name = useDemoStore(selectProfileName);
   const profileLoading =
+    state.connectedChannels.pos &&
     !state.resources.pos.data &&
     (state.resources.pos.status === "loading" ||
       state.resources.pos.status === "idle");

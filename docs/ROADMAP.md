@@ -264,7 +264,7 @@ Historischer M4-Stand, am 30.10. abgeglichen: Hoch/Mittel implementiert, unabhä
 
 ## Phase 5 – Test & Iteration (Di 03.11. – Mi 04.11.) – Details in `docs/TESTPLAN.md`
 
-**Umsetzungsauftrag von Lucas (27.10.2026):** Codex übernimmt die Agenteninspektion, behebt belegte Befunde und bereitet das Testpaket vor. Eigenprüfung und Walkthrough: [P5.md](reviews/P5.md). Dies ersetzt keine Evaluation durch unabhängige Teammitglieder oder Studierende. Der Phase-4-Stand wurde mit PR #19 integriert und als `m4` markiert; der [unabhängige Gegencheck](reviews/P4-P5-gegencheck.md) liegt vor. Gate M5 und die unabhängige Prüfung der späteren Feedback-Runde bleiben offen.
+**Umsetzungsauftrag von Lucas (27.10.2026):** Codex übernimmt die Agenteninspektion, behebt belegte Befunde und bereitet das Testpaket vor. Eigenprüfung und Walkthrough: [P5.md](reviews/P5.md). Dies ersetzt keine Evaluation durch unabhängige Teammitglieder oder Studierende. Der Phase-4-Stand wurde mit PR #19 integriert und als `m4` markiert; der [unabhängige Gegencheck](reviews/P4-P5-gegencheck.md) liegt vor. Der unabhängige Review der späteren Feedback-Runde und der Nachlauf ihrer drei Korrekturen liegen vor ([P5-PR29](reviews/P5-PR29.md)); Gate M5 und der Merge bleiben offen.
 
 - [ ] **P5-01 [Team]** Heuristische Evaluation und Cognitive Walkthrough des Hero-Flows (Di vormittags)
   - [x] Vorgelagerte Agenteninspektion aller Screens und Walkthrough dokumentiert; zwei belegte Befunde priorisiert.

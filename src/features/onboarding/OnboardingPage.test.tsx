@@ -39,6 +39,74 @@ async function prepare() {
   await vi.advanceTimersByTimeAsync(LATENCY_MS);
   await ready;
 }
+
+it.each([
+  { saved: false, action: "Weiter" },
+  { saved: true, action: "Überspringen" },
+])(
+  "P5-15: $action mit getrenntem POS und gültigem Profil (gespeichert: $saved)",
+  async ({ saved, action }) => {
+    vi.useFakeTimers();
+    const ready = demoStore.getState().resetDemo();
+    if (saved)
+      demoStore.getState().saveProfile({
+        firstName: "Alex",
+        lastName: "Muster",
+        goalRegularTime: true,
+        jobHoursPerWeek: 15,
+      });
+    const router = createMemoryRouter(
+      [
+        { path: "/start", Component: OnboardingPage },
+        { path: "/", element: <p>Übersicht</p> },
+      ],
+      { initialEntries: ["/start"] },
+    );
+    render(<RouterProvider router={router} />);
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Mit Hochschul-Login anmelden (Demo)",
+      }),
+    );
+    // Disconnect before the first POS response: no cached data can fill the profile.
+    fireEvent.click(screen.getByRole("checkbox", { name: "POS" }));
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(LATENCY_MS);
+      await ready;
+    });
+    expect(demoStore.getState().resources.pos).toMatchObject({
+      status: "idle",
+      data: null,
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Weiter" }));
+    if (!saved) {
+      fireEvent.change(screen.getByLabelText("Vorname"), {
+        target: { value: "Alex" },
+      });
+      fireEvent.change(screen.getByLabelText("Nachname"), {
+        target: { value: "Muster" },
+      });
+    }
+    expect(screen.getByRole("button", { name: "Weiter" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Überspringen" })).toBeEnabled();
+    fireEvent.click(screen.getByRole("button", { name: action }));
+    if (action === "Weiter") {
+      expect(
+        screen.getByRole("heading", { name: "Hinweis-Stil" }),
+      ).toBeVisible();
+      fireEvent.click(
+        screen.getByRole("button", { name: "Einrichtung abschließen" }),
+      );
+    }
+    expect(router.state.location.pathname).toBe("/");
+    expect(demoStore.getState()).toMatchObject({
+      onboardingComplete: true,
+      connectedChannels: { pos: false },
+      profileName: { firstName: "Alex", lastName: "Muster" },
+    });
+  },
+);
+
 it("P4-06: Erststart und Überspringen setzen Standardwerte", async () => {
   await prepare();
   const router = createMemoryRouter(

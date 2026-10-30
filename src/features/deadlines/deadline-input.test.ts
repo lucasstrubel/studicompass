@@ -3,6 +3,19 @@ import { DEMO_NOW } from "@/config/demo";
 import { fromDueAt, toDueAt, validateDeadline } from "./deadline-input";
 
 describe("own deadline input (P5-13)", () => {
+  it.each([
+    { date: "2027-03-28", time: "02:30", field: "time" },
+    { date: "2027-03-28", time: "25:00", field: "time" },
+    { date: "2027-02-29", time: "", field: "date" },
+  ] as const)(
+    "rejects invalid date/time $date $time at the affected field",
+    ({ date, time, field }) => {
+      expect(
+        validateDeadline({ title: "Termin", date, time }, DEMO_NOW)[field],
+      ).toBeTruthy();
+    },
+  );
+
   it("stores a date only or an instant in German time", () => {
     expect(toDueAt("2027-01-28", "")).toBe("2027-01-28");
     expect(toDueAt("2027-01-28", "10:00")).toBe("2027-01-28T10:00:00+01:00");

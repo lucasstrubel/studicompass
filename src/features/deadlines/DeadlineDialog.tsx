@@ -84,11 +84,13 @@ export function DeadlineDialog({
       ].current?.focus();
       return;
     }
+    const dueAt = toDueAt(date, time);
+    if (dueAt === null) return;
     if (
       savePersonalDeadline({
         id: entry?.id,
         title,
-        dueAt: toDueAt(date, time),
+        dueAt,
         kind,
         moduleId: moduleId || undefined,
       })

@@ -1,9 +1,15 @@
-import { cleanup, render, screen, within } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { demoStore } from "@/store/demo-store";
-import { LATENCY_MS } from "@/config/demo";
+import { DEMO_STORAGE_KEY, LATENCY_MS } from "@/config/demo";
 import { ModulesPage } from "./ModulesPage";
 
 afterEach(() => vi.useRealTimers());
@@ -232,11 +238,30 @@ describe("Moduldetail: Kurs-Links und Notizen (P5-12)", () => {
     );
   });
 
+  it("persists the latest edit and deletion immediately, while the note still has focus", async () => {
+    await renderAt("/module/m-stat");
+    const note = screen.getByLabelText("Notizen zum Modul");
+    note.focus();
+    fireEvent.change(note, { target: { value: "Noch offene Frage" } });
+    expect(note).toHaveFocus();
+    expect(
+      JSON.parse(localStorage.getItem(DEMO_STORAGE_KEY) ?? "null"),
+    ).toMatchObject({
+      state: { moduleNotes: { "m-stat": "Noch offene Frage" } },
+    });
+    fireEvent.change(note, { target: { value: "" } });
+    expect(
+      JSON.parse(localStorage.getItem(DEMO_STORAGE_KEY) ?? "null"),
+    ).toMatchObject({
+      state: { moduleNotes: {} },
+    });
+  });
+
   it("keeps a note typed right before leaving the page (P5-12 review)", async () => {
     await renderAt("/module/m-stat");
     const user = userEvent.setup();
     await user.type(screen.getByLabelText("Notizen zum Modul"), "Blatt 12");
-    // Leave before the save delay ends.
+    // Leaving the page must retain the last edit as well.
     cleanup();
     expect(demoStore.getState().moduleNotes["m-stat"]).toBe("Blatt 12");
   });
