@@ -36,11 +36,11 @@ Akademische Testorakel und `src/domain/*.spec.ts` bleiben unverändert. Keine ne
 - `npm run screens -- --workers=2`: **59 bestanden**, alle Aufnahmen bei 1440×900 und 390×844 im vollständigen Integrationsstand erneut erstellt; Kalender, Profil und Anlaufstellen anschließend gesichtet.
 - Nach ausdrücklicher Zustimmung von Lucas zur Diff-Übermittlung: unabhängiger schreibgeschützter Codex-Gesamtreview mit drei bestätigten Major-Befunden (POS-Ladesperre, ausstehende Notizen bei Dokumentwechsel, nicht existierende Sommerzeit-Uhrzeit). Alle drei korrigiert; der unabhängige Nachlauf meldet keine weiteren Befunde. [Vollständiger Review und Nachprüfung](P5-PR29.md).
 - Nach den Korrekturen: `VITEST_MAX_WORKERS=2; npm run check` grün mit **325 Tests in 47 Dateien**, Typecheck, Lint und Build. Vollständiges E2E: **53 bestanden, 9 bewusst übersprungen**, einschließlich der neuen Review-Regressionen auf Desktop und mobil. `npm run screens -- --workers=2`: **61 bestanden**, einschließlich der neuen Fehleransicht bei 1440×900 und 390×844; anschließend gesichtet.
-- Bekannte Build-Warnung: Hauptbundle ca. 859 kB minifiziert / 252 kB gzip; Diagramm getrennt ca. 384 kB / 110 kB gzip (P5-F10, nicht Teil der freigegebenen Feedback-Tasks P5-09 bis P5-15).
+- Historischer PR-29-Build: Hauptbundle ca. 859 kB / 252 kB gzip. Die anschließende technische Restprüfung P5-F10 mit Bundle-Aufteilung und 320-px-Korrektur steht in [P5-abschluss](P5-abschluss.md).
 
-## Offen bis zur Abnahme
+## Nach der Integration / verbleibende Abnahme
 
-- Freigabe und Merge von PR #29 nach `main`; kein Merge, Tag oder Release ohne Lucas' ausdrückliches OK.
+- PR #29 ist nach ausdrücklicher Freigabe von Lucas per Squash nach `main` integriert (`7e035c4`); der Produktionsdeploy war erfolgreich. Der Dateibaum entsprach exakt dem geprüften PR-Kopf. Tags und Releases sind nicht gesetzt.
 - Echter ICS-Import, Screenreader und reale Geräte.
-- Teamprüfung, belegte Sitzungsprotokolle und Häufigkeiten, nutzerbasierte Endpriorisierung und Präsentationsergebnisse (P5-01 bis P5-05). Die Sammelliste vom 28.10. ist übernommen; fehlende Nutzerdaten wurden nicht erfunden.
+- Die bereits durchgeführte Vierpersonen-Teamrunde ist inzwischen ausdrücklich bestätigt und mit Methode, drei Kernbefunden und Evidenzgrenzen dokumentiert: [Teamrunde](../evaluation/P5-teamrunde.md). Einzelprotokolle und Aufgabenkennzahlen sind nicht vorhanden; die formale M5-Abnahme liegt bei Lucas.
 - Gate M5 bleibt offen. Phase 6 mit Freeze, finalem Deploy/Tag, Demo/Folien, Aufnahme und Generalprobe ist nicht als erledigt markiert.

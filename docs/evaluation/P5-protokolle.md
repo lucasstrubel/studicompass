@@ -1,6 +1,6 @@
 # Phase 5 – Sitzungsprotokolle P1–P5
 
-**Status: nicht durchgeführt.** Alle Beobachtungsfelder bleiben bis zu echten Sitzungen leer. Anleitung und Erfolgskriterien stehen im [Testplan](../TESTPLAN.md). Keine Namen oder Kontaktdaten eintragen. Zitate nur wörtlich; Zusammenfassungen als solche kennzeichnen.
+**Status dieser Einzelprotokoll-Vorlagen: nicht ausgefüllt.** Die tatsächlich durchgeführte Runde bestand aus vier Teammitgliedern, die individuell alle Funktionen testeten und anschließend gemeinsam Feedback notierten; siehe [Teamrunde](P5-teamrunde.md). Für diese Runde liegen keine ausgefüllten Einzelprotokolle vor. Die Felder werden nicht nachträglich mit erfundenen Daten gefüllt. Anleitung und Erfolgskriterien stehen im [Testplan](../TESTPLAN.md). Keine Namen oder Kontaktdaten eintragen. Zitate nur wörtlich; Zusammenfassungen als solche kennzeichnen.
 
 Erfolg: **ja / mit Hilfe / nein / nicht durchgeführt**. Zeit in Sekunden; konkrete Hilfe im Beobachtungsfeld nennen. Q1 = Vertrauen 1–5 mit Begründung; Q2 = unklar/überraschend; Q3 = hilfreich; Q4 = Nutzungsabsicht und heutige Alternative; Q5 = Bedeutung von „Knapp“ und „Kritisch“.
 

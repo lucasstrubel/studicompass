@@ -3,11 +3,11 @@
 Grundlage: VL01 (Test-Methoden: Usability-Test, Usability-Inspektion, Befragung) und VL05 (ISO 9241-110, Nielsen, Seven Stages of Action).
 Ziel: prüfen, ob der Prototyp die Idee **selbsterklärend** vermittelt und ob Niklas' Kernaufgaben effektiv, effizient und zufriedenstellend lösbar sind (Gebrauchstauglichkeit nach ISO 9241-11).
 
-**Stand 30.10.2026:** Agenteninspektion und technische Iteration in [P5.md](reviews/P5.md); zusätzlich liegt die Sammelliste aus Team-Review und Nutzertest vom 28.10. vor ([Befundliste](evaluation/P5-auswertung.md)). Die Teilnehmendenprotokolle, Häufigkeiten und Endauswertung sind noch nicht eingetragen; die geplanten 3–5 Sitzungen und Gate M5 gelten deshalb weiter als offen. Die Agenteninspektion ersetzt weder die unabhängige Team-Evaluation noch echte Nutzerbeobachtungen.
+**Stand 30.10.2026:** Die von Lucas bestätigte Teamrunde ist durchgeführt: Vier Teammitglieder testeten individuell alle Funktionen und sammelten anschließend gemeinsam Feedback. Die Sammelliste vom 28.10. bildete die Grundlage der integrierten Änderungen P5-08 bis P5-15. Methode, Befunde, drei Kernbeispiele und Evidenzgrenzen stehen in der [Dokumentation der Teamrunde](evaluation/P5-teamrunde.md). Die folgenden Thinking-Aloud-Aufgaben und Einzelprotokolle beschreiben die ursprüngliche Planung; ein entsprechender externer Test mit Aufgabenkennzahlen ist nicht nachgewiesen. Eine neue Runde wird nicht automatisch verlangt. Die formale M5-Abnahme der vorhandenen qualitativen Evidenz liegt bei Lucas.
 
 **Durchführungspaket:** [Aufgabenblatt ohne Lösungen](evaluation/P5-aufgaben.md) · [Protokolle P1–P5](evaluation/P5-protokolle.md) · [Auswertung und Präsentationsvorlage](evaluation/P5-auswertung.md). Dieses Testplandokument ist für Moderation und Protokoll bestimmt und enthält Lösungshinweise. Teilnehmende erhalten nur das Aufgabenblatt.
 
-Reihenfolge: erst Inspektion durch das Team (billig, findet offensichtliche Probleme), dann Test mit Nutzer:innen (findet, was das Team nicht sieht – „Du bist nicht der Nutzer“, VL03).
+Ursprünglich geplanter Ablauf: erst Inspektion durch das Team, dann Test mit unabhängigen Nutzer:innen (VL03). Die folgenden Methoden- und Protokollvorlagen beschreiben diese Planung. Die tatsächlich durchgeführte interne Teamrunde ist davon getrennt oben und im Teambericht dokumentiert.
 
 ---
 

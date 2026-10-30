@@ -115,6 +115,7 @@ export function SettingsPage() {
             <Button
               key={channel}
               variant="outline"
+              className="h-auto min-h-9 max-w-full whitespace-normal py-1.5"
               disabled={state.resources[channel].status === "loading"}
               onClick={() =>
                 void state.setChannelConnected(
