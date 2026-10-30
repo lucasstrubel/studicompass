@@ -9,6 +9,8 @@ const SCREENS = [
   { name: "folgen-check-statistik", path: "/entscheidung/e-stat-ws26" },
   { name: "folgen-check-marketing", path: "/entscheidung/e-mkt-ws26" },
   { name: "studienverlauf", path: "/verlauf" },
+  { name: "studienverlauf-laden", path: "/verlauf" },
+  { name: "studienverlauf-fehler", path: "/verlauf" },
   { name: "studienverlauf-meilenstein", path: "/verlauf" },
   { name: "studienverlauf-ergebnis", path: "/verlauf" },
   { name: "module", path: "/module" },
@@ -42,11 +44,14 @@ const SCREENS = [
 const VIEWPORTS = [
   { name: "1440", width: 1440, height: 900 },
   { name: "390", width: 390, height: 844 },
+  { name: "320", width: 320, height: 844 },
 ];
 for (const screen of SCREENS)
   for (const viewport of VIEWPORTS.filter(
     // From 1280 px the top bar lists every area and there is no menu to open (P5-09).
-    (item) => screen.name !== "navigation" || item.name === "390",
+    (item) =>
+      (screen.name !== "navigation" || item.name === "390") &&
+      (item.name !== "320" || screen.name === "einstellungen"),
   ))
     test(`${screen.name} ${viewport.name}`, async ({ page }) => {
       const loadingDeadlines = screen.name === "fristen-laden";
@@ -57,7 +62,14 @@ for (const screen of SCREENS)
       }
       await page.setViewportSize(viewport);
       await page.emulateMedia({ reducedMotion: "reduce" });
-      await page.goto(screen.path);
+      if (screen.name === "studienverlauf-laden")
+        await page.route("**/PlannerPage-*.js", () => {});
+      if (screen.name === "studienverlauf-fehler")
+        await page.route("**/PlannerPage-*.js", (route) => route.abort());
+      await page.goto(screen.path, {
+        waitUntil:
+          screen.name === "studienverlauf-laden" ? "domcontentloaded" : "load",
+      });
       if (screen.path === "/")
         await page
           .getByRole("button", { name: "Demo ohne Einrichtung starten" })
@@ -99,9 +111,17 @@ for (const screen of SCREENS)
         await expect(
           page.getByText("Keine Fristen in diesem Zeitraum."),
         ).toHaveCount(0);
+      } else if (screen.name === "studienverlauf-laden") {
+        await expect(
+          page.getByRole("status", { name: "Studienverlauf wird geladen" }),
+        ).toBeVisible();
       } else {
         await expect(page.locator("[data-slot=skeleton]")).toHaveCount(0);
       }
+      if (screen.name === "studienverlauf-fehler")
+        await expect(page.getByRole("alert")).toContainText(
+          "Studienverlauf konnte nicht geladen werden",
+        );
       if (screen.name === "onboarding-2")
         await expect(
           page.getByText("Verbunden (Demo)", { exact: true }),
@@ -162,7 +182,9 @@ for (const screen of SCREENS)
       if (screen.name === "fristen-uhrzeitfehler") {
         await page.getByRole("button", { name: "Termin hinzufügen" }).click();
         const dialog = page.getByRole("dialog");
-        await dialog.getByLabel("Titel", { exact: true }).fill("Uhrzeitwechsel");
+        await dialog
+          .getByLabel("Titel", { exact: true })
+          .fill("Uhrzeitwechsel");
         await dialog.getByLabel("Datum", { exact: true }).fill("2027-03-28");
         await dialog.getByLabel("Uhrzeit (optional)").fill("02:30");
         await dialog.getByRole("button", { name: "Speichern" }).click();
@@ -181,18 +203,29 @@ for (const screen of SCREENS)
         await expect(assistant.getByRole("log")).toContainText("KI-Antwort");
       }
       await page.evaluate(() => document.fonts.ready);
+      if (screen.name === "einstellungen" && viewport.name === "320")
+        await page
+          .getByRole("button", {
+            name: "Website: Verbindung trennen (Simulation)",
+            exact: true,
+          })
+          .scrollIntoViewIfNeeded();
       // The pointer stays where the last click happened; move it away so no hover style shows.
       await page.mouse.move(0, 0);
       await page.screenshot({
         path: `docs/screens/${screen.name}-${viewport.name}.png`,
-        fullPage: ![
-          "assistent-hinweis",
-          "postfach-detail",
-          "benachrichtigungen",
-          "navigation",
-          "studienverlauf-ergebnis",
-          "folgen-check-assistent",
-          "fristen-uhrzeitfehler",
-        ].includes(screen.name),
+        fullPage:
+          viewport.name !== "320" &&
+          ![
+            "assistent-hinweis",
+            "postfach-detail",
+            "benachrichtigungen",
+            "navigation",
+            "studienverlauf-ergebnis",
+            "folgen-check-assistent",
+            "fristen-uhrzeitfehler",
+            "studienverlauf-laden",
+            "studienverlauf-fehler",
+          ].includes(screen.name),
       });
     });

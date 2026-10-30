@@ -264,18 +264,18 @@ Historischer M4-Stand, am 30.10. abgeglichen: Hoch/Mittel implementiert, unabhä
 
 ## Phase 5 – Test & Iteration (Di 03.11. – Mi 04.11.) – Details in `docs/TESTPLAN.md`
 
-**Umsetzungsauftrag von Lucas (27.10.2026):** Codex übernimmt die Agenteninspektion, behebt belegte Befunde und bereitet das Testpaket vor. Eigenprüfung und Walkthrough: [P5.md](reviews/P5.md). Dies ersetzt keine Evaluation durch unabhängige Teammitglieder oder Studierende. Der Phase-4-Stand wurde mit PR #19 integriert und als `m4` markiert; der [unabhängige Gegencheck](reviews/P4-P5-gegencheck.md) liegt vor. Der unabhängige Review der späteren Feedback-Runde und der Nachlauf ihrer drei Korrekturen liegen vor ([P5-PR29](reviews/P5-PR29.md)); Gate M5 und der Merge bleiben offen.
+**Umsetzungsauftrag von Lucas (27.10.2026):** Codex übernimmt die Agenteninspektion, behebt belegte Befunde und bereitet das Testpaket vor. Eigenprüfung und Walkthrough: [P5.md](reviews/P5.md). Dies ersetzt keine Evaluation durch unabhängige Teammitglieder oder Studierende. Der Phase-4-Stand wurde mit PR #19 integriert und als `m4` markiert; der [unabhängige Gegencheck](reviews/P4-P5-gegencheck.md) liegt vor. Der unabhängige Review der späteren Feedback-Runde und der Nachlauf ihrer drei Korrekturen liegen vor ([P5-PR29](reviews/P5-PR29.md)); Die freigegebene Feedback-Runde ist mit PR #29 nach main integriert. Die bereits durchgeführte Vierpersonen-Teamrunde ist [dokumentiert](evaluation/P5-teamrunde.md); M5 bleibt eine ausdrückliche Abnahmeentscheidung.
 
 - [ ] **P5-01 [Team]** Heuristische Evaluation und Cognitive Walkthrough des Hero-Flows (Di vormittags)
-  - [x] Vorgelagerte Agenteninspektion aller Screens und Walkthrough dokumentiert; zwei belegte Befunde priorisiert.
+  - [x] Agenteninspektion dokumentiert; zusätzlich Vierpersonen-Teamtest mit individuellen Funktionstests und gemeinsamer Feedbacksammlung durchgeführt. Die formale Nielsen-/Walkthrough-Methode ist für diese Teamrunde nicht separat protokolliert.
 - [ ] **P5-02 [Team]** Usability-Test mit Thinking Aloud, 3–5 Personen aus dem Persona-Segment (Di/Mi)
-  - [x] Moderationsleitfaden, Aufgabenblatt ohne Lösungen und leere Protokolle P1–P5 vorbereitet: [Testpaket](TESTPLAN.md).
+  - [x] Teamrunde mit vier Personen als reale Feedback-Grundlage dokumentiert. Die vorbereiteten Einzelprotokolle sind leer und werden nicht nachträglich erfunden. Der ursprünglich geplante Persona-/Thinking-Aloud-Test ist damit nicht nachgewiesen; siehe [Teamrunde](evaluation/P5-teamrunde.md).
 - [ ] **P5-03 [Team]** Auswertung: Befunde mit Schweregrad und betroffenem Prinzip, Top 5 festlegen
-  - [x] Vorläufige Priorisierung der Inspektionsbefunde; [Auswertungsvorlage](evaluation/P5-auswertung.md) mit Schweregrad, beobachteter Häufigkeit und Präsentationsstruktur vorbereitet. Nutzerhäufigkeit nicht erhoben.
-- [ ] **P5-04 [Claude]** Top 5 umsetzen; **[Codex]** Review
-  - [x] Zwei belegte Inspektionsbefunde umgesetzt und technisch nachgeprüft; endgültige Top-Befunde nach Nutzertests und unabhängiges Review bleiben offen.
-- [ ] **P5-05 [Team]** Ergebnisse für die Präsentation festhalten: drei Kernbefunde und was daraufhin geändert wurde
-  - [x] Vorlage für Beobachtung, Änderung und Nachprüfung vorbereitet; noch keine Nutzertestergebnisse eingetragen.
+  - [x] Sammelliste und Änderungen je Befund zugeordnet; Lucas hat den Umfang P5-09 bis P5-15 freigegeben. Schweregrade und Personenhäufigkeiten der Sammelliste sind nicht überliefert; keine statistische Top-5-Rangfolge behauptet.
+- [x] **P5-04 [Codex, direkt von Lucas beauftragt]** Top-Befunde umsetzen und unabhängig reviewen
+  - [x] P5-09 bis P5-15 und alle bestätigten Major-Befunde aus PR #29 umgesetzt, unabhängig nachgeprüft und mit `7e035c4` integriert. Technische Restprüfung P5-F10 mit behobenem 320-px-Überlauf und Bundle-Aufteilung: [P5-abschluss](reviews/P5-abschluss.md); aktueller Folge-PR vor dem Merge.
+- [x] **P5-05 [Team/Codex]** Ergebnisse für die Präsentation festhalten: drei Kernbefunde und was daraufhin geändert wurde
+  - [x] Drei belegte Kernbefunde aus der Teamrunde mit Umsetzung, technischen Nachweisen, Vorher-/Nachher-Screenshots und Evidenzgrenzen aufbereitet: [Teamrunde](evaluation/P5-teamrunde.md).
 
 ### P5-06 [Claude] Designrevision 2 (Feedback von Lucas, 27.10.2026)
 Vor den Nutzertests, damit sie den neuen Stand sehen. Entscheidungen von Lucas: Chatfenster vor Ort, Terrakotta bleibt Marke plus Farbfamilie, helles Menü-Panel, „Jetzt wichtig“ zart getönt mit Kante.
@@ -296,10 +296,10 @@ Vor den Nutzertests, damit niemand mit einer verdeckenden Sprechblase startet. B
 - [x] Codex-Review: ein Major bestätigt und behoben (Sprechblase kam nach Neuladen ohne Interaktion wieder) → [P5-07.md](reviews/P5-07.md)
 - **AK:** Sprechblase erscheint nach Neuladen nicht erneut und verdeckt nach dem ersten Scrollen oder Seitenwechsel nichts mehr; „Warum?“ reagiert auch 4 px neben dem Text (E2E); Avatar zeigt „NB“; `npm run check` und `npm run e2e` grün; Screenshots neu (1440×900, 390×844), die Sprechblase zeigt nur noch `assistent-hinweis`.
 
-### Feedback-Runde (Team-Review und Nutzertest, 28.10.2026)
+### Feedback-Runde (vier individuelle Teamtests und gemeinsame Sammlung, 28.10.2026)
 
 Grundlage:
-- Sammelliste von Team-Review und Nutzertest, als Befunde P5-F11 bis P5-F33 in der [Befundliste](evaluation/P5-auswertung.md).
+- Sammelliste aus den individuellen Funktionstests der vier Teammitglieder und der anschließenden gemeinsamen Feedbacksammlung, als Befunde P5-F11 bis P5-F33 in der [Befundliste](evaluation/P5-auswertung.md). Methodik von Lucas im Folgeauftrag bestätigt.
 - Lucas hat am 28.10. entschieden, sie bis zur Präsentation umzusetzen.
 - Entscheidungen und Konzeptänderungen stehen in KONZEPT (Vermerk „P5-08“).
 
@@ -386,7 +386,7 @@ Für alle Tasks gilt: Hero-Flow, Testorakel (KONZEPT §10.4) und Spezifikationst
 #### P5-14 [Codex, direkter Auftrag von Lucas] Kalenderansicht (P5-F26 Kalender)
 - [x] Umschalter Liste/Kalender auf der Fristen-Seite (`?ansicht=kalender`)
 - [x] Monatsraster Mo–So ab dem Monat von `DEMO_NOW`, Vor/Zurück/„Heute“; Fristen, eigene Termine und Prüfungstermine; ausgewählter Tag listet seine Einträge mit Links
-- Umsetzung und technische Eigenprüfung durch Codex am 30.10.2026 auf direkten Auftrag von Lucas: [P5-14](reviews/P5-14.md). Im gemeinsamen Integrations-PR [#29](https://github.com/lucasstrubel/studicompass/pull/29) gesichert; Freigabe und Merge stehen aus.
+- Umsetzung und technische Eigenprüfung durch Codex am 30.10.2026 auf direkten Auftrag von Lucas: [P5-14](reviews/P5-14.md). Mit [PR #29](https://github.com/lucasstrubel/studicompass/pull/29) per Squash nach main integriert (`7e035c4`); Produktionsdeploy erfolgreich. Unabhängiger Gesamtreview und Nachlauf: [P5-PR29](reviews/P5-PR29.md).
 - **AK:**
   - 26.01. (Abmeldung Statistik) und 27.01. (Prüfung Statistik) sichtbar.
   - Bedienbar per Tastatur und Touch.
@@ -399,7 +399,7 @@ Für alle Tasks gilt: Hero-Flow, Testorakel (KONZEPT §10.4) und Spezifikationst
 - [x] Produkt-Tour standardmäßig angehakt; „Überspringen“ ab Schritt 2 behält die Eingaben (P5-F08)
 - [x] Einstellungen: Abschnitt „Profil“ (Name, Ziel, Nebenjob); Profilmenü „Profil bearbeiten“. Der Name wirkt auf Begrüßung, Sprechblase, Avatar und Anfrage-Entwürfe.
 - [x] Seite Anlaufstellen (`/anlaufstellen`, S10) in Topbar und Menü; Zuständige Stelle im Assistenten verlinkt dorthin; Katalogfrage A-09
-- Umsetzung und technische Eigenprüfung durch Codex am 30.10.2026 auf direkten Auftrag von Lucas: [P5-15](reviews/P5-15.md). Im gemeinsamen Integrations-PR [#29](https://github.com/lucasstrubel/studicompass/pull/29) gesichert; Freigabe und Merge stehen aus.
+- Umsetzung und technische Eigenprüfung durch Codex am 30.10.2026 auf direkten Auftrag von Lucas: [P5-15](reviews/P5-15.md). Mit [PR #29](https://github.com/lucasstrubel/studicompass/pull/29) per Squash nach main integriert (`7e035c4`); Produktionsdeploy erfolgreich. Unabhängiger Gesamtreview und Nachlauf: [P5-PR29](reviews/P5-PR29.md).
 - **AK:**
   - Namensänderung wirkt sofort überall, übersteht Neuladen; „Demo zurücksetzen“ stellt Niklas wieder her.
   - Onboarding per Tastatur.
@@ -439,7 +439,7 @@ Von oben nach unten streichen, wenn die Zeit knapp wird:
 
 **Gate M5 (Mi 04.11. abends):** Top-Befunde behoben · Testergebnisse dokumentiert.
 
-Stand: Feedback-Runde P5-09 bis P5-15 im [Integrations-PR #29](https://github.com/lucasstrubel/studicompass/pull/29) zusammengeführt; [Prüfnachweise und offene Abnahme](reviews/P5-integration.md). Agenteninspektion, technische Iteration und Testvorbereitung erledigt. Echte Sitzungen, nutzerbasierte Endauswertung und Präsentationsergebnisse stehen aus. **M5 bleibt offen; kein Tag gesetzt.**
+Stand: Feedback-Runde P5-09 bis P5-15 im [Integrations-PR #29](https://github.com/lucasstrubel/studicompass/pull/29) zusammengeführt; [Prüfnachweise und offene Abnahme](reviews/P5-integration.md). Vier Teammitglieder haben bereits individuell alle Funktionen getestet und gemeinsam Feedback gesammelt (von Lucas bestätigt). Qualitative Auswertung und drei Kernbefunde sind [dokumentiert](evaluation/P5-teamrunde.md). Die Iteration ist geprüft, gemergt und deployt. Ein externer Thinking-Aloud-Test und Aufgabenkennzahlen sind nicht nachgewiesen. **M5 zur Abnahme durch Lucas vorbereitet; kein Tag gesetzt.**
 
 ---
 

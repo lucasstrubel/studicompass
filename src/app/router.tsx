@@ -6,7 +6,7 @@ import type { RouteHandle } from "@/components/layout/route-handle";
 import { OverviewEntry } from "@/features/onboarding/OverviewEntry";
 import { DashboardRail } from "@/features/dashboard/DashboardRail";
 import { DecisionPage } from "@/features/decision/DecisionPage";
-import { PlannerPage } from "@/features/planner/PlannerPage";
+import { PlannerRoute, PlannerRouteError } from "@/app/PlannerRoute";
 import { OnboardingPage } from "@/features/onboarding/OnboardingPage";
 import { AssistantPage } from "@/features/assistant/AssistantPage";
 import { InboxPage } from "@/features/inbox/InboxPage";
@@ -26,7 +26,8 @@ const shellRoutes: PageRoute[] = [
   },
   {
     path: "verlauf",
-    Component: PlannerPage,
+    Component: PlannerRoute,
+    ErrorBoundary: PlannerRouteError,
     handle: { title: "Studienverlauf", ownHeader: true },
   },
   {
