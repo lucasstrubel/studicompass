@@ -83,7 +83,8 @@ test("P5-10: nach Verschiebungen bleiben die Boxen breit, nur die Zeitleiste scr
   const columns = page
     .getByRole("region", { name: /^Zeitleiste/ })
     .getByRole("listitem", { name: /Fachsemester$/ });
-  expect(await columns.count()).toBeGreaterThanOrEqual(9);
+  // Closing the modal releases aria-hidden after its exit transition; wait for the accessible columns.
+  await expect.poll(() => columns.count()).toBeGreaterThanOrEqual(9);
   for (const box of await columns.all())
     expect((await box.boundingBox())?.width ?? 0).toBeGreaterThanOrEqual(176);
   const overflow = await page.evaluate(
