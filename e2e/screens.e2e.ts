@@ -23,6 +23,7 @@ const SCREENS = [
     path: "/assistent?frage=Kann%20ich%20Statistik%20im%20Ausland%20schreiben%3F",
   },
   { name: "fristen", path: "/fristen" },
+  { name: "fristen-kalender", path: "/fristen?ansicht=kalender" },
   { name: "fristen-laden", path: "/fristen" },
   { name: "fristen-eigener-termin", path: "/fristen" },
   { name: "assistent-wartet", path: "/assistent?frage=A-04" },
@@ -148,6 +149,8 @@ for (const screen of SCREENS)
         await dialog.getByRole("button", { name: "Speichern" }).click();
         await expect(dialog).toHaveCount(0);
       }
+      if (screen.name === "fristen-kalender")
+        await page.getByRole("button", { name: /Di, 26.01.2027,/ }).click();
       if (screen.name === "navigation")
         await page.getByRole("button", { name: "Navigation öffnen" }).click();
       if (screen.name === "folgen-check-assistent") {

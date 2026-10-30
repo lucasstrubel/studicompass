@@ -382,9 +382,10 @@ Für alle Tasks gilt: Hero-Flow, Testorakel (KONZEPT §10.4) und Spezifikationst
   - Ein Eintrag für morgen 10:00 erscheint unter „Diese Woche“ und als „Nächste Frist“.
   - Einträge überstehen Neuladen, „Demo zurücksetzen“ leert sie.
 
-#### P5-14 [Claude] Kalenderansicht (P5-F26 Kalender)
-- [ ] Umschalter Liste/Kalender auf der Fristen-Seite (`?ansicht=kalender`)
-- [ ] Monatsraster Mo–So ab dem Monat von `DEMO_NOW`, Vor/Zurück/„Heute“; Fristen, eigene Termine und Prüfungstermine; ausgewählter Tag listet seine Einträge mit Links
+#### P5-14 [Codex, direkter Auftrag von Lucas] Kalenderansicht (P5-F26 Kalender)
+- [x] Umschalter Liste/Kalender auf der Fristen-Seite (`?ansicht=kalender`)
+- [x] Monatsraster Mo–So ab dem Monat von `DEMO_NOW`, Vor/Zurück/„Heute“; Fristen, eigene Termine und Prüfungstermine; ausgewählter Tag listet seine Einträge mit Links
+- Umsetzung und technische Eigenprüfung durch Codex am 30.10.2026 auf direkten Auftrag von Lucas: [P5-14](reviews/P5-14.md). Für PR #29 im eigenen Task-Zweig gesichert; Freigabe und Merge stehen aus.
 - **AK:**
   - 26.01. (Abmeldung Statistik) und 27.01. (Prüfung Statistik) sichtbar.
   - Bedienbar per Tastatur und Touch.
