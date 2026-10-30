@@ -58,9 +58,6 @@ export function MilestoneCard() {
                 .join(", ")}.`}
         </p>
       )}
-      {condition && (
-        <CitationList className="mt-3" citations={[condition.citation]} />
-      )}
       <Link
         to="/verlauf"
         className="mt-4 inline-flex items-center gap-2 rounded-sm text-meta font-semibold text-accent-strong"
@@ -68,6 +65,9 @@ export function MilestoneCard() {
         Meilenstein im Studienverlauf
         <ArrowRight className="size-4" aria-hidden="true" />
       </Link>
+      {condition && (
+        <CitationList variant="footer" citations={[condition.citation]} />
+      )}
     </>
   );
 }

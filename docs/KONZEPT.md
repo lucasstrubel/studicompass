@@ -272,7 +272,7 @@ Jeder Screen hat Lade-, Leer- und Fehlerzustand. Werte in Beispielen entsprechen
   - kompakt eine Zeile je Modul
   - ab eingetragener Prüfungsvorleistung zusätzlich die Zulassung
   - Semester aufklappbar mit Zusammenfassung, z. B. „5 Module · 30 ECTS · alle bestanden“
-  - standardmäßig offen sind nur Semester mit offenen Modulen bis zum aktuellen; dazu „Alle aufklappen“
+  - standardmäßig offen ist nur das aktuelle Semester; dazu „Alle aufklappen“
 - **Detail:** Modulsteckbrief (Inhalt in 1–2 Sätzen, Prüfungsform, Angebot – Quelle Modulhandbuch), Prüfung (Termin, Raum, Status, Abmeldefrist mit Countdown), Moodle-Fortschritt; Aktionen „Folgen einer Abmeldung prüfen“ → S4 und „Frage zu diesem Modul stellen“ → S5 mit Kontext.
 - **Detail rechts** (P5-08, ab 1024 px zweispaltig):
   - **Kurs-Links:** „Moodle-Kurs öffnen“ automatisch mit dem Hinweis „Im echten Betrieb öffnet sich der Moodle-Kurs …“; eine eigene Adresse lässt sich festlegen. Eigene Links mit Bezeichnung und http(s)-Adresse lassen sich anlegen, bearbeiten und entfernen; sie öffnen in einem neuen Tab.
@@ -547,7 +547,7 @@ Vereinfachung, die im UI benannt wird: Die Prognose verteilt Module nicht indivi
   - Prüfungsvorleistungen
   - eigene Termine
 
-  Die Felder ergänzen Datenversion 3 additiv (wie in P5-07); „Demo zurücksetzen“ leert sie. Im Startzustand gibt es keine eigenen Einträge, deshalb bleiben Testorakel (§10.4), Hero-Flow und Testaufgaben unverändert. Eigene Einträge ändern keine Prognose. Der Profilname ersetzt Vor- und Nachname aus dem POS nur in der Anzeige (Begrüßung, Avatar, Anfrage-Entwürfe).
+  Die Felder wurden zu Datenversion 3 additiv ergänzt (wie in P5-07). P5-15 erhöht wegen der ergänzten Beispieldaten (Zuständigkeiten und A-09) die Datenversion auf 4; Einstellungen, Simulationen und gültige eigene Einträge aus Version 2 und 3 werden additiv übernommen. „Demo zurücksetzen“ leert sie. Im Startzustand gibt es keine eigenen Einträge, deshalb bleiben Testorakel (§10.4), Hero-Flow und Testaufgaben unverändert. Eigene Einträge ändern keine Prognose. Der Profilname ersetzt Vor- und Nachname aus dem POS nur in der Anzeige (Begrüßung, Avatar, Anfrage-Entwürfe).
 
 ---
 
@@ -609,7 +609,7 @@ Nur helles Design (Entscheidung von Lucas am 27.10.2026, P5-06). Kontrastrevisio
 | `--accent-strong` | `#A4492E` | Links, Akzenttext, Fokusring | 5,6:1 / 5,9:1 |
 | `--accent-soft` / `--accent-soft-foreground` | `#F7E4DD` / `#9A4128` | zurückhaltende Hervorhebungen / Text darauf | 5,4:1 |
 
-**Farbfamilie** – Designrevision P5-06: Terrakotta allein wirkte monoton. Wie in Referenz 1 bekommt jedes Modul eine eigene Farbe; die ECTS-Werte (Balken und Verlauf) sind durchgehend blau. Starke Töne für Linien, Balken und Illustrationskonturen (≥ 3:1 auf Seite, Karte und Track `--muted`), weiche Töne als Fläche unter Tinte (≥ 14:1). Nie Statusfarbe: Grün, Ocker und Rot bleiben Im Plan, Knapp und Kritisch vorbehalten. Seit P5-08 nutzt auch der Meilenstein-Chip im Studienverlauf (Flagge + Text) die Farbfamilie: Fläche `--tone-violet-soft`, Text in Tinte, Flagge in `--tone-violet` (4,9:1 zur Fläche). Das zarte Terrakotta wirkte wie eine Warnung (Feedback 28.10.). Meilenstein-Boxen und die Meilenstein-Karte der Übersicht bleiben neutral.
+**Farbfamilie** – Designrevision P5-06: Terrakotta allein wirkte monoton. Wie in Referenz 1 bekommt jedes Modul eine eigene Farbe; die ECTS-Werte (Balken und Verlauf) sind durchgehend blau. Starke Töne für Linien, Balken und Illustrationskonturen (≥ 3:1 auf Seite, Karte und Track `--muted`), weiche Töne als Fläche unter Tinte (≥ 14:1). Nie Statusfarbe: Grün, Ocker und Rot bleiben Im Plan, Knapp und Kritisch vorbehalten. Seit P5-08 nutzt auch der Meilenstein-Chip im Studienverlauf (Flagge + Text) die Farbfamilie: Fläche `--tone-violet-soft`, Text in Tinte (14,6:1), Flagge in `--tone-violet` (4,9:1 zur Fläche). Das zarte Terrakotta wirkte wie eine Warnung (Feedback 28.10.). Meilenstein-Boxen und die Meilenstein-Karte der Übersicht bleiben neutral.
 
 | Token | Wert | Verwendung | Kontrast |
 |---|---|---|---|
@@ -653,7 +653,7 @@ Regeln: Terrakotta ist nie Statusfarbe. Kritisch-Rot und Terrakotta liegen im Fa
 - **Icons:** lucide-react, 20 px in der Navigation, 18 px im Text.
 - **Quellen-Fußzeile** (P5-08, Feedback 28.10.): Quellen stehen am Ende ihrer Karte bzw. ihres Abschnitts, unter den Aktionen. Eine feine Linie trennt sie ab, sie stehen kompakt in einer Zeile (`CitationList`, Variante `footer`), „Beispiel“ steht je Quelle. In aufklappbaren Erklärungen („Warum?“) bleibt die Quelle am Ende der Erklärung. Jede Aussage behält ihre Quelle in derselben Karte (Q-3).
 - **Eigener Eintrag** (P5-08): Badge statt Kanal-Badge für Termine und Prüfungsvorleistungen, die Niklas selbst einträgt; Quelle „Von dir eingetragen“.
-- **Zeitleiste** (P5-08): ab 1280 px Semesterspalten mit Mindestbreite 11rem; reicht der Platz nicht, scrollt nur die Zeitleiste horizontal (fokussierbar, beschriftet), nie die Seite (Q-5).
+- **Zeitleiste** (P5-08): ab 1280 px Semesterspalten mit Mindestbreite 11rem; reicht der Platz nicht, scrollt nur die Zeitleiste horizontal (fokussierbar, beschriftet), nie die Seite (Q-5). Lange Modulnamen und Quellen brechen an den Wortfugen (z. B. „Wirtschafts-|informatik“, `compoundParts`), weil Browser Deutsch nur mit geladenem Wörterbuch trennen.
 
 ### 12.5 Tonalität und Hinweis-Stil
 - Du-Ansprache, kurze Sätze, Fakten zuerst, konkrete Zahlen und Termine, keine Schuldzuweisung, immer „Was heißt das?“ und „Was kannst du tun?“.

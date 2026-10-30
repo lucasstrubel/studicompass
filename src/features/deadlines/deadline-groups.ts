@@ -1,5 +1,4 @@
 import { DEMO_TIME_ZONE } from "@/config/demo";
-import type { Deadline } from "@/domain/types";
 
 function day(value: Date) {
   return new Intl.DateTimeFormat("en-CA", {
@@ -10,21 +9,13 @@ function day(value: Date) {
   }).format(value);
 }
 
-/** Inclusive end of a date-only deadline, with the offset of that German calendar day. */
-export function deadlineInstant(value: string) {
-  if (value.length !== 10) return value;
-  const offset =
-    new Intl.DateTimeFormat("en", {
-      timeZone: DEMO_TIME_ZONE,
-      timeZoneName: "longOffset",
-    })
-      .formatToParts(new Date(`${value}T12:00:00Z`))
-      .find((part) => part.type === "timeZoneName")
-      ?.value.replace("GMT", "") ?? "+00:00";
-  return `${value}T23:59:59${offset}`;
-}
+export { deadlineInstant } from "@/lib/zoned-time";
+
 /** Calendar weeks start on Monday in the demo time zone, independently of the device. */
-export function groupDeadlines(deadlines: Deadline[], now: Date) {
+export function groupDeadlines<T extends { dueAt: string }>(
+  deadlines: T[],
+  now: Date,
+) {
   const today = day(now);
   const midnight = Date.parse(`${today}T00:00:00Z`);
   const weekday = new Date(midnight).getUTCDay();

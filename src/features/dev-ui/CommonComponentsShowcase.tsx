@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
+import { AdmissionStatus } from "@/components/common/AdmissionStatus";
 import { ChannelBadge } from "@/components/common/ChannelBadge";
+import { OwnEntryBadge } from "@/components/common/OwnEntryBadge";
 import { CitationList } from "@/components/common/CitationList";
 import { ConsequenceItem } from "@/components/common/ConsequenceItem";
 import { Countdown } from "@/components/common/Countdown";
@@ -145,6 +147,23 @@ export function CommonComponentsShowcase() {
 
       <Section name="CitationList">
         <CitationList citations={CITATIONS} />
+        <div className="rounded-xl border bg-card p-4">
+          <p className="text-body">Karte mit Quellen-Fußzeile (P5-09)</p>
+          <CitationList variant="footer" citations={CITATIONS} />
+        </div>
+      </Section>
+
+      <Section name="OwnEntryBadge">
+        <OwnEntryBadge />
+      </Section>
+
+      <Section name="AdmissionStatus">
+        <div className="flex flex-col gap-2">
+          <AdmissionStatus admission="admitted" />
+          <AdmissionStatus admission="open" />
+          <AdmissionStatus admission="notAdmitted" />
+          <AdmissionStatus admission="open" short />
+        </div>
       </Section>
 
       <Section name="DemoBadge">

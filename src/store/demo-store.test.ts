@@ -174,7 +174,7 @@ describe("P2-05: simulations and persistence", () => {
     localStorage.setItem(
       DEMO_STORAGE_KEY,
       JSON.stringify({
-        version: DATA_VERSION - 2,
+        version: 1,
         state: { withdrawnExamIds: ["e-stat-ws26"], hintTone: "neutral" },
       }),
     );
@@ -249,6 +249,131 @@ describe("P2-05: simulations and persistence", () => {
     expect(makeStore().getState().assistantHintSeen).toBe(true);
     await store.getState().resetDemo();
     expect(store.getState().assistantHintSeen).toBe(false);
+  });
+
+  it("keeps the planner's 'Abgeschlossenes ausblenden' across reloads until a reset (P5-10)", async () => {
+    const store = makeStore();
+    await store.getState().hydrate();
+    expect(store.getState().plannerHideCompleted).toBe(false);
+    store.getState().setPlannerHideCompleted(true);
+    expect(makeStore().getState().plannerHideCompleted).toBe(true);
+    await store.getState().resetDemo();
+    expect(store.getState().plannerHideCompleted).toBe(false);
+  });
+
+  it("keeps notes and course links per module until a reset (P5-12)", async () => {
+    const store = makeStore();
+    await store.getState().hydrate();
+    store
+      .getState()
+      .setModuleNote("m-stat", "Probeklausur bis Dienstag rechnen");
+    expect(
+      store.getState().saveCourseLink("m-stat", {
+        label: "Website Prof. Keller",
+        url: "https://example.org/keller",
+      }),
+    ).toBe(true);
+    // Only http(s): script or mail addresses are refused.
+    expect(
+      store.getState().saveCourseLink("m-stat", {
+        label: "Trick",
+        url: "javascript:alert(1)",
+      }),
+    ).toBe(false);
+    expect(store.getState().setMoodleUrl("m-stat", "ftp://moodle")).toBe(false);
+    expect(
+      store.getState().setMoodleUrl("m-stat", "https://moodle.example/kurs/7"),
+    ).toBe(true);
+
+    const reloaded = makeStore().getState();
+    expect(reloaded.moduleNotes).toEqual({
+      "m-stat": "Probeklausur bis Dienstag rechnen",
+    });
+    expect(reloaded.courseLinks["m-stat"]).toEqual([
+      expect.objectContaining({
+        label: "Website Prof. Keller",
+        url: "https://example.org/keller",
+      }),
+    ]);
+    expect(reloaded.moodleUrls).toEqual({
+      "m-stat": "https://moodle.example/kurs/7",
+    });
+
+    const [link] = store.getState().courseLinks["m-stat"];
+    store.getState().saveCourseLink("m-stat", { ...link, label: "Keller" });
+    expect(store.getState().courseLinks["m-stat"][0].label).toBe("Keller");
+    store.getState().removeCourseLink("m-stat", link.id);
+    store.getState().setModuleNote("m-stat", "  ");
+    expect(store.getState().courseLinks).toEqual({});
+    expect(store.getState().moduleNotes).toEqual({});
+
+    store.getState().setModuleNote("m-db", "Blatt 12 fehlt");
+    await store.getState().resetDemo();
+    expect(store.getState().moduleNotes).toEqual({});
+    expect(store.getState().moodleUrls).toEqual({});
+  });
+
+  it("keeps Prüfungsvorleistungen and own dates until a reset and refuses invalid ones (P5-13)", async () => {
+    const store = makeStore();
+    await store.getState().hydrate();
+    expect(
+      store.getState().saveCoursework({
+        moduleId: "m-stat",
+        title: "  ",
+        status: "open",
+      }),
+    ).toBe(false);
+    expect(
+      store.getState().savePersonalDeadline({
+        title: "Abgabe",
+        dueAt: "morgen",
+        kind: "submission",
+      }),
+    ).toBe(false);
+    store.getState().saveCoursework({
+      moduleId: "m-stat",
+      title: "Testat",
+      status: "done",
+    });
+    store.getState().savePersonalDeadline({
+      title: "Abgabe Fallstudie",
+      dueAt: "2027-01-31",
+      kind: "submission",
+      moduleId: "m-mkt",
+    });
+    const reloaded = makeStore().getState();
+    expect(reloaded.coursework).toEqual([
+      expect.objectContaining({ title: "Testat", status: "done" }),
+    ]);
+    expect(reloaded.personalDeadlines).toEqual([
+      expect.objectContaining({
+        title: "Abgabe Fallstudie",
+        moduleId: "m-mkt",
+      }),
+    ]);
+    await store.getState().resetDemo();
+    expect(store.getState().coursework).toEqual([]);
+    expect(store.getState().personalDeadlines).toEqual([]);
+  });
+
+  it("drops stored course links with unsafe addresses (P5-12)", () => {
+    localStorage.setItem(
+      DEMO_STORAGE_KEY,
+      JSON.stringify({
+        version: DATA_VERSION,
+        state: {
+          courseLinks: {
+            "m-stat": [
+              { id: "a", label: "Gut", url: "https://example.org" },
+              { id: "b", label: "Böse", url: "javascript:alert(1)" },
+            ],
+          },
+        },
+      }),
+    );
+    expect(makeStore().getState().courseLinks["m-stat"]).toEqual([
+      { id: "a", label: "Gut", url: "https://example.org/" },
+    ]);
   });
 
   it("ignores an obsolete response when reset races with hydration", async () => {

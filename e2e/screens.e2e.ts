@@ -9,18 +9,26 @@ const SCREENS = [
   { name: "folgen-check-statistik", path: "/entscheidung/e-stat-ws26" },
   { name: "folgen-check-marketing", path: "/entscheidung/e-mkt-ws26" },
   { name: "studienverlauf", path: "/verlauf" },
+  { name: "studienverlauf-meilenstein", path: "/verlauf" },
+  { name: "studienverlauf-ergebnis", path: "/verlauf" },
   { name: "module", path: "/module" },
   { name: "modul-statistik", path: "/module/m-stat" },
+  { name: "modul-pruefungsvorleistung", path: "/module/m-stat" },
   { name: "postfach", path: "/postfach" },
   { name: "postfach-detail", path: "/postfach?eintrag=i-02" },
   { name: "assistent", path: "/assistent" },
   { name: "assistent-antwort", path: "/assistent?frage=A-02" },
+  { name: "assistent-anlaufstellen", path: "/assistent?frage=A-09" },
+  { name: "anlaufstellen", path: "/anlaufstellen" },
   {
     name: "assistent-fallback",
     path: "/assistent?frage=Kann%20ich%20Statistik%20im%20Ausland%20schreiben%3F",
   },
   { name: "fristen", path: "/fristen" },
+  { name: "fristen-kalender", path: "/fristen?ansicht=kalender" },
   { name: "fristen-laden", path: "/fristen" },
+  { name: "fristen-eigener-termin", path: "/fristen" },
+  { name: "fristen-uhrzeitfehler", path: "/fristen" },
   { name: "assistent-wartet", path: "/assistent?frage=A-04" },
   { name: "einstellungen", path: "/einstellungen" },
   { name: "benachrichtigungen", path: "/module" },
@@ -36,7 +44,10 @@ const VIEWPORTS = [
   { name: "390", width: 390, height: 844 },
 ];
 for (const screen of SCREENS)
-  for (const viewport of VIEWPORTS)
+  for (const viewport of VIEWPORTS.filter(
+    // From 1280 px the top bar lists every area and there is no menu to open (P5-09).
+    (item) => screen.name !== "navigation" || item.name === "390",
+  ))
     test(`${screen.name} ${viewport.name}`, async ({ page }) => {
       const loadingDeadlines = screen.name === "fristen-laden";
       const clockTime = new Date("2027-01-25T18:30:00Z");
@@ -67,10 +78,15 @@ for (const screen of SCREENS)
             name: "Mit Hochschul-Login anmelden (Demo)",
           })
           .click();
-        for (let step = 2; step < Number(screen.name.at(-1)); step++)
+        for (let step = 2; step < Number(screen.name.at(-1)); step++) {
+          if (step === 3)
+            await expect(
+              page.getByLabel("Vorname", { exact: true }),
+            ).toHaveValue("Niklas");
           await page
             .getByRole("button", { name: "Weiter", exact: true })
             .click();
+        }
       }
       await expect(
         page.getByRole("heading", { level: 1, includeHidden: true }),
@@ -107,6 +123,51 @@ for (const screen of SCREENS)
       }
       if (screen.name === "benachrichtigungen")
         await page.getByRole("button", { name: /^Benachrichtigungen/ }).click();
+      if (screen.name === "studienverlauf-meilenstein")
+        await page
+          .getByRole("button", { name: "Praxissemester", exact: true })
+          .click();
+      if (screen.name === "studienverlauf-ergebnis") {
+        await page.getByRole("switch", { name: "Simulation" }).click();
+        await page
+          .getByRole("button", { name: "Statistik verschieben" })
+          .click();
+        await page.getByRole("menuitem", { name: "WS 2027/28" }).click();
+        await expect(page.getByRole("dialog")).toBeVisible();
+      }
+      if (screen.name === "modul-pruefungsvorleistung") {
+        const card = page.getByRole("region", { name: "Prüfungsvorleistung" });
+        await card
+          .getByRole("button", { name: "Prüfungsvorleistung eintragen" })
+          .click();
+        await card
+          .getByLabel("Was ist zu erbringen?")
+          .fill("8 von 12 Übungsblättern");
+        await card.getByLabel("Frist (optional)").fill("2027-01-26");
+        await card.getByRole("button", { name: "Eintragen" }).click();
+        await card.scrollIntoViewIfNeeded();
+      }
+      if (screen.name === "fristen-eigener-termin") {
+        await page.getByRole("button", { name: "Termin hinzufügen" }).click();
+        const dialog = page.getByRole("dialog");
+        await dialog.getByLabel("Titel").fill("Lerngruppe Statistik");
+        await dialog.getByLabel("Datum").fill("2027-01-26");
+        await dialog.getByLabel("Uhrzeit (optional)").fill("10:00");
+        await dialog.getByLabel("Art").selectOption("appointment");
+        await dialog.getByRole("button", { name: "Speichern" }).click();
+        await expect(dialog).toHaveCount(0);
+      }
+      if (screen.name === "fristen-kalender")
+        await page.getByRole("button", { name: /Di, 26.01.2027,/ }).click();
+      if (screen.name === "fristen-uhrzeitfehler") {
+        await page.getByRole("button", { name: "Termin hinzufügen" }).click();
+        const dialog = page.getByRole("dialog");
+        await dialog.getByLabel("Titel", { exact: true }).fill("Uhrzeitwechsel");
+        await dialog.getByLabel("Datum", { exact: true }).fill("2027-03-28");
+        await dialog.getByLabel("Uhrzeit (optional)").fill("02:30");
+        await dialog.getByRole("button", { name: "Speichern" }).click();
+        await expect(dialog.getByText(/Diese Uhrzeit existiert/)).toBeVisible();
+      }
       if (screen.name === "navigation")
         await page.getByRole("button", { name: "Navigation öffnen" }).click();
       if (screen.name === "folgen-check-assistent") {
@@ -129,7 +190,9 @@ for (const screen of SCREENS)
           "postfach-detail",
           "benachrichtigungen",
           "navigation",
+          "studienverlauf-ergebnis",
           "folgen-check-assistent",
+          "fristen-uhrzeitfehler",
         ].includes(screen.name),
       });
     });

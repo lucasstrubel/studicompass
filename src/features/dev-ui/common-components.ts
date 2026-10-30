@@ -10,4 +10,6 @@ export const COMMON_COMPONENTS = [
   "EmptyState",
   "ErrorState",
   "PageHeader",
+  "OwnEntryBadge",
+  "AdmissionStatus",
 ] as const;

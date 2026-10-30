@@ -19,6 +19,7 @@ import { APP_NAME } from "@/config/demo";
 import { CitationList } from "@/components/common/CitationList";
 import type { Notification } from "@/domain/types";
 import { CHANNELS } from "@/services/types";
+import { ProfileSection } from "@/features/profile/ProfileSection";
 
 const TYPES: { type: Notification["type"]; label: string }[] = [
   { type: "decision", label: "Entscheidungen" },
@@ -36,6 +37,7 @@ export function SettingsPage() {
   );
   return (
     <div className="max-w-4xl space-y-6">
+      <ProfileSection />
       <fieldset className="space-y-3 rounded-xl border bg-card p-4">
         <legend className="px-1 text-section-title">Hinweis-Stil</legend>
         <div className="flex flex-wrap gap-4">
@@ -68,6 +70,8 @@ export function SettingsPage() {
         )}
         {preview && (
           <CitationList
+            variant="footer"
+            className="mt-0"
             citations={
               state.resources.rules.data?.rules
                 .filter((rule) => preview.ruleIds.includes(rule.id))

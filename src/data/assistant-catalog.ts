@@ -178,4 +178,37 @@ export const assistantCatalog: AssistantEntry[] = [
     personalExample:
       "Wenn du dieses Semester nicht antrittst, ist der nächste Termin im WS 2027/28.",
   },
+  {
+    id: "A-09",
+    question: "An wen wende ich mich mit meiner Frage?",
+    suggested: false,
+    keywords: [
+      "zuständig",
+      "zuständige stelle",
+      "an wen",
+      "wende ich mich",
+      "ansprechpartner",
+      "ansprechperson",
+      "anlaufstelle",
+      "kontakt",
+      "wer hilft",
+    ],
+    shortAnswer:
+      "**Das hängt vom Thema ab:** Prüfungen, Fristen und Zulassungen klärt das Prüfungsamt, das Praxissemester das Praktikantenamt, deine Studienplanung die Studienberatung und Wahlpflichtmodule das Studiendekanat.",
+    details:
+      "Alle Stellen mit Zuständigkeiten, Kontakt und Sprechzeiten stehen unter Anlaufstellen. Bei Sonderfällen hilft „Anfrage vorbereiten“.",
+    personalExample:
+      "Unter Anlaufstellen findest du die passende Stelle mit Kontakt und Sprechzeiten.",
+    ruleIds: [],
+    citations: [
+      {
+        document: "Website der Hochschule, Seite „Ansprechpartner“",
+        summary: "Zuständige Stellen nach Thema (Beispiel).",
+        verified: false,
+      },
+    ],
+    officeIds: ["o-pa", "o-prakt", "o-sb", "o-sd"],
+    actions: [{ label: "Anlaufstellen öffnen", href: "/anlaufstellen" }],
+    followUpIds: ["A-01", "A-03"],
+  },
 ];

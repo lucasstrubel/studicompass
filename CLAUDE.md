@@ -8,6 +8,9 @@ Ziel ist ein **selbsterklärender Hi-Fi-Prototyp** für die Präsentation am **F
 Primäre Persona: **Niklas Brandt**, 20, Wirtschaftsinformatik, 3. Semester, Nebenjob 15 Std./Woche.
 
 ## Verbindliche Dokumente – vor jeder Umsetzung lesen
+
+**Vorrang der genehmigten Roadmap (Lucas, 30.10.2026):** Bei Widersprüchen mit `docs/KONZEPT.md` oder `docs/INHALTE.md` gelten die genehmigte `docs/ROADMAP.md` und ihre Akzeptanzkriterien. Die abweichende Dokumentation wird nachgezogen. Lucas hat Codex direkt mit der weiteren Umsetzung einschließlich Branches, Commits, Pushes und PR-Pflege beauftragt; eine Übergabe an Claude Code ist dafür nicht erforderlich. Merges nach `main`, Tags und Releases benötigen weiterhin Lucas' ausdrückliches OK.
+
 | Datei | Inhalt |
 |---|---|
 | `docs/ROADMAP.md` | Reihenfolge, Tasks mit IDs, Akzeptanzkriterien, Owner ([Claude] / [Codex] / [Team] / [Lucas]) |
@@ -24,7 +27,7 @@ Primäre Persona: **Niklas Brandt**, 20, Wirtschaftsinformatik, 3. Semester, Neb
 - App-Starts und GUI-Tests öffnen Fenster auf Lucas' Desktop: vorher ankündigen.
 
 ## Stack
-Vite · React · TypeScript (strict) · React Router · Tailwind CSS · shadcn/ui (Radix) · lucide-react · Zustand (persist) · Recharts (über shadcn `chart`) · date-fns (Locale `de`) · Vitest + Testing Library · optional Playwright · Fontsource (Manrope, lokal) · Deployment: Vercel (statisch, SPA-Rewrite).
+Vite · React · TypeScript (strict) · React Router · Tailwind CSS · shadcn/ui (Radix) · lucide-react · Zustand (persist) · Recharts (über shadcn `chart`) · date-fns (Locale `de`) · @dnd-kit/core (Drag & Drop im Was-wäre-wenn, P5-11) · Vitest + Testing Library · optional Playwright · Fontsource (Manrope, lokal) · Deployment: Vercel (statisch, SPA-Rewrite).
 Aktuelle stabile Versionen verwenden und in `package.json` festhalten. Kein Backend, keine Datenbank, keine Authentifizierung, keine Requests an fremde Server.
 - Vor Setup-Schritten die aktuelle offizielle Anleitung lesen (Vite, Tailwind CSS, shadcn/ui) – Versionen und Init-Befehle ändern sich.
 - Peer-Dependency-Konflikte nicht mit `--force` oder `--legacy-peer-deps` überdecken: stoppen und Konflikt samt Optionen an Lucas melden.

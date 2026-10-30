@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { demoStore } from "@/store/demo-store";
 import { useDemoStore } from "@/store/use-demo-store";
+import { selectProfileName } from "@/store/selectors";
 import { AssistantChat } from "./AssistantChat";
 
 const HINT_ID = "assistant-hint";
@@ -21,6 +22,7 @@ const HINT_SCROLL_PX = 40;
 export function AssistantLauncher() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const [openedAt, setOpenedAt] = useState(location.key);
   const [pageKey, setPageKey] = useState(location.key);
   // The store only remembers that the bubble was shown; whether it is still visible is local.
   const [hintVisible, setHintVisible] = useState(
@@ -28,9 +30,7 @@ export function AssistantLauncher() {
   );
   const markHintSeen = useDemoStore((state) => state.markAssistantHintSeen);
   const onboardingComplete = useDemoStore((state) => state.onboardingComplete);
-  const firstName = useDemoStore(
-    (state) => state.resources.pos.data?.student.firstName,
-  );
+  const firstName = useDemoStore(selectProfileName)?.firstName;
   const onAssistantPage = location.pathname === "/assistent";
   // Only after the onboarding: before it, the overview renders the shell for a moment and then redirects.
   const hint = hintVisible && onboardingComplete && !open && !onAssistantPage;
@@ -59,6 +59,7 @@ export function AssistantLauncher() {
   if (onAssistantPage) return null;
 
   const openWindow = () => {
+    setOpenedAt(location.key);
     setHintVisible(false);
     setOpen(true);
   };
@@ -113,6 +114,14 @@ export function AssistantLauncher() {
         {/* Transparent: the page stays visible and sharp; the overlay only catches outside clicks. */}
         <DialogPrimitive.Overlay className="fixed inset-0 z-50" />
         <DialogPrimitive.Content
+          onCloseAutoFocus={(event) => {
+            if (location.key === openedAt || !location.hash) return;
+            const target = document.getElementById(location.hash.slice(1));
+            if (!target) return;
+            // A linked office owns focus after navigation; Escape on the same page still returns to the launcher.
+            event.preventDefault();
+            target.focus();
+          }}
           className="panel-shadow fixed inset-0 z-50 flex flex-col overflow-hidden bg-card text-card-foreground md:inset-auto md:right-6 md:bottom-6 md:h-[min(40rem,calc(100dvh-3rem))] md:w-[min(26rem,calc(100vw-3rem))] md:rounded-2xl md:border motion-safe:data-open:animate-in motion-safe:data-open:fade-in-0 motion-safe:data-open:slide-in-from-bottom-4"
           onOpenAutoFocus={(event) => {
             const field =

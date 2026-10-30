@@ -1,8 +1,9 @@
 # Roadmap – StudiCompass Prototyp
 
-Zeitraum: Fr, 23.10. – Fr, 06.11.2026 (Präsentation) · Stand: 29.10.2026 (v4: Feedback-Runde P5-08 bis P5-15 mit eigener Kürzungsliste; v3 vom 26.10.: Zeitplan nach Verzug in Phase 1 neu gesetzt, Kürzungs-Checkpoints, Reviews startet Claude Code)
+Zeitraum: Fr, 23.10. – Fr, 06.11.2026 (Präsentation) · Stand: 30.10.2026 (v4: Feedback-Runde P5-08 bis P5-15 mit eigener Kürzungsliste; Umsetzung und Git-/PR-Arbeit jetzt direkt durch Codex beauftragt)
 
 ## So wird mit dieser Roadmap gearbeitet
+- **Entscheidung von Lucas, 30.10.2026:** Diese genehmigte Roadmap und ihre Akzeptanzkriterien haben bei Widersprüchen Vorrang vor KONZEPT und INHALTE. Codex übernimmt die weitere freigegebene Umsetzung einschließlich Branches, Commits, Pushes und PR-Pflege selbst; eine Übergabe an Claude ist nicht erforderlich. Merge, Tags und Releases bleiben ausdrücklich freizugeben.
 - Reihenfolge einhalten. Jede Phase endet mit einem **Gate**; die nächste Phase beginnt erst, wenn das Gate erfüllt ist. **Ausnahme:** Phase 1 hängt nicht von Inhalten ab und läuft parallel zu Phase 0 – Gate M0 muss erst vor P2-03 erfüllt sein.
 - **Owner:** [Claude] = Claude Code · [Codex] = Codex, delegiert von Claude Code mit Brief nach `AGENTS.md` · [Team] = Gruppe · [Lucas] = Lucas allein.
 - **Pro Task:** neue Claude-Code-Unterhaltung → Plan (`/plan`) → Freigabe → Umsetzung auf eigenem Branch → `npm run check` → Sichtprüfung (1440×900 und 390×844; seit P5-06 nur hell) → Codex-Review (startet Claude Code mit `/codex-review --base main`) → Befunde abarbeiten → Checkbox abhaken → PR → Merge.
@@ -219,7 +220,7 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch (ursprünglich `feat
 
 ## Phase 4 – Ergänzung (So 01.11. – Mo 02.11.)
 
-**Umsetzungsauftrag von Lucas (27.10.2026):** Codex setzt P4-01 bis P4-08 vollständig einschließlich Fristen, ICS und Tour um. Die bisherigen Owner bleiben als ursprüngliche Planung stehen. Umsetzung und technische Eigenprüfung: `docs/reviews/P4-implementation.md`, Phasenbefunde: `docs/reviews/P4.md`. Kalenderimport in einer echten Kalender-App und unabhängiger Gegencheck bleiben separat offen; kein Merge oder Tag ohne Lucas' OK.
+**Umsetzungsauftrag von Lucas (27.10.2026):** Codex setzt P4-01 bis P4-08 vollständig einschließlich Fristen, ICS und Tour um. Die bisherigen Owner bleiben als ursprüngliche Planung stehen. Umsetzung und technische Eigenprüfung: `docs/reviews/P4-implementation.md`, Phasenbefunde: `docs/reviews/P4.md`. Der unabhängige Gegencheck wurde am 27.10. nachgeholt ([Bericht](reviews/P4-P5-gegencheck.md)); der echte Kalenderimport bleibt offen. Kein weiterer Merge oder Tag ohne Lucas' OK.
 
 ### P4-01 [Claude] Assistent (S5) – US-12, US-13, US-14
 - [x] Chat-Oberfläche, Vorschlagsfragen, Zuordnung (KONZEPT §11), Antwortkarte, Resolver für „Für dich heißt das“, Fallback mit „Anfrage vorbereiten“, Kontext-Chip
@@ -257,13 +258,13 @@ P2-06 bis P2-08 arbeiten testgetrieben auf **einem** Branch (ursprünglich `feat
 
 **Gate M4 (Mo 02.11., 22:00):** alle Stories mit Priorität Hoch und Mittel umgesetzt · keine offenen Blocker oder Major-Befunde.
 
-Stand der Umsetzung: Hoch/Mittel implementiert, technische Prüfungen dokumentiert. Formale Abnahme einschließlich unabhängigem Gegencheck steht aus; `m4` wurde nicht gesetzt.
+Historischer M4-Stand, am 30.10. abgeglichen: Hoch/Mittel implementiert, unabhängiger Gegencheck vom 27.10. dokumentiert; Tag `m4` liegt auf `f33b931` (PR #19). Echter Kalenderimport, Screenreader und reale Geräte bleiben separat offen. Die neue Feedback-Runde P5-09 bis P5-15 braucht eigene Nachweise und Integration.
 
 ---
 
 ## Phase 5 – Test & Iteration (Di 03.11. – Mi 04.11.) – Details in `docs/TESTPLAN.md`
 
-**Umsetzungsauftrag von Lucas (27.10.2026):** Codex übernimmt die Agenteninspektion, behebt belegte Befunde und bereitet das Testpaket vor. Eigenprüfung und Walkthrough: [P5.md](reviews/P5.md). Dies ersetzt keine Evaluation durch unabhängige Teammitglieder oder Studierende. Der vorhandene uncommittete Phase-4-Stand bleibt erhalten; M4-Abnahme und unabhängiger Gegencheck sind weiter offen.
+**Umsetzungsauftrag von Lucas (27.10.2026):** Codex übernimmt die Agenteninspektion, behebt belegte Befunde und bereitet das Testpaket vor. Eigenprüfung und Walkthrough: [P5.md](reviews/P5.md). Dies ersetzt keine Evaluation durch unabhängige Teammitglieder oder Studierende. Der Phase-4-Stand wurde mit PR #19 integriert und als `m4` markiert; der [unabhängige Gegencheck](reviews/P4-P5-gegencheck.md) liegt vor. Der unabhängige Review der späteren Feedback-Runde und der Nachlauf ihrer drei Korrekturen liegen vor ([P5-PR29](reviews/P5-PR29.md)); Gate M5 und der Merge bleiben offen.
 
 - [ ] **P5-01 [Team]** Heuristische Evaluation und Cognitive Walkthrough des Hero-Flows (Di vormittags)
   - [x] Vorgelagerte Agenteninspektion aller Screens und Walkthrough dokumentiert; zwei belegte Befunde priorisiert.
@@ -321,18 +322,18 @@ Für alle Tasks gilt: Hero-Flow, Testorakel (KONZEPT §10.4) und Spezifikationst
 - **AK:** keine Widersprüche zwischen KONZEPT, INHALTE, ROADMAP und CLAUDE.md; neue Texte freigegeben.
 
 #### P5-09 [Claude] Navigation und Quellen-Fußzeilen (P5-F26 Reiter, P5-F27, P5-F31)
-- [ ] Ab 1280 px kein Hamburger. Die Topbar zeigt alle Bereiche: Übersicht, Studienverlauf, Module & Noten, Fristen, Postfach, Assistent (Anlaufstellen ab P5-15). Einstellungen über das Profilmenü; unter 1280 px bleibt das Menü-Panel unverändert.
-- [ ] `CitationList` mit Variante `footer`; Quellen als letzte Zeile jeder Karte, unter den Aktionen. In „Warum?“ bleibt die Quelle am Ende der Erklärung.
+- [x] Ab 1280 px kein Hamburger. Die Topbar zeigt alle Bereiche: Übersicht, Studienverlauf, Module & Noten, Fristen, Postfach, Assistent (Anlaufstellen ab P5-15). Einstellungen über das Profilmenü; unter 1280 px bleibt das Menü-Panel unverändert.
+- [x] `CitationList` mit Variante `footer`; Quellen als letzte Zeile jeder Karte, unter den Aktionen. In „Warum?“ bleibt die Quelle am Ende der Erklärung.
 - **AK:** Topbar ohne Umbruch bei 1280, 1440 und 1920 px; jede Regel- und Fristaussage behält ihre Quelle in derselben Karte (Q-3); `check`, `e2e`, Screenshots neu.
 
 #### P5-10 [Claude] Studienverlauf: Orientierung und robustes Layout (P5-F13 bis P5-F18)
-- [ ] Modulname führt zum Moduldetail, auch in der Simulation
-- [ ] Meilenstein-Chip (Flagge + Text) in Violett, als Umschalter für die zugehörigen Module:
+- [x] Modulname führt zum Moduldetail, auch in der Simulation
+- [x] Meilenstein-Chip (Flagge + Text) in Violett, als Umschalter für die zugehörigen Module:
   - Domänenfunktion mit Test; DR-11 und DR-12 in den Daten
   - Markierung mit Icon und Text, Regel mit Quelle
-- [ ] Meilenstein-Boxen sichtbar fest (Schloss, Erklärung mit Quelle)
-- [ ] Schalter „Abgeschlossenes ausblenden“ (gespeichert)
-- [ ] Spalten ab 1280 px mindestens 11rem breit; zusätzliche Spalten scrollen nur innerhalb der Zeitleiste
+- [x] Meilenstein-Boxen sichtbar fest (Schloss, Erklärung mit Quelle)
+- [x] Schalter „Abgeschlossenes ausblenden“ (gespeichert)
+- [x] Spalten ab 1280 px mindestens 11rem breit; zusätzliche Spalten scrollen nur innerhalb der Zeitleiste
 - **AK:**
   - Werte unverändert.
   - Umschalter und Links per Tastatur.
@@ -341,11 +342,11 @@ Für alle Tasks gilt: Hero-Flow, Testorakel (KONZEPT §10.4) und Spezifikationst
   - Bei 9 Spalten bleibt jede Box mindestens 11rem breit.
 
 #### P5-11 [Claude] Was-wäre-wenn: Ergebnis-Dialog und Drag & Drop (P5-F19, P5-F20)
-- [ ] Nach jeder Verschiebung ein Ergebnis-Dialog:
+- [x] Nach jeder Verschiebung ein Ergebnis-Dialog:
   - Inhalt: Abschluss und Praxissemester (echt → simuliert), Status, mitverschobene Module, Folgen mit Quelle
   - Aktionen: „Weiter simulieren“, „Verschiebung zurücknehmen“, „Simulation verwerfen“
-- [ ] Kompakter Simulationsstatus bleibt oben sichtbar
-- [ ] Drag & Drop (`@dnd-kit/core`):
+- [x] Kompakter Simulationsstatus bleibt oben sichtbar
+- [x] Drag & Drop (`@dnd-kit/core`):
   - nur bei eingeschalteter Simulation
   - zulässige Semester beim Ziehen hervorgehoben, unzulässige mit Grund gedimmt
   - Menü bleibt für die Tastatur
@@ -355,12 +356,12 @@ Für alle Tasks gilt: Hero-Flow, Testorakel (KONZEPT §10.4) und Spezifikationst
   - Marketing → SS 2027 ergibt über Menü und Drag dieselben Werte (Szenario D).
 
 #### P5-12 [Claude] ECTS-Verlauf und Module & Noten (P5-F11, P5-F12, P5-F21 bis P5-F23)
-- [ ] ECTS-Verlauf:
+- [x] ECTS-Verlauf:
   - Startpunkt „Studienbeginn“ mit 0
   - Tooltip mit Ist bzw. Prognose, Soll und Differenz
   - Tabellenspalte Differenz
-- [ ] Modulliste kompakt in einer Zeile je Modul; Semester aufklappbar mit Zusammenfassung
-- [ ] Moduldetail ab 1024 px zweispaltig:
+- [x] Modulliste kompakt in einer Zeile je Modul; Semester aufklappbar mit Zusammenfassung, nur das aktuelle offen
+- [x] Moduldetail ab 1024 px zweispaltig:
   - Kurs-Links: Moodle automatisch (Hinweis), eigene Adresse, eigene http(s)-Links
   - Notizen je Modul
 - **AK:**
@@ -370,33 +371,35 @@ Für alle Tasks gilt: Hero-Flow, Testorakel (KONZEPT §10.4) und Spezifikationst
   - Alles per Tastatur bedienbar.
 
 #### P5-13 [Claude] Prüfungsvorleistungen und eigene Termine (P5-F24, P5-F25)
-- [ ] Prüfungsvorleistungen für Module mit Prüfung im aktuellen Semester:
+- [x] Prüfungsvorleistungen für Module mit Prüfung im aktuellen Semester:
   - Stand offen / erbracht / nicht erbracht
   - Zulassung als Domänenfunktion mit Test, angezeigt mit Quelle DR-13 in Moduldetail, Modulliste, Modulkarten und Folgen-Check
-- [ ] Eigene Termine anlegen, bearbeiten, löschen (nicht vor dem Demo-Datum):
+- [x] Eigene Termine anlegen, bearbeiten, löschen (nicht vor dem Demo-Datum):
   - Badge „Eigener Eintrag“
   - Prüfungsvorleistungen mit Frist erscheinen als Frist
-- [ ] Gemeinsamer Selektor für Kanal-Fristen, eigene Termine und Fristen von Prüfungsvorleistungen; „Nächste Frist“ und ICS-Export berücksichtigen eigene Einträge
+- [x] Gemeinsamer Selektor für Kanal-Fristen, eigene Termine und Fristen von Prüfungsvorleistungen; „Nächste Frist“ und ICS-Export berücksichtigen eigene Einträge
 - **AK:**
   - Startzustand ohne Einträge, „Nächste Frist“ bleibt „Abmeldung Statistik“.
   - Ein Eintrag für morgen 10:00 erscheint unter „Diese Woche“ und als „Nächste Frist“.
   - Einträge überstehen Neuladen, „Demo zurücksetzen“ leert sie.
 
-#### P5-14 [Claude] Kalenderansicht (P5-F26 Kalender)
-- [ ] Umschalter Liste/Kalender auf der Fristen-Seite (`?ansicht=kalender`)
-- [ ] Monatsraster Mo–So ab dem Monat von `DEMO_NOW`, Vor/Zurück/„Heute“; Fristen, eigene Termine und Prüfungstermine; ausgewählter Tag listet seine Einträge mit Links
+#### P5-14 [Codex, direkter Auftrag von Lucas] Kalenderansicht (P5-F26 Kalender)
+- [x] Umschalter Liste/Kalender auf der Fristen-Seite (`?ansicht=kalender`)
+- [x] Monatsraster Mo–So ab dem Monat von `DEMO_NOW`, Vor/Zurück/„Heute“; Fristen, eigene Termine und Prüfungstermine; ausgewählter Tag listet seine Einträge mit Links
+- Umsetzung und technische Eigenprüfung durch Codex am 30.10.2026 auf direkten Auftrag von Lucas: [P5-14](reviews/P5-14.md). Im gemeinsamen Integrations-PR [#29](https://github.com/lucasstrubel/studicompass/pull/29) gesichert; Freigabe und Merge stehen aus.
 - **AK:**
   - 26.01. (Abmeldung Statistik) und 27.01. (Prüfung Statistik) sichtbar.
   - Bedienbar per Tastatur und Touch.
   - Keine Scrollleiste bei 360 px.
 
-#### P5-15 [Claude] Profil, Onboarding und Anlaufstellen (P5-F28 bis P5-F30, P5-F32)
-- [ ] Onboarding-Schritt „Dein Profil“:
+#### P5-15 [Codex, direkter Auftrag von Lucas] Profil, Onboarding und Anlaufstellen (P5-F28 bis P5-F30, P5-F32)
+- [x] Onboarding-Schritt „Dein Profil“:
   - Vor- und Nachname, aus dem POS vorbelegt, Pflicht, höchstens 40 Zeichen
   - keine E-Mail-, Login- oder Passwortfelder
-- [ ] Produkt-Tour standardmäßig angehakt; „Überspringen“ ab Schritt 2 behält die Eingaben (P5-F08)
-- [ ] Einstellungen: Abschnitt „Profil“ (Name, Ziel, Nebenjob); Profilmenü „Profil bearbeiten“. Der Name wirkt auf Begrüßung, Sprechblase, Avatar und Anfrage-Entwürfe.
-- [ ] Seite Anlaufstellen (`/anlaufstellen`, S10) in Topbar und Menü; Zuständige Stelle im Assistenten verlinkt dorthin; Katalogfrage A-09
+- [x] Produkt-Tour standardmäßig angehakt; „Überspringen“ ab Schritt 2 behält die Eingaben (P5-F08)
+- [x] Einstellungen: Abschnitt „Profil“ (Name, Ziel, Nebenjob); Profilmenü „Profil bearbeiten“. Der Name wirkt auf Begrüßung, Sprechblase, Avatar und Anfrage-Entwürfe.
+- [x] Seite Anlaufstellen (`/anlaufstellen`, S10) in Topbar und Menü; Zuständige Stelle im Assistenten verlinkt dorthin; Katalogfrage A-09
+- Umsetzung und technische Eigenprüfung durch Codex am 30.10.2026 auf direkten Auftrag von Lucas: [P5-15](reviews/P5-15.md). Im gemeinsamen Integrations-PR [#29](https://github.com/lucasstrubel/studicompass/pull/29) gesichert; Freigabe und Merge stehen aus.
 - **AK:**
   - Namensänderung wirkt sofort überall, übersteht Neuladen; „Demo zurücksetzen“ stellt Niklas wieder her.
   - Onboarding per Tastatur.
@@ -436,7 +439,7 @@ Von oben nach unten streichen, wenn die Zeit knapp wird:
 
 **Gate M5 (Mi 04.11. abends):** Top-Befunde behoben · Testergebnisse dokumentiert.
 
-Stand: Agenteninspektion, technische Iteration und Testvorbereitung erledigt. Echte Sitzungen, nutzerbasierte Endauswertung und Präsentationsergebnisse stehen aus. **M5 bleibt offen; kein Tag gesetzt.**
+Stand: Feedback-Runde P5-09 bis P5-15 im [Integrations-PR #29](https://github.com/lucasstrubel/studicompass/pull/29) zusammengeführt; [Prüfnachweise und offene Abnahme](reviews/P5-integration.md). Agenteninspektion, technische Iteration und Testvorbereitung erledigt. Echte Sitzungen, nutzerbasierte Endauswertung und Präsentationsergebnisse stehen aus. **M5 bleibt offen; kein Tag gesetzt.**
 
 ---
 

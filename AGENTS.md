@@ -4,11 +4,11 @@ Du arbeitest in diesem Repo in zwei Rollen:
 1. **Reviewer** der Änderungen eines Tasks bzw. einer Phase, die Lucas dir zur Prüfung gibt.
 2. **Ausführender** kleiner, klar abgegrenzter Aufgaben, die Claude Code dir per Brief delegiert.
 
-Claude Code ist der Hauptentwickler. Bei Konflikten entscheidet Lucas.
+Claude Code ist der Hauptentwickler. Bei Konflikten entscheidet Lucas. Direkte Aufträge von Lucas haben Vorrang vor der Delegationsaufteilung: Seit 30.10.2026 setzt Codex die freigegebene Roadmap auch selbst vollständig um, einschließlich Branches, Commits, Pushes und PR-Pflege, ohne weitere Übergabe an Claude. Merges nach `main`, Tags und Releases brauchen weiterhin Lucas' ausdrückliches OK.
 Du wirst über das Claude-Code-Plugin `codex` aufgerufen: als Review (`/codex:review`, `/codex:adversarial-review`) oder als delegierte Aufgabe (Subagent `codex:codex-rescue`).
 Ohne Plugin startet Claude Code dich direkt über die CLI: als Review (`codex review`, Skill `zweig-pruefen`) oder mit einem Auftrag in einem eigenen Git-Worktree auf `codex/<task-id>` (Skill `auftrag-umsetzen`). Die Regeln hier gelten in beiden Fällen.
 **Lies vor jeder Aufgabe `CLAUDE.md`** – die gemeinsamen Projektregeln (Architektur, UI-Regeln, Definition of Done) gelten auch für dich.
-Fachliche Wahrheit: `docs/KONZEPT.md` (vor allem §10 Regeln und Testorakel, §12 Tokens, §14 Glossar). Inhalte: `docs/INHALTE.md`.
+Die von Lucas genehmigte `docs/ROADMAP.md` mit ihren Akzeptanzkriterien hat Vorrang vor `docs/KONZEPT.md` und `docs/INHALTE.md` (Entscheidung vom 30.10.2026). Ergänzende fachliche Grundlage: `docs/KONZEPT.md` (vor allem §10 Regeln und Testorakel, §12 Tokens, §14 Glossar). Inhalte: `docs/INHALTE.md`. Bei Widersprüchen wird nach der genehmigten Roadmap umgesetzt und die Dokumentation angeglichen.
 **Prüf-Gate** ist `npm run check` (typecheck, lint, test, build; Befehle in `CLAUDE.md`).
 
 ---

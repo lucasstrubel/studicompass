@@ -48,3 +48,46 @@ it("P4-05: Hinweis-Stil, Benachrichtigungstypen und Gelesenstatus", async () => 
   expect(demoStore.getState().readNotificationIds).toHaveLength(4);
   await act(() => vi.advanceTimersByTimeAsync(300));
 });
+
+it("P5-15: Profil bearbeiten fokussiert den Abschnitt, prüft Namen und speichert alle Profilfelder", async () => {
+  vi.useFakeTimers();
+  const ready = demoStore.getState().resetDemo();
+  await vi.advanceTimersByTimeAsync(LATENCY_MS);
+  await ready;
+  render(
+    <AppProviders>
+      <RouterProvider
+        router={createMemoryRouter(
+          [{ path: "/einstellungen", Component: SettingsPage }],
+          { initialEntries: ["/einstellungen#profil"] },
+        )}
+      />
+    </AppProviders>,
+  );
+  expect(screen.getByRole("region", { name: "Profil" })).toHaveFocus();
+  expect(screen.getByLabelText("Vorname")).toHaveValue("Niklas");
+  fireEvent.change(screen.getByLabelText("Vorname"), {
+    target: { value: " " },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Profil speichern" }));
+  expect(screen.getByLabelText("Vorname")).toHaveFocus();
+  expect(demoStore.getState().profileName).toBeNull();
+  fireEvent.change(screen.getByLabelText("Vorname"), {
+    target: { value: "Alex" },
+  });
+  fireEvent.change(screen.getByLabelText("Nachname"), {
+    target: { value: "Muster" },
+  });
+  fireEvent.change(screen.getByRole("slider"), { target: { value: "20" } });
+  fireEvent.click(
+    screen.getByRole("checkbox", {
+      name: "Mein Ziel: Abschluss in Regelstudienzeit",
+    }),
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Profil speichern" }));
+  expect(demoStore.getState()).toMatchObject({
+    profileName: { firstName: "Alex", lastName: "Muster" },
+    jobHoursPerWeek: 20,
+    goalRegularTime: false,
+  });
+});

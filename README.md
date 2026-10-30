@@ -18,7 +18,7 @@ npm run dev
 
 Die App läuft dann unter http://localhost:5173.
 
-Beim ersten Aufruf der Übersicht öffnet sich das vierstufige Onboarding. „Demo ohne Einrichtung starten“ überspringt es mit den Standardwerten. Direkte Links auf andere Seiten bleiben erreichbar. Unter Einstellungen kannst du die Einrichtung erneut starten oder die Demo zurücksetzen; das gewählte Design bleibt dabei erhalten.
+Beim ersten Aufruf der Übersicht öffnet sich das vierstufige Onboarding. „Demo ohne Einrichtung starten“ überspringt es mit den Standardwerten und ohne Tour. Ab Schritt 2 behält „Überspringen“ deine Eingaben; die Produkt-Tour ist standardmäßig angehakt und lässt sich abwählen. Direkte Links auf andere Seiten bleiben erreichbar. Unter Einstellungen kannst du dein lokales Profil bearbeiten, die Einrichtung erneut starten oder die Demo zurücksetzen.
 
 ## Befehle
 
@@ -42,8 +42,8 @@ Beim ersten Aufruf der Übersicht öffnet sich das vierstufige Onboarding. „De
 - Playwright nutzt das lokal installierte **Google Chrome** (`channel: "chrome"`); ein Browser-Download ist nicht nötig. Ohne Chrome schlagen `e2e` und `screens` fehl.
 - Beide Befehle bauen die App (`npm run build`) und starten `vite preview` auf Port 4173. Läuft dort schon ein Server, wird er wiederverwendet.
 - `npm run e2e` prüft Übersicht → Folgen-Check → simulierte Abmeldung → Übersicht (Kritisch, SS 2028, SS 2029) → „Rückgängig“, dazu denselben Weg nur per Tastatur und horizontales Scrollen auf den Kernscreens.
-- Zusätzlich prüft `e2e` Onboarding und Tour per Tastatur, Postfach-Deep-Links und Gelesenstatus nach Neuladen, acht Assistentenfragen per Klick und Freitext, Fallback, ICS-Download, persönliche Einstellungen, Kanalverbindungen und Demo-Reset. Die ergänzenden Screens werden bei 360 bis 1920 px geprüft. Der Hero-Flow-Test fragt außerdem den Assistenten im Fenster vom Folgen-Check aus.
-- `npm run screens` schreibt 44 Aufnahmen (22 Ansichten in 1440×900 und 390×844, nur helles Design) als `<ansicht>-<breite>.png` nach `docs/screens/`: Kernscreens, Module und Detail, Postfach und Detail, Assistent mit Antwort, Fallback und Wartezustand, Fristen (auch beim Laden), Einstellungen, Glocken-Sheet, offenes Menü, Assistent-Fenster über dem Folgen-Check und vier Onboarding-Schritte.
+- Zusätzlich prüft `e2e` Onboarding und Tour per Tastatur, Postfach-Deep-Links und Gelesenstatus nach Neuladen, neun Assistentenfragen per Klick und Freitext, Fallback, ICS-Download, Profiländerungen, Kanalverbindungen und Demo-Reset. Kalender und Anlaufstellen gehören zu den ergänzenden Screens bei 360 bis 1920 px; der Kalender hat außerdem einen Touchtest bei 360 px. Der Hero-Flow-Test fragt den Assistenten im Fenster vom Folgen-Check aus.
+- `npm run screens` schreibt 61 Aufnahmen (31 Ansichten in 1440×900 und 390×844; das Menü nur bei 390 px, nur helles Design) als `<ansicht>-<breite>.png` nach `docs/screens/`: Kernscreens, Module und Detail, Prüfungsvorleistung, Postfach und Detail, Assistent mit Antwort, Anlaufstellen-Antwort, Fallback und Wartezustand, Anlaufstellen, Fristen (auch Kalender, eigener Termin, Sommerzeit-Feldfehler und Ladezustand), Einstellungen, Glocken-Sheet, Menü, Assistent-Fenster über dem Folgen-Check und vier Onboarding-Schritte.
 - `npm run check` enthält die End-to-End-Tests nicht; Playwright-Dateien enden auf `.e2e.ts`, damit Vitest sie nicht aufgreift.
 
 ## Daten und Berechnungen (Phase 2)
@@ -52,7 +52,7 @@ Beim ersten Aufruf der Übersicht öffnet sich das vierstufige Onboarding. „De
 - Sechs Services laden POS, Moodle, Mail, Website, Regelwerk und Assistent unabhängig voneinander. Die Mocks warten 500 ms; `FLAGS.simulateErrors` in `src/config/demo.ts` aktiviert Fehler. Es gibt keine Hochschul-Requests.
 - `src/store/demo-store.ts` hält Ladezustände, Einstellungen und Simulationen. `hydrate()` lädt die Daten, `retry()` wiederholt einen einzelnen Service. Unter `/_ui` lassen sich Ladezustände und Fehler beobachten; Übersicht, Folgen-Check und Studienverlauf zeigen sie je Kanal (Phase 3).
 - `src/store/selectors.ts` liefert akademischen Zustand, Studienstand, Prognose, Postfach, Fristen und Benachrichtigungen. Berechnete Selektoren liefern bei unverändertem Store stabile Referenzen für React.
-- Abmeldung speichert einen Snapshot; `undo()` stellt ihn wieder her, auch nach einem Neuladen. Was-wäre-wenn bleibt temporär. Nutzeränderungen werden unter `DEMO_STORAGE_KEY` gespeichert und durch `resetDemo()` zurückgesetzt. Nach Änderungen an den Beispieldaten `DATA_VERSION` erhöhen. Version 3 übernimmt Einstellungen und Simulationen aus Version 2 durch eine additive Migration; ältere Datenversionen werden verworfen. Der Gesprächsverlauf des Assistenten (`assistantThread`) liegt nur im Speicher; `resetDemo()` leert ihn.
+- Abmeldung speichert einen Snapshot; `undo()` stellt ihn wieder her, auch nach einem Neuladen. Was-wäre-wenn bleibt temporär. Nutzeränderungen werden unter `DEMO_STORAGE_KEY` gespeichert und durch `resetDemo()` zurückgesetzt. Nach Änderungen an den Beispieldaten `DATA_VERSION` erhöhen. Version 4 (P5-15: Zuständigkeiten und A-09) übernimmt Einstellungen, Simulationen und gültige eigene Einträge aus Version 2 und 3 additiv; ältere Datenversionen werden verworfen. Der Profilname ersetzt nur die Anzeige, nicht die POS-Daten oder akademische Berechnungen. Der Gesprächsverlauf des Assistenten (`assistantThread`) liegt nur im Speicher; `resetDemo()` leert ihn.
 - `src/domain/` enthält ausschließlich reine TypeScript-Berechnungen nach KONZEPT §10. Die Spezifikationstests wurden vor der Implementierung ausgeführt und bleiben unverändert. Nach drei Fehlversuchen wird die Prognose blockiert; zukünftige Praxis- und Abschlusstermine bleiben offen.
 - Prüfnachweis, Testorakel und Übergabe: [Phase-2-Review](docs/reviews/P2.md).
 
@@ -62,6 +62,8 @@ Beim ersten Aufruf der Übersicht öffnet sich das vierstufige Onboarding. „De
 - Das Postfach bündelt die vier Kanäle mit Filtern, Wichtigkeitsbegründungen und gespeicherten Gelesenmarkierungen. Beispiel: `/postfach?eintrag=i-02`.
 - Module & Noten zeigt Kennzahlen und Moduldetails. Von dort öffnen sich der passende Folgen-Check oder der Assistent mit Modulkontext.
 - Fristen lassen sich einzeln oder gemeinsam als ICS herunterladen. Der Import in eine echte Kalender-App steht als externe Prüfung noch aus.
+- Die Fristen haben eine Kalenderansicht (`/fristen?ansicht=kalender`) mit deutschen Kalendertagen, Fristen, eigenen Terminen, Prüfungsvorleistungen und Prüfungsterminen. Liste und Kalender teilen Quellen und Aktionen.
+- Anlaufstellen zeigt Zuständigkeiten, Kontakt und Sprechzeiten mit Beispielquellen. Passende Fragen führen in den Assistenten; seine zuständigen Stellen verlinken zurück zur jeweiligen Karte.
 - Einstellungen steuern Hinweis-Stil und Benachrichtigungstypen. Getrennte Kanäle behalten geladene Daten in der Sitzung; nach Neuladen lädt ein getrennter Kanal erst beim Wiederverbinden.
 - Umsetzung, Prüfungen und offene Abnahmen: [Phasenbericht P4](docs/reviews/P4.md), [Umsetzungsnachweis](docs/reviews/P4-implementation.md).
 
@@ -110,7 +112,7 @@ Nie `shadcn add --overwrite` für vorhandene Komponenten: Die Wrapper weichen be
   - Jede Route trägt ihren Titel im `handle`. Er erscheint als Überschrift im Inhaltsbereich und als Browser-Tab-Titel „‹Titel› · StudiCompass“; Seiten mit eigenem Kopf setzen `ownHeader`.
   - Unbekannte Pfade zeigen die 404-Seite. Das Onboarding (`/start`) läuft ohne Shell.
 - **Layout:** [`src/components/layout/`](src/components/layout/), Einträge einmal in `navigation.ts`.
-  - ab 1280 px: Toplinks und eingerückter Rahmen; alle Bereiche zusätzlich im Hamburger-Menü
+  - ab 1280 px: alle Bereiche als Toplinks und eingerückter Rahmen; kein Hamburger-Menü
   - darunter: Navigation über das Hamburger-Menü, mobil bildschirmfüllende App
   - Das Hamburger-Menü ist ein helles Panel unter dem Button: Hover zeigt eine Vorschau, Klick oder Tastatur fixieren dasselbe Panel als Dialog mit Fokusführung. Die Seite bleibt sichtbar und scharf.
   - Die aktuelle Seite markieren Kontur bzw. Fläche und Fettung, gesteuert über `aria-current`.

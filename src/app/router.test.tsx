@@ -40,6 +40,7 @@ describe("routes (KONZEPT §7)", () => {
     ["/postfach", "Postfach"],
     ["/assistent", "Assistent"],
     ["/fristen", "Fristen"],
+    ["/anlaufstellen", "Anlaufstellen"],
     ["/einstellungen", "Einstellungen"],
     ["/start", "Onboarding"],
     ["/gibt-es-nicht", "Seite nicht gefunden"],
@@ -193,6 +194,25 @@ describe("top bar", () => {
 
     await user.keyboard("{Enter}");
     expect(router.state.location.pathname).toBe("/einstellungen");
+  });
+
+  it("P5-15: reaches Profil bearbeiten by keyboard and focuses the profile section", async () => {
+    const user = userEvent.setup();
+    const router = renderApp("/module");
+    screen.getByRole("button", { name: "Profil" }).focus();
+    await user.keyboard("{Enter}");
+    expect(
+      await screen.findByRole("menuitem", { name: "Einstellungen" }),
+    ).toHaveFocus();
+    await user.keyboard("{ArrowDown}");
+    expect(
+      screen.getByRole("menuitem", { name: "Profil bearbeiten" }),
+    ).toHaveFocus();
+    await user.keyboard("{Enter}");
+    expect(router.state.location.pathname + router.state.location.hash).toBe(
+      "/einstellungen#profil",
+    );
+    expect(screen.getByRole("region", { name: "Profil" })).toHaveFocus();
   });
 });
 

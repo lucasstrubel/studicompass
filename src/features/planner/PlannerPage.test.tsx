@@ -34,6 +34,11 @@ function renderPlanner() {
 const semester = (name: string) =>
   screen.getByRole("listitem", { name: new RegExp(`^${name},`) });
 
+/** After each move the result dialog opens (P5-11); "Weiter simulieren" returns to the timeline. */
+async function continueSimulating(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByRole("button", { name: "Weiter simulieren" }));
+}
+
 describe("Studienverlauf (KONZEPT §8 S2, §10.4)", () => {
   it("shows the forecast, status and goal consistent with overview and Folgen-Check", () => {
     renderPlanner();
@@ -119,8 +124,14 @@ describe("Studienverlauf (KONZEPT §8 S2, §10.4)", () => {
       "WS 2030/31",
     ]);
     await user.click(screen.getByRole("menuitem", { name: "WS 2027/28" }));
+    expect(
+      screen.getByRole("dialog", {
+        name: "Simulation: Statistik → WS 2027/28",
+      }),
+    ).toBeInTheDocument();
+    await continueSimulating(user);
 
-    const banner = screen.getByRole("status");
+    const banner = screen.getByRole("status", { name: "Simulationsstatus" });
     expect(banner).toHaveTextContent("Simulation");
     expect(banner).toHaveTextContent(
       "Abschluss in der Simulation: SS 2029 (echter Plan: WS 2028/29) · Praxissemester SS 2028",
@@ -172,12 +183,15 @@ describe("Studienverlauf (P3-04 review)", () => {
       screen.getByRole("button", { name: "Statistik verschieben" }),
     );
     await user.click(screen.getByRole("menuitem", { name: "WS 2027/28" }));
+    await continueSimulating(user);
 
     expect(
       screen.getByText(/Echter Plan ohne Simulation/).closest("p"),
     ).toHaveTextContent("WS 2028/29");
     expect(
-      within(screen.getByRole("status")).getByText("Kritisch"),
+      within(
+        screen.getByRole("status", { name: "Simulationsstatus" }),
+      ).getByText("Kritisch"),
     ).toBeVisible();
   });
 
@@ -210,6 +224,7 @@ describe("Studienverlauf (P3-04 review)", () => {
       screen.getByRole("button", { name: "Statistik verschieben" }),
     );
     await user.click(screen.getByRole("menuitem", { name: "WS 2028/29" }));
+    await continueSimulating(user);
     await user.click(
       screen.getByRole("button", { name: "IT-Sicherheit verschieben" }),
     );
@@ -248,6 +263,7 @@ describe("Studienverlauf (P3-06 review: focus)", () => {
     screen.getByRole("button", { name: "Statistik verschieben" }).focus();
     await user.keyboard("{Enter}");
     await user.click(screen.getByRole("menuitem", { name: "WS 2027/28" }));
+    await continueSimulating(user);
 
     await vi.waitFor(() =>
       expect(document.activeElement).toBe(
@@ -283,5 +299,207 @@ describe("Studienverlauf (P3-06 review: focus)", () => {
     renderPlanner();
     await user.click(screen.getByRole("button", { name: "Rückgängig" }));
     expect(document.activeElement).toBe(screen.getByRole("main"));
+  });
+});
+
+describe("Studienverlauf: Orientierung (P5-10)", () => {
+  it("links every module name to its module entry (P5-F13)", () => {
+    renderPlanner();
+    expect(
+      within(semester("WS 2026/27")).getByRole("link", { name: "Statistik" }),
+    ).toHaveAttribute("href", "/module/m-stat");
+    expect(
+      within(semester("WS 2027/28")).getByRole("link", {
+        name: "Praxissemester",
+      }),
+    ).toHaveAttribute("href", "/module/m-praxis");
+  });
+
+  it("toggles the marking of a milestone's modules with the rule and its source (DR-6, DR-12)", async () => {
+    const user = userEvent.setup();
+    renderPlanner();
+    const internship = within(semester("WS 2027/28")).getByRole("button", {
+      name: "Praxissemester",
+    });
+    expect(internship).toHaveAttribute("aria-pressed", "false");
+    await user.click(internship);
+    expect(internship).toHaveAttribute("aria-pressed", "true");
+    const status = screen.getByRole("status", { name: "Markierte Module" });
+    expect(status).toHaveTextContent(
+      "Zum Praxissemester wirst du zugelassen, wenn alle Module des Grundstudiums bestanden sind.",
+    );
+    expect(within(status).getByRole("list", { name: "Quellen" })).toBeVisible();
+    // 15 foundation modules: passed ones are marked, open ones also say "noch offen".
+    expect(document.querySelectorAll("[data-marked]")).toHaveLength(15);
+    expect(semester("WS 2026/27")).toHaveTextContent(
+      "für Praxissemester · noch offen",
+    );
+    expect(semester("WS 2025/26")).toHaveTextContent("für Praxissemester");
+    expect(semester("WS 2025/26")).not.toHaveTextContent("noch offen");
+
+    // Another milestone replaces the marking; a second click clears it.
+    const thesis = within(semester("WS 2028/29")).getByRole("button", {
+      name: "Bachelorarbeit",
+    });
+    await user.click(thesis);
+    expect(document.querySelectorAll("[data-marked]")).toHaveLength(2);
+    expect(
+      screen.getByRole("status", { name: "Markierte Module" }),
+    ).toHaveTextContent(
+      "Zur Bachelorarbeit wirst du zugelassen, wenn du Praxis- und Projektsemester bestanden hast.",
+    );
+    await user.click(thesis);
+    expect(document.querySelectorAll("[data-marked]")).toHaveLength(0);
+  });
+
+  it("explains why milestone boxes stay put (P5-F18)", () => {
+    renderPlanner();
+    expect(semester("WS 2027/28")).toHaveTextContent(
+      "Fester MeilensteinRutscht automatisch nach hinten, wenn Module des Grundstudiums fehlen.",
+    );
+    expect(semester("SS 2028")).toHaveTextContent(
+      "Folgt auf das Praxissemester und rutscht mit ihm.",
+    );
+  });
+
+  it("hides completed semesters and passed modules and remembers the choice (P5-F16)", async () => {
+    const user = userEvent.setup();
+    renderPlanner();
+    await user.click(
+      screen.getByRole("switch", { name: "Abgeschlossenes ausblenden" }),
+    );
+    // WS 2025/26 and SS 2026 hold only passed modules (the open ones of SS 2026 are planned for SS 2027).
+    for (const term of [/^WS 2025\/26,/, /^SS 2026,/])
+      expect(
+        screen.queryByRole("listitem", { name: term }),
+      ).not.toBeInTheDocument();
+    expect(semester("WS 2026/27")).toBeInTheDocument();
+    expect(
+      screen.getByText(/2 abgeschlossene Semester sind ausgeblendet/),
+    ).toBeInTheDocument();
+    expect(demoStore.getState().plannerHideCompleted).toBe(true);
+  });
+});
+
+describe("Was-wäre-wenn: Ergebnis-Dialog (P5-11)", () => {
+  it("shows what changes right after a move, including modules that moved along", async () => {
+    const user = userEvent.setup();
+    renderPlanner();
+    await user.click(screen.getByRole("switch", { name: "Simulation" }));
+    await user.click(
+      screen.getByRole("button", { name: "Statistik verschieben" }),
+    );
+    await user.click(screen.getByRole("menuitem", { name: "WS 2027/28" }));
+    const dialog = screen.getByRole("dialog", {
+      name: "Simulation: Statistik → WS 2027/28",
+    });
+    expect(dialog).toHaveTextContent("AbschlussWS 2028/29wird zuSS 2029");
+    expect(dialog).toHaveTextContent("PraxissemesterWS 2027/28wird zuSS 2028");
+    expect(within(dialog).getByText("Kritisch")).toBeVisible();
+    expect(dialog).toHaveTextContent(/Mit verschoben: \d+ Module/);
+    expect(dialog).toHaveTextContent("Praxissemester");
+    // Consequences come with "Warum?" and sources, as before in the banner.
+    expect(
+      within(dialog).getAllByRole("button", { name: /^Warum\?/ }).length,
+    ).toBeGreaterThan(0);
+  });
+
+  it("takes back only the last move and reopens the result from the status", async () => {
+    const user = userEvent.setup();
+    renderPlanner();
+    await user.click(screen.getByRole("switch", { name: "Simulation" }));
+    await user.click(
+      screen.getByRole("button", { name: "Marketing verschieben" }),
+    );
+    await user.click(screen.getByRole("menuitem", { name: "SS 2027" }));
+    await continueSimulating(user);
+    await user.click(screen.getByRole("button", { name: "Folgen ansehen" }));
+    expect(
+      screen.getByRole("dialog", { name: "Simulation: Marketing → SS 2027" }),
+    ).toBeInTheDocument();
+    await user.click(
+      screen.getByRole("button", { name: "Verschiebung zurücknehmen" }),
+    );
+    expect(demoStore.getState().whatIf).toEqual([]);
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    // The simulation stays switched on for the next try.
+    expect(screen.getByRole("switch", { name: "Simulation" })).toBeChecked();
+  });
+
+  it("discards the simulation from the dialog and returns the focus to the switch", async () => {
+    const user = userEvent.setup();
+    renderPlanner();
+    await user.click(screen.getByRole("switch", { name: "Simulation" }));
+    await user.click(
+      screen.getByRole("button", { name: "Statistik verschieben" }),
+    );
+    await user.click(screen.getByRole("menuitem", { name: "WS 2027/28" }));
+    await user.click(
+      within(screen.getByRole("dialog")).getByRole("button", {
+        name: "Simulation verwerfen",
+      }),
+    );
+    expect(demoStore.getState().whatIf).toEqual([]);
+    await vi.waitFor(() =>
+      expect(document.activeElement).toBe(
+        screen.getByRole("switch", { name: "Simulation" }),
+      ),
+    );
+  });
+
+  it("makes open modules draggable only while simulating, milestones never (P5-F20)", async () => {
+    const user = userEvent.setup();
+    renderPlanner();
+    expect(document.querySelectorAll("[data-draggable]")).toHaveLength(0);
+    await user.click(screen.getByRole("switch", { name: "Simulation" }));
+    const draggable = [...document.querySelectorAll("[data-draggable]")].map(
+      (node) => node.querySelector("a")?.textContent,
+    );
+    expect(draggable).toContain("Statistik");
+    expect(draggable).not.toContain("Praxissemester");
+    expect(draggable).not.toContain("Mathematik 1");
+  });
+
+  it("takes back exactly the last step when the same module moves twice (P5-11 review)", async () => {
+    const user = userEvent.setup();
+    renderPlanner();
+    await user.click(screen.getByRole("switch", { name: "Simulation" }));
+    await user.click(
+      screen.getByRole("button", { name: "Marketing verschieben" }),
+    );
+    await user.click(screen.getByRole("menuitem", { name: "SS 2027" }));
+    await continueSimulating(user);
+    const first = structuredClone(demoStore.getState().whatIf);
+    await user.click(
+      screen.getByRole("button", { name: "Marketing verschieben" }),
+    );
+    await user.click(screen.getByRole("menuitem", { name: "WS 2027/28" }));
+    await user.click(
+      screen.getByRole("button", { name: "Verschiebung zurücknehmen" }),
+    );
+    expect(demoStore.getState().whatIf).toEqual(first);
+  });
+
+  it("lists modules the rules push further, even if moved by hand before (P5-11 review)", async () => {
+    const user = userEvent.setup();
+    renderPlanner();
+    await user.click(screen.getByRole("switch", { name: "Simulation" }));
+    await user.click(
+      screen.getByRole("button", { name: "IT-Sicherheit verschieben" }),
+    );
+    await user.click(screen.getByRole("menuitem", { name: "WS 2028/29" }));
+    await continueSimulating(user);
+    await user.click(
+      screen.getByRole("button", { name: "Statistik verschieben" }),
+    );
+    await user.click(screen.getByRole("menuitem", { name: "WS 2028/29" }));
+    const dialog = screen.getByRole("dialog", {
+      name: "Simulation: Statistik → WS 2028/29",
+    });
+    expect(
+      within(dialog)
+        .getByText(/^Mit verschoben:/)
+        .closest("p"),
+    ).toHaveTextContent("IT-Sicherheit");
   });
 });

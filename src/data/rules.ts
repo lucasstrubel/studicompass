@@ -129,4 +129,45 @@ export const rules: Rule[] = [
       maxRegularLoad: 36,
     },
   },
+  // P5-08: example rules that only mark the modules of a milestone in the planner; the projection does
+  // not use them (KONZEPT §10.3).
+  {
+    id: "DR-11",
+    title:
+      "Zum Projektsemester wirst du zugelassen, wenn du das Praxissemester bestanden hast.",
+    citation: {
+      document: "SPO Wirtschaftsinformatik",
+      summary:
+        "Zum Projektsemester wirst du zugelassen, wenn du das Praxissemester bestanden hast.",
+      verified: false,
+    },
+    officeId: "o-pa",
+    params: {},
+  },
+  {
+    id: "DR-12",
+    title:
+      "Zur Bachelorarbeit wirst du zugelassen, wenn du Praxis- und Projektsemester bestanden hast.",
+    citation: {
+      document: "SPO Wirtschaftsinformatik",
+      summary:
+        "Zur Bachelorarbeit wirst du zugelassen, wenn du Praxis- und Projektsemester bestanden hast.",
+      verified: false,
+    },
+    officeId: "o-pa",
+    params: {},
+  },
+  {
+    id: "DR-13",
+    title:
+      "Sieht ein Modul eine Prüfungsvorleistung vor, wirst du zur Prüfung erst zugelassen, wenn du sie erbracht hast.",
+    citation: {
+      document: "Modulhandbuch Wirtschaftsinformatik",
+      summary:
+        "Sieht ein Modul eine Prüfungsvorleistung vor, wirst du zur Prüfung erst zugelassen, wenn du sie erbracht hast.",
+      verified: false,
+    },
+    officeId: "o-pa",
+    params: {},
+  },
 ];

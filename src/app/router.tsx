@@ -13,6 +13,7 @@ import { InboxPage } from "@/features/inbox/InboxPage";
 import { ModulesPage } from "@/features/modules/ModulesPage";
 import { DeadlinesPage } from "@/features/deadlines/DeadlinesPage";
 import { SettingsPage } from "@/features/settings/SettingsPage";
+import { OfficesPage } from "@/features/offices/OfficesPage";
 
 type PageRoute = RouteObject & { handle: RouteHandle };
 
@@ -45,6 +46,11 @@ const shellRoutes: PageRoute[] = [
     handle: { title: "Assistent" },
   },
   { path: "fristen", Component: DeadlinesPage, handle: { title: "Fristen" } },
+  {
+    path: "anlaufstellen",
+    Component: OfficesPage,
+    handle: { title: "Anlaufstellen" },
+  },
   {
     path: "entscheidung/:examId",
     Component: DecisionPage,
