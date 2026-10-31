@@ -73,6 +73,21 @@ try {
   await page.getByRole("button", { name: "Nächste Folie" }).click();
   if ((await page.locator("#count").textContent()) !== "2 / 12")
     throw new Error("Button-Navigation fehlgeschlagen");
+  // Mouse and keyboard must remain interchangeable while a toolbar button has focus.
+  await page.keyboard.press("ArrowRight");
+  if ((await page.locator("#count").textContent()) !== "3 / 12")
+    throw new Error("Pfeiltaste nach Button-Klick fehlgeschlagen");
+  await page.keyboard.press("n");
+  if (!(await page.locator("#notes").isVisible()))
+    throw new Error("Notizenkürzel nach Button-Klick fehlgeschlagen");
+  await page.keyboard.press("n");
+  await page.keyboard.press("f");
+  await page.waitForFunction(() => document.fullscreenElement !== null);
+  await page.keyboard.press("f");
+  await page.waitForFunction(() => document.fullscreenElement === null);
+  await page.keyboard.press("Space");
+  if ((await page.locator("#count").textContent()) !== "4 / 12")
+    throw new Error("Native Button-Aktivierung per Leertaste fehlgeschlagen");
   for (const viewport of [
     { width: 1280, height: 720 },
     { width: 1920, height: 1080 },

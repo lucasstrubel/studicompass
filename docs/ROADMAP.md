@@ -457,7 +457,7 @@ Stand: Feedback-Runde P5-09 bis P5-15 mit [PR #29](https://github.com/lucasstrub
 
 **Gate M6 (Do 05.11. abends):** präsentationsbereit, Backup vorhanden.
 
-Stand 31.10.: Skript, Anleitung, Folien und lokale Backups vorbereitet und lokal geprüft. Der unabhängige P6-Review wartet auf die ausdrückliche Freigabe zur Übermittlung des neuen Diffs; PR bleibt Entwurf. M6 bleibt bis zur Generalprobe und eigenen Abnahme offen. Kein neuer Merge, Tag oder Release durch diesen Status gesetzt.
+Stand 31.10.: Skript, Anleitung, Folien und lokale Backups vorbereitet und geprüft. Unabhängiger P6-Review mit Freigabe ohne Blocker/Major; zwei Minor-Befunde bestätigt, behoben und gezielt nachgeprüft. [Bericht](reviews/P6.md). M6 bleibt bis zur Generalprobe und eigenen Abnahme offen. Kein neuer Merge, Tag oder Release durch diesen Status gesetzt.
 
 ---
 

@@ -16,6 +16,8 @@ const extracted = path.join(
 const manifest = JSON.parse(
   await readFile(path.join(extracted, "manifest.json"), "utf8"),
 );
+if (!manifest.files.some((file) => file.path === "DEMO-SKRIPT.md"))
+  throw new Error("Der verlinkte Sprechtext fehlt im Offline-Paket");
 for (const file of manifest.files) {
   const full = path.resolve(extracted, file.path);
   const relative = path.relative(extracted, full);

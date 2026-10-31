@@ -16,7 +16,7 @@ Dann <http://127.0.0.1:4173> öffnen. Für die Vorführung den fertigen Build ve
 
 **Separates Offline-Paket:** `artifacts/presentation/studicompass-lokal.zip` vollständig entpacken. Im entpackten Ordner `START.cmd` ausführen oder `node server.mjs` starten. Node.js 22.22.2 oder neuer muss bereits installiert sein. Keine npm-Installation und kein Internet erforderlich. Der Server bindet nur an `127.0.0.1`. Mit Strg+C beenden. Bei belegtem Port: `node server.mjs --port 4174` und die ausgegebene Adresse öffnen.
 
-Das Paket enthält den Produktionsbuild, einen lokalen SPA-Server, diese Anleitung und ein Manifest mit Basis-Commit und SHA-256-Prüfsummen. Es ist ein Präsentationsbackup und kein veröffentlichter Release.
+Das Paket enthält den Produktionsbuild, einen lokalen SPA-Server, diese Anleitung, den Sprechtext `DEMO-SKRIPT.md` und ein Manifest mit Basis-Commit und SHA-256-Prüfsummen. Es ist ein Präsentationsbackup und kein veröffentlichter Release.
 
 ## Ausgangsstand herstellen
 

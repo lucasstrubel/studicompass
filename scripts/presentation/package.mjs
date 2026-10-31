@@ -24,6 +24,10 @@ await cp(
   path.join(repo, "docs/praesentation/DEMO-ANLEITUNG.md"),
   path.join(bundle, "DEMO-ANLEITUNG.md"),
 );
+await cp(
+  path.join(repo, "docs/praesentation/DEMO-SKRIPT.md"),
+  path.join(bundle, "DEMO-SKRIPT.md"),
+);
 await writeFile(
   path.join(bundle, "START.cmd"),
   '@echo off\r\ncd /d "%~dp0"\r\nnode server.mjs\r\nif errorlevel 1 pause\r\n',
