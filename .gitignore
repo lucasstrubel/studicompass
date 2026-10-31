@@ -28,6 +28,9 @@ docs/referenzen/
 test-results/
 playwright-report/
 
+# Reproducible local presentation build and recording (P6)
+/artifacts/presentation/
+
 # IDE
 .idea/
 .vscode/

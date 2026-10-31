@@ -25,7 +25,7 @@ Stand: 29.10.2026 (Feedback-Runde, P5-08) · Arbeitstitel: **StudiCompass** · P
 
 **Gestaltungsregel daraus `[entschieden]`:** StudiCompass warnt nur, wenn eine Sonderregel greift (Angebot nur einmal im Jahr, Zulassungsvoraussetzung eines Meilensteins, Grenze offener Prüfungen). Pauschale Warnungen bei jeder Abmeldung sind durch die Daten nicht gedeckt und erzeugen Hinweis-Müdigkeit.
 
-**Feedback-Runde 28.10.2026 (P5-08) `[entschieden]`:** Team-Review und ein Nutzertest ergaben eine Sammelliste mit rund 25 Punkten (Befunde P5-F11 bis P5-F33 in `docs/evaluation/P5-auswertung.md`). Lucas hat entschieden, sie bis zur Präsentation umzusetzen (ROADMAP P5-09 bis P5-15). Wo das frühere Festlegungen ändert, steht der Vermerk „P5-08“ an der Stelle. Persona, Hero-Flow und Testorakel (§10.4) bleiben unverändert, weil alle neuen Eingaben leer starten.
+**Feedback-Runde 28.10.2026 (P5-08) `[entschieden]`:** Vier Teammitglieder testeten individuell alle Funktionen und notierten anschließend gemeinsam Feedback. Die Sammelliste enthält 23 Punkte (P5-F11 bis P5-F33). Lucas hat den Umsetzungsumfang über ROADMAP P5-09 bis P5-15 freigegeben. [Durchführung und Evidenzgrenzen](evaluation/P5-teamrunde.md), [M5-Abnahme vom 31.10.](abnahmen/M5.md). Wo das frühere Festlegungen ändert, steht der Vermerk „P5-08“ an der Stelle. Persona, Hero-Flow und Testorakel (§10.4) bleiben unverändert, weil alle neuen Eingaben leer starten.
 
 ---
 
@@ -83,7 +83,9 @@ Ehrliche Einschränkung zu P4: Echte Sonderfälle stehen per Definition oft nich
 
 ## 5 Scope
 
-### 5.1 Priorisierung (Begriffe aus dem User Story Mapping, VL04) `[Vorschlag]`
+### 5.1 Priorisierung (Begriffe aus dem User Story Mapping, VL04) `[entschieden]`
+
+Bestätigt durch die genehmigte Roadmap und Lucas' Vorrangentscheidung vom 30.10.2026; [Entscheidungsabgleich](abnahmen/entscheidungsabgleich.md).
 
 | Priorität | Inhalt | Stories |
 |---|---|---|
@@ -637,7 +639,7 @@ Regeln: Terrakotta ist nie Statusfarbe. Kritisch-Rot und Terrakotta liegen im Fa
 **Diagramme:** Ist = Linie `--tone-blue` + Fläche `--tone-blue-soft`, Prognose gestrichelt in `--tone-blue`; Soll = gestrichelte Linie `--muted-foreground`; Werte immer zusätzlich als Zahl.
 
 ### 12.3 Typografie
-- Schrift: **Manrope** (variabel, lokal über Fontsource) `[Vorschlag]`; Alternative: Plus Jakarta Sans.
+- Schrift: **Manrope** (variabel, lokal über Fontsource) `[entschieden]`; Bestandteil des genehmigten Stacks und der umgesetzten Designrevisionen.
 - Skala: Seitentitel 28/36 · 600 · Abschnitt 20/28 · 600 · Kartentitel 16/24 · 600 · Fließtext 15/22 · 400–500 · Meta 13/18 · 500 · Kennzahl 40/44 · 700.
 - Zahlen (ECTS, Countdown, Noten) mit `tabular-nums`.
 

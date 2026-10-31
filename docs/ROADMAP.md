@@ -1,6 +1,6 @@
 # Roadmap – StudiCompass Prototyp
 
-Zeitraum: Fr, 23.10. – Fr, 06.11.2026 (Präsentation) · Stand: 30.10.2026 (v4: Feedback-Runde P5-08 bis P5-15 mit eigener Kürzungsliste; Umsetzung und Git-/PR-Arbeit jetzt direkt durch Codex beauftragt)
+Zeitraum: Fr, 23.10. – Fr, 06.11.2026 (Präsentation) · Stand: 31.10.2026 (M5 durch Lucas abgenommen; Präsentationsvorbereitung direkt beauftragt)
 
 ## So wird mit dieser Roadmap gearbeitet
 - **Entscheidung von Lucas, 30.10.2026:** Diese genehmigte Roadmap und ihre Akzeptanzkriterien haben bei Widersprüchen Vorrang vor KONZEPT und INHALTE. Codex übernimmt die weitere freigegebene Umsetzung einschließlich Branches, Commits, Pushes und PR-Pflege selbst; eine Übergabe an Claude ist nicht erforderlich. Merge, Tags und Releases bleiben ausdrücklich freizugeben.
@@ -32,15 +32,16 @@ Es gibt keinen separaten Puffer – die **Kürzungsliste** unten ist der Puffer.
 
 ### P0-01 [Team] Entscheidungen bestätigen (bis Mo 26.10.)
 - [ ] Name festlegen (Arbeitstitel StudiCompass; Hinweise in KONZEPT §15 A-5) → `APP_NAME`
-- [ ] Priorisierung KONZEPT §5.1 bestätigen oder anpassen
-- [ ] Stack laut CLAUDE.md bestätigen
-- [ ] Demo-Zeit und Szenario (KONZEPT §10.2, §10.4) bestätigen
+- [x] Priorisierung KONZEPT §5.1 über die genehmigte Roadmap einschließlich Feedback-Runde bestätigt
+- [x] Stack laut CLAUDE.md im genehmigten Umsetzungsumfang bestätigt
+- [x] Demo-Zeit und Szenario (KONZEPT §10.2, §10.4) über genehmigte Roadmap und Testorakel bestätigt
+- Nachweis und verbleibende Grenzen: [Entscheidungsabgleich vom 31.10.](abnahmen/entscheidungsabgleich.md). StudiCompass bleibt Arbeitstitel; keine zusätzliche Namensentscheidung behauptet.
 - **AK:** Markierungen `[Vorschlag]` in KONZEPT.md auf `[entschieden]` gesetzt oder geändert.
 
 ### P0-02 [Team] Echte Inhalte einsammeln → `docs/INHALTE.md` (bis Mi 28.10. vormittags – P2-03 braucht sie)
 - [ ] Modulliste aus dem Studienverlaufsplan WI (Name, ECTS, Fachsemester, Angebot WS/SS)
 - [ ] Regeln DR-4 bis DR-9 in der SPO WI nachschlagen (Abschnitt, Kurztext, Stand) → „geprüft: ja“
-- [ ] Zuständige Stellen: öffentliche Kontaktdaten oder fiktiv lassen
+- [x] Zuständige Stellen als Beispielangaben belassen; Texte und Zuständigkeiten am 29.10. von Lucas freigegeben (P5-09, INHALTE §8)
 - **AK:** INHALTE.md aktualisiert; ändert sich dadurch das Szenario, ist KONZEPT §10.4 angepasst.
 - Wenn die Zeit fehlt: Beispielwerte bleiben, das UI zeigt „Beispiel“.
 
@@ -56,7 +57,7 @@ Es gibt keinen separaten Puffer – die **Kürzungsliste** unten ist der Puffer.
 - [x] Kit ins Repo-Root (`CLAUDE.md`, `AGENTS.md`, `docs/`), Commit auf `main`, Tag `m0`
 - [x] Codex CLI installieren und anmelden; Claude-Code-Plugin `codex` (openai/codex-plugin-cc) installieren; `/codex:setup` meldet Codex als bereit; Review-Gate bleibt aus
 - [x] optional: `gh auth login`, damit Claude Code PRs anlegen kann
-- [ ] Einstellung „Project instructions“ auf dem Standard lassen: Liegen `CLAUDE.md` und `AGENTS.md` beide im Repo, liest Claude Code nur `CLAUDE.md` – gewollt, weil `AGENTS.md` die Codex-Rolle beschreibt
+- [ ] Historisch: Einstellung „Project instructions“ von Claude Code auf Standard. Persönliche Einstellung nicht geprüft; für die seit 30.10. direkt beauftragte Codex-Ausführung kein ausstehender Einrichtungsschritt.
 - [x] Session 0 (`docs/PROMPTS.md` §0) – am 26.10. mit der Gesamtplanung erledigt: Umgebung geprüft, Testorakel §10.4 aus INHALTE.md nachgerechnet (stimmt), Lücken in v3 aufgelöst
 - **AK:** Claude Code fasst Regeln, Testorakel und Zusammenarbeit mit Codex korrekt zusammen.
 
@@ -266,14 +267,14 @@ Historischer M4-Stand, am 30.10. abgeglichen: Hoch/Mittel implementiert, unabhä
 
 **Umsetzungsauftrag von Lucas (27.10.2026):** Codex übernimmt die Agenteninspektion, behebt belegte Befunde und bereitet das Testpaket vor. Eigenprüfung und Walkthrough: [P5.md](reviews/P5.md). Dies ersetzt keine Evaluation durch unabhängige Teammitglieder oder Studierende. Der Phase-4-Stand wurde mit PR #19 integriert und als `m4` markiert; der [unabhängige Gegencheck](reviews/P4-P5-gegencheck.md) liegt vor. Der unabhängige Review der späteren Feedback-Runde und der Nachlauf ihrer drei Korrekturen liegen vor ([P5-PR29](reviews/P5-PR29.md)); Die freigegebene Feedback-Runde ist mit PR #29 nach main integriert. Die bereits durchgeführte Vierpersonen-Teamrunde ist [dokumentiert](evaluation/P5-teamrunde.md); M5 bleibt eine ausdrückliche Abnahmeentscheidung.
 
-- [ ] **P5-01 [Team]** Heuristische Evaluation und Cognitive Walkthrough des Hero-Flows (Di vormittags)
+- [x] **P5-01 [Team]** Mit dokumentierter Methodenabweichung durch Lucas bei M5 abgenommen: ursprünglich heuristische Evaluation und Cognitive Walkthrough des Hero-Flows
   - [x] Agenteninspektion dokumentiert; zusätzlich Vierpersonen-Teamtest mit individuellen Funktionstests und gemeinsamer Feedbacksammlung durchgeführt. Die formale Nielsen-/Walkthrough-Methode ist für diese Teamrunde nicht separat protokolliert.
-- [ ] **P5-02 [Team]** Usability-Test mit Thinking Aloud, 3–5 Personen aus dem Persona-Segment (Di/Mi)
+- [x] **P5-02 [Team]** Mit dokumentierter Methodenabweichung durch Lucas bei M5 abgenommen: tatsächliche Vierpersonen-Teamrunde statt des ursprünglich geplanten Thinking-Aloud-Tests im Persona-Segment
   - [x] Teamrunde mit vier Personen als reale Feedback-Grundlage dokumentiert. Die vorbereiteten Einzelprotokolle sind leer und werden nicht nachträglich erfunden. Der ursprünglich geplante Persona-/Thinking-Aloud-Test ist damit nicht nachgewiesen; siehe [Teamrunde](evaluation/P5-teamrunde.md).
-- [ ] **P5-03 [Team]** Auswertung: Befunde mit Schweregrad und betroffenem Prinzip, Top 5 festlegen
+- [x] **P5-03 [Team]** Qualitative Auswertung und genehmigten Umsetzungsumfang durch Lucas bei M5 abgenommen; ursprüngliche Schweregrad-/Top-5-Auswertung nicht nachträglich behauptet
   - [x] Sammelliste und Änderungen je Befund zugeordnet; Lucas hat den Umfang P5-09 bis P5-15 freigegeben. Schweregrade und Personenhäufigkeiten der Sammelliste sind nicht überliefert; keine statistische Top-5-Rangfolge behauptet.
 - [x] **P5-04 [Codex, direkt von Lucas beauftragt]** Top-Befunde umsetzen und unabhängig reviewen
-  - [x] P5-09 bis P5-15 und alle bestätigten Major-Befunde aus PR #29 umgesetzt, unabhängig nachgeprüft und mit `7e035c4` integriert. Technische Restprüfung P5-F10 mit behobenem 320-px-Überlauf und Bundle-Aufteilung: [P5-abschluss](reviews/P5-abschluss.md); aktueller Folge-PR vor dem Merge.
+  - [x] P5-09 bis P5-15 und alle bestätigten Major-Befunde aus PR #29 umgesetzt, unabhängig nachgeprüft und mit `7e035c4` integriert. Technische Restprüfung P5-F10 mit behobenem 320-px-Überlauf und Bundle-Aufteilung: [P5-abschluss](reviews/P5-abschluss.md); PR #30 mit `862fbb6` gemergt und produktiv deployt.
 - [x] **P5-05 [Team/Codex]** Ergebnisse für die Präsentation festhalten: drei Kernbefunde und was daraufhin geändert wurde
   - [x] Drei belegte Kernbefunde aus der Teamrunde mit Umsetzung, technischen Nachweisen, Vorher-/Nachher-Screenshots und Evidenzgrenzen aufbereitet: [Teamrunde](evaluation/P5-teamrunde.md).
 
@@ -439,19 +440,24 @@ Von oben nach unten streichen, wenn die Zeit knapp wird:
 
 **Gate M5 (Mi 04.11. abends):** Top-Befunde behoben · Testergebnisse dokumentiert.
 
-Stand: Feedback-Runde P5-09 bis P5-15 im [Integrations-PR #29](https://github.com/lucasstrubel/studicompass/pull/29) zusammengeführt; [Prüfnachweise und offene Abnahme](reviews/P5-integration.md). Vier Teammitglieder haben bereits individuell alle Funktionen getestet und gemeinsam Feedback gesammelt (von Lucas bestätigt). Qualitative Auswertung und drei Kernbefunde sind [dokumentiert](evaluation/P5-teamrunde.md). Die Iteration ist geprüft, gemergt und deployt. Ein externer Thinking-Aloud-Test und Aufgabenkennzahlen sind nicht nachgewiesen. **M5 zur Abnahme durch Lucas vorbereitet; kein Tag gesetzt.**
+Stand: Feedback-Runde P5-09 bis P5-15 mit [PR #29](https://github.com/lucasstrubel/studicompass/pull/29) integriert, technische Restprüfung mit [PR #30](https://github.com/lucasstrubel/studicompass/pull/30) als `862fbb6` produktiv deployt. Vier Teammitglieder haben individuell alle Funktionen getestet und gemeinsam Feedback gesammelt. Qualitative Auswertung und drei Kernbefunde sind [dokumentiert](evaluation/P5-teamrunde.md). **M5 durch Lucas am 31.10.2026 formal abgenommen**, einschließlich der sichtbaren Methodenabweichung: kein belegter externer Thinking-Aloud-Test und keine Aufgabenkennzahlen. [Abnahmeentscheidung](abnahmen/M5.md). Kein Tag gesetzt.
 
 ---
 
 ## Phase 6 – Release & Präsentation (Do 05.11.)
 
-- [ ] **P6-01 [Claude]** Content-Freeze 12:00 · finaler Deploy · Git-Tag `v1.0` · README mit Demo-Anleitung (Start, Demo zurücksetzen, Hero-Flow)
-- [ ] **P6-02 [Team]** Demo-Skript für den Hero-Flow (3–4 Min.): Übersicht → „Jetzt wichtig“ → Folgen-Check → Vergleich mit Marketing → Assistent mit Quelle → Fallback
-- [ ] **P6-03 [Team]** Folien: Persona und kritisches Szenario → Live-Demo → VPC-Fit (Traceability-Tabelle KONZEPT §3) → Testergebnisse und Iteration → Ausblick (Ideenparkplatz, Integrationsannahmen, ergänzte Stakeholder)
-- [ ] **P6-04 [Team]** Backup: Bildschirmaufnahme des Hero-Flows, Screenshots, lokaler Build (`npm run build && npm run preview`)
+**Direkter Auftrag von Lucas, 31.10.2026:** Demo-Skript, Anleitung und Folien, Backup-Aufnahme und lokales Präsentationspaket jetzt vorbereiten. [Umsetzungsplan und Prüfkriterien](P6-UMSETZUNGSPLAN.md). Die ursprünglichen Owner bleiben als Planhistorie stehen; Umsetzung durch Codex. Content-Freeze, Tags, Release und Generalprobe am Präsentationsgerät sind davon getrennt.
+
+- [ ] **P6-01 [Claude]** Content-Freeze 12:00 · finaler Deploy · Git-Tag `v1.0`
+  - [x] README mit [Demo-Anleitung](praesentation/DEMO-ANLEITUNG.md) (Start, Demo zurücksetzen, Hero-Flow) ergänzt. Freeze, finaler Release-Deploy und Tag benötigen weiterhin Lucas' Freigabe.
+- [x] **P6-02 [Codex, direkt beauftragt]** [Demo-Skript](praesentation/DEMO-SKRIPT.md) mit Sprechtext für 3:40 Minuten: Übersicht → „Jetzt wichtig“ → Folgen-Check → Vergleich mit Marketing → Assistent mit Quelle → Fallback. Ablauf gegen das Offline-Paket geprüft.
+- [x] **P6-03 [Codex, direkt beauftragt]** Zwölf Folien als [HTML](praesentation/studicompass.html) und [PDF](praesentation/studicompass.pdf): Persona und kritisches Szenario → Live-Demo → VPC-Fit → Teamfeedback und Iteration → Ausblick mit Integrationsannahmen und Stakeholdern. Quellen und Sprechhinweise vorhanden; alle Folien gesichtet.
+- [x] **P6-04 [Codex, direkt beauftragt]** Backup-Aufnahme des tatsächlichen Hero-Flows (220 Sekunden, acht Kapitel, ohne Ton), vorhandene Screenshots und separat startbarer Produktionsbuild mit lokalem Server und Prüfsummenmanifest erstellt. Aus ZIP entpackten Build ohne externe Requests geprüft; [Prüfbericht und Reproduktion](reviews/P6.md).
 - [ ] **P6-05 [Team]** Generalprobe am Präsentationsgerät (Beamer-Auflösung, z. B. 1280×720 und 1920×1080 prüfen); vorher „Demo zurücksetzen“
 
 **Gate M6 (Do 05.11. abends):** präsentationsbereit, Backup vorhanden.
+
+Stand 31.10.: Skript, Anleitung, Folien und lokale Backups vorbereitet und geprüft. Unabhängiger P6-Review mit Freigabe ohne Blocker/Major; zwei Minor-Befunde bestätigt, behoben und gezielt nachgeprüft. [Bericht](reviews/P6.md). M6 bleibt bis zur Generalprobe und eigenen Abnahme offen. Kein neuer Merge, Tag oder Release durch diesen Status gesetzt.
 
 ---
 
