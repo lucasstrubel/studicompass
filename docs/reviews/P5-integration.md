@@ -42,5 +42,5 @@ Akademische Testorakel und `src/domain/*.spec.ts` bleiben unverändert. Keine ne
 
 - PR #29 ist nach ausdrücklicher Freigabe von Lucas per Squash nach `main` integriert (`7e035c4`); der Produktionsdeploy war erfolgreich. Der Dateibaum entsprach exakt dem geprüften PR-Kopf. Tags und Releases sind nicht gesetzt.
 - Echter ICS-Import, Screenreader und reale Geräte.
-- Die bereits durchgeführte Vierpersonen-Teamrunde ist inzwischen ausdrücklich bestätigt und mit Methode, drei Kernbefunden und Evidenzgrenzen dokumentiert: [Teamrunde](../evaluation/P5-teamrunde.md). Einzelprotokolle und Aufgabenkennzahlen sind nicht vorhanden; die formale M5-Abnahme liegt bei Lucas.
-- Gate M5 bleibt offen. Phase 6 mit Freeze, finalem Deploy/Tag, Demo/Folien, Aufnahme und Generalprobe ist nicht als erledigt markiert.
+- Die bereits durchgeführte Vierpersonen-Teamrunde ist inzwischen ausdrücklich bestätigt und mit Methode, drei Kernbefunden und Evidenzgrenzen dokumentiert: [Teamrunde](../evaluation/P5-teamrunde.md). Einzelprotokolle und Aufgabenkennzahlen sind nicht vorhanden; Lucas hat M5 am 31.10. formal abgenommen.
+- Nachtrag 31.10.2026: PR #30 ist mit `862fbb6` gemergt und deployt. Lucas hat [M5 formal abgenommen](../abnahmen/M5.md) und die Präsentationsvorbereitung beauftragt. Freeze, Tags/Release und Generalprobe sind dadurch nicht automatisch erledigt.

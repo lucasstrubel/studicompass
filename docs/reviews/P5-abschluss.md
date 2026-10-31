@@ -48,6 +48,6 @@ Der Befund wurde bestätigt und korrigiert. Vor der Breitenmessung müssen Stati
 
 ## Noch abzugrenzen
 
-M5 ist zur Abnahme anhand der vorhandenen qualitativen Team-Evidenz vorbereitet. Die ursprünglich geplante Thinking-Aloud-Methode, Persona-Zuordnung und Aufgabenkennzahlen sind nicht nachgewiesen. Kein neuer Testtermin wird automatisch angesetzt. Lucas entscheidet über die formale Abnahme; Tags und Releases bleiben freigabepflichtig.
+PR #30 ist mit `862fbb6` per Squash nach main gemergt und produktiv deployt. Lucas hat M5 am 31.10.2026 anhand der vorhandenen qualitativen Team-Evidenz formal abgenommen ([Entscheidung](../abnahmen/M5.md)). Die ursprünglich geplante Thinking-Aloud-Methode, Persona-Zuordnung und Aufgabenkennzahlen bleiben als nicht nachgewiesen ausgewiesen. Kein neuer Testtermin wird automatisch angesetzt; Tags und Releases bleiben freigabepflichtig.
 
 Die Produktfragen P5-F05/F06 sowie Ideen P5-F07/F09 bleiben separat ausgewiesen. Die Kürzung von Folgen-Karten oder Vereinheitlichung der Assistent-Einstiege wird hier nicht ohne priorisierte Produktentscheidung umgesetzt. Tatsächlicher Kalenderimport, Screenreader, reale Geräte, Flow-Chart-Unterlagen und Präsentations-Generalprobe bleiben gesonderte Aufgaben.

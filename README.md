@@ -20,6 +20,16 @@ Die App läuft dann unter http://localhost:5173.
 
 Beim ersten Aufruf der Übersicht öffnet sich das vierstufige Onboarding. „Demo ohne Einrichtung starten“ überspringt es mit den Standardwerten und ohne Tour. Ab Schritt 2 behält „Überspringen“ deine Eingaben; die Produkt-Tour ist standardmäßig angehakt und lässt sich abwählen. Direkte Links auf andere Seiten bleiben erreichbar. Unter Einstellungen kannst du dein lokales Profil bearbeiten, die Einrichtung erneut starten oder die Demo zurücksetzen.
 
+## Präsentation und Offline-Backup (P6)
+
+- [Demo-Anleitung](docs/praesentation/DEMO-ANLEITUNG.md): Start, Zurücksetzen, feste Demo-Zeit und Verhalten bei Ausfall.
+- [Demo-Skript](docs/praesentation/DEMO-SKRIPT.md): Hero-Flow mit Sprechtext in 3:40 Minuten, einschließlich Marketing-Vergleich, Quelle und Sonderfall.
+- [Folien als HTML](docs/praesentation/studicompass.html) und [PDF](docs/praesentation/studicompass.pdf), [Sprechhinweise und Quellen](docs/praesentation/FOLIEN-NOTIZEN.md).
+- Lokale Ausgaben: `artifacts/presentation/hero-flow.webm` (ohne Ton) und `artifacts/presentation/studicompass-lokal.zip`. Das entpackte Build-Paket startet mit vorhandenem Node.js über `START.cmd`, ohne npm-Installation oder Internet.
+- Reproduzieren und prüfen: [P6-Prüfbericht](docs/reviews/P6.md). Die lokalen Video-/Build-Ausgaben sind nicht versioniert; die Skripte liegen unter `scripts/presentation/`.
+
+M5 ist [durch Lucas am 31.10.2026 formal abgenommen](docs/abnahmen/M5.md). Content-Freeze, Tags/Release und die Generalprobe am tatsächlichen Präsentationsgerät bleiben separat.
+
 ## Befehle
 
 | Befehl                 | Zweck                                                                    |

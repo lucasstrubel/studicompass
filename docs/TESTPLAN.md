@@ -3,7 +3,7 @@
 Grundlage: VL01 (Test-Methoden: Usability-Test, Usability-Inspektion, Befragung) und VL05 (ISO 9241-110, Nielsen, Seven Stages of Action).
 Ziel: prüfen, ob der Prototyp die Idee **selbsterklärend** vermittelt und ob Niklas' Kernaufgaben effektiv, effizient und zufriedenstellend lösbar sind (Gebrauchstauglichkeit nach ISO 9241-11).
 
-**Stand 30.10.2026:** Die von Lucas bestätigte Teamrunde ist durchgeführt: Vier Teammitglieder testeten individuell alle Funktionen und sammelten anschließend gemeinsam Feedback. Die Sammelliste vom 28.10. bildete die Grundlage der integrierten Änderungen P5-08 bis P5-15. Methode, Befunde, drei Kernbeispiele und Evidenzgrenzen stehen in der [Dokumentation der Teamrunde](evaluation/P5-teamrunde.md). Die folgenden Thinking-Aloud-Aufgaben und Einzelprotokolle beschreiben die ursprüngliche Planung; ein entsprechender externer Test mit Aufgabenkennzahlen ist nicht nachgewiesen. Eine neue Runde wird nicht automatisch verlangt. Die formale M5-Abnahme der vorhandenen qualitativen Evidenz liegt bei Lucas.
+**Stand 31.10.2026:** Die von Lucas bestätigte Teamrunde ist durchgeführt: Vier Teammitglieder testeten individuell alle Funktionen und sammelten anschließend gemeinsam Feedback. Die Sammelliste vom 28.10. bildete die Grundlage der integrierten Änderungen P5-08 bis P5-15. Methode, Befunde, drei Kernbeispiele und Evidenzgrenzen stehen in der [Dokumentation der Teamrunde](evaluation/P5-teamrunde.md). Die folgenden Thinking-Aloud-Aufgaben und Einzelprotokolle beschreiben die ursprüngliche Planung; ein entsprechender externer Test mit Aufgabenkennzahlen ist nicht nachgewiesen. Lucas hat die vorhandene qualitative Evidenz bei [M5 formal abgenommen](abnahmen/M5.md). Eine neue Runde ist nicht beauftragt.
 
 **Durchführungspaket:** [Aufgabenblatt ohne Lösungen](evaluation/P5-aufgaben.md) · [Protokolle P1–P5](evaluation/P5-protokolle.md) · [Auswertung und Präsentationsvorlage](evaluation/P5-auswertung.md). Dieses Testplandokument ist für Moderation und Protokoll bestimmt und enthält Lösungshinweise. Teilnehmende erhalten nur das Aufgabenblatt.
 
@@ -96,6 +96,8 @@ Vollständig vorbereitete Sitzungsbögen einschließlich Abschlussfragen: [P1–
 ---
 
 ## 4 Auswertung und Iteration (Mi 04.11.)
+
+**Abnahmestand 31.10.2026:** Lucas hat M5 auf Basis der tatsächlich durchgeführten Vierpersonen-Teamrunde und ihrer qualitativen Auswertung formal abgenommen. Die folgende ursprüngliche Methodik ist als Planung erhalten; sie ist kein nachträglicher Durchführungsnachweis. Abweichungen und fehlende Aufgabenkennzahlen sind in der [M5-Entscheidung](abnahmen/M5.md) ausdrücklich festgehalten.
 
 1. Alle Befunde (Inspektion und Test) in eine Liste: Befund · betroffener Screen · verletztes Prinzip · Schwere · Häufigkeit.
 2. Top 5 nach Schwere × Häufigkeit auswählen → Claude Code setzt um (P5-04).

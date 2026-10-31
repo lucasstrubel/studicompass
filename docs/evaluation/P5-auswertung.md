@@ -79,10 +79,10 @@ Präsentationsschluss: Zahl und Segment der tatsächlich getesteten Personen, Ge
 ## Gate M5
 
 - [x] Bereits durchgeführte Runde wahrheitsgemäß dokumentiert: vier Teammitglieder, individuelle Funktionstests, gemeinsame Feedbacksammlung.
-- [ ] Ursprünglich geplanter Thinking-Aloud-Test mit Persona-Segment und Aufgabenkennzahlen nicht nachgewiesen; Abnahmeentscheidung zur vorhandenen Team-Evidenz durch Lucas.
+- [x] Lucas hat M5 am 31.10.2026 anhand der vorhandenen Team-Evidenz abgenommen. Ursprünglich geplanter Thinking-Aloud-Test mit Persona-Segment und Aufgabenkennzahlen bleibt als nicht nachgewiesen ausgewiesen.
 - [x] Inspektions- und Teamrundenbefunde zusammengeführt; qualitative Umsetzungsentscheidung über die genehmigte Roadmap belegt.
 - [x] Freigegebene Feedback-Befunde P5-F11 bis F32 umgesetzt und technisch nachgeprüft; F33 und zurückgestellte Inspektionsbefunde ausgewiesen.
 - [x] Drei belegte Kernbefunde mit Änderung, Screenshots und Evidenzgrenzen aufbereitet.
 - [x] Unabhängiger Gesamtreview und sauberer Nachlauf dokumentiert (P5-PR29); M4-Status separat bestätigt.
 
-**M5: zur Abnahme anhand der dokumentierten Team-Evidenz vorbereitet; kein Tag gesetzt.** Die vorhandene Runde ist erledigt. Die abweichende Methode und fehlenden Aufgabenkennzahlen bleiben ausdrücklich sichtbar; die Abnahmeentscheidung trifft Lucas.
+**M5: durch Lucas am 31.10.2026 formal abgenommen; kein Tag gesetzt.** [Abnahmeentscheidung](../abnahmen/M5.md). Die vorhandene Runde ist erledigt. Die abweichende Methode und fehlenden Aufgabenkennzahlen bleiben ausdrücklich sichtbar.
