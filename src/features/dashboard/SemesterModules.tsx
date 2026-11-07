@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { ArrowRight, Undo2 } from "lucide-react";
 import { Link } from "react-router";
 import { AdmissionStatus } from "@/components/common/AdmissionStatus";
@@ -8,6 +9,7 @@ import { DemoBadge } from "@/components/common/DemoBadge";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "@/domain/terms";
+import { compoundParts } from "@/lib/compound-breaks";
 import { formatDateTime } from "@/lib/format";
 import {
   selectAdmission,
@@ -52,7 +54,12 @@ function ModuleRow({
             to={`/module/${module.id}`}
             className="rounded-sm hover:underline"
           >
-            {module.title}
+            {compoundParts(module.title).map((part, index) => (
+              <Fragment key={index}>
+                {index > 0 && <wbr />}
+                {part}
+              </Fragment>
+            ))}
           </Link>
         </h3>
         <p className="text-meta text-muted-foreground tabular-nums">
