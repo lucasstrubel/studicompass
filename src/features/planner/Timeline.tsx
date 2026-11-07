@@ -35,7 +35,7 @@ import {
 import type { Citation, Offering, Term } from "@/domain/types";
 import { CitationList } from "@/components/common/CitationList";
 import type { MilestoneKind } from "@/domain/milestones";
-import { format } from "@/domain/terms";
+import { compare, format } from "@/domain/terms";
 import { compoundParts } from "@/lib/compound-breaks";
 import { formatGrade } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -170,20 +170,22 @@ function ModuleChip({
       data-marked={mark ? "true" : undefined}
       data-draggable={movable ? "true" : undefined}
       className={cn(
-        "rounded-lg border bg-card p-2.5 text-meta",
-        item.movedFrom && "border-2 border-dashed border-status-info",
-        mark && "border-l-4 border-l-tone-violet",
+        "min-w-0 py-2.5 text-meta transition-opacity first:pt-0",
+        (item.movedFrom || mark) &&
+          "my-1 rounded-lg border-none px-2 first:pt-2.5",
+        item.movedFrom && "bg-status-info-soft",
+        mark && !item.movedFrom && "bg-tone-violet-soft",
         movable && "cursor-grab touch-manipulation",
         isDragging && "opacity-40",
       )}
     >
       <p
-        className="flex items-start gap-1 font-semibold break-words hyphens-auto text-foreground"
+        className="flex items-start gap-1 text-body font-medium break-words hyphens-auto text-foreground"
         lang="de"
       >
         {movable && (
           <GripVertical
-            className="mt-0.5 size-3.5 shrink-0 text-muted-foreground"
+            className="mt-1 size-3.5 shrink-0 text-muted-foreground"
             aria-hidden="true"
           />
         )}
@@ -202,16 +204,19 @@ function ModuleChip({
           ))}
         </Link>
       </p>
-      <p className="text-muted-foreground tabular-nums">{module.ects} ECTS</p>
-      <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5">
-        <span className={cn("inline-flex items-center gap-1", className)}>
-          <Icon className="size-3.5" aria-hidden="true" />
-          {label}
-          {item.grade !== undefined && ` · ${formatGrade(item.grade)}`}
-        </span>
-        <span className="text-muted-foreground">
-          {OFFERING[module.offering]}
-        </span>
+      <p className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-muted-foreground">
+        <span className="tabular-nums">{module.ects} ECTS</span>
+        {/* Planned is the normal case for later semesters; only screen readers need the word there. */}
+        {status === "planned" ? (
+          <span className="sr-only">{label}</span>
+        ) : (
+          <span className={cn("inline-flex items-center gap-1", className)}>
+            <Icon className="size-3.5" aria-hidden="true" />
+            {label}
+            {item.grade !== undefined && ` · ${formatGrade(item.grade)}`}
+          </span>
+        )}
+        {simulation && <span>{OFFERING[module.offering]}</span>}
       </p>
       {mark && (
         <p className="mt-1 flex items-start gap-1 font-semibold text-foreground">
@@ -227,18 +232,11 @@ function ModuleChip({
       )}
       {fixedNote && (
         <div className="mt-1">
-          <p className="flex items-center gap-1 font-semibold text-foreground">
+          <p className="flex items-center gap-1 font-medium text-foreground">
             <Lock className="size-3.5 shrink-0" aria-hidden="true" />
             Fester Meilenstein
           </p>
           <p className="text-muted-foreground">{fixedNote.text}</p>
-          {fixedNote.citation && (
-            <CitationList
-              variant="footer"
-              className="mt-2 pt-2"
-              citations={[fixedNote.citation]}
-            />
-          )}
         </div>
       )}
       {item.movedFrom && (
@@ -326,8 +324,8 @@ function SemesterColumn({
       aria-current={current ? "step" : undefined}
       data-drop={dropState ?? undefined}
       className={cn(
-        "flex min-w-0 flex-col gap-2 rounded-xl border p-3",
-        current ? "border-foreground bg-card" : "bg-muted",
+        "flex min-w-0 flex-col gap-2 rounded-xl border border-transparent p-3 transition-[opacity,background-color]",
+        current && "border-border bg-card",
         dropState === "allowed" &&
           "border-status-info bg-status-info-soft ring-2 ring-status-info",
         dropState === "allowed" && isOver && "ring-4",
@@ -344,6 +342,48 @@ function SemesterColumn({
       )}
       {children}
     </li>
+  );
+}
+
+/**
+ * The course line above the columns: the same controls as on the overview. Decorative, because the column's
+ * accessible name already holds the semester. The line reaches into the next column across its padding and gap.
+ */
+function CourseStep({
+  semester,
+  state,
+  last,
+}: {
+  semester: number;
+  state: "done" | "current" | "planned";
+  last: boolean;
+}) {
+  return (
+    <span aria-hidden="true" className="relative flex items-center">
+      <span
+        className={cn(
+          "relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full text-meta font-semibold tabular-nums",
+          state === "done" && "bg-foreground text-background",
+          state === "current" && "bg-accent text-accent-foreground",
+          state === "planned" && "border-2 border-input bg-background",
+          last &&
+            state === "planned" &&
+            "outline-2 outline-offset-2 outline-input",
+        )}
+      >
+        {semester}
+      </span>
+      {!last && (
+        <span
+          className={cn(
+            "absolute top-1/2 left-7 -right-8 hidden -translate-y-1/2 xl:block",
+            state === "done"
+              ? "h-0.5 bg-foreground"
+              : "border-t-2 border-dotted border-input",
+          )}
+        />
+      )}
+    </span>
   );
 }
 
@@ -471,11 +511,21 @@ export function Timeline({
         className="focus-visible:-outline-offset-2 xl:overflow-x-auto xl:pb-2"
       >
         <ol className="grid gap-3 xl:auto-cols-[minmax(11rem,1fr)] xl:grid-flow-col xl:gap-2">
-          {terms.map((item) => {
+          {terms.map((item, index) => {
             const current =
               item.term.season === currentTerm.season &&
               item.term.year === currentTerm.year;
             const heavy = item.ects > LOAD_LIMIT;
+            const fixedCitations = item.modules.flatMap((entry) => {
+              const citation = entry.module.isMilestone
+                ? fixedNotes[entry.module.isMilestone]?.citation
+                : undefined;
+              return citation ? [citation] : [];
+            });
+            const footerCitations = [
+              ...(heavy && load.citation ? [load.citation] : []),
+              ...fixedCitations,
+            ];
             return (
               <SemesterColumn
                 key={format(item.term)}
@@ -484,16 +534,32 @@ export function Timeline({
                 dropState={dropState(item)}
                 blockedReason={drag ? blockedReason(drag, item.term) : ""}
               >
-                <div>
-                  <p className="text-card-title">{format(item.term)}</p>
-                  <p className="text-meta text-muted-foreground">
-                    {item.semester}. Fachsemester
-                    {current && " · aktuell"}
-                  </p>
-                  <p className="mt-1 text-meta tabular-nums">
-                    {item.ects} ECTS geplant
-                    {item.earnedEcts > 0 && ` · ${item.earnedEcts} erreicht`}
-                  </p>
+                <div className="flex items-center gap-3 xl:block">
+                  <CourseStep
+                    semester={item.semester}
+                    state={
+                      current
+                        ? "current"
+                        : compare(item.term, currentTerm) < 0
+                          ? "done"
+                          : "planned"
+                    }
+                    last={index === terms.length - 1}
+                  />
+                  <div className="xl:mt-2">
+                    <p className="text-card-title">
+                      {format(item.term)}
+                      {current && (
+                        <span className="ml-1.5 text-meta font-normal text-muted-foreground">
+                          aktuell
+                        </span>
+                      )}
+                    </p>
+                    <p className="text-meta text-muted-foreground tabular-nums">
+                      {item.ects} ECTS geplant
+                      {item.earnedEcts > 0 && ` · ${item.earnedEcts} erreicht`}
+                    </p>
+                  </div>
                 </div>
                 {item.milestones.length > 0 && (
                   <ul className="flex flex-wrap gap-1">
@@ -527,7 +593,7 @@ export function Timeline({
                     Nebenjob pro Woche
                   </p>
                 )}
-                <ul className="flex flex-col gap-2">
+                <ul className="flex flex-col divide-y">
                   {item.modules.map((entry) => (
                     <ModuleChip
                       key={entry.module.id}
@@ -549,13 +615,11 @@ export function Timeline({
                     />
                   ))}
                 </ul>
-                {heavy && load.citation && (
-                  <CitationList
-                    variant="footer"
-                    className="mt-auto"
-                    citations={[load.citation]}
-                  />
-                )}
+                <CitationList
+                  variant="footer"
+                  className="mt-auto pt-1"
+                  citations={footerCitations}
+                />
               </SemesterColumn>
             );
           })}

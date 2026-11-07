@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { ChevronsDownUp, ChevronsUpDown } from "lucide-react";
 import { CitationList } from "@/components/common/CitationList";
+import { EctsProgress } from "@/components/common/EctsProgress";
 import { EmptyState } from "@/components/common/EmptyState";
 import {
   Accordion,
@@ -204,27 +205,35 @@ export function ModuleList() {
   return (
     <div className="space-y-5">
       <section aria-label="Kennzahlen">
-        <dl className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {[
-            ["Erreichte ECTS", progress.earnedEcts],
-            [
-              "Notenschnitt",
-              progress.gradeAverage === null
-                ? "Noch keine Noten"
-                : formatGrade(progress.gradeAverage),
-            ],
-            ["Bestandene Module", passed],
-            [
-              "Offene Grundstudiums-Prüfungen",
-              progress.openFoundationModules.length,
-            ],
-          ].map(([label, value]) => (
-            <div key={label} className="rounded-xl border bg-card p-3">
-              <dt className="text-meta text-muted-foreground">{label}</dt>
-              <dd className="mt-1 text-section-title tabular-nums">{value}</dd>
-            </div>
-          ))}
-        </dl>
+        <div className="rounded-xl border bg-card p-4">
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-3 lg:grid-cols-4">
+            {[
+              ["Erreichte ECTS", progress.earnedEcts],
+              [
+                "Notenschnitt",
+                progress.gradeAverage === null
+                  ? "Noch keine Noten"
+                  : formatGrade(progress.gradeAverage),
+              ],
+              ["Bestandene Module", passed],
+              [
+                "Offene Grundstudiums-Prüfungen",
+                progress.openFoundationModules.length,
+              ],
+            ].map(([label, value]) => (
+              <div key={label}>
+                <dt className="text-meta text-muted-foreground">{label}</dt>
+                <dd className="text-section-title tabular-nums">{value}</dd>
+              </div>
+            ))}
+          </dl>
+          <EctsProgress
+            className="mt-3"
+            earned={progress.earnedEcts}
+            total={program.totalEcts}
+            target={progress.targetEcts}
+          />
+        </div>
         <CitationList
           variant="footer"
           className="mt-3"
@@ -265,7 +274,7 @@ export function ModuleList() {
             type="multiple"
             value={open}
             onValueChange={setOpen}
-            className="bg-card"
+            className="overflow-hidden rounded-xl border bg-card"
           >
             {groups.map((group) => (
               <AccordionItem

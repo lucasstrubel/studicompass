@@ -11,7 +11,7 @@ export function ModuleNotes({ moduleId }: { moduleId: string }) {
   const id = useId();
 
   return (
-    <section className="rounded-xl border bg-card p-4" aria-labelledby={id}>
+    <section className="p-4" aria-labelledby={id}>
       <h3 id={id} className="text-card-title">
         Notizen
       </h3>

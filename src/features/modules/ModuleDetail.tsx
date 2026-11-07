@@ -1,3 +1,4 @@
+import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -57,13 +58,35 @@ export function ModuleDetail({ id }: { id: string }) {
     Date.parse(exam.withdrawalDeadline) > DEMO_NOW.getTime();
   return (
     <div className="space-y-5">
-      <Link to="/module" className="text-meta underline">
-        Zur Modulliste
-      </Link>
-      <h2 className="text-section-title">{module.title}</h2>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <Link
+            to="/module"
+            className="inline-flex items-center gap-1 rounded-sm text-meta font-semibold text-accent-strong"
+          >
+            <ArrowLeft className="size-4" aria-hidden="true" />
+            Zur Modulliste
+          </Link>
+          <h2 className="mt-1 text-section-title">{module.title}</h2>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {canDecide && (
+            <Button variant="outline" asChild>
+              <Link to={`/entscheidung/${exam.id}`}>
+                Folgen einer Abmeldung prüfen
+              </Link>
+            </Button>
+          )}
+          <Button variant="outline" asChild>
+            <Link to={`/assistent?module=${module.id}`}>
+              Frage zu diesem Modul stellen
+            </Link>
+          </Button>
+        </div>
+      </div>
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
-        <div className="min-w-0 space-y-5">
-          <section className="space-y-3 rounded-xl border bg-card p-4">
+        <div className="min-w-0 divide-y rounded-xl border bg-card">
+          <section className="space-y-2 p-4">
             <h3 className="text-card-title">Modulsteckbrief</h3>
             <p className="text-body">{module.description}</p>
             <p className="text-meta">
@@ -77,7 +100,7 @@ export function ModuleDetail({ id }: { id: string }) {
               citations={[offeringRule(module, rules["DR-4"]).citation]}
             />
           </section>
-          <section className="space-y-3 rounded-xl border bg-card p-4">
+          <section className="space-y-2 p-4">
             <h3 className="text-card-title">Prüfung</h3>
             <ExamStatusLabel exam={exam} />
             {exam?.date && (
@@ -134,14 +157,14 @@ export function ModuleDetail({ id }: { id: string }) {
               <Skeleton
                 role="status"
                 aria-label="Moodle-Fortschritt wird geladen"
-                className="h-20"
+                className="m-4 h-20"
               />
             }
           >
             {() => (
-              <section className="rounded-xl border bg-card p-4">
+              <section className="p-4">
                 <h3 className="text-card-title">Moodle-Fortschritt</h3>
-                <p className="mt-2 text-body">
+                <p className="mt-1 text-body">
                   {progress
                     ? `${progress.label}${progress.detail ? ` · ${progress.detail}` : ""}`
                     : "Für dieses Modul ist kein Moodle-Fortschritt hinterlegt."}
@@ -149,22 +172,11 @@ export function ModuleDetail({ id }: { id: string }) {
               </section>
             )}
           </ResourceBoundary>
-          <div className="flex flex-wrap gap-2">
-            {canDecide && (
-              <Button variant="outline" asChild>
-                <Link to={`/entscheidung/${exam.id}`}>
-                  Folgen einer Abmeldung prüfen
-                </Link>
-              </Button>
-            )}
-            <Button variant="outline" asChild>
-              <Link to={`/assistent?module=${module.id}`}>
-                Frage zu diesem Modul stellen
-              </Link>
-            </Button>
-          </div>
         </div>
-        <aside aria-label="Deine Ergänzungen" className="space-y-5">
+        <aside
+          aria-label="Deine Ergänzungen"
+          className="divide-y rounded-xl border bg-card"
+        >
           {/* Keyed by module: switching modules must not carry over drafts or open forms. */}
           <CourseLinks
             key={`links-${module.id}`}
