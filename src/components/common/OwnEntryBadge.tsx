@@ -1,12 +1,12 @@
 import { PenLine } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/** Marks a date or Prüfungsvorleistung Niklas entered himself; it has no Kanal (P5-13). */
+/** Marks a date or Prüfungsvorleistung the student entered; it has no Kanal (P5-13). Quiet metadata, not a chip. */
 export function OwnEntryBadge({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        "inline-flex w-fit shrink-0 items-center gap-1 rounded-full border border-dashed px-2 py-0.5 text-meta text-muted-foreground",
+        "inline-flex w-fit shrink-0 items-center gap-1 text-meta text-muted-foreground",
         className,
       )}
     >

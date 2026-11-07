@@ -10,7 +10,7 @@ const CHANNEL_ICONS: Record<Channel, typeof Mail> = {
   website: Globe,
 };
 
-/** Origin system of a piece of information (Kanal) as icon + name. */
+/** Origin system of a piece of information (Kanal) as icon + name; quiet metadata, not a chip. */
 export function ChannelBadge({
   channel,
   className,
@@ -22,7 +22,7 @@ export function ChannelBadge({
   return (
     <span
       className={cn(
-        "inline-flex w-fit shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-meta text-muted-foreground",
+        "inline-flex w-fit shrink-0 items-center gap-1 text-meta text-muted-foreground",
         className,
       )}
     >

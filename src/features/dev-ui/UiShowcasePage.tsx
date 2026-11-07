@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { CommonComponentsShowcase } from "./CommonComponentsShowcase";
 import { DemoDataPanel } from "./DemoDataPanel";
 import {
+  BookOpen,
   CircleCheck,
   CircleHelp,
   Info,
@@ -110,7 +111,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { ModuleIllustration } from "@/features/dashboard/ModuleIllustration";
 import {
   moduleToneStyle,
   type ModuleTone,
@@ -452,12 +452,15 @@ export function UiShowcasePage() {
 
           <Section name="card">
             <div className="flex items-center gap-3">
-              <div style={moduleToneStyle("m-se1")}>
-                <ModuleIllustration kind="books" />
-              </div>
+              <span
+                className="flex size-9 items-center justify-center rounded-lg bg-(--module-tone-soft) text-(--module-tone)"
+                style={moduleToneStyle("m-se1")}
+              >
+                <BookOpen className="size-5" aria-hidden="true" />
+              </span>
               <p className="text-meta text-muted-foreground">
-                Referenz 1: kompakte Karten, feine Rahmen, lokale
-                Linienillustrationen.
+                Fläche: weiß mit Haarlinie, ohne Schatten und nie in einer
+                anderen Fläche. Modul-Icons kommen aus Lucide.
               </p>
             </div>
             <Card>

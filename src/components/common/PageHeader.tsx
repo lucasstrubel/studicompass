@@ -2,8 +2,9 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Page heading (the page's only h1) with optional meta line, description and actions. Routes that use it
- * set `ownHeader` in their handle, so the shell leaves out its own h1.
+ * Page heading (the page's only h1) with optional meta line, description and actions. The meta line sits below
+ * the heading, never above it. Routes that use it set `ownHeader` in their handle, so the shell leaves out its
+ * own h1.
  */
 export function PageHeader({
   title,
@@ -29,11 +30,13 @@ export function PageHeader({
         className,
       )}
     >
-      <div className="min-w-0 space-y-2">
-        {meta && (
-          <div className="flex flex-wrap items-center gap-2">{meta}</div>
-        )}
+      <div className="min-w-0 space-y-1.5">
         <Heading className="text-page-title">{title}</Heading>
+        {meta && (
+          <div className="flex flex-wrap items-center gap-2 text-body text-muted-foreground">
+            {meta}
+          </div>
+        )}
         {description && (
           <div className="max-w-prose text-body text-muted-foreground">
             {description}

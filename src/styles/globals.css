@@ -228,21 +228,10 @@
   }
 }
 
-/* Reference 1: a quiet inset workspace; floating panels (menu, assistant) share its soft shadow. */
-@media (min-width: 48rem) {
-  .app-frame {
-    box-shadow: 0 16px 48px -24px
-      color-mix(in srgb, var(--foreground) 24%, transparent);
-  }
-}
+/* Everything that floats (menu, assistant) shares one soft shadow; surfaces on the page have none. */
 .panel-shadow {
   box-shadow: 0 16px 40px -16px
     color-mix(in srgb, var(--foreground) 28%, transparent);
-}
-
-/* Warm neutral canvas around the light workspace. */
-body:has(.app-frame) {
-  background-color: var(--muted);
 }
 
 /* The dark hero surface: redefines the regular names locally (not .dark, see the variant above). */

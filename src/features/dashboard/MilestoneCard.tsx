@@ -26,41 +26,45 @@ export function MilestoneCard() {
 
   return (
     <>
-      <p className="flex items-center gap-2 text-meta text-muted-foreground">
-        <Flag className="size-4" aria-hidden="true" />
-        Dein nächster Meilenstein
-      </p>
-      <h2 id="milestone" className="mt-2 text-section-title">
-        Praxissemester
-        {internshipTerm ? ` · ${format(internshipTerm)}` : ""}
-        {internshipShift !== null && internshipShift > 0 && (
-          <span className="text-status-critical-foreground">
-            {" "}
-            (+{internshipShift} Semester)
-          </span>
-        )}
+      <h2
+        id="milestone"
+        className="flex flex-wrap items-center gap-x-2 text-section-title"
+      >
+        <Flag className="size-5 text-tone-violet" aria-hidden="true" />
+        <span>
+          Praxissemester
+          {internshipTerm ? ` · ${format(internshipTerm)}` : ""}
+          {internshipShift !== null && internshipShift > 0 && (
+            <span className="text-status-critical-foreground">
+              {" "}
+              (+{internshipShift} Semester)
+            </span>
+          )}
+        </span>
       </h2>
-      {condition && (
-        <p className="mt-2 text-body">
-          Bedingung: {condition.citation.summary}
+      <div className="mt-2 max-w-prose space-y-1 text-body">
+        {condition && (
+          <p>
+            Dein nächster Meilenstein. Bedingung: {condition.citation.summary}
+          </p>
+        )}
+        <p>
+          Noch offen: {openFoundation.length} Module des Grundstudiums (
+          {registeredNow.length} davon in diesem Semester angemeldet)
         </p>
-      )}
-      <p className="mt-2 text-body">
-        Noch offen: {openFoundation.length} Module des Grundstudiums (
-        {registeredNow.length} davon in diesem Semester angemeldet)
-      </p>
-      {later.length > 0 && (
-        <p className="mt-2 text-body text-muted-foreground">
-          {laterTerms.size === 1 && internshipShift === 0
-            ? `Erreichbar, wenn du ${joinNames(later.map((item) => item.module.title))} im ${format(later[0].term)} bestehst.`
-            : `Noch nachzuholen: ${later
-                .map((item) => `${item.module.title} (${format(item.term)})`)
-                .join(", ")}.`}
-        </p>
-      )}
+        {later.length > 0 && (
+          <p className="text-muted-foreground">
+            {laterTerms.size === 1 && internshipShift === 0
+              ? `Erreichbar, wenn du ${joinNames(later.map((item) => item.module.title))} im ${format(later[0].term)} bestehst.`
+              : `Noch nachzuholen: ${later
+                  .map((item) => `${item.module.title} (${format(item.term)})`)
+                  .join(", ")}.`}
+          </p>
+        )}
+      </div>
       <Link
         to="/verlauf"
-        className="mt-4 inline-flex items-center gap-2 rounded-sm text-meta font-semibold text-accent-strong"
+        className="mt-3 inline-flex items-center gap-1 rounded-sm text-meta font-semibold text-accent-strong"
       >
         Meilenstein im Studienverlauf
         <ArrowRight className="size-4" aria-hidden="true" />

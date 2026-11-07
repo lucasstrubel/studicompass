@@ -19,7 +19,7 @@ export function WithdrawalNotice() {
   const undo = useDemoStore((state) => state.undo);
   if (withdrawn.length === 0) return null;
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-xl border border-status-info bg-status-info-soft p-3 text-status-info-foreground">
+    <div className="flex flex-wrap items-center gap-3 rounded-xl bg-status-info-soft p-3 text-status-info-foreground">
       <DemoBadge variant="simulation" className="bg-card" />
       <p className="flex-1 text-body">
         Simulierte Abmeldung:{" "}

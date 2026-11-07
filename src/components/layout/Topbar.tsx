@@ -1,6 +1,7 @@
 import { useRef } from "react";
-import { Compass, Settings, UserRound } from "lucide-react";
+import { Settings, UserRound } from "lucide-react";
 import { Link, NavLink, useLocation } from "react-router";
+import { BrandMark } from "@/components/common/BrandMark";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -72,40 +73,49 @@ function ProfileMenu() {
 export function Topbar() {
   const location = useLocation();
   return (
-    <header className="relative z-30 flex flex-wrap items-center gap-x-3 gap-y-2 border-b bg-card px-4 py-3 md:px-6">
-      {/* Below 1280 px only; above, the top bar lists every area (P5-09). */}
-      <div className="xl:hidden">
-        <NavigationMenu key={location.key} />
-      </div>
-      <Link
-        to="/"
-        aria-label={APP_NAME + " – Übersicht"}
-        className="flex items-center gap-2 text-card-title"
-      >
-        <Compass className="size-6 text-accent-strong" />
-        <span>{APP_NAME}</span>
-      </Link>
-      <nav
-        aria-label="Hauptnavigation"
-        className="ml-2 hidden xl:block 2xl:ml-5"
-      >
-        <ul className="flex items-center gap-1">
-          {TOP_NAV_ITEMS.map((item) => (
-            <li key={item.to}>
-              <NavLink
-                to={item.to}
-                end={item.end}
-                className="block rounded-lg border-b-2 border-transparent px-2 py-2 text-meta whitespace-nowrap text-muted-foreground hover:bg-muted hover:text-foreground aria-[current=page]:border-accent-strong aria-[current=page]:font-semibold aria-[current=page]:text-foreground 2xl:px-3"
-              >
-                {item.label}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <div className="ml-auto flex items-center gap-1">
-        <NotificationsButton />
-        <ProfileMenu />
+    <header className="relative z-30 border-b bg-card">
+      <div className="mx-auto flex max-w-360 flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 md:px-6 xl:px-8">
+        {/* Below 1280 px only; above, the top bar lists every area (P5-09). */}
+        <div className="xl:hidden">
+          <NavigationMenu key={location.key} />
+        </div>
+        <Link
+          to="/"
+          aria-label={APP_NAME + " – Übersicht"}
+          className="flex items-center gap-1.5 rounded-sm text-section-title"
+        >
+          <BrandMark />
+          <span>{APP_NAME}</span>
+        </Link>
+        <nav aria-label="Hauptnavigation" className="ml-4 hidden xl:block">
+          <ul className="flex items-center gap-1">
+            {TOP_NAV_ITEMS.map((item) => (
+              <li key={item.to}>
+                <NavLink
+                  to={item.to}
+                  end={item.end}
+                  className="relative block rounded-lg px-3 py-1.5 text-body font-medium whitespace-nowrap text-muted-foreground transition-colors hover:bg-muted hover:text-foreground aria-[current=page]:text-foreground"
+                >
+                  {({ isActive }) => (
+                    <>
+                      {item.label}
+                      {isActive && (
+                        <span
+                          aria-hidden="true"
+                          className="absolute inset-x-3 -bottom-[13px] h-0.5 rounded-full bg-accent"
+                        />
+                      )}
+                    </>
+                  )}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div className="ml-auto flex items-center gap-1">
+          <NotificationsButton />
+          <ProfileMenu />
+        </div>
       </div>
     </header>
   );

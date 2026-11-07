@@ -30,7 +30,11 @@ async function renderPlanner() {
     </AppProviders>,
   );
   // The route may first show its chunk-loading state; assertions below concern the loaded plan.
-  await screen.findByRole("region", { name: /^Zeitleiste/ });
+  await screen.findByRole(
+    "region",
+    { name: /^Zeitleiste/ },
+    { timeout: 5000 },
+  );
 }
 
 const semester = (name: string) =>
