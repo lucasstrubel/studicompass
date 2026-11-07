@@ -88,8 +88,11 @@ export function DashboardPage() {
       <ResourceBoundary services={["pos"]} skeleton={null}>
         {() => <WithdrawalNotice />}
       </ResourceBoundary>
-      <div className="rounded-2xl border bg-card p-5 md:p-7">
-        <section aria-labelledby="study-progress">
+      <div className="overflow-hidden rounded-2xl border bg-card">
+        <section
+          aria-labelledby="study-progress"
+          className="surface-hero p-5 md:px-7 md:py-6"
+        >
           <ResourceBoundary
             services={["pos", "rules"]}
             skeleton={
@@ -103,17 +106,13 @@ export function DashboardPage() {
             {() => <StudyProgressCard />}
           </ResourceBoundary>
         </section>
-        <section aria-labelledby="ects-history" className="mt-6 border-t pt-6">
+        <section aria-labelledby="ects-history" className="p-5 md:px-7 md:py-6">
           <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
             <h2 id="ects-history" className="text-section-title">
               ECTS-Verlauf
             </h2>
             <CourseLegend />
           </div>
-          <p className="mt-1 text-body text-muted-foreground">
-            Kumuliert je Semester; das laufende und die folgenden Semester als
-            Prognose, wenn du alle angemeldeten Prüfungen bestehst.
-          </p>
           <ResourceBoundary services={["pos"]} skeleton={chartSkeleton}>
             {() => (
               <Suspense fallback={chartSkeleton}>

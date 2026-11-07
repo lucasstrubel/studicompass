@@ -29,8 +29,6 @@ export function StudyProgressCard() {
   const rules = useDemoStore(selectRulesById);
   if (!progress || !plan || !academic || !program) return null;
 
-  const completedSemesters =
-    semesterNumber(academic.currentTerm, academic.student.startTerm) - 1;
   const deficit = progress.targetEcts - progress.earnedEcts;
   const graduationSemester = plan.graduationTerm
     ? semesterNumber(plan.graduationTerm, academic.student.startTerm)
@@ -53,7 +51,7 @@ export function StudyProgressCard() {
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 sm:ml-auto sm:gap-x-5">
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="link" className="h-auto px-0 text-meta">
+              <Button variant="link" className="h-auto px-0">
                 <CircleHelp aria-hidden="true" />
                 Wie wird das berechnet?
               </Button>
@@ -66,13 +64,17 @@ export function StudyProgressCard() {
                 {calculationRules.map((rule) => (
                   <li key={rule.id}>{rule.citation.summary}</li>
                 ))}
+                <li>
+                  Prognosen gelten, wenn du alle angemeldeten Prüfungen
+                  bestehst.
+                </li>
               </ul>
               <CitationList
                 citations={calculationRules.map((rule) => rule.citation)}
               />
             </PopoverContent>
           </Popover>
-          <Button variant="link" className="h-auto px-0 text-meta" asChild>
+          <Button variant="link" className="h-auto px-0" asChild>
             <Link to="/verlauf">
               Studienverlauf ansehen
               <ArrowRight aria-hidden="true" />
@@ -80,8 +82,8 @@ export function StudyProgressCard() {
           </Button>
         </div>
       </div>
-      <div className="grid gap-x-12 gap-y-4 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-end">
-        <div>
+      <div className="grid gap-x-12 gap-y-4 sm:grid-cols-2 lg:grid-cols-[auto_auto_minmax(0,1fr)] lg:items-end">
+        <div className="sm:col-span-2 lg:col-span-1">
           <p className="flex flex-wrap items-baseline gap-2">
             <span className="text-figure tabular-nums">
               {progress.earnedEcts}
@@ -92,41 +94,40 @@ export function StudyProgressCard() {
           </p>
           <p className="text-body tabular-nums">
             {deficit > 0
-              ? `${deficit} ECTS hinter dem Regelverlauf`
-              : "Im Regelverlauf"}{" "}
-            <span className="text-muted-foreground">
-              (Soll nach {completedSemesters} Semestern: {progress.targetEcts})
-            </span>
+              ? `${deficit} ECTS hinter dem Soll von ${progress.targetEcts}`
+              : "Im Regelverlauf"}
           </p>
         </div>
-        <dl className="grid gap-x-8 gap-y-3 text-body sm:grid-cols-2">
+        {/* Forecasts are named as such; the assumption behind them sits in "Wie wird das berechnet?". */}
+        <dl className="contents">
           <div>
-            <dt className="text-meta text-muted-foreground">
-              Ende dieses Semesters
+            <dt className="text-body text-muted-foreground">
+              Semesterende (Prognose)
             </dt>
-            <dd className="tabular-nums">
-              <span className="font-semibold">
-                {plan.ectsEndOfTerm} von {plan.targetEndOfTerm}
-              </span>{" "}
-              – wenn du alle angemeldeten Prüfungen bestehst
+            <dd className="text-section-title tabular-nums">
+              {plan.ectsEndOfTerm} von {plan.targetEndOfTerm}
             </dd>
           </div>
           <div>
-            <dt className="text-meta text-muted-foreground">
-              Voraussichtlicher Abschluss
+            <dt className="text-body text-muted-foreground">
+              Abschluss (Prognose)
             </dt>
             <dd>
               {plan.graduationTerm ? (
                 <>
-                  <span className="font-semibold">
+                  <span className="text-section-title tabular-nums">
                     {format(plan.graduationTerm)}
                   </span>{" "}
-                  {delay !== null && delay > 0
-                    ? `– ${delay} Semester nach der Regelstudienzeit`
-                    : "– in Regelstudienzeit"}
+                  <span className="text-body">
+                    {delay !== null && delay > 0
+                      ? `– ${delay} Semester später`
+                      : "– in Regelstudienzeit"}
+                  </span>
                 </>
               ) : (
-                "Nicht planbar – bitte wende dich an das Prüfungsamt."
+                <span className="text-body">
+                  Nicht planbar – bitte wende dich an das Prüfungsamt.
+                </span>
               )}
             </dd>
           </div>

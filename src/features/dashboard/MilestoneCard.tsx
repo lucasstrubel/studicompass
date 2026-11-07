@@ -43,11 +43,6 @@ export function MilestoneCard() {
         </span>
       </h2>
       <div className="mt-2 max-w-prose space-y-1 text-body">
-        {condition && (
-          <p>
-            Dein nächster Meilenstein. Bedingung: {condition.citation.summary}
-          </p>
-        )}
         <p>
           Noch offen: {openFoundation.length} Module des Grundstudiums (
           {registeredNow.length} davon in diesem Semester angemeldet)

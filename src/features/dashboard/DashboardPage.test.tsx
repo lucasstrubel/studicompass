@@ -42,12 +42,8 @@ describe("Übersicht", () => {
     expect(within(progress).getByText("48")).toBeInTheDocument();
     expect(within(progress).getByText("ECTS von 210")).toBeInTheDocument();
     expect(within(progress).getByText("Knapp")).toBeInTheDocument();
-    expect(progress).toHaveTextContent(
-      "12 ECTS hinter dem Regelverlauf (Soll nach 2 Semestern: 60)",
-    );
-    expect(progress).toHaveTextContent(
-      "78 von 90 – wenn du alle angemeldeten Prüfungen bestehst",
-    );
+    expect(progress).toHaveTextContent("12 ECTS hinter dem Soll von 60");
+    expect(progress).toHaveTextContent("78 von 90");
     expect(progress).toHaveTextContent("WS 2028/29 – in Regelstudienzeit");
   });
 
@@ -103,9 +99,7 @@ describe("Übersicht", () => {
       "Dein Praxissemester verschiebt sich voraussichtlich auf SS 2028.",
     );
     expect(progress).toHaveTextContent("72 von 90");
-    expect(progress).toHaveTextContent(
-      "SS 2029 – 1 Semester nach der Regelstudienzeit",
-    );
+    expect(progress).toHaveTextContent("SS 2029 – 1 Semester später");
     expect(region(/^Praxissemester/)).toHaveTextContent(
       "Praxissemester · SS 2028 (+1 Semester)",
     );

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useSyncExternalStore } from "react";
+import { useEffect, useRef } from "react";
 import {
   Area,
   CartesianGrid,
@@ -23,15 +23,6 @@ const CHART_CONFIG = {
   forecast: { label: "Prognose", color: "var(--accent)" },
   target: { label: "Soll", color: "var(--muted-foreground)" },
 } satisfies ChartConfig;
-
-/** From here on chart and table stand side by side, so the table no longer needs its disclosure. */
-const WIDE_QUERY = "(min-width: 64rem)";
-
-function subscribeToWide(onChange: () => void) {
-  const query = window.matchMedia(WIDE_QUERY);
-  query.addEventListener("change", onChange);
-  return () => query.removeEventListener("change", onChange);
-}
 
 type WaypointKind = "start" | "done" | "position" | "planned" | "finish";
 
@@ -266,17 +257,13 @@ const FORECAST_DOT = waypoint(["planned", "finish"]);
  * Course line and value table of the ECTS-Verlauf: cumulative actual and forecast against the target up to
  * the expected graduation, so a simulated decision visibly lengthens the course. The section heading lives on
  * the page, so it shows while this lazy chunk loads. The chart is decorative for screen readers: the table
- * holds the same values. On narrow screens the table folds away under the chart.
+ * holds the same values and stays folded away until someone asks for the numbers.
  */
 export function EctsHistory() {
   const plan = useDemoStore(selectBasePlan);
   const academic = useDemoStore(selectAcademicState);
   const chart = useCourseDraw(
     plan?.terms.map((item) => item.cumulativeEcts).join() ?? "",
-  );
-  const wide = useSyncExternalStore(
-    subscribeToWide,
-    () => window.matchMedia(WIDE_QUERY).matches,
   );
   if (!plan || !academic) return null;
 
@@ -322,7 +309,7 @@ export function EctsHistory() {
   ];
 
   return (
-    <div className="mt-3 grid gap-x-6 gap-y-3 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-center">
+    <div className="mt-3">
       <div ref={chart} className="min-w-0">
         <ChartContainer
           config={CHART_CONFIG}
@@ -391,11 +378,15 @@ export function EctsHistory() {
           </ComposedChart>
         </ChartContainer>
       </div>
-      <details open={wide || undefined}>
-        <summary className="w-fit cursor-pointer rounded-sm text-meta font-medium text-muted-foreground hover:text-foreground lg:hidden">
+      <details className="mt-2">
+        <summary className="w-fit cursor-pointer rounded-sm text-body font-medium text-muted-foreground hover:text-foreground">
           Werte als Tabelle
         </summary>
-        <table className="mt-2 w-full text-meta tabular-nums lg:mt-0">
+        <p className="mt-2 text-meta text-muted-foreground">
+          Kumuliert je Semester. Prognosen gelten, wenn du alle angemeldeten
+          Prüfungen bestehst.
+        </p>
+        <table className="mt-2 w-full max-w-xl text-meta tabular-nums">
           <caption className="sr-only">ECTS je Semester</caption>
           <thead className="text-muted-foreground">
             <tr>

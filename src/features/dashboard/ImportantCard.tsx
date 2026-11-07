@@ -81,12 +81,8 @@ export function ImportantCard() {
                       <ArrowRight aria-hidden="true" />
                     </Link>
                   </Button>
-                  <p className="text-meta">
-                    Abmeldefrist:{" "}
-                    <Countdown
-                      until={decision.exam.withdrawalDeadline ?? ""}
-                      className="font-semibold"
-                    />
+                  <p className="text-body font-semibold tabular-nums">
+                    <Countdown until={decision.exam.withdrawalDeadline ?? ""} />
                   </p>
                 </div>
               </div>
