@@ -17,19 +17,13 @@ dist-ssr
 .env
 .env.*
 
-# Persönliche Agenteneinstellungen (die geteilten unter .claude/, .codex/, .agents/ sind versioniert)
+# Persönliche Agenteneinstellungen
 .claude/settings.local.json
 CLAUDE.local.md
 
-# Fremde Design-Referenzen — nur lokal, das Repo ist öffentlich
-docs/referenzen/
-
-# Playwright-Ausgaben (die Screenshots in docs/screens/ werden versioniert)
+# Playwright-Ausgaben
 test-results/
 playwright-report/
-
-# Reproducible local presentation build and recording (P6)
-/artifacts/presentation/
 
 # IDE
 .idea/
