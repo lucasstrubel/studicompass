@@ -619,7 +619,7 @@ export function Timeline({
       {/* Preview under the pointer; no drop animation, so reduced motion needs no extra case. */}
       <DragOverlay dropAnimation={null}>
         {drag && (
-          <div className="panel-shadow rounded-lg border bg-card p-2.5 text-meta font-semibold text-foreground">
+          <div className="panel-shadow scale-[1.02] rounded-lg bg-card p-2.5 text-meta font-semibold text-foreground">
             {drag.title}
             <span className="block font-normal text-muted-foreground">
               In ein hervorgehobenes Semester ziehen

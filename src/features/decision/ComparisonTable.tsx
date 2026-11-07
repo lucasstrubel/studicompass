@@ -214,7 +214,10 @@ export function ComparisonTable({
                     ))}
                   </tr>
                   <tr id={whyId} hidden={!open} className="border-b bg-muted">
-                    <td colSpan={outcomes.length + 1} className="p-3">
+                    <td
+                      colSpan={outcomes.length + 1}
+                      className="p-3 motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-150"
+                    >
                       <Why row={row} rules={rules} />
                     </td>
                   </tr>

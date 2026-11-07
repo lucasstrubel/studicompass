@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { ResourceBoundary } from "@/components/common/ResourceBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AssistantChat } from "./AssistantChat";
+import { AssistantChatLoader } from "./AssistantChatLoader";
 
 /** Assistent: `?frage=` asks a catalog question or free text, `?module=` sets the context. */
 export function AssistantPage() {
@@ -18,7 +18,7 @@ export function AssistantPage() {
       }
     >
       {() => (
-        <AssistantChat
+        <AssistantChatLoader
           initialQuestion={params.get("frage") ?? params.get("q") ?? ""}
           moduleId={params.get("module") ?? params.get("modul")}
         />

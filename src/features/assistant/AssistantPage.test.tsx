@@ -1,11 +1,13 @@
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router";
-import { afterEach, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, expect, it, vi } from "vitest";
 import { demoStore } from "@/store/demo-store";
 import { LATENCY_MS } from "@/config/demo";
 import { AssistantPage } from "./AssistantPage";
+import { preloadAssistantChat } from "./assistant-chat-module";
 import { StrictMode } from "react";
 
+beforeAll(() => preloadAssistantChat());
 afterEach(() => vi.useRealTimers());
 
 it("P5-F02: sperrt Anschlussfragen während einer Antwort und gibt sie danach frei", async () => {

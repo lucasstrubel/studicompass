@@ -228,6 +228,27 @@
   }
 }
 
+/*
+ * Native disclosures open by height instead of jumping; browsers without ::details-content just open them. The
+ * clip margin keeps the focus rings of the controls inside.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+  details::details-content {
+    height: 0;
+    overflow: clip;
+    overflow-clip-margin: 4px;
+    transition:
+      height 180ms var(--ease-strong),
+      content-visibility 180ms allow-discrete;
+  }
+  details[open]::details-content {
+    height: auto;
+  }
+}
+
 /* Everything that floats (menu, assistant) shares one soft shadow; surfaces on the page have none. */
 .panel-shadow {
   box-shadow: 0 16px 40px -16px

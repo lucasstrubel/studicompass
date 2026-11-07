@@ -12,8 +12,10 @@ import { AppProviders } from "@/app/providers";
 import { routes } from "@/app/router";
 import { LATENCY_MS } from "@/config/demo";
 import { demoStore } from "@/store/demo-store";
+import { preloadAssistantChat } from "./assistant-chat-module";
 
 beforeEach(async () => {
+  await preloadAssistantChat();
   vi.useFakeTimers();
   const ready = demoStore.getState().resetDemo();
   await vi.advanceTimersByTimeAsync(LATENCY_MS);

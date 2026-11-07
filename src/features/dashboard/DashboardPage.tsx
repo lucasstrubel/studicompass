@@ -71,7 +71,7 @@ function CourseLegend() {
 const chartSkeleton = (
   <Skeleton
     role="status"
-    className="mx-5 h-48 md:mx-7 md:h-60"
+    className="h-48 md:h-60"
     aria-label="ECTS-Verlauf wird geladen"
   />
 );
@@ -110,13 +110,15 @@ export function DashboardPage() {
             </h2>
             <CourseLegend />
           </div>
-          <ResourceBoundary services={["pos"]} skeleton={chartSkeleton}>
-            {() => (
-              <Suspense fallback={chartSkeleton}>
-                <EctsHistory />
-              </Suspense>
-            )}
-          </ResourceBoundary>
+          <div className="mt-2 px-5 md:px-7">
+            <ResourceBoundary services={["pos"]} skeleton={chartSkeleton}>
+              {() => (
+                <Suspense fallback={chartSkeleton}>
+                  <EctsHistory />
+                </Suspense>
+              )}
+            </ResourceBoundary>
+          </div>
         </section>
       </div>
       <ResourceBoundary

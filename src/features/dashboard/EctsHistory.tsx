@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { ComposedChart, Line, XAxis, YAxis } from "recharts";
 import {
   ChartContainer,
@@ -223,6 +224,27 @@ function waypoint(kinds: WaypointKind[]) {
   };
 }
 
+/** The course last drawn in this session; coming back to the page does not draw it again. */
+let drawnCourse: string | null = null;
+
+/**
+ * The one authored moment of the app: the course draws itself on first view and again when a decision changes it,
+ * which shows the consequence. The chart stands complete without this, and reduced motion leaves it that way.
+ */
+function useCourseDraw(course: string) {
+  const chart = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (drawnCourse === course) return;
+    drawnCourse = course;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    chart.current?.animate?.(
+      [{ clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0 0 0)" }],
+      { duration: 600, easing: "cubic-bezier(0.23, 1, 0.32, 1)" },
+    );
+  }, [course]);
+  return chart;
+}
+
 const EARNED_DOT = waypoint(["start", "done", "position"]);
 const FORECAST_DOT = waypoint(["planned", "finish"]);
 
@@ -235,6 +257,9 @@ const FORECAST_DOT = waypoint(["planned", "finish"]);
 export function EctsHistory() {
   const plan = useDemoStore(selectBasePlan);
   const academic = useDemoStore(selectAcademicState);
+  const chart = useCourseDraw(
+    plan?.terms.map((item) => item.cumulativeEcts).join() ?? "",
+  );
   if (!plan || !academic) return null;
 
   const position = plan.terms.findLastIndex(
@@ -280,63 +305,65 @@ export function EctsHistory() {
 
   return (
     <>
-      <ChartContainer
-        config={CHART_CONFIG}
-        className="aspect-auto h-48 w-full md:h-60"
-        aria-hidden="true"
-      >
-        <ComposedChart
-          accessibilityLayer={false}
-          data={points}
-          margin={{ left: 20, right: 24, top: 36, bottom: 0 }}
+      <div ref={chart} className="-mx-5 md:-mx-7">
+        <ChartContainer
+          config={CHART_CONFIG}
+          className="aspect-auto h-48 w-full md:h-60"
+          aria-hidden="true"
         >
-          <XAxis
-            dataKey="term"
-            tickLine={false}
-            axisLine={false}
-            tickMargin={12}
-            tick={{ fill: "var(--hero-muted)" }}
-            interval="preserveStartEnd"
-            minTickGap={4}
-          />
-          <YAxis hide domain={[0, "dataMax"]} />
-          <ChartTooltip
-            cursor={{ stroke: "var(--hero-border)" }}
-            content={<EctsTooltip />}
-          />
-          <Line
-            dataKey="target"
-            type="linear"
-            stroke="var(--color-target)"
-            strokeWidth={1.5}
-            strokeDasharray="6 5"
-            dot={false}
-            activeDot={false}
-            isAnimationActive={false}
-          />
-          <Line
-            dataKey="forecast"
-            type="linear"
-            stroke="var(--color-forecast)"
-            strokeWidth={2}
-            strokeDasharray="1 6"
-            strokeLinecap="round"
-            dot={FORECAST_DOT}
-            activeDot={false}
-            isAnimationActive={false}
-          />
-          <Line
-            dataKey="actual"
-            type="linear"
-            stroke="var(--color-actual)"
-            strokeWidth={3}
-            dot={EARNED_DOT}
-            activeDot={false}
-            isAnimationActive={false}
-          />
-        </ComposedChart>
-      </ChartContainer>
-      <details className="mt-3 px-5 md:px-7">
+          <ComposedChart
+            accessibilityLayer={false}
+            data={points}
+            margin={{ left: 20, right: 24, top: 36, bottom: 0 }}
+          >
+            <XAxis
+              dataKey="term"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={12}
+              tick={{ fill: "var(--hero-muted)" }}
+              interval="preserveStartEnd"
+              minTickGap={4}
+            />
+            <YAxis hide domain={[0, "dataMax"]} />
+            <ChartTooltip
+              cursor={{ stroke: "var(--hero-border)" }}
+              content={<EctsTooltip />}
+            />
+            <Line
+              dataKey="target"
+              type="linear"
+              stroke="var(--color-target)"
+              strokeWidth={1.5}
+              strokeDasharray="6 5"
+              dot={false}
+              activeDot={false}
+              isAnimationActive={false}
+            />
+            <Line
+              dataKey="forecast"
+              type="linear"
+              stroke="var(--color-forecast)"
+              strokeWidth={2}
+              strokeDasharray="1 6"
+              strokeLinecap="round"
+              dot={FORECAST_DOT}
+              activeDot={false}
+              isAnimationActive={false}
+            />
+            <Line
+              dataKey="actual"
+              type="linear"
+              stroke="var(--color-actual)"
+              strokeWidth={3}
+              dot={EARNED_DOT}
+              activeDot={false}
+              isAnimationActive={false}
+            />
+          </ComposedChart>
+        </ChartContainer>
+      </div>
+      <details className="mt-3">
         <summary className="w-fit cursor-pointer rounded-sm text-meta font-medium text-muted-foreground hover:text-foreground">
           Werte als Tabelle
         </summary>

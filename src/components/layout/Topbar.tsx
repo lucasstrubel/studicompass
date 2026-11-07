@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { m } from "motion/react";
 import { Settings, UserRound } from "lucide-react";
 import { Link, NavLink, useLocation } from "react-router";
 import { BrandMark } from "@/components/common/BrandMark";
@@ -100,7 +101,13 @@ export function Topbar() {
                     <>
                       {item.label}
                       {isActive && (
-                        <span
+                        // Glides to the new page, so the eye follows the change of place.
+                        <m.span
+                          layoutId="nav-indicator"
+                          transition={{
+                            duration: 0.2,
+                            ease: [0.23, 1, 0.32, 1],
+                          }}
                           aria-hidden="true"
                           className="absolute inset-x-3 -bottom-[13px] h-0.5 rounded-full bg-accent"
                         />

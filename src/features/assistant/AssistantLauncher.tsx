@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
-import { Maximize2, MessageCircleQuestionMark, X } from "lucide-react";
+import { Maximize2, X } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { Dialog as DialogPrimitive } from "radix-ui";
+import { BrandMark } from "@/components/common/BrandMark";
 import { ResourceBoundary } from "@/components/common/ResourceBoundary";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { demoStore } from "@/store/demo-store";
 import { useDemoStore } from "@/store/use-demo-store";
 import { selectProfileName } from "@/store/selectors";
-import { AssistantChat } from "./AssistantChat";
+import { preloadAssistantChat } from "./assistant-chat-module";
+import { AssistantChatLoader } from "./AssistantChatLoader";
 
 const HINT_ID = "assistant-hint";
 /** Scrolling this far retires the speech bubble; the scroll reset after a page change is no reason. */
@@ -71,8 +73,8 @@ export function AssistantLauncher() {
     >
       {/* Button and bubble sit at z-20, below the top bar (z-30), so the open menu panel covers them. */}
       {hint && (
-        <div className="fixed right-6 bottom-24 z-20 w-64 max-w-[calc(100vw-3rem)] motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-2 motion-safe:duration-300">
-          <div className="panel-shadow relative rounded-2xl border bg-card p-3 pr-10">
+        <div className="fixed right-6 bottom-24 z-20 w-64 max-w-[calc(100vw-3rem)] motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-2 motion-safe:duration-200">
+          <div className="panel-shadow relative rounded-2xl bg-card p-3 pr-10">
             <button
               type="button"
               id={HINT_ID}
@@ -96,7 +98,7 @@ export function AssistantLauncher() {
             {/* Tail pointing at the button below. */}
             <span
               aria-hidden="true"
-              className="absolute -bottom-1.5 right-6 size-3 rotate-45 border-r border-b bg-card"
+              className="absolute -bottom-1.5 right-6 size-3 rotate-45 bg-card"
             />
           </div>
         </div>
@@ -105,9 +107,14 @@ export function AssistantLauncher() {
         <Button
           aria-label="Assistent öffnen"
           aria-describedby={hint ? HINT_ID : undefined}
+          // The chat loads on its own; starting at the first sign of intent makes it open at once.
+          onPointerEnter={() =>
+            void preloadAssistantChat().catch(() => undefined)
+          }
+          onFocus={() => void preloadAssistantChat().catch(() => undefined)}
           className="panel-shadow fixed right-6 bottom-6 z-20 size-14 rounded-full bg-accent text-accent-foreground hover:bg-accent/90"
         >
-          <MessageCircleQuestionMark className="size-6" aria-hidden="true" />
+          <BrandMark mono className="size-7" />
         </Button>
       </DialogPrimitive.Trigger>
       <DialogPrimitive.Portal>
@@ -122,7 +129,7 @@ export function AssistantLauncher() {
             event.preventDefault();
             target.focus();
           }}
-          className="panel-shadow fixed inset-0 z-50 flex flex-col overflow-hidden bg-card text-card-foreground md:inset-auto md:right-6 md:bottom-6 md:h-[min(40rem,calc(100dvh-3rem))] md:w-[min(26rem,calc(100vw-3rem))] md:rounded-2xl md:border motion-safe:data-open:animate-in motion-safe:data-open:fade-in-0 motion-safe:data-open:slide-in-from-bottom-4"
+          className="panel-shadow fixed inset-0 z-50 flex origin-bottom-right flex-col overflow-hidden bg-background text-foreground md:inset-auto md:right-6 md:bottom-6 md:h-[min(42rem,calc(100dvh-3rem))] md:w-[min(28rem,calc(100vw-3rem))] md:rounded-2xl motion-safe:duration-200 motion-safe:ease-(--ease-drawer) motion-safe:data-open:animate-in motion-safe:data-open:fade-in-0 motion-safe:data-closed:animate-out motion-safe:data-closed:fade-out-0 motion-safe:data-closed:duration-150 motion-safe:md:data-open:zoom-in-95 motion-safe:md:data-closed:zoom-out-95"
           onOpenAutoFocus={(event) => {
             const field =
               event.currentTarget instanceof HTMLElement
@@ -134,14 +141,15 @@ export function AssistantLauncher() {
             }
           }}
         >
-          <div className="flex items-start gap-3 border-b px-4 py-3">
+          {/* A div, not a header: inside the portal a header would become a second banner landmark. */}
+          <div className="surface-hero flex items-center gap-3 px-4 py-3">
+            <BrandMark className="size-7" />
             <div className="min-w-0 flex-1">
               <DialogPrimitive.Title className="text-card-title">
                 Assistent
               </DialogPrimitive.Title>
               <DialogPrimitive.Description className="text-meta text-muted-foreground">
-                Antworten stützen sich auf SPO und Modulhandbuch. Verbindlich
-                ist das Prüfungsamt.
+                Fragen zu deinem Studium, Antworten mit Quelle
               </DialogPrimitive.Description>
             </div>
             <Button variant="ghost" size="icon-sm" asChild>
@@ -170,7 +178,7 @@ export function AssistantLauncher() {
                 />
               }
             >
-              {() => <AssistantChat variant="panel" />}
+              {() => <AssistantChatLoader variant="panel" />}
             </ResourceBoundary>
           </div>
         </DialogPrimitive.Content>

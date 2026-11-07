@@ -16,14 +16,12 @@ describe("P5-15: lokales Profil", () => {
     await store.getState().hydrate();
     const plan = selectBasePlan(store.getState());
     expect(
-      store
-        .getState()
-        .saveProfile({
-          firstName: " Alex ",
-          lastName: " Muster ",
-          goalRegularTime: true,
-          jobHoursPerWeek: 15,
-        }),
+      store.getState().saveProfile({
+        firstName: " Alex ",
+        lastName: " Muster ",
+        goalRegularTime: true,
+        jobHoursPerWeek: 15,
+      }),
     ).toBe(true);
     expect(selectProfileName(store.getState())).toEqual({
       firstName: "Alex",
@@ -53,25 +51,21 @@ describe("P5-15: lokales Profil", () => {
     await store.getState().hydrate();
     const before = store.getState();
     expect(
-      store
-        .getState()
-        .saveProfile({
-          firstName: " ",
-          lastName: "Muster",
-          goalRegularTime: false,
-          jobHoursPerWeek: 20,
-        }),
+      store.getState().saveProfile({
+        firstName: " ",
+        lastName: "Muster",
+        goalRegularTime: false,
+        jobHoursPerWeek: 20,
+      }),
     ).toBe(false);
     expect(store.getState()).toBe(before);
     expect(
-      store
-        .getState()
-        .saveProfile({
-          firstName: "Alex",
-          lastName: "Muster",
-          goalRegularTime: false,
-          jobHoursPerWeek: Number.NaN,
-        }),
+      store.getState().saveProfile({
+        firstName: "Alex",
+        lastName: "Muster",
+        goalRegularTime: false,
+        jobHoursPerWeek: Number.NaN,
+      }),
     ).toBe(false);
     expect(store.getState()).toBe(before);
   });

@@ -79,7 +79,11 @@ export function ConsequenceItem({
             />
           </button>
         </div>
-        <div id={detailsId} hidden={!open} className="mt-2 space-y-2">
+        <div
+          id={detailsId}
+          hidden={!open}
+          className="mt-2 space-y-2 motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-150"
+        >
           <p className="text-body">{consequence.detail}</p>
           <CitationList citations={citations} />
         </div>
