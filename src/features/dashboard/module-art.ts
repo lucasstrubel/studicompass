@@ -11,14 +11,14 @@ const MODULE_ART: Record<string, IllustrationKind> = {
   "m-mkt": "globe",
 };
 
-export type ModuleTone = "violet" | "teal" | "blue" | "plum" | "terracotta";
+export type ModuleTone = "violet" | "teal" | "blue" | "plum" | "slate";
 
 const TONES: readonly ModuleTone[] = [
   "violet",
   "teal",
   "blue",
   "plum",
-  "terracotta",
+  "slate",
 ];
 
 // The modules of the overview: this semester's exams and the recent grades, each in its own colour.
@@ -27,7 +27,7 @@ const MODULE_TONES: Record<string, ModuleTone> = {
   "m-db": "teal",
   "m-se1": "blue",
   "m-gpm": "plum",
-  "m-mkt": "terracotta",
+  "m-mkt": "slate",
   "m-klr": "teal",
   "m-bsrn": "blue",
   "m-mathe2": "violet",

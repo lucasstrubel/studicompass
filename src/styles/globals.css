@@ -7,8 +7,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-sans);
+  --font-sans: "Hanken Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Bricolage Grotesque Variable", var(--font-sans);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
@@ -41,8 +41,8 @@
   --color-tone-blue-soft: var(--tone-blue-soft);
   --color-tone-plum: var(--tone-plum);
   --color-tone-plum-soft: var(--tone-plum-soft);
-  --color-tone-terracotta: var(--tone-terracotta);
-  --color-tone-terracotta-soft: var(--tone-terracotta-soft);
+  --color-tone-slate: var(--tone-slate);
+  --color-tone-slate-soft: var(--tone-slate-soft);
   --color-status-on-track: var(--status-on-track);
   --color-status-on-track-foreground: var(--status-on-track-foreground);
   --color-status-on-track-soft: var(--status-on-track-soft);
@@ -64,90 +64,111 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Type scale (text-page-title … text-figure) and motion (state changes ease out). */
+/*
+ * Type scale (text-page-title … text-figure) and motion. Display face only on titles and the study figure,
+ * never on labels, buttons or data. Motion: strong ease-out; state changes stay short.
+ */
 @theme {
-  --text-page-title: 1.75rem;
-  --text-page-title--line-height: 2.25rem;
+  --text-page-title: 2rem;
+  --text-page-title--line-height: 2.5rem;
   --text-page-title--font-weight: 600;
+  --text-page-title--letter-spacing: -0.02em;
   --text-section-title: 1.25rem;
   --text-section-title--line-height: 1.75rem;
   --text-section-title--font-weight: 600;
+  --text-section-title--letter-spacing: -0.01em;
   --text-card-title: 1rem;
   --text-card-title--line-height: 1.5rem;
   --text-card-title--font-weight: 600;
   --text-body: 0.9375rem;
-  --text-body--line-height: 1.375rem;
+  --text-body--line-height: 1.5rem;
   --text-meta: 0.8125rem;
-  --text-meta--line-height: 1.125rem;
-  --text-meta--font-weight: 500;
-  --text-figure: 2.5rem;
-  --text-figure--line-height: 2.75rem;
+  --text-meta--line-height: 1.25rem;
+  --text-meta--font-weight: 400;
+  --text-figure: 2.75rem;
+  --text-figure--line-height: 3rem;
   --text-figure--font-weight: 700;
-  --default-transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  --text-figure--letter-spacing: -0.03em;
+  --ease-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --default-transition-duration: 150ms;
+  --default-transition-timing-function: var(--ease-strong);
 }
 
 /*
- * Colour tokens ("Warm Ink"); src/styles/tokens.test.ts checks their minimum contrast.
+ * Colour tokens ("Graphit & Mandarine"); src/styles/tokens.test.ts checks their minimum contrast.
  * The shadcn names are mapped onto these tokens.
  */
 :root {
   color-scheme: light;
-  --background: #faf9f5;
-  --foreground: #1a1917;
+  --background: #f6f6f7;
+  --foreground: #17171a;
   --card: #ffffff;
   --card-foreground: var(--foreground);
   --popover: var(--card);
   --popover-foreground: var(--foreground);
-  --primary: #1a1917;
-  --primary-foreground: #faf9f5;
+  --primary: #17171a;
+  --primary-foreground: #ffffff;
   --secondary: var(--muted);
   --secondary-foreground: var(--foreground);
-  --muted: #eeeae3;
-  --muted-foreground: #57534b;
-  /* Terracotta is the brand accent, never a status colour and never text on a light surface. */
-  --accent: #d97757;
-  --accent-foreground: #1a1917;
-  --accent-strong: #a4492e;
-  --accent-soft: #f7e4dd;
-  --accent-soft-foreground: #9a4128;
+  --muted: #ececee;
+  --muted-foreground: #5a5a62;
+  /* Mandarin is the brand, never a status colour and never text on a light surface (there: --accent-strong). */
+  --accent: #ff5c1f;
+  --accent-foreground: #17171a;
+  --accent-strong: #b83c0c;
+  --accent-soft: #ffeadf;
+  --accent-soft-foreground: #a33408;
   --destructive: var(--status-critical-foreground);
-  --border: #d4cfc6;
-  --input: #817b70;
+  --border: #e3e3e6;
+  --input: #80808a;
   --ring: var(--accent-strong);
   --chart-1: var(--tone-blue);
   --chart-2: var(--muted-foreground);
   --radius: 0.625rem;
-  /* Status: --status-* = surface/icon, -foreground = text, -soft = soft surface; always with icon and text. */
-  --status-on-track: #788c5d;
-  --status-on-track-foreground: #5a6b43;
-  --status-on-track-soft: #eaefe2;
-  --status-tight: #b07a12;
-  --status-tight-foreground: #8a5a00;
-  --status-tight-soft: #fbefd5;
-  --status-critical: #c8443a;
-  --status-critical-foreground: #b3261e;
-  --status-critical-soft: #fbe3e0;
-  --status-info: #8cb2d7;
-  --status-info-foreground: #3b6694;
-  --status-info-soft: #e3ecf6;
   /*
-   * Colour family: module identities, grades and the ECTS figures, so the page is not
-   * terracotta only. Strong tones are lines, bars and illustration strokes (at least 3:1 on page, card
-   * and track); soft tones are surfaces under ink. Never a status colour: green, ochre and red stay
-   * reserved for Im Plan, Knapp and Kritisch.
+   * The one dark surface: it carries the course line. .surface-hero maps these onto the regular names, so
+   * links, focus ring and tooltip inside work without special classes. This is a surface, not a theme.
    */
-  --tone-violet: #6a55b5;
-  --tone-violet-soft: #ece8f7;
-  --tone-teal: #1e7369;
-  --tone-teal-soft: #dcefea;
-  --tone-blue: #3466a8;
-  --tone-blue-soft: #e2ebf7;
-  --tone-plum: #9c4675;
-  --tone-plum-soft: #f5e3ec;
-  --tone-terracotta: var(--accent-strong);
-  --tone-terracotta-soft: var(--accent-soft);
+  --hero: #1b1b1f;
+  --hero-foreground: #ffffff;
+  --hero-muted: #c2c2c7;
+  --hero-line: #ff7a45;
+  --hero-target: #8e8e96;
+  --hero-border: #34343a;
+  --hero-raised: #2a2a30;
+  /*
+   * Status: --status-* = surface/icon, -foreground = text, -soft = soft surface; always with icon and text.
+   * Ochre leans yellow and red leans crimson, so both stay apart from the mandarin brand colour.
+   */
+  --status-on-track: #1f8f55;
+  --status-on-track-foreground: #14703f;
+  --status-on-track-soft: #def4e6;
+  --status-tight: #b58900;
+  --status-tight-foreground: #7a5600;
+  --status-tight-soft: #fbf0c9;
+  --status-critical: #d42a52;
+  --status-critical-foreground: #b3163a;
+  --status-critical-soft: #fde7ec;
+  --status-info: #6b8fbf;
+  --status-info-foreground: #3a5a86;
+  --status-info-soft: #e6edf6;
+  /*
+   * Colour family: module identities, grades and the ECTS figures. Strong tones are lines, bars and icons
+   * (at least 3:1 on page, card and track); soft tones are surfaces under ink. Never a status colour.
+   */
+  --tone-violet: #6d4bd6;
+  --tone-violet-soft: #ece7fb;
+  --tone-teal: #0f7c70;
+  --tone-teal-soft: #d9f1ec;
+  --tone-blue: #2f62d9;
+  --tone-blue-soft: #e4ecfb;
+  --tone-plum: #a83a7c;
+  --tone-plum-soft: #f8e4f0;
+  --tone-slate: #56606f;
+  --tone-slate-soft: #e8ebef;
   /* Backdrop behind dialogs and sheets. */
-  --overlay: rgb(26 25 23 / 0.3);
+  --overlay: rgb(23 23 26 / 0.3);
 }
 
 @layer base {
@@ -159,6 +180,30 @@
   }
   html {
     @apply font-sans;
+    font-optical-sizing: auto;
+  }
+  /* --text-* cannot set a family, so the display classes get theirs here. */
+  .text-page-title,
+  .text-section-title,
+  .text-figure {
+    font-family: var(--font-heading);
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  /* The parts the browser would otherwise style on its own. */
+  ::selection {
+    background-color: var(--accent-soft);
+    color: var(--foreground);
+  }
+  input,
+  textarea {
+    caret-color: var(--accent-strong);
+  }
+  a {
+    text-underline-offset: 0.2em;
   }
   /*
    * One focus ring for every focusable element, 2 px --ring (= --accent-strong) with 2 px
@@ -198,4 +243,22 @@
 /* Warm neutral canvas around the light workspace. */
 body:has(.app-frame) {
   background-color: var(--muted);
+}
+
+/* The dark hero surface: redefines the regular names locally (not .dark, see the variant above). */
+.surface-hero {
+  --background: var(--hero);
+  --foreground: var(--hero-foreground);
+  --card: var(--hero-raised);
+  --card-foreground: var(--hero-foreground);
+  --popover: var(--hero-raised);
+  --popover-foreground: var(--hero-foreground);
+  --muted: var(--hero-raised);
+  --muted-foreground: var(--hero-muted);
+  --border: var(--hero-border);
+  --input: var(--hero-target);
+  --accent-strong: var(--hero-line);
+  --ring: var(--hero-line);
+  background-color: var(--hero);
+  color: var(--hero-foreground);
 }

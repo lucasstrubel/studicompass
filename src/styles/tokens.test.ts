@@ -99,7 +99,7 @@ describe("design tokens", () => {
       contrast(token("--accent-strong"), token("--muted")),
     ).toBeGreaterThanOrEqual(3);
     // Colour family: lines, bars and strokes on every surface they appear on; ink on the soft tones.
-    for (const tone of ["violet", "teal", "blue", "plum", "terracotta"]) {
+    for (const tone of ["violet", "teal", "blue", "plum", "slate"]) {
       for (const surface of ["--background", "--card", "--muted"]) {
         expect(
           contrast(token(`--tone-${tone}`), token(surface)),
@@ -111,10 +111,44 @@ describe("design tokens", () => {
         `ink on ${tone}-soft`,
       ).toBeGreaterThanOrEqual(4.5);
     }
-    // Ink on terracotta: the assistant button.
+    // Ink on mandarin: the assistant button.
     expect(
       contrast(token("--accent-foreground"), token("--accent")),
     ).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it("the dark hero surface keeps text, line and focus ring readable", () => {
+    for (const surface of ["--hero", "--hero-raised"]) {
+      for (const text of ["--hero-foreground", "--hero-muted"]) {
+        expect(
+          contrast(token(text), token(surface)),
+          `${text} on ${surface}`,
+        ).toBeGreaterThanOrEqual(4.5);
+      }
+    }
+    // The line colour doubles as link and focus ring inside .surface-hero.
+    expect(
+      contrast(token("--hero-line"), token("--hero")),
+    ).toBeGreaterThanOrEqual(4.5);
+    expect(
+      contrast(token("--hero-target"), token("--hero")),
+    ).toBeGreaterThanOrEqual(3);
+    expect(
+      contrast(token("--accent"), token("--hero")),
+      "needle on hero",
+    ).toBeGreaterThanOrEqual(3);
+  });
+
+  it("status text stays readable on its soft surface", () => {
+    for (const status of ["on-track", "tight", "critical", "info"]) {
+      expect(
+        contrast(
+          token(`--status-${status}-foreground`),
+          token(`--status-${status}-soft`),
+        ),
+        status,
+      ).toBeGreaterThanOrEqual(4.5);
+    }
   });
 });
 

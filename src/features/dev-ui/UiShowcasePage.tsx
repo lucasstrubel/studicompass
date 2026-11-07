@@ -204,21 +204,21 @@ const TONES: { tone: ModuleTone; label: string }[] = [
   { tone: "teal", label: "Petrol" },
   { tone: "blue", label: "Blau" },
   { tone: "plum", label: "Pflaume" },
-  { tone: "terracotta", label: "Terrakotta" },
+  { tone: "slate", label: "Schiefer" },
 ];
 const TONE_SURFACES: Record<ModuleTone, string> = {
   violet: "bg-tone-violet-soft",
   teal: "bg-tone-teal-soft",
   blue: "bg-tone-blue-soft",
   plum: "bg-tone-plum-soft",
-  terracotta: "bg-tone-terracotta-soft",
+  slate: "bg-tone-slate-soft",
 };
 const TONE_BARS: Record<ModuleTone, string> = {
   violet: "bg-tone-violet",
   teal: "bg-tone-teal",
   blue: "bg-tone-blue",
   plum: "bg-tone-plum",
-  terracotta: "bg-tone-terracotta",
+  slate: "bg-tone-slate",
 };
 
 // Status colours: soft surface with text, plus the surface/icon colour; always icon and text.
@@ -252,12 +252,12 @@ const STATUSES = [
 // Type scale with example texts.
 const TYPE_SCALE = [
   {
-    token: "text-page-title · 28/36 · 600",
+    token: "text-page-title · 32/40 · 600 · Bricolage",
     className: "text-page-title",
     text: "Übersicht",
   },
   {
-    token: "text-section-title · 20/28 · 600",
+    token: "text-section-title · 20/28 · 600 · Bricolage",
     className: "text-section-title",
     text: "Dieses Semester (WS 2026/27)",
   },
@@ -267,17 +267,17 @@ const TYPE_SCALE = [
     text: "Studienstand",
   },
   {
-    token: "text-body · 15/22",
+    token: "text-body · 15/24",
     className: "text-body",
     text: "Die Abmeldefrist für Statistik endet morgen um 23:59 Uhr.",
   },
   {
-    token: "text-meta · 13/18 · 500",
+    token: "text-meta · 13/20 · 400",
     className: "text-meta text-muted-foreground",
     text: "Moodle · aktualisiert vor 12 Min.",
   },
   {
-    token: "text-figure · 40/44 · 700",
+    token: "text-figure · 44/48 · 700 · Bricolage",
     className: "text-figure tabular-nums",
     text: "48 ECTS",
   },
