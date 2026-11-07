@@ -122,7 +122,7 @@ function WhyButton({
       aria-expanded={open}
       aria-controls={controls}
       onClick={onToggle}
-      className="relative inline-flex items-center gap-1 rounded-sm text-meta font-normal text-accent-strong after:absolute after:-inset-x-1 after:-inset-y-1.5 hover:underline"
+      className="relative inline-flex items-center gap-1 rounded-sm text-meta font-normal text-muted-foreground after:absolute after:-inset-x-1 after:-inset-y-1.5 hover:text-foreground"
     >
       Warum?
       <span className="sr-only"> – {label}</span>
@@ -170,7 +170,7 @@ export function ComparisonTable({
           <caption className="sr-only">
             Vergleich der Optionen für {module.title}
           </caption>
-          <thead className="border-b bg-muted text-meta">
+          <thead className="border-b text-meta text-muted-foreground">
             <tr>
               <th scope="col" className="p-3 font-semibold">
                 Kriterium
@@ -194,13 +194,15 @@ export function ComparisonTable({
                 <Fragment key={row.id}>
                   <tr className="border-b last:border-b-0">
                     <th scope="row" className="p-3 align-top font-medium">
-                      <span className="block">{row.label}</span>
-                      <WhyButton
-                        open={open}
-                        controls={whyId}
-                        label={row.label}
-                        onToggle={() => toggle(row.id)}
-                      />
+                      <span className="flex flex-wrap items-baseline justify-between gap-x-3">
+                        <span>{row.label}</span>
+                        <WhyButton
+                          open={open}
+                          controls={whyId}
+                          label={row.label}
+                          onToggle={() => toggle(row.id)}
+                        />
+                      </span>
                     </th>
                     {outcomes.map((outcome) => (
                       <td

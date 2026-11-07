@@ -54,7 +54,7 @@ export function ProfileSection() {
       id="profil"
       tabIndex={-1}
       aria-labelledby="profile-title"
-      className="scroll-mt-24 space-y-4 rounded-xl border bg-card p-4"
+      className="scroll-mt-24 space-y-4 p-5"
     >
       <h2 id="profile-title" className="text-section-title">
         Profil

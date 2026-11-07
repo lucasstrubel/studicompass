@@ -34,6 +34,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { Citation, Offering, Term } from "@/domain/types";
 import { CitationList } from "@/components/common/CitationList";
+import {
+  CourseDot,
+  CourseLine,
+  type CourseDotState,
+} from "@/components/common/CourseDot";
 import type { MilestoneKind } from "@/domain/milestones";
 import { compare, format } from "@/domain/terms";
 import { compoundParts } from "@/lib/compound-breaks";
@@ -355,32 +360,18 @@ function CourseStep({
   last,
 }: {
   semester: number;
-  state: "done" | "current" | "planned";
+  state: CourseDotState;
   last: boolean;
 }) {
   return (
     <span aria-hidden="true" className="relative flex items-center">
-      <span
-        className={cn(
-          "relative z-10 flex size-7 shrink-0 items-center justify-center rounded-full text-meta font-semibold tabular-nums",
-          state === "done" && "bg-foreground text-background",
-          state === "current" && "bg-accent text-accent-foreground",
-          state === "planned" && "border-2 border-input bg-background",
-          last &&
-            state === "planned" &&
-            "outline-2 outline-offset-2 outline-input",
-        )}
-      >
+      <CourseDot state={state} last={last}>
         {semester}
-      </span>
+      </CourseDot>
       {!last && (
-        <span
-          className={cn(
-            "absolute top-1/2 left-7 -right-8 hidden -translate-y-1/2 xl:block",
-            state === "done"
-              ? "h-0.5 bg-foreground"
-              : "border-t-2 border-dotted border-input",
-          )}
+        <CourseLine
+          state={state}
+          className="absolute top-1/2 left-7 -right-8 hidden -translate-y-1/2 xl:block"
         />
       )}
     </span>

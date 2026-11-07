@@ -36,71 +36,82 @@ export function SettingsPage() {
     (item) => item.type === "decision",
   );
   return (
-    <div className="max-w-4xl space-y-6">
+    <div className="max-w-3xl divide-y rounded-xl border bg-card">
       <ProfileSection />
-      <fieldset className="space-y-3 rounded-xl border bg-card p-4">
-        <legend className="px-1 text-section-title">Hinweis-Stil</legend>
-        <div className="flex flex-wrap gap-4">
-          {(
-            [
-              { value: "neutral", label: "Sachlich" },
-              { value: "direct", label: "Direkt" },
-            ] as const
-          ).map((item) => (
+      <div className="p-5">
+        <fieldset className="space-y-3">
+          <legend className="mb-3 text-section-title">Hinweis-Stil</legend>
+          <div className="flex flex-wrap gap-4">
+            {(
+              [
+                { value: "neutral", label: "Sachlich" },
+                { value: "direct", label: "Direkt" },
+              ] as const
+            ).map((item) => (
+              <label
+                key={item.value}
+                className="flex items-center gap-2 text-body"
+              >
+                <input
+                  className="accent-primary"
+                  type="radio"
+                  name="tone"
+                  checked={state.hintTone === item.value}
+                  onChange={() => state.setHintTone(item.value)}
+                />
+                {item.label}
+              </label>
+            ))}
+          </div>
+          <p className="text-meta text-muted-foreground">
+            Wirkt auf Übersicht, Folgen-Check und Benachrichtigungen.
+          </p>
+          {preview && (
+            <p className="text-body">
+              Vorschau: {preview.text[state.hintTone]}
+            </p>
+          )}
+          {preview && (
+            <CitationList
+              variant="footer"
+              className="mt-0"
+              citations={
+                state.resources.rules.data?.rules
+                  .filter((rule) => preview.ruleIds.includes(rule.id))
+                  .map((rule) => rule.citation) ?? []
+              }
+            />
+          )}
+        </fieldset>
+      </div>
+      <div className="p-5">
+        <fieldset className="space-y-2">
+          <legend className="mb-3 text-section-title">
+            Benachrichtigungen
+          </legend>
+          <p className="text-meta text-muted-foreground">
+            Wähle die Typen für die Glocke. Die Hinweise auf der Übersicht
+            bleiben verfügbar.
+          </p>
+          {TYPES.map((item) => (
             <label
-              key={item.value}
+              key={item.type}
               className="flex items-center gap-2 text-body"
             >
               <input
                 className="accent-primary"
-                type="radio"
-                name="tone"
-                checked={state.hintTone === item.value}
-                onChange={() => state.setHintTone(item.value)}
+                type="checkbox"
+                checked={state.notificationTypes[item.type]}
+                onChange={(event) =>
+                  state.setNotificationType(item.type, event.target.checked)
+                }
               />
               {item.label}
             </label>
           ))}
-        </div>
-        <p className="text-meta text-muted-foreground">
-          Wirkt auf Übersicht, Folgen-Check und Benachrichtigungen.
-        </p>
-        {preview && (
-          <p className="text-body">Vorschau: {preview.text[state.hintTone]}</p>
-        )}
-        {preview && (
-          <CitationList
-            variant="footer"
-            className="mt-0"
-            citations={
-              state.resources.rules.data?.rules
-                .filter((rule) => preview.ruleIds.includes(rule.id))
-                .map((rule) => rule.citation) ?? []
-            }
-          />
-        )}
-      </fieldset>
-      <fieldset className="space-y-3 rounded-xl border bg-card p-4">
-        <legend className="px-1 text-section-title">Benachrichtigungen</legend>
-        <p className="text-meta text-muted-foreground">
-          Wähle die Typen für die Glocke. Die Hinweise auf der Übersicht bleiben
-          verfügbar.
-        </p>
-        {TYPES.map((item) => (
-          <label key={item.type} className="flex items-center gap-2 text-body">
-            <input
-              className="accent-primary"
-              type="checkbox"
-              checked={state.notificationTypes[item.type]}
-              onChange={(event) =>
-                state.setNotificationType(item.type, event.target.checked)
-              }
-            />
-            {item.label}
-          </label>
-        ))}
-      </fieldset>
-      <section className="space-y-3" aria-labelledby="channels-settings">
+        </fieldset>
+      </div>
+      <section className="space-y-3 p-5" aria-labelledby="channels-settings">
         <h2 id="channels-settings" className="text-section-title">
           Verbundene Kanäle
         </h2>
@@ -115,7 +126,8 @@ export function SettingsPage() {
             <Button
               key={channel}
               variant="outline"
-              className="h-auto min-h-9 max-w-full whitespace-normal py-1.5"
+              size="sm"
+              className="h-auto min-h-8 max-w-full whitespace-normal py-1"
               disabled={state.resources[channel].status === "loading"}
               onClick={() =>
                 void state.setChannelConnected(
@@ -127,16 +139,14 @@ export function SettingsPage() {
               {CHANNEL_LABELS[channel]}:{" "}
               {state.connectedChannels[channel]
                 ? "Verbindung trennen"
-                : "Verbinden"}{" "}
-              (Simulation)
+                : "Verbinden"}
+              {/* The paragraph above says so once for everyone who can read it there. */}
+              <span className="sr-only"> (Simulation)</span>
             </Button>
           ))}
         </div>
       </section>
-      <section
-        className="space-y-3 rounded-xl border bg-card p-4"
-        aria-labelledby="demo-settings"
-      >
+      <section className="space-y-3 p-5" aria-labelledby="demo-settings">
         <h2 id="demo-settings" className="text-section-title">
           Demo
         </h2>

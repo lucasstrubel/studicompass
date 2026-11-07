@@ -370,7 +370,7 @@ function PlannerContent() {
           shifted={shifted}
           consequences={
             plan.consequences.length > 0 && (
-              <ul className="space-y-2">
+              <ul className="divide-y rounded-xl border">
                 {plan.consequences.map((consequence) => (
                   <li key={consequence.id}>
                     <ConsequenceItem

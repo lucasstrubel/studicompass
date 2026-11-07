@@ -12,4 +12,7 @@ export const COMMON_COMPONENTS = [
   "PageHeader",
   "OwnEntryBadge",
   "AdmissionStatus",
+  "BrandMark",
+  "CourseDot",
+  "Segmented",
 ] as const;

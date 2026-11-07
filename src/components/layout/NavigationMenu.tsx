@@ -32,9 +32,6 @@ function MenuPanel({
         {closeButton}
       </div>
       <nav aria-label={TITLE} className="flex flex-1 flex-col p-2">
-        <p className="px-3 pt-2 pb-1 text-meta text-muted-foreground">
-          Dein Studium
-        </p>
         <ul className="space-y-0.5">
           {[...NAV_ITEMS, SETTINGS_ITEM].map((item) => (
             <li
@@ -45,7 +42,7 @@ function MenuPanel({
                 to={item.to}
                 end={item.end}
                 onClick={onNavigate}
-                className="group flex min-h-11 items-center gap-3 rounded-xl px-3 text-body text-muted-foreground hover:bg-muted hover:text-foreground aria-[current=page]:bg-muted aria-[current=page]:font-semibold aria-[current=page]:text-foreground"
+                className="group flex min-h-11 items-center gap-3 rounded-lg px-3 text-body transition-colors text-muted-foreground hover:bg-muted hover:text-foreground aria-[current=page]:bg-muted aria-[current=page]:font-semibold aria-[current=page]:text-foreground"
               >
                 <item.icon className="size-5 shrink-0 group-aria-[current=page]:text-accent-strong" />
                 {item.label}

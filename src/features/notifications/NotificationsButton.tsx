@@ -88,7 +88,7 @@ export function NotificationsButton() {
                     description="Du kannst die Benachrichtigungstypen in den Einstellungen auswählen."
                   />
                 )}
-                <ul className="space-y-4">
+                <ul className="divide-y">
                   {items.map((item) => {
                     const Icon = ICONS[item.type];
                     const citations = item.ruleIds.flatMap((id) =>
@@ -97,7 +97,7 @@ export function NotificationsButton() {
                     return (
                       <li
                         key={item.id}
-                        className="space-y-2 rounded-xl border p-3 text-body"
+                        className="space-y-1.5 py-4 text-body first:pt-0"
                       >
                         <p className="flex flex-wrap items-center gap-2 text-meta">
                           <Icon className="size-4" aria-hidden="true" />
@@ -111,23 +111,6 @@ export function NotificationsButton() {
                         >
                           {formatDateTime(new Date(item.createdAt))}
                         </time>
-                        <CitationList
-                          citations={
-                            citations.length
-                              ? citations
-                              : [
-                                  {
-                                    document: item.ruleIds.length
-                                      ? "SPO und Modulhandbuch Wirtschaftsinformatik (Beispiel; Regelwerk gerade nicht verfügbar)"
-                                      : item.type === "inbox"
-                                        ? "Mail – Raumänderung Statistik (Demodaten)"
-                                        : "TH-Website – Rückmeldung (Demodaten)",
-                                    summary: item.message,
-                                    verified: false,
-                                  },
-                                ]
-                          }
-                        />
                         <div className="flex flex-wrap gap-2">
                           <Button variant="outline" size="sm" asChild>
                             <Link
@@ -150,6 +133,25 @@ export function NotificationsButton() {
                             </Button>
                           )}
                         </div>
+                        <CitationList
+                          variant="footer"
+                          className="mt-2"
+                          citations={
+                            citations.length
+                              ? citations
+                              : [
+                                  {
+                                    document: item.ruleIds.length
+                                      ? "SPO und Modulhandbuch Wirtschaftsinformatik (Beispiel; Regelwerk gerade nicht verfügbar)"
+                                      : item.type === "inbox"
+                                        ? "Mail – Raumänderung Statistik (Demodaten)"
+                                        : "TH-Website – Rückmeldung (Demodaten)",
+                                    summary: item.message,
+                                    verified: false,
+                                  },
+                                ]
+                          }
+                        />
                       </li>
                     );
                   })}
