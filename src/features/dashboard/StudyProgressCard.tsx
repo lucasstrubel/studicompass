@@ -50,7 +50,7 @@ export function StudyProgressCard() {
           Dein Studienstand
         </h2>
         <StatusBadge status={progress.trafficLight} />
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-1 sm:ml-auto">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 sm:ml-auto sm:gap-x-5">
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="link" className="h-auto px-0 text-meta">

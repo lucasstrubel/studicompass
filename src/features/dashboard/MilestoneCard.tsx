@@ -26,11 +26,11 @@ export function MilestoneCard() {
 
   return (
     <>
-      <h2
-        id="milestone"
-        className="flex flex-wrap items-center gap-x-2 text-section-title"
-      >
-        <Flag className="size-5 text-tone-violet" aria-hidden="true" />
+      <h2 id="milestone" className="flex items-start gap-2 text-section-title">
+        <Flag
+          className="mt-1 size-5 shrink-0 text-tone-violet"
+          aria-hidden="true"
+        />
         <span>
           Praxissemester
           {internshipTerm ? ` · ${format(internshipTerm)}` : ""}

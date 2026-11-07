@@ -171,7 +171,7 @@ function Waypoint({
         <>
           {/* The needle marks the student's position on the course. */}
           <svg
-            x={cx - 50}
+            x={cx - 42}
             y={cy + 17}
             width={14}
             height={14}
@@ -282,7 +282,7 @@ export function EctsHistory() {
     <>
       <ChartContainer
         config={CHART_CONFIG}
-        className="aspect-auto h-56 w-full md:h-60"
+        className="aspect-auto h-48 w-full md:h-60"
         aria-hidden="true"
       >
         <ComposedChart
@@ -297,7 +297,7 @@ export function EctsHistory() {
             tickMargin={12}
             tick={{ fill: "var(--hero-muted)" }}
             interval="preserveStartEnd"
-            minTickGap={16}
+            minTickGap={4}
           />
           <YAxis hide domain={[0, "dataMax"]} />
           <ChartTooltip

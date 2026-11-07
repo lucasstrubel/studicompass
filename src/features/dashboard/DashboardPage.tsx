@@ -71,7 +71,7 @@ function CourseLegend() {
 const chartSkeleton = (
   <Skeleton
     role="status"
-    className="mx-5 h-56 md:mx-7 md:h-60"
+    className="mx-5 h-48 md:mx-7 md:h-60"
     aria-label="ECTS-Verlauf wird geladen"
   />
 );
