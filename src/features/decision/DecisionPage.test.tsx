@@ -44,13 +44,13 @@ function row(label: string) {
 }
 
 describe("Folgen-Check", () => {
-  it("shows head, deadline chip, hint and goal for Statistik", () => {
-    renderCheck("e-stat-ws26");
+  it("shows head, deadline chip, hint and goal for Programmierung 2", () => {
+    renderCheck("e-pr2-ws26");
 
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Statistik – antreten oder abmelden?",
+        name: "Programmierung 2 – antreten oder abmelden?",
       }),
     ).toBeInTheDocument();
     expect(
@@ -64,32 +64,33 @@ describe("Folgen-Check", () => {
     ).toBeInTheDocument();
   });
 
-  it("compares exactly the values of scenarios B, C and A for Statistik", () => {
-    renderCheck("e-stat-ws26");
+  it("compares exactly the values of scenarios B, C and A for Programmierung 2", () => {
+    renderCheck("e-pr2-ws26");
 
-    expect(row("Nächster Termin Statistik")).toEqual([
+    expect(row("Nächster Termin Programmierung 2")).toEqual([
       "–",
-      "WS 2027/28 (Versuch 2)",
-      "WS 2027/28 (Versuch 1)",
+      "SS 2027 (Versuch 2)",
+      "SS 2027 (Versuch 1)",
     ]);
-    expect(row("ECTS Ende WS 2026/27 (Soll 90)")).toEqual(["78", "72", "72"]);
+    expect(row("ECTS Ende WS 2026/27 (Soll 90)")).toEqual(["75", "65", "65"]);
     expect(row("Status")).toEqual(["Knapp", "Kritisch", "Kritisch"]);
+    expect(row("Unternehmensinformatikprojekt")).toEqual([
+      "SS 2027 – erreichbar",
+      "SS 2028 (+2 Semester)",
+      "SS 2028 (+2 Semester)",
+    ]);
     expect(row("Praxissemester")).toEqual([
       "WS 2027/28 – erreichbar",
-      "SS 2028 (+1 Semester)",
-      "SS 2028 (+1 Semester)",
+      "WS 2027/28 – erreichbar",
+      "WS 2027/28 – erreichbar",
     ]);
     expect(row("Voraussichtlicher Abschluss")).toEqual([
       "WS 2028/29",
       "SS 2029",
       "SS 2029",
     ]);
-    expect(row("Offene Grundstudiums-Prüfungen")).toEqual([
-      "2",
-      "3 – Grenze erreicht",
-      "3 – Grenze erreicht",
-    ]);
-    expect(row("Prüfungsversuche Statistik")).toEqual([
+    expect(row("Offene Grundstudiums-Prüfungen")).toEqual(["0", "1", "1"]);
+    expect(row("Prüfungsversuche Programmierung 2")).toEqual([
       "1 von 3 genutzt",
       "1 von 3 genutzt",
       "0 von 3 genutzt",
@@ -102,10 +103,10 @@ describe("Folgen-Check", () => {
   });
 
   it("explains a row with its rule and source under Warum?", () => {
-    renderCheck("e-stat-ws26");
+    renderCheck("e-pr2-ws26");
     const table = screen.getByRole("table");
     const why = within(table).getByRole("button", {
-      name: /^Warum\?.*Praxissemester$/,
+      name: /^Warum\?.*Unternehmensinformatikprojekt$/,
     });
     expect(why).toHaveAttribute("aria-expanded", "false");
 
@@ -116,36 +117,38 @@ describe("Folgen-Check", () => {
     );
     expect(details).toBeVisible();
     expect(details).toHaveTextContent(
-      "Zum Praxissemester wirst du zugelassen, wenn alle Module des Grundstudiums bestanden sind.",
+      "Für das Unternehmensinformatikprojekt brauchst du die abgeschlossene Bachelorvorprüfung",
     );
     expect(details).toHaveTextContent(
-      "Quelle: SPO WirtschaftsinformatikBeispiel",
+      "Quelle: StuPO Bachelor (ab 01.09.2026), § 56 Abs. 2",
     );
   });
 
-  it("shows Marketing without a milestone shift but with the load hint (scenario D)", () => {
-    renderCheck("e-mkt-ws26");
+  it("shows Wirtschaftsinformatik 3 without a milestone shift but with the load hint (scenario D)", () => {
+    renderCheck("e-wi3-ws26");
 
-    expect(row("Nächster Termin Marketing")[2]).toBe("SS 2027 (Versuch 1)");
-    expect(row("ECTS Ende WS 2026/27 (Soll 90)")[2]).toBe("72");
+    expect(row("Nächster Termin Wirtschaftsinformatik 3")[2]).toBe(
+      "SS 2027 (Versuch 1)",
+    );
+    expect(row("ECTS Ende WS 2026/27 (Soll 90)")[2]).toBe("70");
     expect(row("Status")[2]).toBe("Knapp");
     expect(row("Praxissemester")[2]).toBe("WS 2027/28 – erreichbar");
     expect(row("Voraussichtlicher Abschluss")[2]).toBe("WS 2028/29");
-    expect(row("Offene Grundstudiums-Prüfungen")[2]).toBe(
-      "3 – Grenze erreicht",
-    );
+    expect(row("Offene Grundstudiums-Prüfungen")[2]).toBe("0");
 
     const withdraw = screen.getByRole("region", {
       name: "Wenn du dich abmeldest",
     });
     expect(withdraw).toHaveTextContent("Hohe Belastung");
-    expect(withdraw).toHaveTextContent("SS 2027: 48 ECTS geplant");
+    expect(withdraw).toHaveTextContent("SS 2027: 45 ECTS geplant");
     expect(withdraw).not.toHaveTextContent("Praxissemester verschiebt sich");
-    expect(screen.getByText(/Marketing gibt es jedes Semester/)).toBeVisible();
+    expect(
+      screen.getByText(/Wirtschaftsinformatik 3 gibt es jedes Semester/),
+    ).toBeVisible();
   });
 
   it("weights both actions equally", () => {
-    renderCheck("e-stat-ws26");
+    renderCheck("e-pr2-ws26");
     const attend = screen.getByRole("button", { name: "Ich trete an" });
     const withdraw = screen.getByRole("button", {
       name: "Abmeldung vornehmen",
@@ -154,13 +157,13 @@ describe("Folgen-Check", () => {
   });
 
   it("simulates the withdrawal after confirmation, updates the overview and undoes it", async () => {
-    const router = renderCheck("e-stat-ws26");
+    const router = renderCheck("e-pr2-ws26");
 
     fireEvent.click(
       screen.getByRole("button", { name: "Abmeldung vornehmen" }),
     );
     const dialog = screen.getByRole("alertdialog", {
-      name: "Von Statistik abmelden?",
+      name: "Von Programmierung 2 abmelden?",
     });
     expect(dialog).toHaveTextContent(
       "Im echten Betrieb leitet StudiCompass dich zur Abmeldung ins POS weiter. Im Prototyp wird sie simuliert.",
@@ -174,7 +177,7 @@ describe("Folgen-Check", () => {
     });
     expect(router.state.location.pathname).toBe("/");
     expect(
-      screen.getByText("Statistik: Abmeldung simuliert"),
+      screen.getByText("Programmierung 2: Abmeldung simuliert"),
     ).toBeInTheDocument();
     const progress = screen.getByRole("region", { name: "Dein Studienstand" });
     expect(within(progress).getByText("Kritisch")).toBeInTheDocument();
@@ -211,7 +214,7 @@ describe("Folgen-Check", () => {
 
     await tabTo("Folgen prüfen");
     await user.keyboard("{Enter}");
-    expect(router.state.location.pathname).toBe("/entscheidung/e-stat-ws26");
+    expect(router.state.location.pathname).toBe("/entscheidung/e-pr2-ws26");
 
     await tabTo("Abmeldung vornehmen");
     await user.keyboard("{Enter}");
@@ -220,11 +223,11 @@ describe("Folgen-Check", () => {
     await tabTo("Abmeldung simulieren");
     await user.keyboard("{Enter}");
     expect(router.state.location.pathname).toBe("/");
-    expect(demoStore.getState().withdrawnExamIds).toEqual(["e-stat-ws26"]);
+    expect(demoStore.getState().withdrawnExamIds).toEqual(["e-pr2-ws26"]);
   }, 20_000);
 
   it("keeps the dialog cancellable and returns to the comparison", async () => {
-    renderCheck("e-stat-ws26");
+    renderCheck("e-pr2-ws26");
     fireEvent.click(
       screen.getByRole("button", { name: "Abmeldung vornehmen" }),
     );
@@ -241,11 +244,13 @@ describe("Folgen-Check", () => {
 
   it("shows the simulated state with undo when the exam is already withdrawn", () => {
     act(() => {
-      demoStore.getState().withdrawExam("e-stat-ws26");
+      demoStore.getState().withdrawExam("e-pr2-ws26");
     });
-    renderCheck("e-stat-ws26");
+    renderCheck("e-pr2-ws26");
 
-    expect(screen.getByText("Abmeldung von Statistik simuliert")).toBeVisible();
+    expect(
+      screen.getByText("Abmeldung von Programmierung 2 simuliert"),
+    ).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "Rückgängig" }));
     expect(screen.getByRole("table")).toBeInTheDocument();
   });
@@ -263,37 +268,39 @@ describe("Folgen-Check", () => {
 describe("Folgen-Check (P3-03 review)", () => {
   it("offers Rückgängig only for the latest decision", () => {
     act(() => {
-      demoStore.getState().withdrawExam("e-stat-ws26");
-      demoStore.getState().withdrawExam("e-mkt-ws26");
+      demoStore.getState().withdrawExam("e-pr2-ws26");
+      demoStore.getState().withdrawExam("e-wi3-ws26");
     });
-    renderCheck("e-stat-ws26");
-    expect(screen.getByText("Abmeldung von Statistik simuliert")).toBeVisible();
+    renderCheck("e-pr2-ws26");
+    expect(
+      screen.getByText("Abmeldung von Programmierung 2 simuliert"),
+    ).toBeVisible();
     expect(
       screen.queryByRole("button", { name: "Rückgängig" }),
     ).not.toBeInTheDocument();
   });
 
-  it("explains the offering of the module itself (Marketing: jedes Semester)", () => {
-    renderCheck("e-mkt-ws26");
+  it("explains the offering of the module itself (Wirtschaftsinformatik 3: jedes Semester)", () => {
+    renderCheck("e-wi3-ws26");
     const table = screen.getByRole("table");
     const why = within(table).getByRole("button", {
-      name: /^Warum\?.*Nächster Termin Marketing$/,
+      name: /^Warum\?.*Nächster Termin Wirtschaftsinformatik 3$/,
     });
     fireEvent.click(why);
     const details = document.getElementById(
       why.getAttribute("aria-controls") ?? "",
     );
     expect(details).toHaveTextContent(
-      "Marketing wird jedes Semester angeboten.",
+      "Wirtschaftsinformatik 3 wird jedes Semester angeboten.",
     );
     expect(details).toHaveTextContent(
-      "Quelle: Modulhandbuch Wirtschaftsinformatik, Modul Marketing",
+      "Quelle: Modulhandbuch UIB, Modul Wirtschaftsinformatik 3",
     );
-    expect(details).not.toHaveTextContent("Statistik");
+    expect(details).not.toHaveTextContent("Programmierung 2");
   });
 
   it("does not repeat a base hint that an option changes (scenario D: 48, not 42 ECTS)", () => {
-    renderCheck("e-mkt-ws26");
+    renderCheck("e-wi3-ws26");
     expect(
       screen.queryByRole("region", {
         name: "Gilt unabhängig von deiner Entscheidung",
@@ -303,7 +310,7 @@ describe("Folgen-Check (P3-03 review)", () => {
   });
 
   it("shows channel errors with retry next to the help offers", async () => {
-    renderCheck("e-stat-ws26");
+    renderCheck("e-pr2-ws26");
     await act(async () => {
       await vi.advanceTimersByTimeAsync(LATENCY_MS);
     });
@@ -334,7 +341,7 @@ describe("Folgen-Check (P3-06 review)", () => {
   it("keeps the page heading when POS fails on first load", async () => {
     FLAGS.simulateErrors = true;
     const reload = demoStore.getState().resetDemo();
-    renderCheck("e-stat-ws26");
+    renderCheck("e-pr2-ws26");
     await act(async () => {
       await vi.advanceTimersByTimeAsync(LATENCY_MS);
       await reload;
@@ -352,12 +359,12 @@ describe("Folgen-Check: Zulassung (P5-13)", () => {
   it("shows the admission from an entered Prüfungsvorleistung and keeps the comparison", () => {
     act(() => {
       demoStore.getState().saveCoursework({
-        moduleId: "m-stat",
+        moduleId: "m-pr2",
         title: "8 von 12 Übungsblättern",
         status: "failed",
       });
     });
-    renderCheck("e-stat-ws26");
+    renderCheck("e-pr2-ws26");
     expect(
       screen.getByText("Nicht zugelassen: Prüfungsvorleistung nicht erbracht"),
     ).toBeVisible();
@@ -365,13 +372,13 @@ describe("Folgen-Check: Zulassung (P5-13)", () => {
       screen.getByRole("link", {
         name: "Prüfungsvorleistung im Modul ansehen",
       }),
-    ).toHaveAttribute("href", "/module/m-stat");
+    ).toHaveAttribute("href", "/module/m-pr2");
     // The comparison is untouched.
     expect(screen.getAllByText("SS 2029").length).toBeGreaterThan(0);
   });
 
   it("shows nothing while no Prüfungsvorleistung is entered", () => {
-    renderCheck("e-stat-ws26");
+    renderCheck("e-pr2-ws26");
     expect(
       screen.queryByText(
         /Zur Prüfung zugelassen|Zulassung offen|Nicht zugelassen/,

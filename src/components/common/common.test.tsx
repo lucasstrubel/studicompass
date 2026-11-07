@@ -65,18 +65,18 @@ describe("CitationList", () => {
         variant="footer"
         citations={[
           {
-            document: "SPO Wirtschaftsinformatik",
+            document: "StuPO Bachelor (ab 01.09.2026)",
             summary: "",
             verified: false,
           },
           {
             document: "Modulhandbuch",
-            section: "Modul Statistik",
+            section: "Modul Programmierung 2",
             summary: "",
             verified: true,
           },
           {
-            document: "SPO Wirtschaftsinformatik",
+            document: "StuPO Bachelor (ab 01.09.2026)",
             summary: "",
             verified: false,
           },
@@ -85,7 +85,7 @@ describe("CitationList", () => {
     );
     const list = screen.getByRole("list", { name: "Quellen" });
     expect(list.parentElement).toHaveTextContent(
-      "Quellen: SPO WirtschaftsinformatikBeispiel · Modulhandbuch, Modul Statistik",
+      "Quellen: StuPO Bachelor (ab 01.09.2026)Beispiel · Modulhandbuch, Modul Programmierung 2",
     );
     expect(screen.getAllByRole("listitem")).toHaveLength(2);
   });
@@ -95,13 +95,13 @@ describe("CitationList", () => {
       <CitationList
         citations={[
           {
-            document: "SPO Wirtschaftsinformatik",
+            document: "StuPO Bachelor (ab 01.09.2026)",
             summary: "",
             verified: false,
           },
           {
             document: "Modulhandbuch",
-            section: "Modul Statistik",
+            section: "Modul Programmierung 2",
             summary: "",
             verified: true,
           },
@@ -110,10 +110,10 @@ describe("CitationList", () => {
     );
     const items = screen.getAllByRole("listitem");
     expect(items[0]).toHaveTextContent(
-      "Quelle: SPO WirtschaftsinformatikBeispiel",
+      "Quelle: StuPO Bachelor (ab 01.09.2026)Beispiel",
     );
     expect(items[1]).toHaveTextContent(
-      "Quelle: Modulhandbuch, Modul Statistik",
+      "Quelle: Modulhandbuch, Modul Programmierung 2",
     );
     expect(items[1]).not.toHaveTextContent("Beispiel");
   });
@@ -135,7 +135,7 @@ describe("ConsequenceItem", () => {
         consequence={consequence}
         citations={[
           {
-            document: "SPO Wirtschaftsinformatik",
+            document: "StuPO Bachelor (ab 01.09.2026)",
             summary: "",
             verified: false,
           },
@@ -190,7 +190,7 @@ describe("PageHeader", () => {
 describe("CitationList (duplicates)", () => {
   it("lists a document cited by several rules only once", () => {
     const spo = {
-      document: "SPO Wirtschaftsinformatik",
+      document: "StuPO Bachelor (ab 01.09.2026)",
       summary: "",
       verified: false,
     };

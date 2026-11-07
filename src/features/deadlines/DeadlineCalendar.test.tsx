@@ -7,7 +7,7 @@ import { DeadlineCalendar } from "./DeadlineCalendar";
 const items: AgendaItem[] = [
   {
     id: "stat",
-    title: "Abmeldung Statistik",
+    title: "Abmeldung Programmierung 2",
     dueAt: "2027-01-26T23:59:00+01:00",
     type: "Abmeldung",
     origin: "channel",
@@ -32,7 +32,7 @@ it("P5-14: selects days with keyboard, crosses months, and returns to the demo d
   expect(
     within(
       screen.getByRole("region", { name: "Einträge am ausgewählten Tag" }),
-    ).getByText("Abmeldung Statistik"),
+    ).getByText("Abmeldung Programmierung 2"),
   ).toBeVisible();
   await user.keyboard("{PageDown}");
   expect(screen.getByRole("heading", { name: "Februar 2027" })).toBeVisible();

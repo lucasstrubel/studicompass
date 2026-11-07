@@ -1,15 +1,14 @@
-import { Fragment } from "react";
 import { ArrowRight, Undo2 } from "lucide-react";
 import { Link } from "react-router";
 import { AdmissionStatus } from "@/components/common/AdmissionStatus";
 import { ChannelBadge } from "@/components/common/ChannelBadge";
 import { CitationList } from "@/components/common/CitationList";
+import { CompoundText } from "@/components/common/CompoundText";
 import type { Citation } from "@/domain/types";
 import { DemoBadge } from "@/components/common/DemoBadge";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "@/domain/terms";
-import { compoundParts } from "@/lib/compound-breaks";
 import { formatDateTime } from "@/lib/format";
 import {
   selectAdmission,
@@ -25,9 +24,9 @@ const OFFERING_LABELS = { WS: "nur im WS", SS: "nur im SS" } as const;
 
 // Source of the offering labels ("nur im WS").
 const OFFERING_SOURCE: Citation = {
-  document: "Modulhandbuch Wirtschaftsinformatik",
-  summary: "Angebotsturnus der Module",
-  verified: false,
+  document: "Modulhandbuch UIB",
+  summary: "Häufigkeit der Module",
+  verified: true,
 };
 
 type MoodleState = "loading" | "error" | "ready";
@@ -54,12 +53,7 @@ function ModuleRow({
             to={`/module/${module.id}`}
             className="rounded-sm hover:underline"
           >
-            {compoundParts(module.title).map((part, index) => (
-              <Fragment key={index}>
-                {index > 0 && <wbr />}
-                {part}
-              </Fragment>
-            ))}
+            <CompoundText>{module.title}</CompoundText>
           </Link>
         </h3>
         <p className="text-meta text-muted-foreground tabular-nums">

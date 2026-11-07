@@ -29,7 +29,7 @@ describe("shadcn wrapper accessibility", () => {
       <Popover>
         <PopoverTrigger>Quelle öffnen</PopoverTrigger>
         <PopoverContent>
-          <PopoverTitle>Modulhandbuch Wirtschaftsinformatik</PopoverTitle>
+          <PopoverTitle>Modulhandbuch UIB</PopoverTitle>
         </PopoverContent>
       </Popover>,
     );
@@ -38,11 +38,11 @@ describe("shadcn wrapper accessibility", () => {
 
     expect(
       screen.getByRole("dialog", {
-        name: "Modulhandbuch Wirtschaftsinformatik",
+        name: "Modulhandbuch UIB",
       }),
     ).toHaveAttribute(
       "aria-labelledby",
-      screen.getByText("Modulhandbuch Wirtschaftsinformatik").id,
+      screen.getByText("Modulhandbuch UIB").id,
     );
   });
 
@@ -81,7 +81,7 @@ describe("shadcn wrapper accessibility", () => {
     render(
       <Popover defaultOpen>
         <PopoverContent aria-label="Quelle">
-          <PopoverTitle>Modulhandbuch Wirtschaftsinformatik</PopoverTitle>
+          <PopoverTitle>Modulhandbuch UIB</PopoverTitle>
         </PopoverContent>
       </Popover>,
     );
@@ -97,7 +97,7 @@ describe("shadcn wrapper accessibility", () => {
         <span id="source-label">Quelle</span>
         <Popover defaultOpen>
           <PopoverContent aria-labelledby="source-label" aria-label="Beleg">
-            <PopoverTitle>Modulhandbuch Wirtschaftsinformatik</PopoverTitle>
+            <PopoverTitle>Modulhandbuch UIB</PopoverTitle>
           </PopoverContent>
         </Popover>
       </>,
@@ -207,7 +207,7 @@ describe("German labels", () => {
       screen.getByRole("region", { name: "Meldungen alt+T" }),
     ).toBeInTheDocument();
     act(() => {
-      toast("Statistik: Abmeldung simuliert");
+      toast("Programmierung 2: Abmeldung simuliert");
     });
     expect(
       await screen.findByRole("button", { name: "Meldung schließen" }),

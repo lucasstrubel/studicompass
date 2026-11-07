@@ -12,10 +12,10 @@ test("P5-F10: alle Bereiche bei 320 px ohne Seitenüberlauf", async ({
   for (const path of [
     "/",
     "/verlauf",
-    "/entscheidung/e-stat-ws26",
-    "/entscheidung/e-mkt-ws26",
+    "/entscheidung/e-pr2-ws26",
+    "/entscheidung/e-wi3-ws26",
     "/module",
-    "/module/m-stat",
+    "/module/m-pr2",
     "/postfach",
     "/postfach?eintrag=i-02",
     "/assistent?frage=A-02",
@@ -32,7 +32,9 @@ test("P5-F10: alle Bereiche bei 320 px ohne Seitenüberlauf", async ({
     ).toHaveCount(1);
     await expect(page.locator("[data-slot=skeleton]")).toHaveCount(0);
     if (path.startsWith("/entscheidung/")) {
-      const module = path.endsWith("e-stat-ws26") ? "Statistik" : "Marketing";
+      const module = path.endsWith("e-pr2-ws26")
+        ? "Programmierung 2"
+        : "Wirtschaftsinformatik 3";
       await expect(
         page.getByRole("heading", {
           level: 1,

@@ -25,12 +25,12 @@ type CommonComponent = (typeof COMMON_COMPONENTS)[number];
 // Showcase values (presentation only, no store access).
 const CITATIONS: Citation[] = [
   {
-    document: "Modulhandbuch Wirtschaftsinformatik, Modul Statistik",
-    summary: "Statistik wird nur im Wintersemester angeboten.",
+    document: "Modulhandbuch UIB, Modul Programmierung 2",
+    summary: "Programmierung 2 wird nur im Wintersemester angeboten.",
     verified: false,
   },
   {
-    document: "SPO Wirtschaftsinformatik",
+    document: "StuPO Bachelor (ab 01.09.2026)",
     section: "§ 9 Abs. 2",
     summary:
       "Von einer angemeldeten Prüfung kannst du dich bis zum Vortag, 23:59 Uhr, abmelden.",
@@ -45,7 +45,7 @@ const CONSEQUENCES: Consequence[] = [
     severity: "critical",
     title: "Praxissemester verschiebt sich auf SS 2028",
     detail:
-      "Zum Praxissemester wirst du zugelassen, wenn alle Module des Grundstudiums bestanden sind. Statistik gibt es erst wieder im WS 2027/28.",
+      "Zum Praxissemester wirst du zugelassen, wenn alle Module des Grundstudiums bestanden sind. Programmierung 2 gibt es erst wieder im WS 2027/28.",
     ruleId: "DR-6",
   },
   {
@@ -115,7 +115,7 @@ export function CommonComponentsShowcase() {
 
       <Section name="Countdown">
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-body">
-          <dt className="text-muted-foreground">Abmeldung Statistik</dt>
+          <dt className="text-muted-foreground">Abmeldung Programmierung 2</dt>
           <dd>
             <Countdown until={IN_ONE_DAY} />
           </dd>
@@ -232,7 +232,7 @@ export function CommonComponentsShowcase() {
       <Section name="PageHeader">
         <PageHeader
           headingLevel={2}
-          title="Statistik – antreten oder abmelden?"
+          title="Programmierung 2 – antreten oder abmelden?"
           meta={<DemoBadge />}
           description="Vergleiche beide Wege, bevor du dich entscheidest."
           actions={

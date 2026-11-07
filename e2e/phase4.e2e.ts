@@ -77,17 +77,17 @@ test("P4/P5-15: alle neun Fragen, Fallback, Kontext und ICS-Download", async ({
 }) => {
   const questions = [
     "Bis wann kann ich mich von einer Prüfung abmelden?",
-    "Was passiert, wenn ich Statistik schiebe?",
+    "Was passiert, wenn ich Programmierung 2 schiebe?",
     "Was brauche ich für die Zulassung zum Praxissemester?",
     "Wie viele Versuche habe ich für eine Prüfung?",
     "Darf ich ins Hauptstudium, wenn noch Prüfungen aus dem Grundstudium offen sind?",
     "Wie viele ECTS fehlen mir noch?",
     "Wie wird mein Notenschnitt berechnet?",
-    "Wann wird Statistik angeboten?",
+    "Wann wird Programmierung 2 angeboten?",
     "An wen wende ich mich mit meiner Frage?",
   ];
-  await page.goto("/assistent?module=m-stat");
-  await expect(page.getByText("bezogen auf: Statistik")).toBeVisible();
+  await page.goto("/assistent?module=m-pr2");
+  await expect(page.getByText("bezogen auf: Programmierung 2")).toBeVisible();
   for (const question of questions) {
     await page.getByRole("textbox", { name: "Deine Frage" }).fill(question);
     await page.getByRole("button", { name: "Frage stellen" }).click();
@@ -101,7 +101,7 @@ test("P4/P5-15: alle neun Fragen, Fallback, Kontext und ICS-Download", async ({
   await page
     .getByRole("textbox", { name: "Deine Frage" })
     .fill(
-      "Kann ich das Praxissemester im Ausland machen und Statistik trotzdem im Winter schreiben?",
+      "Kann ich das Praxissemester im Ausland machen und Programmierung 2 trotzdem im Winter schreiben?",
     );
   await page.getByRole("button", { name: "Frage stellen" }).click();
   await page.getByRole("button", { name: "Anfrage vorbereiten" }).click();
@@ -120,7 +120,7 @@ test("P4: Screens ohne Überlauf von 360 bis 1920 px", async ({ page }) => {
   const paths = [
     "/start",
     "/module",
-    "/module/m-stat",
+    "/module/m-pr2",
     "/postfach",
     "/postfach?eintrag=i-02",
     "/assistent?frage=A-02",
@@ -152,7 +152,7 @@ test("P4: alle Katalogfragen und der Sonderfall per Klick", async ({
   page,
 }) => {
   test.setTimeout(60000);
-  for (let index = 0; index < 10; index++) {
+  for (let index = 0; index < 13; index++) {
     await page.goto("/assistent");
     await expect(page.locator("[data-slot=skeleton]")).toHaveCount(0);
     if (index >= 6) {
@@ -173,7 +173,7 @@ test("P4: alle Katalogfragen und der Sonderfall per Klick", async ({
         .click();
     }
     await expect(page.getByRole("log")).toContainText("KI-Antwort");
-    if (index === 9)
+    if (index === 12)
       await expect(
         page.getByRole("button", { name: "Anfrage vorbereiten" }),
       ).toBeVisible();
@@ -199,7 +199,7 @@ test("P4: Ziel, Nebenjob, Kanaltrennung und Demo-Reset wirken zusammen", async (
   await page.keyboard.press("ArrowRight");
   await page.getByRole("button", { name: "Weiter", exact: true }).click();
   await page.getByRole("button", { name: "Einrichtung abschließen" }).click();
-  await page.goto("/entscheidung/e-mkt-ws26");
+  await page.goto("/entscheidung/e-wi3-ws26");
   await expect(
     page.getByText("Dein Ziel: Studium im eigenen Tempo"),
   ).toBeVisible();
@@ -234,7 +234,7 @@ test("P4: Ziel, Nebenjob, Kanaltrennung und Demo-Reset wirken zusammen", async (
   await page
     .getByRole("button", { name: "Demo ohne Einrichtung starten" })
     .click();
-  await page.goto("/entscheidung/e-mkt-ws26");
+  await page.goto("/entscheidung/e-wi3-ws26");
   await expect(
     page.getByText(/Dein Ziel: Abschluss in Regelstudienzeit/),
   ).toBeVisible();

@@ -100,6 +100,11 @@ export function SimulationResultDialog({
               simulated={plan.graduationTerm}
             />
             <Change
+              label="Unternehmensinformatikprojekt"
+              real={basePlan.projectTerm}
+              simulated={plan.projectTerm}
+            />
+            <Change
               label="Praxissemester"
               real={basePlan.internshipTerm}
               simulated={plan.internshipTerm}

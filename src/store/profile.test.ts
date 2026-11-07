@@ -77,12 +77,12 @@ describe("P5-15: lokales Profil", () => {
         version: 3,
         state: {
           profileName: { firstName: "", lastName: "Muster" },
-          withdrawnExamIds: ["e-stat-ws26"],
+          withdrawnExamIds: ["e-pr2-ws26"],
           hintTone: "neutral",
           jobHoursPerWeek: 20,
-          moduleNotes: { "m-stat": "Testat fehlt" },
+          moduleNotes: { "m-pr2": "Testat fehlt" },
           coursework: [
-            { id: "c-1", moduleId: "m-stat", title: "Testat", status: "open" },
+            { id: "c-1", moduleId: "m-pr2", title: "Testat", status: "open" },
           ],
           personalDeadlines: [
             {
@@ -99,10 +99,10 @@ describe("P5-15: lokales Profil", () => {
     await store.getState().hydrate();
     expect(store.getState()).toMatchObject({
       profileName: null,
-      withdrawnExamIds: ["e-stat-ws26"],
+      withdrawnExamIds: ["e-pr2-ws26"],
       hintTone: "neutral",
       jobHoursPerWeek: 20,
-      moduleNotes: { "m-stat": "Testat fehlt" },
+      moduleNotes: { "m-pr2": "Testat fehlt" },
     });
     expect(store.getState().coursework).toHaveLength(1);
     expect(store.getState().personalDeadlines).toHaveLength(1);

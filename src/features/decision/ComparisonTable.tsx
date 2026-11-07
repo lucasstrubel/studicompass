@@ -50,6 +50,17 @@ function rows(module: Module, currentTerm: Term, target: number): Row[] {
       cell: (outcome) => <StatusBadge status={outcome.trafficLight} />,
     },
     {
+      id: "project",
+      label: "Unternehmensinformatikprojekt",
+      ruleIds: ["DR-11"],
+      cell: (outcome) =>
+        !outcome.projectTerm
+          ? "nicht planbar"
+          : outcome.projectShift
+            ? `${format(outcome.projectTerm)} (+${outcome.projectShift} Semester)`
+            : `${format(outcome.projectTerm)} – erreichbar`,
+    },
+    {
       id: "internship",
       label: "Praxissemester",
       ruleIds: ["DR-6"],

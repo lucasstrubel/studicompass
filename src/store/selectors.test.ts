@@ -37,47 +37,48 @@ describe("P2 selectors: stable snapshots and connected simulation", () => {
     const store = createDemoStore(createMockServices({ latencyMs: 0 }));
     await store.getState().hydrate();
     expect(selectProgress(store.getState())).toMatchObject({
-      earnedEcts: 48,
+      earnedEcts: 45,
       targetEcts: 60,
-      gradeAverage: 2.4,
+      gradeAverage: 2.3,
       trafficLight: "tight",
     });
     expect(selectPlan(store.getState())).toMatchObject({
-      ectsEndOfTerm: 78,
+      ectsEndOfTerm: 75,
       internshipTerm: { season: "WS", year: 2027 },
     });
-    store.getState().setWhatIf([{ moduleId: "m-mkt", action: "withdraw" }]);
+    store.getState().setWhatIf([{ moduleId: "m-wi3", action: "withdraw" }]);
     expect(selectPlan(store.getState())).toMatchObject({
-      ectsEndOfTerm: 72,
+      ectsEndOfTerm: 70,
       trafficLight: "tight",
       internshipShift: 0,
     });
     expect(
       selectAcademicState(store.getState())?.exams.find(
-        (exam) => exam.id === "e-mkt-ws26",
+        (exam) => exam.id === "e-wi3-ws26",
       )?.status,
     ).toBe("registered");
     store.getState().clearWhatIf();
-    store.getState().withdrawExam("e-stat-ws26");
+    store.getState().withdrawExam("e-pr2-ws26");
     expect(selectPlan(store.getState())).toMatchObject({
-      ectsEndOfTerm: 72,
+      ectsEndOfTerm: 65,
       trafficLight: "critical",
-      internshipTerm: { season: "SS", year: 2028 },
+      projectTerm: { season: "SS", year: 2028 },
+      internshipTerm: { season: "WS", year: 2027 },
       graduationTerm: { season: "SS", year: 2029 },
     });
     expect(selectProgress(store.getState())?.trafficLight).toBe("critical");
     store.getState().undo();
     expect(selectPlan(store.getState())).toMatchObject({
-      ectsEndOfTerm: 78,
+      ectsEndOfTerm: 75,
       trafficLight: "tight",
-      internshipShift: 0,
+      projectShift: 0,
     });
     expect(() =>
       store.getState().setWhatIf([
         {
-          moduleId: "m-stat",
+          moduleId: "m-bwl2",
           action: "move",
-          term: { season: "SS", year: 2027 },
+          term: { season: "WS", year: 2027 },
         },
       ]),
     ).toThrow(RangeError);
@@ -95,33 +96,33 @@ describe("P3-02 overview selectors", () => {
   it("lists the five registered exams of WS 2026/27 with Moodle progress", async () => {
     const exams = selectCurrentExams((await loadedStore()).getState());
     expect(exams.map((item) => item.module.id)).toEqual([
-      "m-stat",
-      "m-db",
-      "m-se1",
-      "m-gpm",
-      "m-mkt",
+      "m-pr2",
+      "m-dm",
+      "m-web",
+      "m-bwl2",
+      "m-wi3",
     ]);
     expect(exams[0].progress?.label).toBe("Übungsblätter 5/12");
   });
 
   it("finds the next deadline after DEMO_NOW, skipping a withdrawn exam", async () => {
     const store = await loadedStore();
-    expect(selectNextDeadline(store.getState())?.id).toBe("d-stat-abm");
-    store.getState().withdrawExam("e-stat-ws26");
-    expect(selectNextDeadline(store.getState())?.id).toBe("d-db-abm");
+    expect(selectNextDeadline(store.getState())?.id).toBe("d-pr2-abm");
+    store.getState().withdrawExam("e-pr2-ws26");
+    expect(selectNextDeadline(store.getState())?.id).toBe("d-dm-abm");
   });
 
-  it("raises only Statistik under Jetzt wichtig, and nothing once it is withdrawn", async () => {
+  it("raises only Programmierung 2 under Jetzt wichtig, and nothing once it is withdrawn", async () => {
     const store = await loadedStore();
     const important = selectImportantDecisions(store.getState());
-    expect(important.map((item) => item.exam.id)).toEqual(["e-stat-ws26"]);
+    expect(important.map((item) => item.exam.id)).toEqual(["e-pr2-ws26"]);
     expect(important[0].message).toContain("Morgen um 23:59 ist Schluss.");
 
-    store.getState().withdrawExam("e-stat-ws26");
+    store.getState().withdrawExam("e-pr2-ws26");
     expect(selectImportantDecisions(store.getState())).toEqual([]);
   });
 
-  it("moves internship and graduation when Statistik is withdrawn", async () => {
+  it("moves project and graduation when Programmierung 2 is withdrawn", async () => {
     const store = await loadedStore();
     expect(selectBasePlan(store.getState())).toMatchObject({
       internshipTerm: { season: "WS", year: 2027 },
@@ -129,10 +130,10 @@ describe("P3-02 overview selectors", () => {
       graduationTerm: { season: "WS", year: 2028 },
     });
 
-    store.getState().withdrawExam("e-stat-ws26");
+    store.getState().withdrawExam("e-pr2-ws26");
     expect(selectBasePlan(store.getState())).toMatchObject({
-      internshipTerm: { season: "SS", year: 2028 },
-      internshipShift: 1,
+      projectTerm: { season: "SS", year: 2028 },
+      internshipShift: 0,
       graduationTerm: { season: "SS", year: 2029 },
     });
     expect(selectProgress(store.getState())?.trafficLight).toBe("critical");
@@ -142,7 +143,7 @@ describe("P3-02 overview selectors", () => {
     const store = await loadedStore();
     store.getState().setWhatIf([
       {
-        moduleId: "m-recht",
+        moduleId: "m-bwl2",
         action: "move",
         term: { season: "SS", year: 2028 },
       },
@@ -159,10 +160,10 @@ describe("selectUndoableExamId", () => {
     const store = createDemoStore(createMockServices({ latencyMs: 0 }));
     await store.getState().hydrate();
     expect(selectUndoableExamId(store.getState())).toBeNull();
-    store.getState().withdrawExam("e-stat-ws26");
-    expect(selectUndoableExamId(store.getState())).toBe("e-stat-ws26");
-    store.getState().withdrawExam("e-mkt-ws26");
-    expect(selectUndoableExamId(store.getState())).toBe("e-mkt-ws26");
+    store.getState().withdrawExam("e-pr2-ws26");
+    expect(selectUndoableExamId(store.getState())).toBe("e-pr2-ws26");
+    store.getState().withdrawExam("e-wi3-ws26");
+    expect(selectUndoableExamId(store.getState())).toBe("e-wi3-ws26");
     store.getState().undo();
     expect(selectUndoableExamId(store.getState())).toBeNull();
   });
@@ -171,13 +172,13 @@ describe("selectUndoableExamId", () => {
     const store = createDemoStore(createMockServices({ latencyMs: 0 }));
     await store.getState().hydrate();
     store.getState().savePersonalDeadline({
-      title: "Lerngruppe Statistik",
+      title: "Lerngruppe Programmierung 2",
       dueAt: "2027-01-26T10:00:00+01:00",
       kind: "appointment",
-      moduleId: "m-stat",
+      moduleId: "m-pr2",
     });
     store.getState().saveCoursework({
-      moduleId: "m-stat",
+      moduleId: "m-pr2",
       title: "8 von 12 Übungsblättern",
       dueAt: "2027-01-27",
       status: "open",
@@ -187,11 +188,11 @@ describe("selectUndoableExamId", () => {
     expect(agenda.find((item) => item.origin === "coursework")?.title).toBe(
       "Prüfungsvorleistung: 8 von 12 Übungsblättern",
     );
-    // Tomorrow 10:00 comes before the Statistik withdrawal deadline at 23:59.
+    // Tomorrow 10:00 comes before the Programmierung 2 withdrawal deadline at 23:59.
     expect(selectNextDeadline(store.getState())?.title).toBe(
-      "Lerngruppe Statistik",
+      "Lerngruppe Programmierung 2",
     );
-    expect(selectAdmission(store.getState(), "m-stat")).toBe("open");
+    expect(selectAdmission(store.getState(), "m-pr2")).toBe("open");
     // An achieved Prüfungsvorleistung leaves the agenda and admits to the exam.
     const [item] = store.getState().coursework;
     store.getState().saveCoursework({ ...item, status: "done" });
@@ -200,8 +201,8 @@ describe("selectUndoableExamId", () => {
         (entry) => entry.origin === "coursework",
       ),
     ).toBe(false);
-    expect(selectAdmission(store.getState(), "m-stat")).toBe("admitted");
-    expect(selectAdmission(store.getState(), "m-db")).toBe("none");
+    expect(selectAdmission(store.getState(), "m-pr2")).toBe("admitted");
+    expect(selectAdmission(store.getState(), "m-dm")).toBe("none");
   });
 
   it("counts a date-only own entry until the end of its day (P5-13 review)", async () => {

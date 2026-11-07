@@ -36,7 +36,7 @@ describe("routes", () => {
   it.each([
     ["/verlauf", "Studienverlauf"],
     ["/module", "Module & Noten"],
-    ["/module/m-stat", "Module & Noten"],
+    ["/module/m-pr2", "Module & Noten"],
     ["/postfach", "Postfach"],
     ["/assistent", "Assistent"],
     ["/fristen", "Fristen"],
@@ -63,7 +63,7 @@ describe("routes", () => {
 
   it("answers unknown paths with the 404 page, which leads back to the Übersicht", async () => {
     const user = userEvent.setup();
-    const router = renderApp("/module/m-stat/gibt-es-nicht");
+    const router = renderApp("/module/m-pr2/gibt-es-nicht");
 
     expect(screen.getByText("Diese Seite gibt es nicht.")).toBeInTheDocument();
     await user.click(screen.getByRole("link", { name: "Zur Übersicht" }));
@@ -118,7 +118,7 @@ describe("full navigation", () => {
 
   it("marks Module & Noten on a module detail page, and the Übersicht only on /", async () => {
     const user = userEvent.setup();
-    renderApp("/module/m-stat");
+    renderApp("/module/m-pr2");
     await openMenu(user);
 
     expect(currentLinks(menu().getAllByRole("link"))).toEqual([
@@ -128,7 +128,7 @@ describe("full navigation", () => {
 
   it("marks no entry on the Folgen-Check, which is not in the navigation", async () => {
     const user = userEvent.setup();
-    renderApp("/entscheidung/e-stat-ws26");
+    renderApp("/entscheidung/e-pr2-ws26");
     await openMenu(user);
 
     expect(currentLinks(menu().getAllByRole("link"))).toEqual([]);

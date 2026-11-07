@@ -11,9 +11,9 @@ export interface MilestoneModules {
 }
 
 /**
- * Modules that belong to a milestone (P5-08): the foundation modules for the end of the
- * foundation phase and the internship (DR-6), the internship for the project semester (DR-11), internship
- * and project semester for the thesis (DR-12). Display only – the projection does not use DR-11 or DR-12.
+ * Modules that belong to a milestone (P5-08): the foundation modules for the end of the foundation phase,
+ * the internship (DR-6) and the project (DR-11), everything planned for the first five semesters for the
+ * thesis (DR-12).
  */
 export function milestoneModules(
   kind: MilestoneKind,
@@ -35,16 +35,12 @@ export function milestoneModules(
     case "project":
       return {
         ruleId: "DR-11",
-        moduleIds: ids((module) => module.isMilestone === "internship"),
+        moduleIds: ids((module) => module.phase === "foundation"),
       };
     case "thesis":
       return {
         ruleId: "DR-12",
-        moduleIds: ids(
-          (module) =>
-            module.isMilestone === "internship" ||
-            module.isMilestone === "project",
-        ),
+        moduleIds: ids((module) => module.plannedSemester <= 5),
       };
   }
 }

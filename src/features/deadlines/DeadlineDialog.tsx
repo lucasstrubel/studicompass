@@ -131,7 +131,7 @@ export function DeadlineDialog({
               ref={titleRef}
               id={`${id}-title`}
               value={title}
-              placeholder="Z. B. Abgabe Übungsblatt 12 Statistik"
+              placeholder="Z. B. Abgabe Übungsblatt 12 Programmierung 2"
               aria-invalid={errors.title ? true : undefined}
               aria-describedby={describedBy("title")}
               onChange={(event) => setTitle(event.target.value)}

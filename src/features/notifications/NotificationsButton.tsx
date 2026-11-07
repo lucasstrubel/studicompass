@@ -142,9 +142,9 @@ export function NotificationsButton() {
                               : [
                                   {
                                     document: item.ruleIds.length
-                                      ? "SPO und Modulhandbuch Wirtschaftsinformatik (Beispiel; Regelwerk gerade nicht verfügbar)"
+                                      ? "StuPO und Modulhandbuch (Beispiel; Regelwerk gerade nicht verfügbar)"
                                       : item.type === "inbox"
-                                        ? "Mail – Raumänderung Statistik (Demodaten)"
+                                        ? "Mail – Raumänderung Programmierung 2 (Demodaten)"
                                         : "TH-Website – Rückmeldung (Demodaten)",
                                     summary: item.message,
                                     verified: false,

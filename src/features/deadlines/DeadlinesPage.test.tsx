@@ -31,7 +31,7 @@ it("P5-F01: meldet beim Erstladen keine leeren Fristengruppen", async () => {
     screen.queryByRole("status", { name: "Fristen werden geladen" }),
   ).not.toBeInTheDocument();
   expect(
-    screen.getByRole("heading", { name: "Abmeldung Statistik" }),
+    screen.getByRole("heading", { name: "Abmeldung Programmierung 2" }),
   ).toBeInTheDocument();
 });
 
@@ -129,7 +129,7 @@ it("P5-13: legt einen eigenen Termin an, prüft das Datum und löscht ihn mit R�
   expect(within(dialog).getByLabelText("Titel")).toHaveFocus();
   await user.type(
     within(dialog).getByLabelText("Titel"),
-    "Lerngruppe Statistik",
+    "Lerngruppe Programmierung 2",
   );
   await user.clear(within(dialog).getByLabelText("Datum"));
   await user.type(within(dialog).getByLabelText("Datum"), "2027-01-20");
@@ -151,7 +151,7 @@ it("P5-13: legt einen eigenen Termin an, prüft das Datum und löscht ihn mit R�
   );
   const week = screen.getByRole("region", { name: "Diese Woche" });
   const entry = within(week)
-    .getByRole("heading", { name: "Lerngruppe Statistik" })
+    .getByRole("heading", { name: "Lerngruppe Programmierung 2" })
     .closest("li");
   expect(entry).toHaveTextContent("Eigener Eintrag");
   expect(entry).toHaveTextContent("Termin");
@@ -160,7 +160,7 @@ it("P5-13: legt einen eigenen Termin an, prüft das Datum und löscht ihn mit R�
 
   await user.click(
     within(entry as HTMLElement).getByRole("button", {
-      name: "Lerngruppe Statistik löschen",
+      name: "Lerngruppe Programmierung 2 löschen",
     }),
   );
   expect(demoStore.getState().personalDeadlines).toEqual([]);

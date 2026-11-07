@@ -48,16 +48,16 @@ it("P4-01: Kontext, Vorschlag und Sonderfall mit kopierbarem Entwurf", async () 
     <RouterProvider
       router={createMemoryRouter(
         [{ path: "/assistent", Component: AssistantPage }],
-        { initialEntries: ["/assistent?module=m-stat"] },
+        { initialEntries: ["/assistent?module=m-pr2"] },
       )}
     />,
   );
-  expect(screen.getByText("bezogen auf: Statistik")).toBeInTheDocument();
+  expect(screen.getByText("bezogen auf: Programmierung 2")).toBeInTheDocument();
   fireEvent.click(
     screen.getByRole("button", { name: "Wie viele ECTS fehlen mir noch?" }),
   );
   await act(() => vi.advanceTimersByTimeAsync(800));
-  expect(screen.getAllByText(/Du hast 48 von 210 ECTS/).length).toBeGreaterThan(
+  expect(screen.getAllByText(/Du hast 45 von 210 ECTS/).length).toBeGreaterThan(
     0,
   );
   expect(
@@ -66,7 +66,7 @@ it("P4-01: Kontext, Vorschlag und Sonderfall mit kopierbarem Entwurf", async () 
   fireEvent.change(screen.getByLabelText("Deine Frage"), {
     target: {
       value:
-        "Kann ich das Praxissemester im Ausland machen und Statistik trotzdem im Winter schreiben?",
+        "Kann ich das Praxissemester im Ausland machen und Betriebswirtschaftslehre 3 im selben Semester schreiben?",
     },
   });
   fireEvent.click(screen.getByRole("button", { name: "Frage stellen" }));
@@ -94,7 +94,7 @@ it("P4-01: Deep-Link antwortet auch bei StrictMode-Effektwiederholung", async ()
   );
   await act(() => vi.advanceTimersByTimeAsync(800));
   expect(screen.getByRole("log")).toHaveTextContent(
-    "2,4 aus 8 bestandenen Modulen",
+    "2,3 aus 8 bestandenen Modulen",
   );
 });
 

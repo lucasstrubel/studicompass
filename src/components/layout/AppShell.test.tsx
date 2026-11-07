@@ -66,11 +66,11 @@ describe("AppShell", () => {
   it("fills the right-column slot only when supplied", () => {
     renderShell({
       title: "Übersicht",
-      rightRail: () => <p>Abmeldung Statistik</p>,
+      rightRail: () => <p>Abmeldung Programmierung 2</p>,
     });
     expect(
       within(screen.getByRole("complementary")).getByText(
-        "Abmeldung Statistik",
+        "Abmeldung Programmierung 2",
       ),
     ).toBeInTheDocument();
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);

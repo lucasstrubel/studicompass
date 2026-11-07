@@ -32,39 +32,41 @@ function renderOverview() {
 const region = (name: string | RegExp) => screen.getByRole("region", { name });
 
 describe("Übersicht", () => {
-  it("shows the study progress from the store: 48 of 210, target 60, Knapp, forecast 78 of 90", () => {
+  it("shows the study progress from the store: 45 of 210, target 60, Knapp, forecast 75 of 90", () => {
     renderOverview();
 
     expect(
       screen.getByRole("heading", { level: 1, name: "Guten Abend, Niklas" }),
     ).toBeInTheDocument();
     const progress = region("Dein Studienstand");
-    expect(within(progress).getByText("48")).toBeInTheDocument();
+    expect(within(progress).getByText("45")).toBeInTheDocument();
     expect(within(progress).getByText("ECTS von 210")).toBeInTheDocument();
     expect(within(progress).getByText("Knapp")).toBeInTheDocument();
-    expect(progress).toHaveTextContent("12 ECTS hinter dem Soll von 60");
-    expect(progress).toHaveTextContent("78 von 90");
+    expect(progress).toHaveTextContent("15 ECTS hinter dem Soll von 60");
+    expect(progress).toHaveTextContent("75 von 90");
     expect(progress).toHaveTextContent("WS 2028/29 – in Regelstudienzeit");
   });
 
-  it("raises Statistik under Jetzt wichtig with deadline, countdown, sources and the way to the Folgen-Check", () => {
+  it("raises Programmierung 2 under Jetzt wichtig with deadline, countdown, sources and the way to the Folgen-Check", () => {
     renderOverview();
     const important = region("Jetzt wichtig");
 
     expect(
       within(important).getByRole("heading", {
         level: 3,
-        name: "Statistik: Abmeldung nur noch bis morgen, 23:59 Uhr",
+        name: "Programmierung 2: Abmeldung nur noch bis morgen, 23:59 Uhr",
       }),
     ).toBeInTheDocument();
     expect(important).toHaveTextContent("Morgen um 23:59 ist Schluss.");
     expect(important).toHaveTextContent("noch 1 Tag, 4 Std.");
-    expect(within(important).getAllByText("Beispiel").length).toBeGreaterThan(
-      0,
+    expect(important).toHaveTextContent(
+      "StuPO Bachelor (ab 01.09.2026), § 7 Abs. 2",
     );
+    expect(important).toHaveTextContent("§ 56 Abs. 2");
+    expect(within(important).queryByText("Beispiel")).not.toBeInTheDocument();
     expect(
       within(important).getByRole("link", { name: "Folgen prüfen" }),
-    ).toHaveAttribute("href", "/entscheidung/e-stat-ws26");
+    ).toHaveAttribute("href", "/entscheidung/e-pr2-ws26");
   });
 
   it("lists the five modules of this semester", () => {
@@ -75,26 +77,28 @@ describe("Übersicht", () => {
       5,
     );
     expect(modules).toHaveTextContent("Übungsblätter 5/12");
-    expect(modules).toHaveTextContent("nur im WS");
+    expect(modules).toHaveTextContent("nur im SS");
   });
 
   it("shows the new state after a simulated withdrawal and restores it with Rückgängig", () => {
     renderOverview();
     act(() => {
-      demoStore.getState().withdrawExam("e-stat-ws26");
+      demoStore.getState().withdrawExam("e-pr2-ws26");
     });
 
     const progress = region("Dein Studienstand");
     expect(within(progress).getByText("Kritisch")).toBeInTheDocument();
     expect(progress).toHaveTextContent(
-      "Dein Praxissemester verschiebt sich voraussichtlich auf SS 2028.",
+      "Dein Unternehmensinformatikprojekt verschiebt sich voraussichtlich auf SS 2028.",
     );
-    expect(progress).toHaveTextContent("72 von 90");
+    expect(progress).toHaveTextContent("65 von 90");
     expect(progress).toHaveTextContent("SS 2029 – 1 Semester später");
     expect(region("Jetzt wichtig")).toHaveTextContent(
       "Gerade steht keine Entscheidung mit Sonderregel an.",
     );
-    expect(screen.getByText(/Simulierte Abmeldung: Statistik/)).toBeVisible();
+    expect(
+      screen.getByText(/Simulierte Abmeldung: Programmierung 2/),
+    ).toBeVisible();
 
     fireEvent.click(screen.getByRole("button", { name: "Rückgängig" }));
     expect(
@@ -103,16 +107,16 @@ describe("Übersicht", () => {
     expect(screen.queryByText(/Simulierte Abmeldung/)).not.toBeInTheDocument();
   });
 
-  it("cites the sources of the withdrawal deadline and the offering labels (Beispiel)", () => {
+  it("cites the StuPO for the withdrawal deadline and the handbook for the offering labels", () => {
     renderOverview();
     const deadline = screen.getAllByRole("region", {
       name: "Nächste Frist",
     })[0];
     expect(deadline).toHaveTextContent(
-      "Quelle: SPO WirtschaftsinformatikBeispiel",
+      "Quelle: StuPO Bachelor (ab 01.09.2026), § 7 Abs. 2, § 12 Abs. 1",
     );
     expect(region("Dieses Semester (WS 2026/27)")).toHaveTextContent(
-      "Quelle: Modulhandbuch WirtschaftsinformatikBeispiel",
+      "Quelle: Modulhandbuch UIB",
     );
   });
 
@@ -159,7 +163,7 @@ describe("Übersicht", () => {
       await vi.advanceTimersByTimeAsync(LATENCY_MS);
     });
     expect(
-      within(region("Dein Studienstand")).getByText("48"),
+      within(region("Dein Studienstand")).getByText("45"),
     ).toBeInTheDocument();
   });
 });
@@ -207,9 +211,9 @@ describe("ECTS-Verlauf (P5-12)", () => {
     expect(rows).toEqual([
       "SemesterIst / PrognoseSollDifferenz",
       "WS 2025/263030±0",
-      "SS 20264860−12",
-      "WS 2026/2778 (Prognose)90−12",
-      "SS 2027120 (Prognose)120±0",
+      "SS 20264560−15",
+      "WS 2026/2775 (Prognose)90−15",
+      "SS 2027115 (Prognose)120−5",
       "WS 2027/28150 (Prognose)150±0",
       "SS 2028180 (Prognose)180±0",
       "WS 2028/29210 (Prognose)210±0",

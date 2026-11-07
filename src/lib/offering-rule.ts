@@ -7,13 +7,13 @@ const OFFERING_TEXT = {
 } as const;
 
 /**
- * DR-4 for one module: the rule data only carries the Statistik example, so text and source are built
+ * DR-4 for one module: text and source are built
  * per module (P3-03 review). The verification status follows the rule.
  */
 export function offeringRule(module: Module, rule: Rule | undefined): Rule {
-  const summary = `${module.title} wird ${OFFERING_TEXT[module.offering]} angeboten. Eine Prüfung ist frühestens im nächsten passenden Semester möglich.`;
+  const summary = `${module.title} wird ${OFFERING_TEXT[module.offering]} angeboten. Für den Erstversuch zählt das nächste passende Semester, Wiederholungen folgen im nächsten Prüfungszeitraum.`;
   const citation: Citation = {
-    document: `Modulhandbuch Wirtschaftsinformatik, Modul ${module.title}`,
+    document: `Modulhandbuch UIB, Modul ${module.title}`,
     summary,
     verified: rule?.citation.verified ?? false,
   };
@@ -37,12 +37,12 @@ export function rulesForModule(
 /** DR-4 as a general rule, for rule lists that are not about one module. */
 export function generalOfferingRule(rule: Rule | undefined): Rule {
   const summary =
-    "Ein Modul, das nur im Winter- oder nur im Sommersemester angeboten wird, kannst du frühestens im nächsten Semester dieses Typs ablegen; Module mit Angebot in jedem Semester schon im nächsten Semester.";
+    "Ein Modul, das nur im Winter- oder nur im Sommersemester angeboten wird, belegst du erstmals frühestens im nächsten Semester dieses Typs; Module mit Angebot in jedem Semester schon im nächsten Semester.";
   return {
     id: "DR-4",
     title: summary,
     citation: {
-      document: "Modulhandbuch Wirtschaftsinformatik",
+      document: "Modulhandbuch UIB",
       summary,
       verified: rule?.citation.verified ?? false,
     },

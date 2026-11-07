@@ -57,10 +57,8 @@ test("PR29-Review: ungültige Sommerzeit-Uhrzeit hat einen Feldfehler und wird n
   await dialog.getByRole("button", { name: "Speichern" }).click();
   await expect(dialog).toHaveCount(0);
   await page.reload();
-  const entry = page
-    .getByRole("listitem")
-    .filter({
-      has: page.getByRole("heading", { name: "Uhrzeitwechsel", exact: true }),
-    });
+  const entry = page.getByRole("listitem").filter({
+    has: page.getByRole("heading", { name: "Uhrzeitwechsel", exact: true }),
+  });
   await expect(entry).toContainText("03:30");
 });

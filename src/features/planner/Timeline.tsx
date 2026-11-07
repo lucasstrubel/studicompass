@@ -85,7 +85,7 @@ const OFFERING = {
 const MILESTONES: Record<MilestoneKind, string> = {
   foundationEnd: "Ende Grundstudium",
   internship: "Praxissemester",
-  project: "Projektsemester",
+  project: "Projekt",
   thesis: "Bachelorarbeit",
 };
 
@@ -93,7 +93,7 @@ const MILESTONES: Record<MilestoneKind, string> = {
 const MARKS: Record<MilestoneKind, string> = {
   foundationEnd: "gehört zum Grundstudium",
   internship: "für Praxissemester",
-  project: "für Projektsemester",
+  project: "für Projekt",
   thesis: "für Bachelorarbeit",
 };
 

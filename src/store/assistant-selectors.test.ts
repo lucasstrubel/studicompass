@@ -11,16 +11,16 @@ it("P4-01: Resolver berücksichtigen Abmeldung und Rückgängig, aber keine Was-
     .getState()
     .resources.assistant.data!.catalog.find((item) => item.id === "A-05")!;
   expect(selectAssistantPersonal(store.getState(), entry)).toContain(
-    "2 Prüfungen",
+    "0 Prüfungen",
   );
-  store.getState().setWhatIf([{ moduleId: "m-stat", action: "withdraw" }]);
+  store.getState().setWhatIf([{ moduleId: "m-pr2", action: "withdraw" }]);
   expect(selectAssistantPersonal(store.getState(), entry)).toContain(
-    "2 Prüfungen",
+    "0 Prüfungen",
   );
-  store.getState().withdrawExam("e-stat-ws26");
+  store.getState().withdrawExam("e-pr2-ws26");
   expect(
     selectActionableDeadlines(store.getState()).some(
-      (deadline) => deadline.id === "d-stat-abm",
+      (deadline) => deadline.id === "d-pr2-abm",
     ),
   ).toBe(false);
   expect(
@@ -28,11 +28,11 @@ it("P4-01: Resolver berücksichtigen Abmeldung und Rückgängig, aber keine Was-
       ?.message,
   ).toContain("Abmeldung simuliert");
   expect(selectAssistantPersonal(store.getState(), entry)).toContain(
-    "3 Prüfungen",
+    "1 Prüfung ",
   );
   store.getState().undo();
   expect(selectAssistantPersonal(store.getState(), entry)).toContain(
-    "2 Prüfungen",
+    "0 Prüfungen",
   );
 });
 
@@ -43,10 +43,10 @@ it("Gegencheck: Simulationstexte folgen dem Hinweis-Stil, Meilensteine nur bei V
     selectNotifications(store.getState()).find((item) => item.id === id)
       ?.message;
   const original = message("n-03");
-  store.getState().withdrawExam("e-mkt-ws26");
+  store.getState().withdrawExam("e-wi3-ws26");
   expect(message("n-03")).toBe(original);
   store.getState().undo();
-  store.getState().withdrawExam("e-stat-ws26");
+  store.getState().withdrawExam("e-pr2-ws26");
   expect(message("n-03")).toContain("Simulation");
   store.getState().setHintTone("neutral");
   const neutral = message("n-01");

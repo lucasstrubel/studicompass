@@ -5,16 +5,16 @@ import { earnedEcts, openFoundationModules, targetEcts } from "./progress";
 import { gradeAverage } from "./grades";
 
 describe("progress and grades", () => {
-  it("Basis / DR-1, DR-2, DR-9: 48 ECTS, target 60/90, seven open modules, average 2.4", () => {
+  it("Basis / DR-1, DR-2, DR-9: 45 ECTS, target 60/90, two open modules, average 2.3", () => {
     const { modules, exams } = academicFixture();
-    expect(earnedEcts(modules, exams)).toBe(48);
+    expect(earnedEcts(modules, exams)).toBe(45);
     expect(targetEcts(modules, 2)).toBe(60);
     expect(targetEcts(modules, 3)).toBe(90);
-    expect(openFoundationModules(modules, exams)).toHaveLength(7);
-    expect(gradeAverage(modules, exams)).toBe(2.4);
+    expect(openFoundationModules(modules, exams)).toHaveLength(2);
+    expect(gradeAverage(modules, exams)).toBe(2.3);
   });
   it.each([
-    [4.0, 6],
+    [4.0, 5],
     [4.3, 0],
   ] as const)("DR-1: grade %f yields %i ECTS", (grade, expected) => {
     const module = academicFixture().modules[0];

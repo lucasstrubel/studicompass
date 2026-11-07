@@ -389,7 +389,7 @@ function decisionView(state: DemoState, examId: string): DecisionView {
     exam,
     module,
     outcomes,
-    // Only hints that no option changes; e.g. the DR-10 load differs when withdrawing Marketing (48 vs. 42).
+    // Only hints that no option changes; e.g. the DR-10 load differs when withdrawing Wirtschaftsinformatik 3 (48 vs. 42).
     baseHints: plan.consequences.filter(
       (hint) =>
         !outcomes.some((outcome) =>

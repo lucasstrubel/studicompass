@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { CompoundText } from "./CompoundText";
 
 /**
  * Page heading (the page's only h1) with optional meta line, description and actions. The meta line sits below
@@ -31,7 +32,9 @@ export function PageHeader({
       )}
     >
       <div className="min-w-0 space-y-1.5">
-        <Heading className="text-page-title">{title}</Heading>
+        <Heading className="text-page-title">
+          <CompoundText>{title}</CompoundText>
+        </Heading>
         {meta && (
           <div className="flex flex-wrap items-center gap-2 text-body text-muted-foreground">
             {meta}

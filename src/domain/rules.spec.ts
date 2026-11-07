@@ -18,16 +18,16 @@ describe("rules", () => {
     expect(trafficLight(90, 90, 0, 3)).toBe("onTrack");
     expect(trafficLight(90, 90, 0, 4)).toBe("critical");
   });
-  it("DR-4: WS-only Statistics returns WS 2027, BOTH Marketing returns SS 2027", () => {
+  it("DR-4: WS-only BWL 3 returns WS 2027, BOTH Programmierung 2 returns SS 2027", () => {
     const { modules, currentTerm } = academicFixture();
-    const statistics = modules.find((module) => module.id === "m-stat");
-    const marketing = modules.find((module) => module.id === "m-mkt");
-    if (!statistics || !marketing) throw new Error("Missing fixture module");
-    expect(nextOfferingTerm(statistics, currentTerm)).toEqual({
+    const seasonal = modules.find((module) => module.id === "m-bwl3");
+    const everyTerm = modules.find((module) => module.id === "m-pr2");
+    if (!seasonal || !everyTerm) throw new Error("Missing fixture module");
+    expect(nextOfferingTerm(seasonal, currentTerm)).toEqual({
       season: "WS",
       year: 2027,
     });
-    expect(nextOfferingTerm(marketing, currentTerm)).toEqual({
+    expect(nextOfferingTerm(everyTerm, currentTerm)).toEqual({
       season: "SS",
       year: 2027,
     });

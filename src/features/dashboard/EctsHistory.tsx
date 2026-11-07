@@ -292,7 +292,9 @@ export function EctsHistory() {
       label:
         plan.internshipTerm && compare(item.term, plan.internshipTerm) === 0
           ? "Praxissemester"
-          : undefined,
+          : plan.projectTerm && compare(item.term, plan.projectTerm) === 0
+            ? "Projekt"
+            : undefined,
     };
   });
   // The curve rises from zero (P5-12); without an earned semester the forecast starts there as well.

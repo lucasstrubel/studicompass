@@ -11,11 +11,11 @@ describe("progress input edge cases", () => {
   });
   it("counts a passed module once and excludes failed or missing grades", () => {
     const { modules, exams } = academicFixture();
-    const successful = exams.find((exam) => exam.id === "e-gwi-ws25");
+    const successful = exams.find((exam) => exam.id === "e-ei-ws25");
     if (!successful) throw new Error("Missing exam");
     expect(
       earnedEcts(modules, [...exams, { ...successful, id: "duplicate" }]),
-    ).toBe(48);
+    ).toBe(45);
     expect(earnedEcts(modules, [{ ...successful, grade: undefined }])).toBe(0);
     expect(
       earnedEcts(modules, [{ ...successful, grade: 2, status: "failed" }]),

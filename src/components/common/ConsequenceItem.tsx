@@ -3,6 +3,7 @@ import { ChevronDown, Info, OctagonAlert, TriangleAlert } from "lucide-react";
 import type { Citation, Consequence, Severity } from "@/domain/types";
 import { cn } from "@/lib/utils";
 import { CitationList } from "./CitationList";
+import { CompoundText } from "./CompoundText";
 
 const SEVERITIES: Record<
   Severity,
@@ -54,11 +55,11 @@ export function ConsequenceItem({
       />
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-          <p className="text-body font-semibold">
+          <p className="min-w-0 text-body font-semibold">
             <span className={cn("mr-1.5 text-meta", severityClassName)}>
               {label}:
             </span>
-            {consequence.title}
+            <CompoundText>{consequence.title}</CompoundText>
           </p>
           {/* The invisible ::after enlarges the hit area to 30 px without moving the layout (P5-07). */}
           <button

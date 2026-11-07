@@ -125,6 +125,8 @@ export interface DecisionOutcome {
   trafficLight: TrafficLight;
   internshipTerm: Term | null;
   internshipShift: number | null;
+  projectTerm: Term | null;
+  projectShift: number | null;
   graduationTerm: Term | null;
   openFoundationAfterTerm: number;
   consequences: Consequence[];
@@ -161,7 +163,7 @@ export interface Notification {
 
 export type AssistantResolver =
   | "nextWithdrawalDeadline"
-  | "decisionSummary:e-stat-ws26"
+  | "decisionSummary:e-pr2-ws26"
   | "openFoundationModules"
   | "attemptsOverview"
   | "openFoundationAfterTerm"
@@ -227,7 +229,7 @@ export interface PersonalDeadline {
 
 /** One entry of the deadline list: channel deadlines and own entries side by side (P5-13). */
 export interface AgendaItem {
-  /** Unique within the list, e.g. "d-stat-abm", "own-…", "pvl-…". */
+  /** Unique within the list, e.g. "d-pr2-abm", "own-…", "pvl-…". */
   id: string;
   title: string;
   dueAt: string;
@@ -290,6 +292,8 @@ export interface PlanProjection {
   foundationCompletionTerm: Term | null;
   internshipTerm: Term | null;
   internshipShift: number | null;
+  projectTerm: Term | null;
+  projectShift: number | null;
   graduationTerm: Term | null;
   ectsEndOfTerm: number;
   targetEndOfTerm: number;

@@ -14,9 +14,9 @@ describe("lokale Fragenzuordnung", () => {
     expect(normalizeQuestion(" ÄÖÜ ß, Prüfung?! ")).toBe("aeoeue ss pruefung");
   });
   it("erkennt Synonyme und fällt bei Unklarheit zurück", () => {
-    expect(matchAssistant("Statistik später schreiben", assistantCatalog)).toBe(
-      "A-02",
-    );
+    expect(
+      matchAssistant("Programmierung 2 später schreiben", assistantCatalog),
+    ).toBe("A-02");
     expect(matchAssistant("Hauptstudium vorziehen", assistantCatalog)).toBe(
       "A-05",
     );
@@ -27,7 +27,7 @@ describe("lokale Fragenzuordnung", () => {
       matchAssistant(assistantFallback.question, assistantCatalog),
     ).toBeNull();
     expect(
-      matchAssistant("Statistik im Ausland abmelden", assistantCatalog),
+      matchAssistant("Programmierung 2 im Ausland abmelden", assistantCatalog),
     ).toBeNull();
   });
   it("rät bei gleich hohen Punktzahlen nicht", () => {

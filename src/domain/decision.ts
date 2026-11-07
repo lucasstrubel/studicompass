@@ -1,10 +1,12 @@
 import type { AcademicState, DecisionOption, DecisionOutcome } from "./types";
 import { compare } from "./terms";
+import { next } from "./terms";
 import { nextOfferingTerm } from "./rules";
 import { projectPlan } from "./projection";
 import { usedAttempts } from "./progress";
 
-/** AttendPass / attendFail / withdraw, with DR-5/DR-8 attempts.
+/** AttendPass / attendFail / withdraw, with DR-5/DR-8 attempts. Withdrawing is only an option where it is
+ * open to the student: a retake without a deadline can only be withdrawn on application (DR-15).
  * Requires a registered current-term exam; rejects unknown or already settled exams.
  */
 export function compareDecision(
@@ -25,7 +27,9 @@ export function compareDecision(
   const attemptsBefore = usedAttempts(state.exams, module.id);
   if (attemptsBefore >= 3)
     throw new RangeError("Es sind bereits drei Prüfungsversuche genutzt.");
-  const options: DecisionOption[] = ["attendPass", "attendFail", "withdraw"];
+  const options: DecisionOption[] = exam.withdrawalDeadline
+    ? ["attendPass", "attendFail", "withdraw"]
+    : ["attendPass", "attendFail"];
   // Every option lists only differences from the baseline, attendPass included.
   const baseline = projectPlan(state).consequences;
   return options.map((option) => {
@@ -75,7 +79,12 @@ export function compareDecision(
       status: projection.status,
       blockedModuleIds: projection.blockedModuleIds,
       ...(option !== "attendPass" && attemptsUsed < 3
-        ? { nextAttemptTerm: nextOfferingTerm(module, state.currentTerm) }
+        ? {
+            nextAttemptTerm:
+              option === "attendFail"
+                ? next(state.currentTerm)
+                : nextOfferingTerm(module, state.currentTerm),
+          }
         : {}),
       attemptsUsed,
       ectsEndOfTerm: projection.ectsEndOfTerm,
@@ -83,6 +92,8 @@ export function compareDecision(
       trafficLight: projection.trafficLight,
       internshipTerm: projection.internshipTerm,
       internshipShift: projection.internshipShift,
+      projectTerm: projection.projectTerm,
+      projectShift: projection.projectShift,
       graduationTerm: projection.graduationTerm,
       openFoundationAfterTerm: projection.openFoundationAfterTerm,
       consequences,
@@ -92,7 +103,7 @@ export function compareDecision(
 
 /**
  * True if withdrawing would trigger a special rule: a critical consequence such
- * as a delayed milestone (DR-4/DR-6), more than three open foundation exams (DR-7) or a blocked plan.
+ * as a delayed milestone (DR-6/DR-11), more than three open foundation exams (DR-7) or a blocked plan.
  * Only then does the overview raise the decision under "Jetzt wichtig".
  */
 export function hasSpecialRuleImpact(outcomes: DecisionOutcome[]): boolean {

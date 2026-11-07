@@ -145,12 +145,12 @@ type TokenGroup = "farben" | "typografie";
 
 // Sample texts for this developer page only; the app's data comes from src/data via services (P2).
 const DEADLINES = [
-  "Abmeldung Statistik – Di, 26.01.2027, 23:59",
-  "Abmeldung Datenbanken – Do, 28.01.2027, 23:59",
-  "Abgabe Fallstudie 5 Marketing – So, 31.01.2027, 23:59",
-  "Abmeldung Software Engineering 1 – Mo, 01.02.2027, 23:59",
-  "Abmeldung Geschäftsprozessmanagement – Mi, 03.02.2027, 23:59",
-  "Abmeldung Marketing – So, 07.02.2027, 23:59",
+  "Abmeldung Programmierung 2 – Di, 26.01.2027, 23:59",
+  "Abmeldung Datenmanagement – Do, 28.01.2027, 23:59",
+  "Abgabe Fallstudie 5 Wirtschaftsinformatik 3 – So, 31.01.2027, 23:59",
+  "Abmeldung Webbasierte Systeme – Mo, 01.02.2027, 23:59",
+  "Abmeldung Betriebswirtschaftslehre 2 – Mi, 03.02.2027, 23:59",
+  "Abmeldung Wirtschaftsinformatik 3 – So, 07.02.2027, 23:59",
   "Infoveranstaltung Praxissemester WS 2027/28 – Mi, 10.02.2027, 14:00",
   "Rückmeldung zum SS 2027 – Mo, 15.02.2027",
   "Prüfungsanmeldung SS 2027 – 10.05.–24.05.2027",
@@ -269,7 +269,7 @@ const TYPE_SCALE = [
   {
     token: "text-body · 15/24",
     className: "text-body",
-    text: "Die Abmeldefrist für Statistik endet morgen um 23:59 Uhr.",
+    text: "Die Abmeldefrist für Programmierung 2 endet morgen um 23:59 Uhr.",
   },
   {
     token: "text-meta · 13/20 · 400",
@@ -454,7 +454,7 @@ export function UiShowcasePage() {
             <div className="flex items-center gap-3">
               <span
                 className="flex size-9 items-center justify-center rounded-lg bg-(--module-tone-soft) text-(--module-tone)"
-                style={moduleToneStyle("m-se1")}
+                style={moduleToneStyle("m-web")}
               >
                 <BookOpen className="size-5" aria-hidden="true" />
               </span>
@@ -465,7 +465,7 @@ export function UiShowcasePage() {
             </div>
             <Card>
               <CardHeader>
-                <CardTitle>Statistik</CardTitle>
+                <CardTitle>Programmierung 2</CardTitle>
                 <CardDescription>
                   Klausur 90 Min. · Mi, 27.01.2027, 10:30 Uhr · Raum A 210
                 </CardDescription>
@@ -500,14 +500,14 @@ export function UiShowcasePage() {
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>
-                    Raumänderung: Klausur Statistik am 27.01.
+                    Raumänderung: Klausur Programmierung 2 am 27.01.
                   </DialogTitle>
                   <DialogDescription>
-                    Prüfungsamt · Fr, 22.01.2027, 14:05
+                    Zentrale Prüfungsverwaltung · Fr, 22.01.2027, 14:05
                   </DialogDescription>
                 </DialogHeader>
                 <p className="text-sm">
-                  Liebe Studierende, die Klausur Statistik am Mittwoch,
+                  Liebe Studierende, die Klausur Programmierung 2 am Mittwoch,
                   27.01.2027, 10:30 Uhr findet in Raum A 210 statt (bisher B
                   104). Bitte seid 15 Minuten vorher da und bringt euren
                   Studierendenausweis mit.
@@ -531,7 +531,7 @@ export function UiShowcasePage() {
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>
-                    Wie entscheidest du dich bei Statistik?
+                    Wie entscheidest du dich bei Programmierung 2?
                   </AlertDialogTitle>
                   <AlertDialogDescription>
                     Die Abmeldung wird nur simuliert und lässt sich rückgängig
@@ -580,7 +580,8 @@ export function UiShowcasePage() {
                 5 Prüfungen im WS 2026/27, alle angemeldet.
               </TabsContent>
               <TabsContent value="deadlines" className="text-sm">
-                Nächste Frist: Abmeldung Statistik, Di, 26.01.2027, 23:59.
+                Nächste Frist: Abmeldung Programmierung 2, Di, 26.01.2027,
+                23:59.
               </TabsContent>
               <TabsContent value="grades" className="text-sm">
                 48 ECTS bestanden, Notenschnitt 2,4.
@@ -617,15 +618,13 @@ export function UiShowcasePage() {
               </PopoverTrigger>
               <PopoverContent>
                 <PopoverHeader>
-                  <PopoverTitle>
-                    Modulhandbuch Wirtschaftsinformatik
-                  </PopoverTitle>
+                  <PopoverTitle>Modulhandbuch UIB</PopoverTitle>
                   <PopoverDescription>
-                    Modul Statistik · Beispiel
+                    Modul Programmierung 2 · Beispiel
                   </PopoverDescription>
                 </PopoverHeader>
                 <p className="text-sm">
-                  Statistik wird nur im Wintersemester angeboten.
+                  Programmierung 2 wird nur im Wintersemester angeboten.
                 </p>
               </PopoverContent>
             </Popover>
@@ -634,7 +633,7 @@ export function UiShowcasePage() {
           <Section name="progress">
             <div className="flex flex-col gap-2 text-sm">
               <div className="flex justify-between">
-                <span id="progress-label">Statistik: Übungsblätter</span>
+                <span id="progress-label">Programmierung 2: Übungsblätter</span>
                 <span className="tabular-nums">5/12</span>
               </div>
               <Progress value={42} aria-labelledby="progress-label" />
@@ -643,7 +642,7 @@ export function UiShowcasePage() {
 
           <Section name="separator">
             <div className="flex flex-col gap-3 text-sm">
-              <span>Moodle · Statistik</span>
+              <span>Moodle · Programmierung 2</span>
               <Separator />
               <div className="flex h-5 items-center gap-3">
                 <span>POS</span>
@@ -701,7 +700,7 @@ export function UiShowcasePage() {
               variant="outline"
               className="w-fit"
               onClick={() =>
-                toast.success("Abmeldung von Statistik simuliert", {
+                toast.success("Abmeldung von Programmierung 2 simuliert", {
                   description:
                     "Nur in dieser Demo, im POS hat sich nichts geändert.",
                   action: { label: "Rückgängig", onClick: () => undefined },
@@ -737,7 +736,8 @@ export function UiShowcasePage() {
               <Avatar>
                 <AvatarFallback>NB</AvatarFallback>
               </Avatar>
-              Niklas Brandt · Wirtschaftsinformatik, 3. Semester
+              Niklas Brandt · Unternehmens- und Wirtschaftsinformatik, 3.
+              Semester
             </div>
           </Section>
 
@@ -765,10 +765,10 @@ export function UiShowcasePage() {
               </AccordionItem>
               <AccordionItem value="offering">
                 <AccordionTrigger>
-                  Wann wird Statistik angeboten?
+                  Wann wird Programmierung 2 angeboten?
                 </AccordionTrigger>
                 <AccordionContent>
-                  Statistik wird nur im Wintersemester angeboten.
+                  Programmierung 2 wird nur im Wintersemester angeboten.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>

@@ -208,8 +208,8 @@ export function OnboardingPage() {
                     )}
                 </p>
                 <p>
-                  SPO Wirtschaftsinformatik · Beispiel, Version noch nicht
-                  verifiziert
+                  StuPO Bachelor, Fassung ab 01.09.2026 (nichtamtliche
+                  Lesefassung)
                 </p>
               </div>
             )}

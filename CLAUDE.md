@@ -5,7 +5,8 @@ Arbeitstitel „StudiCompass“ – der Name steht nur in `src/config/demo.ts` (
 ## Worum es geht
 Web-App, die Studierenden der TH Mannheim hilft, ihren Studienstand zu überblicken und Entscheidungen mit Folgen (z. B. eine Prüfungsabmeldung) informiert zu treffen. Sie bündelt POS, Moodle, Hochschul-Mail und Website und beantwortet Fragen zur Prüfungsordnung mit Quellenangabe.
 Selbsterklärender Hi-Fi-Prototyp, kein Produktivsystem. Alle Hochschul-Schnittstellen sind **Dummy-Daten**.
-Primäre Persona: **Niklas Brandt**, 20, Wirtschaftsinformatik, 3. Semester, Nebenjob 15 Std./Woche.
+Primäre Persona: **Niklas Brandt**, 20, Unternehmens- und Wirtschaftsinformatik (UIB), 3. Semester, Nebenjob 15 Std./Woche.
+Regeln stammen aus der StuPO Bachelor (Fassung ab 01.09.2026, § 56 für UIB), Module aus dem Modulhandbuch UIB (module.informatik.th-mannheim.de). Noten, Termine, Mails und Kontaktdaten bleiben erfunden.
 
 **Der Code ist die Quelle der Wahrheit.** Die Konventionen unten beschreiben den aktuellen Stand; sie dürfen geändert werden, wenn Lucas es so entscheidet. Tests werden angepasst, wenn sich das Verhalten bewusst ändert.
 
@@ -71,7 +72,7 @@ Abhängigkeiten nur in diese Richtung: UI → Store/Selektoren → Domain; Store
 - Schriftgrößen über die Typo-Klassen (`text-page-title` … `text-figure`); Zahlen (ECTS, Countdown, Noten) mit `tabular-nums`. Bricolage Grotesque nur auf `text-page-title`, `text-section-title` und `text-figure`, nie auf Labels, Buttons oder Tabellendaten. Kein Kicker über Überschriften, keine farbige Seitenkante.
 - Status „Im Plan / Knapp / Kritisch“ immer als Icon + Text + Farbe.
 - Realistische deutsche Texte; kein Lorem Ipsum, keine Bildplatzhalter, keine sichtbaren TODOs.
-- Jede Aussage zu Regeln oder Fristen zeigt ihre Quelle (`CitationList`); ungeprüfte Regeln tragen das Label „Beispiel“. Quellen stehen als Fußzeile am Ende ihrer Karte oder Zeile, unter den Aktionen, immer sichtbar.
+- Jede Aussage zu Regeln oder Fristen zeigt ihre Quelle (`CitationList`); Regeln aus der StuPO nennen ihren Paragraphen (`section`, `verified: true`); eigene Rechenregeln der App tragen das Label „Beispiel“. Quellen stehen als Fußzeile am Ende ihrer Karte oder Zeile, unter den Aktionen, immer sichtbar.
 - Jeder Datenbereich hat Lade-, Leer- und Fehlerzustand.
 - Barrierearm: Kontrast AA, sichtbarer Fokus, Kernflow per Tastatur, semantisches HTML, `aria-label` an Icon-Buttons, `prefers-reduced-motion`.
 - Fokusring zentral aus `globals.css` (`:focus-visible`, 2 px `--ring` = `--accent-strong`, 2 px Abstand): Komponenten zeichnen keinen eigenen Ring und schalten ihn nicht mit `outline-none` ab (Ausnahme: nicht bedienbare Sprungziele mit `tabIndex={-1}`). Auf `.surface-hero` wird `--ring` lokal zur hellen Akzentfarbe. Schneidet ein Elternteil mit `overflow-hidden` ihn ab: `focus-visible:-outline-offset-2`.

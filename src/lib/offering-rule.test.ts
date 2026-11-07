@@ -9,9 +9,9 @@ describe("consequenceCitations", () => {
   it("cites the module's own handbook entry for its offering (DR-4)", () => {
     const [citation] = consequenceCitations(
       {
-        id: "offering-m-mkt",
+        id: "offering-m-wi3",
         severity: "info",
-        title: "Marketing: nächster Termin",
+        title: "Wirtschaftsinformatik 3: nächster Termin",
         detail: "SS 2027; Angebot: jedes Semester.",
         ruleId: "DR-4",
       },
@@ -19,10 +19,10 @@ describe("consequenceCitations", () => {
       byId,
     );
     expect(citation.document).toBe(
-      "Modulhandbuch Wirtschaftsinformatik, Modul Marketing",
+      "Modulhandbuch UIB, Modul Wirtschaftsinformatik 3",
     );
     expect(citation.summary).toContain("jedes Semester");
-    expect(citation.verified).toBe(false);
+    expect(citation.verified).toBe(true);
   });
 
   it("uses the rule's own source otherwise", () => {

@@ -6,8 +6,8 @@ test("P5: T1, T3 und T4 auf Demodaten", async ({ page }) => {
     .getByRole("button", { name: "Demo ohne Einrichtung starten" })
     .click();
   const progress = page.getByRole("region", { name: "Dein Studienstand" });
-  await expect(progress).toContainText("12 ECTS hinter dem Soll");
-  await expect(progress).toContainText("78 von 90");
+  await expect(progress).toContainText("15 ECTS hinter dem Soll");
+  await expect(progress).toContainText("75 von 90");
   await page.goto("/assistent");
   await page
     .getByRole("button", {
@@ -16,9 +16,9 @@ test("P5: T1, T3 und T4 auf Demodaten", async ({ page }) => {
     })
     .click();
   const answer = page.getByRole("log").getByRole("article");
-  await expect(answer).toContainText("höchstens dreimal ablegen");
+  await expect(answer).toContainText("zweimal wiederholen");
   await expect(answer.getByRole("list", { name: "Quellen" })).toContainText(
-    "SPO",
+    "StuPO",
   );
   // Follow-up controls must not offer actions that are silently discarded while pending.
   const followUp = answer.getByRole("button", {
@@ -30,16 +30,16 @@ test("P5: T1, T3 und T4 auf Demodaten", async ({ page }) => {
   await expect(page.getByRole("log").getByRole("article")).toHaveCount(2);
   await page.goto("/postfach");
   await page
-    .getByRole("button", { name: /Raumänderung: Klausur Statistik/ })
+    .getByRole("button", { name: /Raumänderung: Klausur Programmierung 2/ })
     .click();
   await expect(page.getByRole("dialog")).toContainText("Raum A 210");
 });
 
-test("P5: T5 Marketing ohne Meilensteinverschiebung", async ({
+test("P5: T5 Wirtschaftsinformatik 3 ohne Meilensteinverschiebung", async ({
   page,
   isMobile,
 }) => {
-  await page.goto("/entscheidung/e-mkt-ws26");
+  await page.goto("/entscheidung/e-wi3-ws26");
   if (isMobile) {
     await expect(
       page
@@ -61,7 +61,7 @@ test("P5: T5 Marketing ohne Meilensteinverschiebung", async ({
     name: "Wenn du dich abmeldest",
     exact: true,
   });
-  await expect(consequences).toContainText("SS 2027: 48 ECTS geplant");
+  await expect(consequences).toContainText("SS 2027: 45 ECTS geplant");
   await expect(consequences).not.toContainText(
     "Praxissemester verschiebt sich",
   );
@@ -75,10 +75,10 @@ test("P5: T5 Marketing ohne Meilensteinverschiebung", async ({
 
 test("P5-07: „Warum?“ reagiert auch knapp neben dem Text", async ({ page }) => {
   // A deep link before the onboarding shows no speech bubble (P5-07).
-  await page.goto("/entscheidung/e-stat-ws26");
+  await page.goto("/entscheidung/e-pr2-ws26");
   for (const name of [
     "Warum? – Status",
-    "Warum? – Praxissemester verschiebt sich",
+    "Warum? – Unternehmensinformatikprojekt verschiebt sich",
   ]) {
     const why = page.getByRole("button", { name, exact: true });
     await why.scrollIntoViewIfNeeded();
