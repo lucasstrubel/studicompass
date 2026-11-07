@@ -126,13 +126,22 @@ export function StudyProgressCard() {
                 </>
               ) : (
                 <span className="text-body">
-                  Nicht planbar – bitte wende dich an das Prüfungsamt.
+                  Nicht planbar – bitte wende dich an die Prüfungsverwaltung.
                 </span>
               )}
             </dd>
           </div>
         </dl>
       </div>
+      {plan.projectShift !== null &&
+        plan.projectShift > 0 &&
+        plan.projectTerm && (
+          <p className="flex items-start gap-2 rounded-lg bg-status-critical-soft px-3 py-2 text-body font-medium text-status-critical-foreground">
+            <OctagonAlert className="mt-1 size-4 shrink-0" aria-hidden="true" />
+            Dein Unternehmensinformatikprojekt verschiebt sich voraussichtlich
+            auf {format(plan.projectTerm)}.
+          </p>
+        )}
       {plan.internshipShift !== null &&
         plan.internshipShift > 0 &&
         plan.internshipTerm && (

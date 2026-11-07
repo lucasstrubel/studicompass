@@ -50,7 +50,7 @@ test("P5-09: Quellen stehen als Fußzeile unter den Aktionen der Karte", async (
     .getByRole("link", { name: "Folgen prüfen" })
     .boundingBox();
   const sources = important.getByRole("list", { name: "Quellen" });
-  await expect(sources).toContainText("SPO Wirtschaftsinformatik");
+  await expect(sources).toContainText("StuPO Bachelor (ab 01.09.2026)");
   const box = await sources.boundingBox();
   expect(box?.y ?? 0).toBeGreaterThan((action?.y ?? 0) + (action?.height ?? 0));
 });
@@ -63,10 +63,12 @@ test("P5-10: Modulname führt zum Moduleintrag, Meilenstein markiert seine Modul
   await page
     .getByRole("button", { name: "Praxissemester", exact: true })
     .click();
-  await expect(page.locator("[data-marked]")).toHaveCount(15);
+  await expect(page.locator("[data-marked]")).toHaveCount(10);
   await expect(current).toContainText("für Praxissemester · noch offen");
-  await current.getByRole("link", { name: "Statistik", exact: true }).click();
-  await expect(page).toHaveURL(/\/module\/m-stat$/);
+  await current
+    .getByRole("link", { name: "Programmierung 2", exact: true })
+    .click();
+  await expect(page).toHaveURL(/\/module\/m-pr2$/);
 });
 
 test("P5-10: nach Verschiebungen bleiben die Boxen breit, nur die Zeitleiste scrollt", async ({
@@ -77,7 +79,7 @@ test("P5-10: nach Verschiebungen bleiben die Boxen breit, nur die Zeitleiste scr
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/verlauf");
   await page.getByRole("switch", { name: "Simulation" }).click();
-  await page.getByRole("button", { name: "Kolloquium verschieben" }).click();
+  await page.getByRole("button", { name: "Tutorium verschieben" }).click();
   await page.getByRole("menuitem").last().click();
   await page.getByRole("button", { name: "Weiter simulieren" }).click();
   const columns = page
@@ -99,7 +101,10 @@ const column = (page: Page, term: RegExp) =>
   page.getByRole("listitem", { name: term });
 const marketing = (page: Page) =>
   page.locator("[data-draggable]").filter({
-    has: page.getByRole("link", { name: "Marketing", exact: true }),
+    has: page.getByRole("link", {
+      name: "Wirtschaftsinformatik 3",
+      exact: true,
+    }),
   });
 
 test("P5-11: Drag & Drop mit der Maus ergibt dieselben Werte wie das Menü (Szenario D)", async ({
@@ -127,23 +132,28 @@ test("P5-11: Drag & Drop mit der Maus ergibt dieselben Werte wie das Menü (Szen
   await page.mouse.move(to.x + to.width / 2, from.y + 10, { steps: 15 });
   await page.mouse.up();
   const dialog = page.getByRole("dialog", {
-    name: "Simulation: Marketing → SS 2027",
+    name: "Simulation: Wirtschaftsinformatik 3 → SS 2027",
   });
   await expect(dialog).toBeVisible();
   await dialog.getByRole("button", { name: "Weiter simulieren" }).click();
   const status = page.getByRole("status", { name: "Simulationsstatus" });
   const byDrag = await status.textContent();
-  await expect(target).toContainText("48 ECTS geplant");
+  await expect(target).toContainText("45 ECTS geplant");
   await expect(status).toContainText("Abschluss in der Simulation: WS 2028/29");
 
   // Same move through the menu.
   await status.getByRole("button", { name: "Simulation verwerfen" }).click();
   await page.getByRole("switch", { name: "Simulation" }).click();
-  await page.getByRole("button", { name: "Marketing verschieben" }).click();
+  await page
+    .getByRole("button", {
+      name: "Wirtschaftsinformatik 3 verschieben",
+      exact: true,
+    })
+    .click();
   await page.getByRole("menuitem", { name: "SS 2027" }).click();
   await page.getByRole("button", { name: "Weiter simulieren" }).click();
   await expect(status).toHaveText(byDrag ?? "");
-  await expect(target).toContainText("48 ECTS geplant");
+  await expect(target).toContainText("45 ECTS geplant");
 });
 
 test("P5-11: Drag & Drop per Touch (langes Drücken)", async ({
@@ -181,7 +191,9 @@ test("P5-11: Drag & Drop per Touch (langes Drücken)", async ({
     );
   await touch("touchEnd", end.x, end.y);
   await expect(
-    page.getByRole("dialog", { name: "Simulation: Marketing → SS 2027" }),
+    page.getByRole("dialog", {
+      name: "Simulation: Wirtschaftsinformatik 3 → SS 2027",
+    }),
   ).toBeVisible();
 });
 
@@ -206,9 +218,9 @@ test("P5-12: ECTS-Verlauf startet bei 0 und zeigt die Differenz beim Überfahren
     await page.mouse.move(x, box.y + box.height / 2);
     if ((await tooltip.textContent())?.includes("SS 2026")) break;
   }
-  await expect(tooltip).toContainText("Ist: 48 ECTS");
+  await expect(tooltip).toContainText("Ist: 45 ECTS");
   await expect(tooltip).toContainText("Soll: 60 ECTS");
-  await expect(tooltip).toContainText("12 ECTS unter Soll");
+  await expect(tooltip).toContainText("15 ECTS unter Soll");
 });
 
 test("P5-12: aktuelles Semester ohne Scrollen sichtbar, Notiz übersteht Neuladen", async ({
@@ -221,7 +233,9 @@ test("P5-12: aktuelles Semester ohne Scrollen sichtbar, Notiz übersteht Neulade
   await expect(
     page.getByRole("table", { name: "Module im 3. Fachsemester" }),
   ).toBeInViewport({ ratio: 1 });
-  await page.getByRole("link", { name: "Statistik", exact: true }).click();
+  await page
+    .getByRole("link", { name: "Datenmanagement", exact: true })
+    .click();
   await page
     .getByLabel("Notizen zum Modul")
     .fill("Probeklausur bis Dienstag rechnen");
@@ -254,7 +268,7 @@ test("P5-13: eigener Termin morgen 10:00 erscheint in den Fristen und als nächs
   await page.goto("/fristen");
   await page.getByRole("button", { name: "Termin hinzufügen" }).click();
   const dialog = page.getByRole("dialog", { name: "Termin hinzufügen" });
-  await dialog.getByLabel("Titel").fill("Lerngruppe Statistik");
+  await dialog.getByLabel("Titel").fill("Lerngruppe Programmierung 2");
   await dialog.getByLabel("Datum").fill("2027-01-26");
   await dialog.getByLabel("Uhrzeit (optional)").fill("10:00");
   await dialog.getByLabel("Art").selectOption("appointment");
@@ -262,7 +276,7 @@ test("P5-13: eigener Termin morgen 10:00 erscheint in den Fristen und als nächs
   await expect(
     page
       .getByRole("region", { name: "Diese Woche" })
-      .getByRole("heading", { name: "Lerngruppe Statistik" }),
+      .getByRole("heading", { name: "Lerngruppe Programmierung 2" }),
   ).toBeVisible();
   await page.reload();
   await page.goto("/");
@@ -270,14 +284,14 @@ test("P5-13: eigener Termin morgen 10:00 erscheint in den Fristen und als nächs
     .getByRole("button", { name: "Demo ohne Einrichtung starten" })
     .click();
   const next = page.getByRole("region", { name: "Nächste Frist" }).first();
-  await expect(next).toContainText("Lerngruppe Statistik");
+  await expect(next).toContainText("Lerngruppe Programmierung 2");
   await expect(next).toContainText("Eigener Eintrag");
 });
 
 test("P5-13: Prüfungsvorleistung erbracht → zur Prüfung zugelassen", async ({
   page,
 }) => {
-  await page.goto("/module/m-stat");
+  await page.goto("/module/m-pr2");
   const card = page.getByRole("region", { name: "Prüfungsvorleistung" });
   await card
     .getByRole("button", { name: "Prüfungsvorleistung eintragen" })

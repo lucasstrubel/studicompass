@@ -14,8 +14,8 @@ it("P4-04: ICS erhält UTC, inklusive Datumsbereiche und stabile IDs", () => {
   expect(ics).toContain(
     "DTSTART;VALUE=DATE:20270510\r\nDTEND;VALUE=DATE:20270525",
   );
-  expect(ics).toContain("UID:d-stat-abm@studicompass.example");
-  expect(ics.match(/BEGIN:VEVENT/g)).toHaveLength(10);
+  expect(ics).toContain("UID:d-pr2-abm@studicompass.example");
+  expect(ics.match(/BEGIN:VEVENT/g)).toHaveLength(9);
   expect(ics.endsWith("END:VCALENDAR\r\n")).toBe(true);
   expect(ics.replaceAll("\r\n", "")).not.toMatch(/[\r\n]/);
   expect(deadlinesToIcs(deadlines)).toBe(ics);
@@ -45,12 +45,12 @@ it("P4-04: gruppiert relativ zur Demo-Zeit und zur Kalenderwoche", () => {
   expect(deadlineInstant("2027-05-14")).toBe("2027-05-14T23:59:59+02:00");
   expect(deadlineInstant("2027-02-15")).toBe("2027-02-15T23:59:59+01:00");
   const groups = groupDeadlines(deadlines, DEMO_NOW);
-  expect(groups.map((group) => group.items.length)).toEqual([3, 5, 2]);
+  expect(groups.map((group) => group.items.length)).toEqual([3, 4, 2]);
   const sunday = groupDeadlines(
     deadlines,
     new Date("2027-01-31T12:00:00+01:00"),
   );
-  expect(sunday[0].items.map((item) => item.id)).toEqual(["d-mkt-fs5"]);
+  expect(sunday[0].items.map((item) => item.id)).toEqual(["d-wi3-ue5"]);
   expect(
     groupDeadlines(deadlines, new Date("2028-01-01T00:00:00Z")).flatMap(
       (group) => group.items,

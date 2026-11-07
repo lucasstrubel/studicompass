@@ -15,21 +15,27 @@ test("P5-14: Kalender zeigt Abmeldefrist, Prüfung und Links; URL und Neuladen b
     name: "Einträge am ausgewählten Tag",
   });
   await expect(
-    selected.getByRole("heading", { name: "Abmeldung Statistik", exact: true }),
+    selected.getByRole("heading", {
+      name: "Abmeldung Programmierung 2",
+      exact: true,
+    }),
   ).toBeVisible();
   await expect(
     selected.getByRole("link", { name: "Folgen prüfen" }),
-  ).toHaveAttribute("href", "/entscheidung/e-stat-ws26");
+  ).toHaveAttribute("href", "/entscheidung/e-pr2-ws26");
   await page.keyboard.press("ArrowRight");
   await expect(
     page.getByRole("button", { name: /Mi, 27.01.2027,/ }),
   ).toBeFocused();
   await expect(
-    selected.getByRole("heading", { name: "Prüfung Statistik", exact: true }),
+    selected.getByRole("heading", {
+      name: "Prüfung Programmierung 2",
+      exact: true,
+    }),
   ).toBeVisible();
   await expect(
     selected.getByRole("link", { name: "Zum Modul" }),
-  ).toHaveAttribute("href", "/module/m-stat");
+  ).toHaveAttribute("href", "/module/m-pr2");
   await page.keyboard.press("PageDown");
   await expect(
     page.getByRole("heading", { name: "Februar 2027" }),
@@ -91,7 +97,7 @@ test("P5-14: Kalender ohne horizontales Scrollen bei 360 px", async ({
   await page.getByRole("button", { name: /Di, 26.01.2027,/ }).tap();
   await expect(
     page.getByRole("region", { name: "Einträge am ausgewählten Tag" }),
-  ).toContainText("Abmeldung Statistik");
+  ).toContainText("Abmeldung Programmierung 2");
   expect(
     await page.evaluate(
       () =>

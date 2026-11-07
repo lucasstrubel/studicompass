@@ -21,5 +21,5 @@ export const FLAGS = { simulateErrors: false };
 
 /** Increment whenever the dummy data changes to discard older persisted demo states. */
 // P5-15 adds approved office responsibilities and A-09; preferences from versions 2/3 migrate additively.
-export const DATA_VERSION = 4;
+export const DATA_VERSION = 5;
 export const DEMO_STORAGE_KEY = `${APP_NAME.toLowerCase()}:demo`;

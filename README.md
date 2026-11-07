@@ -46,7 +46,7 @@ Beim ersten Aufruf der Übersicht öffnet sich das vierstufige Onboarding. „De
 
 ## Daten und Berechnungen
 
-- `src/data/` enthält die Beispieldaten; ungeprüfte Regeln bleiben mit `verified: false` gekennzeichnet.
+- `src/data/` enthält die Demodaten. Regeln stammen aus der StuPO Bachelor der TH Mannheim (Fassung ab 01.09.2026, nichtamtliche Lesefassung, § 56 für UIB) und nennen ihren Paragraphen, Module aus dem [Modulhandbuch UIB](https://module.informatik.th-mannheim.de/UIB). Noten, Termine, Mails und Kontaktdaten sind erfunden; eigene Rechenregeln bleiben mit `verified: false` als „Beispiel“ gekennzeichnet.
 - Sechs Services laden POS, Moodle, Mail, Website, Regelwerk und Assistent unabhängig voneinander. Die Mocks warten 500 ms; `FLAGS.simulateErrors` in `src/config/demo.ts` aktiviert Fehler. Es gibt keine Hochschul-Requests.
 - `src/store/demo-store.ts` hält Ladezustände, Einstellungen und Simulationen. `hydrate()` lädt die Daten, `retry()` wiederholt einen einzelnen Service. Unter `/_ui` lassen sich Ladezustände und Fehler beobachten; Übersicht, Folgen-Check und Studienverlauf zeigen sie je Kanal (Phase 3).
 - `src/store/selectors.ts` liefert akademischen Zustand, Studienstand, Prognose, Postfach, Fristen und Benachrichtigungen. Berechnete Selektoren liefern bei unverändertem Store stabile Referenzen für React.

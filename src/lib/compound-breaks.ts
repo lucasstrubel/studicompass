@@ -13,6 +13,10 @@ const HEADS = [
   "semester",
   "arbeit",
   "modul",
+  "projekt",
+  "wirtschafts",
+  "lehre",
+  "prüfung",
 ];
 // A joint: a lowercase letter directly followed by one of the heads.
 const PATTERN = new RegExp(String.raw`(?<=\p{Ll})(?=${HEADS.join("|")})`, "u");

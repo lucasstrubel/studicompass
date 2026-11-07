@@ -3,12 +3,12 @@ import { academicFixture } from "@/test/academic-fixture";
 import { compareDecision, hasSpecialRuleImpact } from "./decision";
 
 describe("hasSpecialRuleImpact", () => {
-  it("flags Statistik (only in WS, delays the internship) but not Marketing (scenario A vs. D)", () => {
+  it("flags Programmierung 2 (only in WS, delays the internship) but not Wirtschaftsinformatik 3 (scenario A vs. D)", () => {
     const state = academicFixture();
-    expect(hasSpecialRuleImpact(compareDecision(state, "e-stat-ws26"))).toBe(
+    expect(hasSpecialRuleImpact(compareDecision(state, "e-pr2-ws26"))).toBe(
       true,
     );
-    expect(hasSpecialRuleImpact(compareDecision(state, "e-mkt-ws26"))).toBe(
+    expect(hasSpecialRuleImpact(compareDecision(state, "e-wi3-ws26"))).toBe(
       false,
     );
   });

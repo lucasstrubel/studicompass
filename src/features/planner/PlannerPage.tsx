@@ -42,7 +42,7 @@ import {
   type MilestoneMarking,
 } from "./Timeline";
 
-const PLAN_RULES = ["DR-4", "DR-6", "DR-7", "DR-10"];
+const PLAN_RULES = ["DR-4", "DR-6", "DR-7", "DR-10", "DR-11", "DR-15"];
 
 /** The last move plus the simulation before it, so "zurücknehmen" restores exactly that step (P5-11 review). */
 interface MoveRecord extends LastMove {
@@ -55,7 +55,8 @@ interface MoveRecord extends LastMove {
 const MARKED: Record<MilestoneKind, string> = {
   foundationEnd: "Module des Grundstudiums",
   internship: "Module, die vor dem Praxissemester bestanden sein müssen",
-  project: "Was vor dem Projektsemester bestanden sein muss",
+  project:
+    "Module, die vor dem Unternehmensinformatikprojekt bestanden sein müssen",
   thesis: "Was vor der Bachelorarbeit bestanden sein muss",
 };
 
@@ -126,15 +127,15 @@ function PlannerContent() {
   // Milestone modules never move by hand; each box says what it depends on (feedback P5-F18).
   const fixedNotes: Partial<Record<MilestoneKind, FixedMilestoneNote>> = {
     internship: {
-      text: "Rutscht automatisch nach hinten, wenn Module des Grundstudiums fehlen.",
+      text: "Rutscht nach hinten, wenn die Bachelorvorprüfung oder 30 ECTS aus dem Hauptstudium fehlen.",
       citation: rules["DR-6"]?.citation,
     },
     project: {
-      text: "Folgt auf das Praxissemester und rutscht mit ihm.",
+      text: "Setzt die Bachelorvorprüfung voraus und läuft nur im Sommersemester.",
       citation: rules["DR-11"]?.citation,
     },
     thesis: {
-      text: "Folgt auf Praxis- und Projektsemester und rutscht mit ihnen.",
+      text: "Frühestens im 6. Semester, nach dem Praxissemester und allen Leistungen der ersten fünf Semester.",
       citation: rules["DR-12"]?.citation,
     },
   };
@@ -261,7 +262,7 @@ function PlannerContent() {
             ) : (
               <p>
                 Ohne weiteren Prüfungsversuch lässt sich kein Abschluss planen.
-                Wende dich an das Prüfungsamt.
+                Wende dich an die Prüfungsverwaltung.
               </p>
             )}
             {goalRegularTime && (
@@ -333,6 +334,7 @@ function PlannerContent() {
               </span>
               {basePlan.graduationTerm &&
                 ` (echter Plan: ${format(basePlan.graduationTerm)})`}
+              {plan.projectTerm && ` · Projekt ${format(plan.projectTerm)}`}
               {plan.internshipTerm &&
                 ` · Praxissemester ${format(plan.internshipTerm)}`}
             </p>
@@ -413,7 +415,7 @@ function PlannerContent() {
         {timeline.terms.length === 0 ? (
           <EmptyState
             title="Kein Verlauf planbar"
-            description="Für ein Modul sind alle Prüfungsversuche genutzt. Das Prüfungsamt klärt, wie es weitergeht."
+            description="Für ein Modul sind alle Prüfungsversuche genutzt. Die Prüfungsverwaltung klärt, wie es weitergeht."
           />
         ) : (
           <Timeline

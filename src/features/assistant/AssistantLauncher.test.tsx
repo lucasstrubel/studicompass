@@ -122,7 +122,7 @@ describe("assistant button and window (P5-06)", () => {
   });
 
   it("answers in place with sources and keeps the conversation after closing", async () => {
-    renderApp("/entscheidung/e-stat-ws26");
+    renderApp("/entscheidung/e-pr2-ws26");
     fireEvent.click(launcher());
     const panel = within(assistantWindow());
     expect(panel.getByRole("textbox", { name: "Deine Frage" })).toHaveFocus();
@@ -175,7 +175,7 @@ describe("assistant button and window (P5-06)", () => {
     fireEvent.click(launcher());
     fireEvent.change(
       within(assistantWindow()).getByRole("textbox", { name: "Deine Frage" }),
-      { target: { value: "Wann wird Statistik angeboten?" } },
+      { target: { value: "Wann wird Programmierung 2 angeboten?" } },
     );
     fireEvent.click(
       within(assistantWindow()).getByRole("button", { name: "Frage stellen" }),
@@ -190,7 +190,7 @@ describe("assistant button and window (P5-06)", () => {
     expect(router.state.location.pathname).toBe("/assistent");
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(screen.getByRole("log")).toHaveTextContent(
-      "Wann wird Statistik angeboten?",
+      "Wann wird Programmierung 2 angeboten?",
     );
 
     await act(() => router.navigate("/"));

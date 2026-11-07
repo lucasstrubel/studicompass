@@ -7,10 +7,10 @@ describe("compoundParts", () => {
       "Grundlagen der Wirtschafts",
       "informatik",
     ]);
-    expect(compoundParts("Geschäftsprozessmanagement")).toEqual([
-      "Geschäfts",
-      "prozess",
-      "management",
+    expect(compoundParts("Betriebswirtschaftslehre 2")).toEqual([
+      "Betriebs",
+      "wirtschafts",
+      "lehre 2",
     ]);
     expect(compoundParts("Wirtschaftsprivatrecht")).toEqual([
       "Wirtschafts",
@@ -24,7 +24,7 @@ describe("compoundParts", () => {
   });
 
   it("leaves short titles and word starts alone", () => {
-    expect(compoundParts("Statistik")).toEqual(["Statistik"]);
+    expect(compoundParts("Programmierung 2")).toEqual(["Programmierung 2"]);
     expect(compoundParts("Modul Recht")).toEqual(["Modul Recht"]);
     expect(compoundParts("Praxissemester").join("")).toBe("Praxissemester");
   });

@@ -3,11 +3,19 @@ import type { IllustrationKind } from "./ModuleIllustration";
 
 // Presentation only: which line drawing and which colour of the family stand next to which module.
 const MODULE_ART: Record<string, IllustrationKind> = {
-  "m-stat": "chart",
-  "m-db": "database",
-  "m-se1": "books",
-  "m-gpm": "process",
-  "m-mkt": "globe",
+  "m-pr1": "code",
+  "m-pr2": "code",
+  "m-dm": "database",
+  "m-web": "globe",
+  "m-wi1": "process",
+  "m-wi2": "process",
+  "m-wi3": "process",
+  "m-bwl1": "chart",
+  "m-bwl2": "chart",
+  "m-bwl3": "chart",
+  "m-ma1": "chart",
+  "m-ma2": "chart",
+  "m-ma3": "chart",
 };
 
 export type ModuleTone = "violet" | "teal" | "blue" | "plum" | "slate";
@@ -22,11 +30,11 @@ const TONES: readonly ModuleTone[] = [
 
 // The modules of the overview, each in its own colour.
 const MODULE_TONES: Record<string, ModuleTone> = {
-  "m-stat": "violet",
-  "m-db": "teal",
-  "m-se1": "blue",
-  "m-gpm": "plum",
-  "m-mkt": "slate",
+  "m-pr2": "violet",
+  "m-dm": "teal",
+  "m-web": "blue",
+  "m-bwl2": "plum",
+  "m-wi3": "slate",
 };
 
 export function moduleArt(moduleId: string): IllustrationKind {

@@ -13,7 +13,7 @@ import { DEMO_STORAGE_KEY, LATENCY_MS } from "@/config/demo";
 import { ModulesPage } from "./ModulesPage";
 
 afterEach(() => vi.useRealTimers());
-it.each(["/module", "/module/m-stat", "/module/unbekannt"])(
+it.each(["/module", "/module/m-pr2", "/module/unbekannt"])(
   "P4-03: Liste und Moduldetail %s",
   async (path) => {
     vi.useFakeTimers();
@@ -29,16 +29,16 @@ it.each(["/module", "/module/m-stat", "/module/unbekannt"])(
       />,
     );
     if (path === "/module") {
-      expect(screen.getByText("48")).toBeInTheDocument();
-      expect(screen.getByText("2,4")).toBeInTheDocument();
+      expect(screen.getByText("45")).toBeInTheDocument();
+      expect(screen.getByText("2,3")).toBeInTheDocument();
       expect(screen.getByText("8")).toBeInTheDocument();
-    } else if (path.endsWith("m-stat")) {
+    } else if (path.endsWith("m-pr2")) {
       expect(
         screen.getByRole("link", { name: "Folgen einer Abmeldung prüfen" }),
-      ).toHaveAttribute("href", "/entscheidung/e-stat-ws26");
+      ).toHaveAttribute("href", "/entscheidung/e-pr2-ws26");
       expect(
         screen.getByRole("link", { name: "Frage zu diesem Modul stellen" }),
-      ).toHaveAttribute("href", "/assistent?module=m-stat");
+      ).toHaveAttribute("href", "/assistent?module=m-pr2");
       expect(
         screen.getByText("Übungsblätter 5/12 · letzte Aktivität vor 16 Tagen"),
       ).toBeInTheDocument();
@@ -94,25 +94,24 @@ describe("Module & Noten kompakt (P5-12)", () => {
     );
     expect(
       screen.getByRole("table", { name: "Module im 3. Fachsemester" }),
-    ).toHaveTextContent("Statistik");
+    ).toHaveTextContent("Datenmanagement");
     await user.click(screen.getByRole("button", { name: "Alle aufklappen" }));
     expect(
       screen.getByRole("table", { name: "Module im 7. Fachsemester" }),
     ).toHaveTextContent("Bachelorarbeit");
-    expect(screen.getByRole("link", { name: "Statistik" })).toHaveAttribute(
-      "href",
-      "/module/m-stat",
-    );
+    expect(
+      screen.getByRole("link", { name: "Programmierung 2" }),
+    ).toHaveAttribute("href", "/module/m-pr2");
   });
 });
 
 describe("Prüfungsvorleistung (P5-13)", () => {
   it("is entered for modules of this semester and drives the admission (DR-13)", async () => {
-    await renderAt("/module/m-stat");
+    await renderAt("/module/m-pr2");
     const user = userEvent.setup();
     const card = screen.getByRole("region", { name: "Prüfungsvorleistung" });
     expect(card).toHaveTextContent(
-      "Für Statistik ist keine Prüfungsvorleistung eingetragen.",
+      "Für Programmierung 2 ist keine Prüfungsvorleistung eingetragen.",
     );
     await user.click(
       within(card).getByRole("button", {
@@ -129,7 +128,7 @@ describe("Prüfungsvorleistung (P5-13)", () => {
     );
     expect(
       within(card).getByRole("list", { name: "Quellen" }),
-    ).toHaveTextContent("Modulhandbuch Wirtschaftsinformatik");
+    ).toHaveTextContent("StuPO Bachelor (ab 01.09.2026), § 56 Abs. 1");
     await user.selectOptions(
       within(card).getByLabelText("Stand von 8 von 12 Übungsblättern"),
       "erbracht",
@@ -143,7 +142,7 @@ describe("Prüfungsvorleistung (P5-13)", () => {
   });
 
   it("is not offered for modules without an exam this semester", async () => {
-    await renderAt("/module/m-gwi");
+    await renderAt("/module/m-ei");
     expect(
       screen.queryByRole("region", { name: "Prüfungsvorleistung" }),
     ).not.toBeInTheDocument();
@@ -152,14 +151,14 @@ describe("Prüfungsvorleistung (P5-13)", () => {
 
 describe("Moduldetail: Kurs-Links und Notizen (P5-12)", () => {
   it("shows the Moodle handover as a hint and keeps an own address", async () => {
-    await renderAt("/module/m-stat");
+    await renderAt("/module/m-pr2");
     const user = userEvent.setup();
     const links = screen.getByRole("region", { name: "Links zum Kurs" });
     await user.click(
       within(links).getByRole("button", { name: "Moodle-Kurs öffnen" }),
     );
     expect(links).toHaveTextContent(
-      "Im echten Betrieb öffnet sich der Moodle-Kurs „Statistik“.",
+      "Im echten Betrieb öffnet sich der Moodle-Kurs „Programmierung 2“.",
     );
     await user.click(
       within(links).getByRole("button", { name: "Eigene Adresse festlegen" }),
@@ -185,13 +184,13 @@ describe("Moduldetail: Kurs-Links und Notizen (P5-12)", () => {
     expect(
       within(links).getByRole("link", { name: /Moodle-Kurs öffnen/ }),
     ).toHaveAttribute("href", "https://moodle.example/course/7");
-    expect(demoStore.getState().moodleUrls["m-stat"]).toBe(
+    expect(demoStore.getState().moodleUrls["m-pr2"]).toBe(
       "https://moodle.example/course/7",
     );
   });
 
   it("adds, opens in a new tab and removes an own link", async () => {
-    await renderAt("/module/m-stat");
+    await renderAt("/module/m-pr2");
     const user = userEvent.setup();
     const links = screen.getByRole("region", { name: "Links zum Kurs" });
     await user.click(
@@ -226,20 +225,20 @@ describe("Moduldetail: Kurs-Links und Notizen (P5-12)", () => {
   });
 
   it("saves notes per module while typing", async () => {
-    await renderAt("/module/m-stat");
+    await renderAt("/module/m-pr2");
     const user = userEvent.setup();
     await user.type(
       screen.getByLabelText("Notizen zum Modul"),
       "Probeklausur rechnen",
     );
     expect(await screen.findByText("Gespeichert")).toBeVisible();
-    expect(demoStore.getState().moduleNotes["m-stat"]).toBe(
+    expect(demoStore.getState().moduleNotes["m-pr2"]).toBe(
       "Probeklausur rechnen",
     );
   });
 
   it("persists the latest edit and deletion immediately, while the note still has focus", async () => {
-    await renderAt("/module/m-stat");
+    await renderAt("/module/m-pr2");
     const note = screen.getByLabelText("Notizen zum Modul");
     note.focus();
     fireEvent.change(note, { target: { value: "Noch offene Frage" } });
@@ -247,7 +246,7 @@ describe("Moduldetail: Kurs-Links und Notizen (P5-12)", () => {
     expect(
       JSON.parse(localStorage.getItem(DEMO_STORAGE_KEY) ?? "null"),
     ).toMatchObject({
-      state: { moduleNotes: { "m-stat": "Noch offene Frage" } },
+      state: { moduleNotes: { "m-pr2": "Noch offene Frage" } },
     });
     fireEvent.change(note, { target: { value: "" } });
     expect(
@@ -258,11 +257,11 @@ describe("Moduldetail: Kurs-Links und Notizen (P5-12)", () => {
   });
 
   it("keeps a note typed right before leaving the page (P5-12 review)", async () => {
-    await renderAt("/module/m-stat");
+    await renderAt("/module/m-pr2");
     const user = userEvent.setup();
     await user.type(screen.getByLabelText("Notizen zum Modul"), "Blatt 12");
     // Leaving the page must retain the last edit as well.
     cleanup();
-    expect(demoStore.getState().moduleNotes["m-stat"]).toBe("Blatt 12");
+    expect(demoStore.getState().moduleNotes["m-pr2"]).toBe("Blatt 12");
   });
 });

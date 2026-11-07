@@ -19,6 +19,14 @@ function curriculumTerm(start: Term, semester: number): Term {
   return term;
 }
 
+/** DR-6: ECTS from the main phase that the internship requires. */
+const MIN_MAIN_ECTS = 30;
+
+/** DR-15: a retake follows in the next exam period, whatever the lecture's offering. */
+function retakeTerm(after: Term): Term {
+  return next(after);
+}
+
 function latest(terms: Term[], fallback: Term): Term {
   return terms.reduce(
     (result, term) => (compare(term, result) > 0 ? term : result),
@@ -42,6 +50,7 @@ function calculate(
   );
   if (!internship || modules.length === 0)
     throw new RangeError("Der Studienverlaufsplan braucht ein Praxissemester.");
+  const project = modules.find((module) => module.isMilestone === "project");
   const passed = passedModuleRecords(exams);
   const byId = new Map(modules.map((module) => [module.id, module]));
   const changes = new Map<string, PlanOverride>();
@@ -80,7 +89,9 @@ function calculate(
         term:
           override.action === "move"
             ? { ...override.term }
-            : nextOfferingTerm(module, currentTerm),
+            : override.action === "fail"
+              ? retakeTerm(currentTerm)
+              : nextOfferingTerm(module, currentTerm),
         passed: false,
       };
     const history = exams.filter((exam) => exam.moduleId === module.id);
@@ -92,12 +103,15 @@ function calculate(
       student.startTerm,
       module.plannedSemester,
     );
-    // A curriculum slot that has passed without an attempt is caught up after the current term (DR-4).
+    // A retake follows in the next exam period (DR-15); a curriculum slot that has passed without an
+    // attempt is caught up in the next offering (DR-4).
     const term = registered
       ? { ...currentTerm }
-      : history.length > 0 || compare(curriculum, currentTerm) <= 0
-        ? nextOfferingTerm(module, currentTerm)
-        : curriculum;
+      : history.some((exam) => exam.status === "failed")
+        ? retakeTerm(currentTerm)
+        : history.length > 0 || compare(curriculum, currentTerm) <= 0
+          ? nextOfferingTerm(module, currentTerm)
+          : curriculum;
     return { moduleId: module.id, term, passed: false };
   });
   const termOf = (id: string): Term => {
@@ -111,42 +125,90 @@ function calculate(
       .map((module) => termOf(module.id)),
     student.startTerm,
   );
+  const afterFoundation = next(foundationCompletionTerm);
+  const setTerm = (id: string, term: Term) => {
+    planned = planned.map((entry) =>
+      entry.moduleId === id ? { ...entry, term: { ...term } } : entry,
+    );
+  };
+
+  // DR-11: the project needs the finished foundation phase and runs in its offered season only.
+  const regularProject = project
+    ? curriculumTerm(student.startTerm, project.plannedSemester)
+    : null;
+  let projectTerm: Term | null = null;
+  if (project && regularProject) {
+    projectTerm = passed.has(project.id)
+      ? termOf(project.id)
+      : offeredAtOrAfter(
+          project,
+          latest(
+            [regularProject, afterFoundation, termOf(project.id)],
+            regularProject,
+          ),
+        );
+    setTerm(project.id, projectTerm);
+  }
+  const projectShift =
+    projectTerm && regularProject
+      ? Math.max(0, semesterNumber(projectTerm, regularProject) - 1)
+      : 0;
+
+  // DR-6: the internship needs the finished foundation phase and enough ECTS from the main phase.
   const regularInternship = curriculumTerm(
     student.startTerm,
     internship.plannedSemester,
   );
-  const internshipTerm = passed.has(internship.id)
+  const mainEctsBefore = (term: Term) =>
+    planned.reduce((sum, entry) => {
+      const module = byId.get(entry.moduleId);
+      return module?.phase === "main" &&
+        module.id !== internship.id &&
+        compare(entry.term, term) < 0
+        ? sum + module.ects
+        : sum;
+    }, 0);
+  let internshipTerm = passed.has(internship.id)
     ? termOf(internship.id)
     : offeredAtOrAfter(
         internship,
         latest(
-          [
-            regularInternship,
-            next(foundationCompletionTerm),
-            termOf(internship.id),
-          ],
+          [regularInternship, afterFoundation, termOf(internship.id)],
           regularInternship,
         ),
       );
+  if (!passed.has(internship.id))
+    for (
+      let guard = 0;
+      guard < modules.length && mainEctsBefore(internshipTerm) < MIN_MAIN_ECTS;
+      guard++
+    )
+      internshipTerm = offeredAtOrAfter(internship, next(internshipTerm));
+  setTerm(internship.id, internshipTerm);
   const internshipShift = Math.max(
     0,
     semesterNumber(internshipTerm, regularInternship) - 1,
   );
 
-  // Shift every unpassed module from the internship onward, then reapply DR-4.
+  // Everything planned after project and internship follows the later of the two, then reapplies DR-4.
+  const lastGate = Math.max(
+    internship.plannedSemester,
+    project?.plannedSemester ?? 0,
+  );
+  const gateShift = Math.max(
+    0,
+    semesterNumber(
+      latest([internshipTerm, projectTerm ?? internshipTerm], internshipTerm),
+      curriculumTerm(student.startTerm, lastGate),
+    ) - 1,
+  );
   planned = planned.map((entry) => {
     const module = byId.get(entry.moduleId);
-    if (
-      !module ||
-      entry.passed ||
-      module.plannedSemester < internship.plannedSemester
-    )
+    if (!module || entry.passed || module.plannedSemester <= lastGate)
       return entry;
-    if (module.id === internship.id)
-      return { ...entry, term: { ...internshipTerm } };
     const shifted = curriculumTerm(
       student.startTerm,
-      module.plannedSemester + internshipShift,
+      module.plannedSemester + gateShift,
     );
     return {
       ...entry,
@@ -227,7 +289,7 @@ function calculate(
       id: "internship-shift",
       severity: "critical",
       title: "Praxissemester verschiebt sich",
-      detail: `Frühestens ${format(internshipTerm)} statt ${format(regularInternship)}: Das Grundstudium muss vorher abgeschlossen sein.`,
+      detail: `Frühestens ${format(internshipTerm)} statt ${format(regularInternship)}: Vorher müssen die Bachelorvorprüfung abgeschlossen und ${MIN_MAIN_ECTS} ECTS aus dem Hauptstudium erreicht sein.`,
       ruleId: "DR-6",
     });
   for (const module of modules) {
@@ -239,8 +301,11 @@ function calculate(
         id: `milestone-${module.id}`,
         severity: "critical",
         title: `${module.title} verschiebt sich`,
-        detail: `${format(actual)} statt ${format(regular)}.`,
-        ruleId: internshipShift > 0 ? "DR-6" : "DR-4",
+        detail:
+          module.isMilestone === "project"
+            ? `${format(actual)} statt ${format(regular)}: Es setzt die abgeschlossene Bachelorvorprüfung voraus und läuft nur im ${module.offering === "SS" ? "Sommersemester" : "Wintersemester"}.`
+            : `${format(actual)} statt ${format(regular)}.`,
+        ruleId: module.isMilestone === "project" ? "DR-11" : "DR-12",
       });
   }
   if (compare(graduationTerm, regularGraduation) > 0)
@@ -249,7 +314,8 @@ function calculate(
       severity: "critical",
       title: "Abschluss verschiebt sich",
       detail: `Voraussichtlich ${format(graduationTerm)} statt ${format(regularGraduation)}.`,
-      ruleId: internshipShift > 0 ? "DR-6" : "DR-4",
+      ruleId:
+        projectShift > 0 ? "DR-11" : internshipShift > 0 ? "DR-6" : "DR-4",
     });
   if (openFoundationAfterTerm >= 3)
     consequences.push({
@@ -259,7 +325,7 @@ function calculate(
         openFoundationAfterTerm > 3
           ? "Grenze überschritten"
           : "Grenze erreicht",
-      detail: `${openFoundationAfterTerm} Prüfungen des Grundstudiums sind nach diesem Semester offen. Für Prüfungen des Hauptstudiums dürfen höchstens drei offen sein.`,
+      detail: `${openFoundationAfterTerm} Prüfungen der Bachelorvorprüfung sind nach diesem Semester offen. Für Prüfungen des Hauptstudiums dürfen höchstens drei fehlen.`,
       ruleId: "DR-7",
     });
   for (const term of terms) {
@@ -280,6 +346,8 @@ function calculate(
     foundationCompletionTerm,
     internshipTerm,
     internshipShift,
+    projectTerm,
+    projectShift: project ? projectShift : null,
     graduationTerm,
     ectsEndOfTerm,
     targetEndOfTerm,
@@ -363,6 +431,8 @@ export function projectPlan(
       foundationCompletionTerm: null,
       internshipTerm: null,
       internshipShift: null,
+      projectTerm: null,
+      projectShift: null,
       graduationTerm: null,
       ectsEndOfTerm,
       targetEndOfTerm: targetEcts(
@@ -376,7 +446,7 @@ export function projectPlan(
         severity: "critical",
         title: `${module.title}: Prüfungsversuche ausgeschöpft`,
         detail:
-          "Drei Prüfungsversuche sind genutzt. Ein weiterer regulärer Versuch ist nicht vorgesehen. Praxis- und Abschlusstermin sind offen; kläre das weitere Vorgehen mit dem Prüfungsamt.",
+          "Drei Prüfungsversuche sind genutzt. Ein weiterer regulärer Versuch ist nicht vorgesehen. Praxis- und Abschlusstermin sind offen; kläre das weitere Vorgehen mit dem Zentrale Prüfungsverwaltung.",
         ruleId: "DR-8",
       })),
     };

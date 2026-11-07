@@ -48,7 +48,7 @@ describe("formatRelativeDay", () => {
 });
 
 describe("formatCountdown", () => {
-  it("shows the Statistik deadline", () => {
+  it("shows the Programmierung 2 deadline", () => {
     expect(formatCountdown(STAT_DEADLINE, DEMO_NOW)).toBe("noch 1 Tag, 4 Std.");
   });
 

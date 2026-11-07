@@ -15,35 +15,35 @@ async function openOverview(page: Page) {
   ).toBeVisible();
 }
 
-test("withdraws Statistik in the simulation and undoes it", async ({
+test("withdraws Programmierung 2 in the simulation and undoes it", async ({
   page,
 }) => {
   await openOverview(page);
   const progress = page.getByRole("region", { name: "Dein Studienstand" });
-  await expect(progress).toContainText("78 von 90");
+  await expect(progress).toContainText("75 von 90");
 
   await page
     .getByRole("region", { name: "Jetzt wichtig" })
     .getByRole("link", { name: "Folgen prüfen" })
     .click();
-  await expect(page).toHaveURL(/\/entscheidung\/e-stat-ws26$/);
+  await expect(page).toHaveURL(/\/entscheidung\/e-pr2-ws26$/);
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "Statistik – antreten oder abmelden?",
+      name: "Programmierung 2 – antreten oder abmelden?",
     }),
   ).toBeVisible();
 
   await page.getByRole("button", { name: "Abmeldung vornehmen" }).click();
   const dialog = page.getByRole("alertdialog", {
-    name: "Von Statistik abmelden?",
+    name: "Von Programmierung 2 abmelden?",
   });
   await expect(dialog).toContainText("Im Prototyp wird sie simuliert.");
   await dialog.getByRole("button", { name: "Abmeldung simulieren" }).click();
 
   await expect(page).toHaveURL(/\/$/);
   const toast = page.locator("[data-sonner-toast]");
-  await expect(toast).toContainText("Statistik: Abmeldung simuliert");
+  await expect(toast).toContainText("Programmierung 2: Abmeldung simuliert");
   await expect(progress.getByText("Kritisch")).toBeVisible();
   await expect(progress).toContainText("SS 2028");
   await expect(progress).toContainText("SS 2029");
@@ -70,7 +70,7 @@ test("runs the same flow by keyboard only", async ({ page, isMobile }) => {
 
   await focusByTab("Folgen prüfen");
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/entscheidung\/e-stat-ws26$/);
+  await expect(page).toHaveURL(/\/entscheidung\/e-pr2-ws26$/);
   await focusByTab("Abmeldung vornehmen");
   await page.keyboard.press("Enter");
   await expect(page.getByRole("alertdialog")).toBeVisible();
@@ -89,11 +89,11 @@ test("runs the same flow by keyboard only", async ({ page, isMobile }) => {
   ).toBeVisible();
   await expect(
     page.getByRole("region", { name: "Dein Studienstand" }),
-  ).toContainText("78 von 90");
+  ).toContainText("75 von 90");
 });
 
 test("keeps the page within the viewport width", async ({ page }) => {
-  for (const path of ["/", "/entscheidung/e-stat-ws26", "/verlauf"]) {
+  for (const path of ["/", "/entscheidung/e-pr2-ws26", "/verlauf"]) {
     await page.goto(path);
     if (path === "/")
       await page
@@ -114,12 +114,12 @@ test("keeps the page within the viewport width", async ({ page }) => {
 test("asks the assistant in place from the Folgen-Check (P5-06)", async ({
   page,
 }) => {
-  await page.goto("/entscheidung/e-stat-ws26");
+  await page.goto("/entscheidung/e-pr2-ws26");
   await page.getByRole("button", { name: "Assistent öffnen" }).click();
   const assistant = page.getByRole("dialog", { name: "Assistent" });
   await assistant
     .getByRole("textbox", { name: "Deine Frage" })
-    .fill("Was passiert, wenn ich Statistik schiebe?");
+    .fill("Was passiert, wenn ich Programmierung 2 schiebe?");
   await assistant.getByRole("button", { name: "Frage stellen" }).click();
   await expect(
     assistant.getByRole("log").getByRole("list", { name: "Quellen" }),
@@ -129,7 +129,7 @@ test("asks the assistant in place from the Folgen-Check (P5-06)", async ({
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "Statistik – antreten oder abmelden?",
+      name: "Programmierung 2 – antreten oder abmelden?",
     }),
   ).toBeVisible();
 });
@@ -147,7 +147,7 @@ test("stays on its own origin, also with the chat loaded", async ({ page }) => {
   const chat = page.getByRole("dialog", { name: "Assistent" });
   await chat
     .getByRole("textbox", { name: "Deine Frage" })
-    .fill("Wann wird Statistik angeboten?");
+    .fill("Wann wird Programmierung 2 angeboten?");
   await chat.getByRole("button", { name: "Frage stellen" }).click();
   await expect(chat.getByRole("article")).toContainText("KI-Antwort");
   expect(foreign).toEqual([]);

@@ -1,18 +1,30 @@
 import type { Office } from "@/domain/types";
 
-// Beispieldaten; fachlich noch nicht verifiziert.
+// Zuständigkeiten nach StuPO § 4, § 16 und § 18; Kontakt und Sprechzeiten sind Beispiele.
 export const offices: Office[] = [
   {
     id: "o-pa",
-    name: "Prüfungsamt",
-    email: "pruefungsamt@hochschule.example",
+    name: "Zentrale Prüfungsverwaltung",
+    email: "pruefungsverwaltung@hochschule.example",
     hours: "Mo–Do 9–12 Uhr",
     topics: [
       "An- und Abmeldung zu Prüfungen",
       "Rücktritt mit Attest",
-      "Prüfungsversuche",
-      "Zulassung zu Prüfungen, Projektsemester und Bachelorarbeit",
-      "Notenbescheinigungen",
+      "Prüfungsversuche und Wiederholungsprüfungen",
+      "Zulassung zu Prüfungen",
+      "Leistungsnachweise und verbindliche Auskünfte",
+    ],
+  },
+  {
+    id: "o-pax",
+    name: "Prüfungsausschuss der Fakultät",
+    email: "pruefungsausschuss@hochschule.example",
+    hours: "nach Vereinbarung",
+    topics: [
+      "Anerkennung und Anrechnung von Leistungen",
+      "Zulassung und Verlängerung der Bachelorarbeit",
+      "Ausnahmen zur Bachelorvorprüfung",
+      "Nachteilsausgleich",
     ],
   },
   {
@@ -22,7 +34,7 @@ export const offices: Office[] = [
     hours: "Di und Do 10–12 Uhr",
     topics: [
       "Zulassung zum Praxissemester",
-      "Suche und Anerkennung der Praxisstelle",
+      "Genehmigung und Anerkennung der Praxisstelle",
       "Praxisbericht",
     ],
   },
@@ -40,13 +52,13 @@ export const offices: Office[] = [
   },
   {
     id: "o-sd",
-    name: "Studiendekanat Wirtschaftsinformatik",
-    email: "studiendekanat-wi@hochschule.example",
+    name: "Studiendekanat Informatik",
+    email: "studiendekanat-informatik@hochschule.example",
     hours: "Mi 13–15 Uhr",
     topics: [
-      "Wahlpflichtmodule",
-      "Anerkennung von Leistungen",
-      "Fragen zu SPO und Modulhandbuch",
+      "Wahlpflichtmodule und Studienarbeit",
+      "Ausnahmen zum Unternehmensinformatikprojekt",
+      "Fragen zu StuPO und Modulhandbuch",
       "Angebot der Module",
     ],
   },

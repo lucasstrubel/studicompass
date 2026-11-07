@@ -40,7 +40,7 @@ describe("P2-05: channel loading and recovery", () => {
       DEMO_NOW.toISOString(),
     );
     expect(selectInbox(store.getState())).toHaveLength(12);
-    expect(selectDeadlines(store.getState())).toHaveLength(10);
+    expect(selectDeadlines(store.getState())).toHaveLength(9);
     expect(store.getState().resources.moodle.data?.progress).toHaveLength(5);
   });
 
@@ -99,21 +99,21 @@ describe("P2-05: simulations and persistence", () => {
     const store = makeStore();
     await store.getState().hydrate();
     const original = selectAcademicState(store.getState());
-    expect(store.getState().withdrawExam("e-stat-ws26")).toBe(true);
+    expect(store.getState().withdrawExam("e-pr2-ws26")).toBe(true);
     expect(
       selectAcademicState(store.getState())?.exams.find(
-        (exam) => exam.id === "e-stat-ws26",
+        (exam) => exam.id === "e-pr2-ws26",
       ),
     ).toMatchObject({ status: "withdrawn", attempt: 1 });
     expect(store.getState().snapshot).not.toBeNull();
-    expect(store.getState().withdrawExam("e-stat-ws26")).toBe(false);
+    expect(store.getState().withdrawExam("e-pr2-ws26")).toBe(false);
     expect(store.getState().withdrawExam("e-gwi-ws25")).toBe(false);
     expect(store.getState().withdrawExam("unknown")).toBe(false);
     store.getState().undo();
     expect(selectAcademicState(store.getState())).toEqual(original);
     expect(store.getState().snapshot).toBeNull();
-    expect(store.getState().confirmAttend("e-stat-ws26")).toBe(true);
-    expect(store.getState().confirmedExamIds).toContain("e-stat-ws26");
+    expect(store.getState().confirmAttend("e-pr2-ws26")).toBe(true);
+    expect(store.getState().confirmedExamIds).toContain("e-pr2-ws26");
   });
 
   it("rejects withdrawals after their deadline", async () => {
@@ -131,14 +131,14 @@ describe("P2-05: simulations and persistence", () => {
     };
     const store = createDemoStore(services);
     await store.getState().hydrate();
-    expect(store.getState().withdrawExam("e-stat-ws26")).toBe(false);
+    expect(store.getState().withdrawExam("e-pr2-ws26")).toBe(false);
     expect(store.getState().snapshot).toBeNull();
   });
 
   it("persists user changes across reload and discards them on data-version changes", async () => {
     const store = makeStore();
     await store.getState().hydrate();
-    store.getState().withdrawExam("e-stat-ws26");
+    store.getState().withdrawExam("e-pr2-ws26");
     store.getState().markRead("i-02");
     store.getState().markNotificationRead("n-01");
     store.getState().setHintTone("neutral");
@@ -149,7 +149,7 @@ describe("P2-05: simulations and persistence", () => {
     await reloaded.getState().hydrate();
     expect(
       selectAcademicState(reloaded.getState())?.exams.find(
-        (exam) => exam.id === "e-stat-ws26",
+        (exam) => exam.id === "e-pr2-ws26",
       )?.status,
     ).toBe("withdrawn");
     expect(
@@ -168,14 +168,14 @@ describe("P2-05: simulations and persistence", () => {
     reloaded.getState().undo();
     expect(
       selectAcademicState(reloaded.getState())?.exams.find(
-        (exam) => exam.id === "e-stat-ws26",
+        (exam) => exam.id === "e-pr2-ws26",
       )?.status,
     ).toBe("registered");
     localStorage.setItem(
       DEMO_STORAGE_KEY,
       JSON.stringify({
         version: 1,
-        state: { withdrawnExamIds: ["e-stat-ws26"], hintTone: "neutral" },
+        state: { withdrawnExamIds: ["e-pr2-ws26"], hintTone: "neutral" },
       }),
     );
     expect(makeStore().getState()).toMatchObject({
@@ -188,11 +188,11 @@ describe("P2-05: simulations and persistence", () => {
     const store = makeStore();
     await store.getState().hydrate();
     const baseline = selectAcademicState(store.getState());
-    store.getState().setWhatIf([{ moduleId: "m-stat", action: "withdraw" }]);
+    store.getState().setWhatIf([{ moduleId: "m-pr2", action: "withdraw" }]);
     expect(selectAcademicState(store.getState())).toEqual(baseline);
     expect(makeStore().getState().whatIf).toEqual([]);
     store.getState().clearWhatIf();
-    store.getState().withdrawExam("e-stat-ws26");
+    store.getState().withdrawExam("e-pr2-ws26");
     store.getState().markRead("i-02");
     await store.getState().resetDemo();
     expect(selectAcademicState(store.getState())).toEqual(baseline);
@@ -208,24 +208,26 @@ describe("P2-05: simulations and persistence", () => {
     const store = makeStore();
     await store.getState().hydrate();
     vi.useFakeTimers();
-    store.getState().askAssistant("Wann wird Statistik angeboten?", "A-08");
+    store
+      .getState()
+      .askAssistant("Wann wird Programmierung 2 angeboten?", "A-08");
     // One question at a time: a second one while the first is pending is ignored.
     store.getState().askAssistant("Ausland?");
     expect(store.getState().assistantPending).toEqual({
-      question: "Wann wird Statistik angeboten?",
+      question: "Wann wird Programmierung 2 angeboten?",
       id: "A-08",
     });
     expect(store.getState().assistantThread).toEqual([]);
     await vi.advanceTimersByTimeAsync(ASSISTANT_DELAY_MS);
     store
       .getState()
-      .askAssistant("  Kann ich Statistik im Ausland schreiben?  ");
+      .askAssistant("  Kann ich Programmierung 2 im Ausland schreiben?  ");
     await vi.advanceTimersByTimeAsync(ASSISTANT_DELAY_MS);
     expect(store.getState().assistantPending).toBeNull();
     expect(store.getState().assistantThread).toEqual([
-      { question: "Wann wird Statistik angeboten?", id: "A-08" },
+      { question: "Wann wird Programmierung 2 angeboten?", id: "A-08" },
       // Free text is matched; a special case leads to the fallback (id null).
-      { question: "Kann ich Statistik im Ausland schreiben?", id: null },
+      { question: "Kann ich Programmierung 2 im Ausland schreiben?", id: null },
     ]);
     expect(localStorage.getItem(DEMO_STORAGE_KEY)).not.toContain("Ausland");
     expect(makeStore().getState().assistantThread).toEqual([]);
@@ -266,48 +268,48 @@ describe("P2-05: simulations and persistence", () => {
     await store.getState().hydrate();
     store
       .getState()
-      .setModuleNote("m-stat", "Probeklausur bis Dienstag rechnen");
+      .setModuleNote("m-pr2", "Probeklausur bis Dienstag rechnen");
     expect(
-      store.getState().saveCourseLink("m-stat", {
+      store.getState().saveCourseLink("m-pr2", {
         label: "Website Prof. Keller",
         url: "https://example.org/keller",
       }),
     ).toBe(true);
     // Only http(s): script or mail addresses are refused.
     expect(
-      store.getState().saveCourseLink("m-stat", {
+      store.getState().saveCourseLink("m-pr2", {
         label: "Trick",
         url: "javascript:alert(1)",
       }),
     ).toBe(false);
-    expect(store.getState().setMoodleUrl("m-stat", "ftp://moodle")).toBe(false);
+    expect(store.getState().setMoodleUrl("m-pr2", "ftp://moodle")).toBe(false);
     expect(
-      store.getState().setMoodleUrl("m-stat", "https://moodle.example/kurs/7"),
+      store.getState().setMoodleUrl("m-pr2", "https://moodle.example/kurs/7"),
     ).toBe(true);
 
     const reloaded = makeStore().getState();
     expect(reloaded.moduleNotes).toEqual({
-      "m-stat": "Probeklausur bis Dienstag rechnen",
+      "m-pr2": "Probeklausur bis Dienstag rechnen",
     });
-    expect(reloaded.courseLinks["m-stat"]).toEqual([
+    expect(reloaded.courseLinks["m-pr2"]).toEqual([
       expect.objectContaining({
         label: "Website Prof. Keller",
         url: "https://example.org/keller",
       }),
     ]);
     expect(reloaded.moodleUrls).toEqual({
-      "m-stat": "https://moodle.example/kurs/7",
+      "m-pr2": "https://moodle.example/kurs/7",
     });
 
-    const [link] = store.getState().courseLinks["m-stat"];
-    store.getState().saveCourseLink("m-stat", { ...link, label: "Keller" });
-    expect(store.getState().courseLinks["m-stat"][0].label).toBe("Keller");
-    store.getState().removeCourseLink("m-stat", link.id);
-    store.getState().setModuleNote("m-stat", "  ");
+    const [link] = store.getState().courseLinks["m-pr2"];
+    store.getState().saveCourseLink("m-pr2", { ...link, label: "Keller" });
+    expect(store.getState().courseLinks["m-pr2"][0].label).toBe("Keller");
+    store.getState().removeCourseLink("m-pr2", link.id);
+    store.getState().setModuleNote("m-pr2", "  ");
     expect(store.getState().courseLinks).toEqual({});
     expect(store.getState().moduleNotes).toEqual({});
 
-    store.getState().setModuleNote("m-db", "Blatt 12 fehlt");
+    store.getState().setModuleNote("m-dm", "Blatt 12 fehlt");
     await store.getState().resetDemo();
     expect(store.getState().moduleNotes).toEqual({});
     expect(store.getState().moodleUrls).toEqual({});
@@ -318,7 +320,7 @@ describe("P2-05: simulations and persistence", () => {
     await store.getState().hydrate();
     expect(
       store.getState().saveCoursework({
-        moduleId: "m-stat",
+        moduleId: "m-pr2",
         title: "  ",
         status: "open",
       }),
@@ -331,7 +333,7 @@ describe("P2-05: simulations and persistence", () => {
       }),
     ).toBe(false);
     store.getState().saveCoursework({
-      moduleId: "m-stat",
+      moduleId: "m-pr2",
       title: "Testat",
       status: "done",
     });
@@ -339,7 +341,7 @@ describe("P2-05: simulations and persistence", () => {
       title: "Abgabe Fallstudie",
       dueAt: "2027-01-31",
       kind: "submission",
-      moduleId: "m-mkt",
+      moduleId: "m-wi3",
     });
     const reloaded = makeStore().getState();
     expect(reloaded.coursework).toEqual([
@@ -348,7 +350,7 @@ describe("P2-05: simulations and persistence", () => {
     expect(reloaded.personalDeadlines).toEqual([
       expect.objectContaining({
         title: "Abgabe Fallstudie",
-        moduleId: "m-mkt",
+        moduleId: "m-wi3",
       }),
     ]);
     await store.getState().resetDemo();
@@ -363,7 +365,7 @@ describe("P2-05: simulations and persistence", () => {
         version: DATA_VERSION,
         state: {
           courseLinks: {
-            "m-stat": [
+            "m-pr2": [
               { id: "a", label: "Gut", url: "https://example.org" },
               { id: "b", label: "Böse", url: "javascript:alert(1)" },
             ],
@@ -371,7 +373,7 @@ describe("P2-05: simulations and persistence", () => {
         },
       }),
     );
-    expect(makeStore().getState().courseLinks["m-stat"]).toEqual([
+    expect(makeStore().getState().courseLinks["m-pr2"]).toEqual([
       { id: "a", label: "Gut", url: "https://example.org/" },
     ]);
   });
@@ -409,7 +411,7 @@ describe("P2-05: simulations and persistence", () => {
         JSON.stringify({
           version: DATA_VERSION,
           state: {
-            withdrawnExamIds: [7, "e-stat-ws26"],
+            withdrawnExamIds: [7, "e-pr2-ws26"],
             jobHoursPerWeek: -12,
             hintTone: "other",
           },
@@ -418,7 +420,7 @@ describe("P2-05: simulations and persistence", () => {
       removeItem: () => undefined,
     });
     expect(store.getState()).toMatchObject({
-      withdrawnExamIds: ["e-stat-ws26"],
+      withdrawnExamIds: ["e-pr2-ws26"],
       jobHoursPerWeek: 15,
       hintTone: "direct",
     });

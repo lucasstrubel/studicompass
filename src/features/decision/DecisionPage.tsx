@@ -175,7 +175,7 @@ function HelpOffers({ exam, module }: { exam: ExamRecord; module: Module }) {
               Assistent fragen
             </span>
             <span className="text-meta text-muted-foreground">
-              Fragen zu {module.title} – mit Quelle aus SPO und Modulhandbuch.
+              Fragen zu {module.title} – mit Quelle aus StuPO und Modulhandbuch.
             </span>
           </Link>
         </li>
@@ -221,7 +221,7 @@ function DecisionActions({
         Deine Entscheidung
       </h2>
       <p className="text-body text-muted-foreground">
-        StudiCompass informiert, entscheiden tust du. Beide Wege sind möglich.
+        StudiCompass informiert, entscheiden tust du.
       </p>
       {/* Both actions look the same on purpose: the app informs, it does not steer (CLAUDE.md). */}
       <div className="grid gap-3 sm:grid-cols-2">
@@ -236,37 +236,46 @@ function DecisionActions({
         >
           Ich trete an
         </Button>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="outline" size="lg">
-              Abmeldung vornehmen
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Von {module.title} abmelden?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Im echten Betrieb leitet StudiCompass dich zur Abmeldung ins POS
-                weiter. Im Prototyp wird sie simuliert.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Zurück zum Vergleich</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  if (!withdrawExam(exam.id)) return;
-                  showUndoToast(
-                    `${module.title}: Abmeldung simuliert`,
-                    exam.id,
-                  );
-                  void navigate("/");
-                }}
-              >
-                Abmeldung simulieren
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        {exam.withdrawalDeadline ? (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline" size="lg">
+                Abmeldung vornehmen
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Von {module.title} abmelden?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Im echten Betrieb leitet StudiCompass dich zur Abmeldung ins
+                  POS weiter. Im Prototyp wird sie simuliert.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Zurück zum Vergleich</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    if (!withdrawExam(exam.id)) return;
+                    showUndoToast(
+                      `${module.title}: Abmeldung simuliert`,
+                      exam.id,
+                    );
+                    void navigate("/");
+                  }}
+                >
+                  Abmeldung simulieren
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        ) : (
+          <p className="self-center text-body text-muted-foreground">
+            Das ist eine Wiederholungsprüfung: Abmelden kannst du dich nur auf
+            Antrag bei der Fakultät.
+          </p>
+        )}
       </div>
     </section>
   );
@@ -396,8 +405,9 @@ function ReadyView({
       <footer className="border-t pt-4 text-meta text-muted-foreground">
         Prognose auf Basis deiner Daten und der Regeln (Stand{" "}
         {updatedAt ? formatDate(new Date(updatedAt)) : "unbekannt"}).
-        Verbindlich ist die Auskunft des Prüfungsamts. Die Prognose verteilt
-        Module nicht individuell neu; sie zeigt die Wirkung der Sonderregeln.
+        Verbindlich ist die Auskunft der Prüfungsverwaltung. Die Prognose
+        verteilt Module nicht individuell neu; sie zeigt die Wirkung der
+        Sonderregeln.
       </footer>
     </div>
   );
@@ -469,7 +479,7 @@ function DecisionContent({ examId }: { examId: string }) {
           <PageHeader title={`Folgen-Check: ${view.module.title}`} />
           <EmptyState
             title="Dazu kann StudiCompass keine Prognose rechnen"
-            description={`${view.reason} Wende dich bitte an das Prüfungsamt.`}
+            description={`${view.reason} Wende dich bitte an die Prüfungsverwaltung.`}
             action={
               <Link
                 to="/assistent?frage=A-04"

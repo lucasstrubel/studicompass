@@ -39,7 +39,9 @@ it("P5-15: loads offices, focuses the linked office and links matching questions
   expect(
     within(office).getByRole("list", { name: "Quellen" }),
   ).toHaveTextContent("Beispiel");
-  const exams = screen.getByRole("region", { name: "Prüfungsamt" });
+  const exams = screen.getByRole("region", {
+    name: "Zentrale Prüfungsverwaltung",
+  });
   fireEvent.click(
     within(exams).getByRole("link", {
       name: "Wie viele Versuche habe ich für eine Prüfung?",

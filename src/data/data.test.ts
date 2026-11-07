@@ -10,7 +10,7 @@ import { assistantCatalog } from "./assistant-catalog";
 import { assistantFallback } from "./assistant-fallback";
 
 describe("consistent example data", () => {
-  it("contains 210 ECTS, 30 per semester and 48 passed ECTS", () => {
+  it("contains 210 ECTS, 30 per semester and 45 passed ECTS", () => {
     expect(modules.reduce((sum, module) => sum + module.ects, 0)).toBe(210);
     for (let semester = 1; semester <= 7; semester++) {
       expect(
@@ -29,7 +29,7 @@ describe("consistent example data", () => {
       modules
         .filter((module) => passed.has(module.id))
         .reduce((sum, module) => sum + module.ects, 0),
-    ).toBe(48);
+    ).toBe(45);
   });
 
   it("resolves all module, exam, office, rule and follow-up references", () => {
@@ -46,7 +46,12 @@ describe("consistent example data", () => {
       if (deadline.examId) expect(examIds).toContain(deadline.examId);
     }
     for (const rule of rules) {
-      expect(rule.citation.verified).toBe(false);
+      // Only the app's own calculation rules stay examples; everything else names its source section.
+      if (rule.citation.verified) {
+        expect(rule.citation.document).not.toContain("StudiCompass");
+      } else {
+        expect(rule.citation.document).toContain("StudiCompass");
+      }
       if (rule.officeId) expect(officeIds).toContain(rule.officeId);
     }
     for (const entry of assistantCatalog) {
@@ -59,7 +64,7 @@ describe("consistent example data", () => {
     for (const notification of notifications) {
       for (const id of notification.ruleIds) expect(ruleIds).toContain(id);
     }
-    expect(assistantCatalog).toHaveLength(9);
+    expect(assistantCatalog).toHaveLength(12);
     expect(assistantCatalog.filter((entry) => entry.suggested)).toHaveLength(6);
     expect(inbox).toHaveLength(12);
     expect(inbox.every((item) => item.body.length > item.preview.length)).toBe(

@@ -186,7 +186,7 @@ function FallbackAnswer({
       <p className="text-meta font-medium text-muted-foreground">KI-Antwort</p>
       <p>{answer}</p>
       <p>
-        Quellenlage: In SPO und Modulhandbuch ist dazu keine eindeutige Regel
+        Quellenlage: In StuPO und Modulhandbuch ist dazu keine eindeutige Regel
         hinterlegt.
       </p>
       <Responsible heading={heading} offices={offices} />
@@ -353,7 +353,7 @@ export function AssistantChat({
   const draft =
     draftQuestion === data.fallback.question
       ? fallbackDraft
-      : `Betreff: Frage zur Prüfungsordnung\n\nGuten Tag, ich studiere ${pos?.program.title ?? "Wirtschaftsinformatik"}${academic ? ` im ${semesterNumber(academic.currentTerm, academic.student.startTerm)}. Fachsemester` : ""}. Meine Matrikelnummer ist ${pos?.student.matriculationNo ?? "nicht verfügbar"}.\n\n${draftQuestion ?? ""}\n\nViele Grüße\n${signature}`;
+      : `Betreff: Frage zur Prüfungsordnung\n\nGuten Tag, ich studiere ${pos?.program.title ?? "Unternehmens- und Wirtschaftsinformatik"}${academic ? ` im ${semesterNumber(academic.currentTerm, academic.student.startTerm)}. Fachsemester` : ""}. Meine Matrikelnummer ist ${pos?.student.matriculationNo ?? "nicht verfügbar"}.\n\n${draftQuestion ?? ""}\n\nViele Grüße\n${signature}`;
   const composer = (
     <div
       className={
@@ -385,8 +385,8 @@ export function AssistantChat({
         </ComposerPrimitive.Send>
       </ComposerPrimitive.Root>
       <p className="mt-2 text-meta text-muted-foreground">
-        Antworten stützen sich auf SPO und Modulhandbuch. Verbindlich ist das
-        Prüfungsamt; im Prototyp sind die Antworten vorbereitet.
+        Antworten stützen sich auf StuPO und Modulhandbuch. Verbindlich ist das
+        Zentrale Prüfungsverwaltung; im Prototyp sind die Antworten vorbereitet.
       </p>
     </div>
   );

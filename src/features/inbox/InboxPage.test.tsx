@@ -29,7 +29,7 @@ it("P4-02: Deep-Link, gelesen markieren und Filter", async () => {
     screen.getByText("Prüfungsanmeldung WS 2026/27 bestätigt"),
   ).toBeInTheDocument();
   expect(
-    screen.queryByText("Raumänderung: Klausur Statistik am 27.01."),
+    screen.queryByText("Raumänderung: Klausur Programmierung 2 am 27.01."),
   ).not.toBeInTheDocument();
 });
 

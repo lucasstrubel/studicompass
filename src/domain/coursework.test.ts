@@ -4,7 +4,7 @@ import { examAdmission } from "./coursework";
 
 const item = (status: Coursework["status"]): Coursework => ({
   id: status,
-  moduleId: "m-stat",
+  moduleId: "m-pr2",
   title: "Übungsblätter",
   status,
 });

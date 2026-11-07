@@ -1,5 +1,5 @@
 export type IllustrationKind =
-  "chart" | "database" | "books" | "process" | "globe";
+  "chart" | "database" | "books" | "process" | "globe" | "code";
 
 /**
  * Original local line art; decorative because the adjacent module heading names the subject. The module
@@ -21,6 +21,19 @@ export function ModuleIllustration({ kind }: { kind: IllustrationKind }) {
         d="M9 69Q44 81 79 67L76 74Q41 86 12 75Z"
         className="fill-muted stroke-border"
       />
+      {kind === "code" && (
+        <>
+          <path d="M14 18H74V62H14Z" className="fill-(--module-tone-soft)" />
+          <path d="M14 28H74" />
+          <circle cx="21" cy="23" r="1.5" className="fill-(--module-tone)" />
+          <circle cx="28" cy="23" r="1.5" className="fill-(--module-tone)" />
+          <path
+            d="M30 37L22 45L30 53M58 37L66 45L58 53"
+            className="stroke-(--module-tone)"
+          />
+          <path d="M49 35L39 55" />
+        </>
+      )}
       {kind === "chart" && (
         <>
           <path d="M17 66V29M17 66H73" />

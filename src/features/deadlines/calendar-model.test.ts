@@ -62,7 +62,7 @@ describe("P5-14: Monatskalender", () => {
       kind: "appointment",
     });
     store.getState().saveCoursework({
-      moduleId: "m-stat",
+      moduleId: "m-pr2",
       title: "Testat",
       status: "open",
       dueAt: "2027-01-26",
@@ -74,16 +74,16 @@ describe("P5-14: Monatskalender", () => {
       );
     expect(itemsOnDay(all(), "2027-01-26").map((item) => item.title)).toEqual(
       expect.arrayContaining([
-        "Abmeldung Statistik",
+        "Abmeldung Programmierung 2",
         "Lerngruppe",
         "Prüfungsvorleistung: Testat",
       ]),
     );
     expect(itemsOnDay(all(), "2027-01-27").map((item) => item.title)).toContain(
-      "Prüfung Statistik",
+      "Prüfung Programmierung 2",
     );
-    store.getState().withdrawExam("e-stat-ws26");
-    expect(all().some((item) => item.id === "exam-e-stat-ws26")).toBe(false);
+    store.getState().withdrawExam("e-pr2-ws26");
+    expect(all().some((item) => item.id === "exam-e-pr2-ws26")).toBe(false);
     expect(
       selectAgenda(store.getState()).some((item) =>
         item.id.startsWith("exam-"),

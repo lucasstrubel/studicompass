@@ -10,11 +10,11 @@ describe("projection safety and curriculum behavior", () => {
     const state = academicFixture();
     const original = structuredClone(state);
     const overrides: PlanOverride[] = [
-      { moduleId: "m-stat", action: "withdraw" },
+      { moduleId: "m-pr2", action: "withdraw" },
     ];
     const savedOverrides = structuredClone(overrides);
     const plan = projectPlan(state, overrides);
-    compareDecision(state, "e-stat-ws26");
+    compareDecision(state, "e-pr2-ws26");
     expect(state).toEqual(original);
     expect(overrides).toEqual(savedOverrides);
     for (const exam of state.exams.filter((exam) => exam.status === "passed")) {
@@ -34,9 +34,9 @@ describe("projection safety and curriculum behavior", () => {
       module.id === "m-ba" ? { ...module, offering: "WS" } : module,
     );
     const plan = projectPlan(state, [
-      { moduleId: "m-stat", action: "withdraw" },
+      { moduleId: "m-pr2", action: "withdraw" },
     ]);
-    expect(plan.internshipTerm).toEqual({ season: "SS", year: 2028 });
+    expect(plan.projectTerm).toEqual({ season: "SS", year: 2028 });
     expect(
       plan.modules.find((entry) => entry.moduleId === "m-ba")?.term,
     ).toEqual({ season: "WS", year: 2029 });
@@ -48,7 +48,7 @@ describe("projection safety and curriculum behavior", () => {
     expect(
       projectPlan(state, [
         {
-          moduleId: "m-stat",
+          moduleId: "m-pr2",
           action: "move",
           term: { season: "WS", year: 2028 },
         },
@@ -57,17 +57,17 @@ describe("projection safety and curriculum behavior", () => {
     const invalid: PlanOverride[][] = [
       [
         {
-          moduleId: "m-stat",
+          moduleId: "m-bwl2",
           action: "move",
-          term: { season: "SS", year: 2027 },
+          term: { season: "WS", year: 2027 },
         },
       ],
-      [{ moduleId: "m-stat", action: "move", term: state.currentTerm }],
-      [{ moduleId: "m-gwi", action: "withdraw" }],
+      [{ moduleId: "m-pr2", action: "move", term: state.currentTerm }],
+      [{ moduleId: "m-ei", action: "withdraw" }],
       [{ moduleId: "missing", action: "withdraw" }],
       [
-        { moduleId: "m-stat", action: "withdraw" },
-        { moduleId: "m-stat", action: "fail" },
+        { moduleId: "m-pr2", action: "withdraw" },
+        { moduleId: "m-pr2", action: "fail" },
       ],
     ];
     for (const overrides of invalid)
@@ -78,7 +78,7 @@ describe("projection safety and curriculum behavior", () => {
     const state = academicFixture();
     const baseline = projectPlan(state);
     const scenario = projectPlan(state, [
-      { moduleId: "m-stat", action: "withdraw" },
+      { moduleId: "m-pr2", action: "withdraw" },
     ]);
     expect(scenario.consequences.some((item) => item.ruleId === "DR-10")).toBe(
       false,
@@ -101,25 +101,26 @@ describe("projection safety and curriculum behavior", () => {
     ).toBe(true);
   });
 
-  it("explains a delayed project milestone even when graduation is unchanged", () => {
+  it("explains a delayed project milestone and the later graduation", () => {
     const plan = projectPlan(academicFixture(), [
       {
-        moduleId: "m-projekt",
+        moduleId: "m-up",
         action: "move",
-        term: { season: "WS", year: 2028 },
+        term: { season: "SS", year: 2028 },
       },
     ]);
     expect(plan).toMatchObject({
       trafficLight: "critical",
       internshipShift: 0,
-      graduationTerm: { season: "WS", year: 2028 },
+      projectShift: 2,
+      graduationTerm: { season: "SS", year: 2029 },
     });
     expect(plan.consequences).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: "milestone-m-projekt",
+          id: "milestone-m-up",
           severity: "critical",
-          ruleId: "DR-4",
+          ruleId: "DR-11",
         }),
       ]),
     );
@@ -127,7 +128,11 @@ describe("projection safety and curriculum behavior", () => {
 
   it("marks delayed graduation critical even when only an elective moves", () => {
     const plan = projectPlan(academicFixture(), [
-      { moduleId: "m-wp3", action: "move", term: { season: "WS", year: 2029 } },
+      {
+        moduleId: "m-wpa3",
+        action: "move",
+        term: { season: "WS", year: 2029 },
+      },
     ]);
     expect(plan).toMatchObject({
       trafficLight: "critical",
@@ -148,22 +153,22 @@ describe("projection safety and curriculum behavior", () => {
   it("blocks existing exhausted attempts without scheduling any further attempt or completion", () => {
     const state = academicFixture();
     state.exams = state.exams.map((exam) =>
-      exam.id === "e-stat-ws26"
+      exam.id === "e-pr2-ws26"
         ? { ...exam, status: "failed", grade: 5, attempt: 3 }
         : exam,
     );
     const plan = projectPlan(state);
     expect(plan).toMatchObject({
       status: "blocked",
-      blockedModuleIds: ["m-stat"],
+      blockedModuleIds: ["m-pr2"],
       foundationCompletionTerm: null,
       internshipTerm: null,
       internshipShift: null,
       graduationTerm: null,
-      ectsEndOfTerm: 72,
-      openFoundationAfterTerm: 3,
+      ectsEndOfTerm: 65,
+      openFoundationAfterTerm: 1,
     });
-    expect(plan.modules.some((module) => module.moduleId === "m-stat")).toBe(
+    expect(plan.modules.some((module) => module.moduleId === "m-pr2")).toBe(
       false,
     );
     expect(plan.terms).toEqual([]);
@@ -179,7 +184,7 @@ describe("projection safety and curriculum behavior", () => {
     state.exams.push(
       {
         id: "first",
-        moduleId: "m-stat",
+        moduleId: "m-pr2",
         term: { season: "WS", year: 2024 },
         status: "failed",
         grade: 5,
@@ -187,19 +192,19 @@ describe("projection safety and curriculum behavior", () => {
       },
       {
         id: "second",
-        moduleId: "m-stat",
+        moduleId: "m-pr2",
         term: { season: "WS", year: 2025 },
         status: "failed",
         grade: 5,
         attempt: 2,
       },
     );
-    const outcomes = compareDecision(state, "e-stat-ws26");
+    const outcomes = compareDecision(state, "e-pr2-ws26");
     expect(outcomes.find((item) => item.option === "attendFail")).toMatchObject(
       {
         attemptsUsed: 3,
         status: "blocked",
-        blockedModuleIds: ["m-stat"],
+        blockedModuleIds: ["m-pr2"],
         internshipTerm: null,
         graduationTerm: null,
         trafficLight: "critical",
@@ -210,9 +215,9 @@ describe("projection safety and curriculum behavior", () => {
     ).toBeUndefined();
     expect(outcomes.find((item) => item.option === "withdraw")).toMatchObject({
       attemptsUsed: 2,
-      nextAttemptTerm: { season: "WS", year: 2027 },
+      nextAttemptTerm: { season: "SS", year: 2027 },
     });
-    expect(() => compareDecision(state, "e-gwi-ws25")).toThrow(RangeError);
+    expect(() => compareDecision(state, "e-ei-ws25")).toThrow(RangeError);
     expect(() => compareDecision(state, "unknown")).toThrow(RangeError);
   });
 });
@@ -220,17 +225,17 @@ describe("projection safety and curriculum behavior", () => {
 describe("validation fixes", () => {
   it("DR-4: catches up a past curriculum slot without an attempt after the current term", () => {
     const state = academicFixture();
-    state.exams = state.exams.filter((exam) => exam.id !== "e-mathe2-ss26");
+    state.exams = state.exams.filter((exam) => exam.id !== "e-ma2-ss26");
     const plan = projectPlan(state);
     expect(
-      plan.modules.find((entry) => entry.moduleId === "m-mathe2")?.term,
+      plan.modules.find((entry) => entry.moduleId === "m-ma2")?.term,
     ).toEqual({ season: "SS", year: 2027 });
-    expect(plan.ectsEndOfTerm).toBe(72);
-    expect(plan.openFoundationAfterTerm).toBe(3);
+    expect(plan.ectsEndOfTerm).toBe(70);
+    expect(plan.openFoundationAfterTerm).toBe(1);
   });
 
   it("every decision option lists only differences from the baseline", () => {
-    const outcomes = compareDecision(academicFixture(), "e-stat-ws26");
+    const outcomes = compareDecision(academicFixture(), "e-pr2-ws26");
     expect(
       outcomes.find((item) => item.option === "attendPass")?.consequences,
     ).toEqual([]);
@@ -242,30 +247,30 @@ describe("validation fixes", () => {
 });
 
 describe("allowedMoveTerms (DR-4, US-10)", () => {
-  it("offers only winter terms after the current one for Statistik", () => {
-    expect(allowedMoveTerms(academicFixture(), "m-stat", 2)).toEqual([
+  it("offers only winter terms after the current one for BWL 3", () => {
+    expect(allowedMoveTerms(academicFixture(), "m-bwl3", 2)).toEqual([
       { season: "WS", year: 2027 },
       { season: "WS", year: 2028 },
     ]);
   });
 
-  it("offers every term for Marketing and nothing before the curriculum slot", () => {
-    expect(allowedMoveTerms(academicFixture(), "m-mkt", 3)).toEqual([
+  it("offers every term for Wirtschaftsinformatik 3 and nothing before the curriculum slot", () => {
+    expect(allowedMoveTerms(academicFixture(), "m-wi3", 3)).toEqual([
       { season: "SS", year: 2027 },
       { season: "WS", year: 2027 },
       { season: "SS", year: 2028 },
     ]);
-    expect(allowedMoveTerms(academicFixture(), "m-itsec", 1)).toEqual([
+    expect(allowedMoveTerms(academicFixture(), "m-wia", 1)).toEqual([
       { season: "SS", year: 2028 },
     ]);
   });
 
   it("offers nothing for passed modules, and every offered term passes projectPlan", () => {
     const state = academicFixture();
-    expect(allowedMoveTerms(state, "m-gwi")).toEqual([]);
-    for (const term of allowedMoveTerms(state, "m-recht"))
+    expect(allowedMoveTerms(state, "m-ei")).toEqual([]);
+    for (const term of allowedMoveTerms(state, "m-bwl2"))
       expect(() =>
-        projectPlan(state, [{ moduleId: "m-recht", action: "move", term }]),
+        projectPlan(state, [{ moduleId: "m-bwl2", action: "move", term }]),
       ).not.toThrow();
   });
 });

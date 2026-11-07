@@ -40,7 +40,7 @@ it("P4-05: Hinweis-Stil, Benachrichtigungstypen und Gelesenstatus", async () => 
     screen.getByRole("button", { name: "Benachrichtigungen, 3 ungelesen" }),
   );
   expect(screen.getByRole("dialog")).toHaveTextContent(
-    "Die Abmeldefrist für Statistik endet morgen",
+    "Die Abmeldefrist für Programmierung 2 endet morgen",
   );
   fireEvent.click(
     screen.getByRole("button", { name: "Alle als gelesen markieren" }),

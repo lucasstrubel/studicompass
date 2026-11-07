@@ -67,7 +67,7 @@ test("P5-15: Überspringen behält das Profil; Bearbeiten, Neuladen, Anfrage und
   await page.goto(
     "/assistent?frage=" +
       encodeURIComponent(
-        "Kann ich das Praxissemester im Ausland machen und Statistik trotzdem im Winter schreiben?",
+        "Kann ich das Praxissemester im Ausland machen und Programmierung 2 trotzdem im Winter schreiben?",
       ),
   );
   await page.getByRole("button", { name: "Anfrage vorbereiten" }).click();
@@ -95,7 +95,10 @@ test("P5-15: Anlaufstellen verlinken passende Fragen; Assistent verlinkt zurück
   page,
 }) => {
   await page.goto("/anlaufstellen#o-pa");
-  const office = page.getByRole("region", { name: "Prüfungsamt", exact: true });
+  const office = page.getByRole("region", {
+    name: "Zentrale Prüfungsverwaltung",
+    exact: true,
+  });
   await expect(office).toBeFocused();
   await expect(office).toContainText("Rücktritt mit Attest");
   await expect(office.getByRole("list", { name: "Quellen" })).toContainText(
@@ -114,16 +117,21 @@ test("P5-15: Anlaufstellen verlinken passende Fragen; Assistent verlinkt zurück
     .click();
   await expect(page).toHaveURL(/assistent\?frage=A-04$/);
   const answer = page.getByRole("log");
-  await answer.getByRole("link", { name: "Prüfungsamt", exact: true }).click();
+  await answer
+    .getByRole("link", { name: "Zentrale Prüfungsverwaltung", exact: true })
+    .click();
   await expect(page).toHaveURL(/anlaufstellen#o-pa$/);
   await expect(
-    page.getByRole("region", { name: "Prüfungsamt", exact: true }),
+    page.getByRole("region", {
+      name: "Zentrale Prüfungsverwaltung",
+      exact: true,
+    }),
   ).toBeFocused();
   await page.goto("/assistent?frage=A-09");
   await expect(page.getByRole("log")).toContainText("Das hängt vom Thema ab");
   await expect(
     page.getByRole("log").getByRole("list", { name: "Quellen" }),
-  ).toContainText("Website der Hochschule");
+  ).toContainText("StuPO Bachelor");
   await page
     .getByRole("link", { name: "Anlaufstellen öffnen", exact: true })
     .click();
@@ -139,9 +147,14 @@ test("P5-15: Anlaufstellen verlinken passende Fragen; Assistent verlinkt zurück
       exact: true,
     })
     .click();
-  await panel.getByRole("link", { name: "Prüfungsamt", exact: true }).click();
+  await panel
+    .getByRole("link", { name: "Zentrale Prüfungsverwaltung", exact: true })
+    .click();
   await expect(page).toHaveURL(/anlaufstellen#o-pa$/);
   await expect(
-    page.getByRole("region", { name: "Prüfungsamt", exact: true }),
+    page.getByRole("region", {
+      name: "Zentrale Prüfungsverwaltung",
+      exact: true,
+    }),
   ).toBeFocused();
 });
