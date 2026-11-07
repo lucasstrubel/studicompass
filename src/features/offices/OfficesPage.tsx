@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { CitationList } from "@/components/common/CitationList";
 import { EmptyState } from "@/components/common/EmptyState";
@@ -22,6 +22,14 @@ export function OfficesPage() {
   }, [hash, offices]);
   return (
     <div className="space-y-5">
+      {/* The page has no navigation entry of its own; visitors come from the assistant. */}
+      <Link
+        to="/assistent"
+        className="inline-flex items-center gap-1 rounded-sm text-meta font-semibold text-accent-strong"
+      >
+        <ArrowLeft className="size-4" aria-hidden="true" />
+        Zum Assistenten
+      </Link>
       <p className="max-w-3xl text-body text-muted-foreground">
         Hier findest du die passende Stelle für dein Anliegen. Zuständigkeiten
         und Kontaktdaten sind Beispiele; im echten Betrieb gelten die Angaben

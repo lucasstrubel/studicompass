@@ -60,7 +60,7 @@ Beim ersten Aufruf der Übersicht öffnet sich das vierstufige Onboarding. „De
 - Module & Noten zeigt Kennzahlen und Moduldetails. Von dort öffnen sich der passende Folgen-Check oder der Assistent mit Modulkontext.
 - Fristen lassen sich einzeln oder gemeinsam als ICS herunterladen. Der Import in eine echte Kalender-App steht als externe Prüfung noch aus.
 - Die Fristen haben eine Kalenderansicht (`/fristen?ansicht=kalender`) mit deutschen Kalendertagen, Fristen, eigenen Terminen, Prüfungsvorleistungen und Prüfungsterminen. Liste und Kalender teilen Quellen und Aktionen.
-- Anlaufstellen zeigt Zuständigkeiten, Kontakt und Sprechzeiten mit Beispielquellen. Passende Fragen führen in den Assistenten; seine zuständigen Stellen verlinken zurück zur jeweiligen Karte.
+- Anlaufstellen (ohne eigenen Navigationseintrag, erreichbar über den Assistenten) zeigt Zuständigkeiten, Kontakt und Sprechzeiten mit Beispielquellen. Passende Fragen führen in den Assistenten; seine zuständigen Stellen verlinken zurück zur jeweiligen Karte.
 - Einstellungen steuern Hinweis-Stil und Benachrichtigungstypen. Getrennte Kanäle behalten geladene Daten in der Sitzung; nach Neuladen lädt ein getrennter Kanal erst beim Wiederverbinden.
 
 ## Deployment
@@ -99,7 +99,7 @@ Nie `shadcn add --overwrite` für vorhandene Komponenten: Die Wrapper weichen be
 ## Design-Tokens und Darstellung
 
 - **Farben:** [`src/styles/globals.css`](src/styles/globals.css) enthält die Werte in `:root`: Grundfarben, Farbfamilie und Statusfarben. Die shadcn-Variablen sind darauf abgebildet. Eigene Tokens gibt es als Tailwind-Klassen, z. B. `text-accent-strong`, `bg-accent-soft`, `bg-tone-blue`, `bg-status-critical-soft`, `text-status-critical-foreground`. Die Modulfarben ordnet `moduleTone()` in [`src/features/dashboard/module-art.ts`](src/features/dashboard/module-art.ts) zu; `moduleToneStyle()` setzt `--module-tone` und `--module-tone-soft` für Modul-Icon, Balken und Notenkreis. Komponenten verwenden nur Tokens, keine Hex-Werte. [`src/styles/tokens.test.ts`](src/styles/tokens.test.ts) prüft die Mindestkontraste und die Quelltexte auf Hex-Werte.
-- **Identität:** Graphit und Mandarine, Signatur ist die Kurslinie (`EctsHistory`, `CourseDot`), Marke die Nadel (`BrandMark`). Die einzige dunkle Fläche ist `.surface-hero`; sie belegt die Token-Namen lokal neu.
+- **Identität:** Graphit und Mandarine, Signatur ist die Kurslinie (`EctsHistory`, `CourseDot`), Marke die Nadel (`BrandMark`). Die einzige dunkle Fläche ist die Kopfzeile des Assistenten-Fensters (`.surface-hero`); sie belegt die Token-Namen lokal neu.
 - **Schrift:** Bricolage Grotesque für Titel und die Standortzahl, Hanken Grotesk für die Oberfläche, beide lokal über Fontsource; es gibt keine Requests an fremde Server. Größen über die Typo-Klassen: `text-page-title`, `text-section-title`, `text-card-title`, `text-body` (Standard), `text-meta`, `text-figure`. Zahlen mit `tabular-nums`.
 - **Fokus:** Ein Fokusring für alle fokussierbaren Elemente steht zentral in `globals.css`: 2 px `--ring` (= `--accent-strong`), 2 px Abstand. Schneidet ein Elternteil mit `overflow-hidden` ihn ab, kommt er mit `focus-visible:-outline-offset-2` nach innen.
 - **Bewegung:** Normalfall CSS mit `--ease-strong`. Motion nur für Nadel und Navigations-Indikator; seine Funktionen laden asynchron (`src/lib/motion-features.ts`). Der Chat mit assistant-ui ist ein eigener Chunk (`AssistantChatLoader`); Tests laden ihn mit `preloadAssistantChat()` vor. `prefers-reduced-motion` schaltet Bewegung ab.

@@ -20,7 +20,7 @@ import { useDemoStore } from "@/store/use-demo-store";
 
 const CALCULATION_RULES = ["DR-1", "DR-2", "DR-3"];
 
-/** Upper part of the overview's hero (US-03): actual, target, gap, status and forecast, above the course line. */
+/** Upper part of the overview's main card (US-03): actual, target, gap, status and forecast, above the course line. */
 export function StudyProgressCard() {
   const progress = useDemoStore(selectProgress);
   const plan = useDemoStore(selectBasePlan);

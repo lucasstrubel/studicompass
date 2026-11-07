@@ -17,11 +17,10 @@ test("P5-09: ab 1280 px alle Bereiche in einer Topbar-Zeile, ohne Hamburger", as
     await expect(nav.getByRole("link")).toHaveText([
       "Übersicht",
       "Studienverlauf",
-      "Module & Noten",
       "Fristen",
-      "Postfach",
       "Assistent",
-      "Anlaufstellen",
+      "Postfach",
+      "Module & Noten",
     ]);
     // One row: the links sit level with the profile button, so nothing wrapped.
     const header = page.getByRole("banner");

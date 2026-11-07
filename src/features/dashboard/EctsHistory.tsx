@@ -1,5 +1,12 @@
-import { useEffect, useRef } from "react";
-import { ComposedChart, Line, XAxis, YAxis } from "recharts";
+import { useEffect, useRef, useSyncExternalStore } from "react";
+import {
+  Area,
+  CartesianGrid,
+  ComposedChart,
+  Line,
+  XAxis,
+  YAxis,
+} from "recharts";
 import {
   ChartContainer,
   ChartTooltip,
@@ -10,12 +17,21 @@ import { selectAcademicState, selectBasePlan } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 import { cn } from "@/lib/utils";
 
-// The course line, the signature of the app: solid = earned, dotted = forecast, thin dashed = target.
+// The course line, the signature of the app: solid with a soft area = earned, dotted = forecast, dashed = target.
 const CHART_CONFIG = {
-  actual: { label: "Ist", color: "var(--hero-line)" },
-  forecast: { label: "Prognose", color: "var(--hero-line)" },
-  target: { label: "Soll", color: "var(--hero-target)" },
+  actual: { label: "Ist", color: "var(--accent)" },
+  forecast: { label: "Prognose", color: "var(--accent)" },
+  target: { label: "Soll", color: "var(--muted-foreground)" },
 } satisfies ChartConfig;
+
+/** From here on chart and table stand side by side, so the table no longer needs its disclosure. */
+const WIDE_QUERY = "(min-width: 64rem)";
+
+function subscribeToWide(onChange: () => void) {
+  const query = window.matchMedia(WIDE_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
 
 type WaypointKind = "start" | "done" | "position" | "planned" | "finish";
 
@@ -71,7 +87,7 @@ function EctsTooltip({
   );
 }
 
-/** Line label with a halo in the surface colour, so it stays readable where it crosses the target line. */
+/** Line label with a halo in the surface colour, so it stays readable where it crosses a line. */
 function LineLabel({
   x,
   y,
@@ -89,7 +105,7 @@ function LineLabel({
       y={y}
       textAnchor="middle"
       className={cn(
-        "fill-(--hero-foreground) stroke-(--hero) text-[0.75rem] font-medium [paint-order:stroke] [stroke-width:4px]",
+        "fill-foreground stroke-card text-[0.8125rem] font-medium [paint-order:stroke] [stroke-width:4px]",
         className,
       )}
     >
@@ -115,11 +131,12 @@ function Waypoint({
       y={cy}
       dy="0.35em"
       textAnchor="middle"
-      className={
+      className={cn(
+        "text-[0.6875rem] font-semibold",
         kind === "planned" || kind === "finish"
-          ? "fill-(--hero-foreground) text-[0.6875rem] font-semibold"
-          : "fill-(--hero) text-[0.6875rem] font-semibold"
-      }
+          ? "fill-foreground"
+          : "fill-accent-foreground",
+      )}
     >
       {semester}
     </text>
@@ -131,11 +148,11 @@ function Waypoint({
           d={`M${cx} ${cy - 9}L${cx + 8} ${cy + 5}L${cx - 8} ${cy + 5}Z`}
           strokeWidth={2}
           strokeLinejoin="round"
-          className="fill-(--hero) stroke-(--hero-line)"
+          className="fill-card stroke-accent"
         />
       )}
       {kind === "done" && (
-        <circle cx={cx} cy={cy} r={10} className="fill-(--hero-line)" />
+        <circle cx={cx} cy={cy} r={10} className="fill-accent" />
       )}
       {kind === "position" && (
         <circle cx={cx} cy={cy} r={12} className="fill-accent" />
@@ -146,7 +163,7 @@ function Waypoint({
           cy={cy}
           r={10}
           strokeWidth={1.5}
-          className="fill-(--hero) stroke-(--hero-line)"
+          className="fill-card stroke-accent"
         />
       )}
       {kind === "finish" && (
@@ -156,14 +173,14 @@ function Waypoint({
             cy={cy}
             r={14}
             strokeWidth={1.5}
-            className="fill-(--hero) stroke-(--hero-line)"
+            className="fill-card stroke-accent"
           />
           <circle
             cx={cx}
             cy={cy}
             r={10}
             strokeWidth={1.5}
-            className="fill-(--hero) stroke-(--hero-line)"
+            className="fill-card stroke-accent"
           />
         </>
       )}
@@ -172,17 +189,14 @@ function Waypoint({
         <>
           {/* The needle marks the student's position on the course. */}
           <svg
-            x={cx - 42}
+            x={cx - 44}
             y={cy + 17}
             width={14}
             height={14}
             viewBox="0 0 24 24"
           >
             <path d="M20 4 14.5 14.5 9.5 9.5Z" className="fill-accent" />
-            <path
-              d="M4 20 9.5 9.5 14.5 14.5Z"
-              className="fill-(--hero-foreground)"
-            />
+            <path d="M4 20 9.5 9.5 14.5 14.5Z" className="fill-foreground" />
           </svg>
           <LineLabel x={cx + 8} y={cy + 28}>
             Du bist hier
@@ -252,13 +266,17 @@ const FORECAST_DOT = waypoint(["planned", "finish"]);
  * Course line and value table of the ECTS-Verlauf: cumulative actual and forecast against the target up to
  * the expected graduation, so a simulated decision visibly lengthens the course. The section heading lives on
  * the page, so it shows while this lazy chunk loads. The chart is decorative for screen readers: the table
- * holds the same values.
+ * holds the same values. On narrow screens the table folds away under the chart.
  */
 export function EctsHistory() {
   const plan = useDemoStore(selectBasePlan);
   const academic = useDemoStore(selectAcademicState);
   const chart = useCourseDraw(
     plan?.terms.map((item) => item.cumulativeEcts).join() ?? "",
+  );
+  const wide = useSyncExternalStore(
+    subscribeToWide,
+    () => window.matchMedia(WIDE_QUERY).matches,
   );
   if (!plan || !academic) return null;
 
@@ -304,30 +322,38 @@ export function EctsHistory() {
   ];
 
   return (
-    <>
-      <div ref={chart} className="-mx-5 md:-mx-7">
+    <div className="mt-3 grid gap-x-6 gap-y-3 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-center">
+      <div ref={chart} className="min-w-0">
         <ChartContainer
           config={CHART_CONFIG}
-          className="aspect-auto h-48 w-full md:h-60"
+          className="aspect-auto h-56 w-full md:h-64"
           aria-hidden="true"
         >
           <ComposedChart
             accessibilityLayer={false}
             data={points}
-            margin={{ left: 20, right: 24, top: 36, bottom: 0 }}
+            margin={{ left: -8, right: 20, top: 32, bottom: 0 }}
           >
+            <CartesianGrid vertical={false} />
             <XAxis
               dataKey="term"
               tickLine={false}
               axisLine={false}
-              tickMargin={12}
-              tick={{ fill: "var(--hero-muted)" }}
+              tickMargin={10}
+              tick={{ fill: "var(--muted-foreground)" }}
               interval="preserveStartEnd"
               minTickGap={4}
+              padding={{ left: 28, right: 12 }}
             />
-            <YAxis hide domain={[0, "dataMax"]} />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              width={40}
+              tick={{ fill: "var(--muted-foreground)" }}
+              domain={[0, "dataMax"]}
+            />
             <ChartTooltip
-              cursor={{ stroke: "var(--hero-border)" }}
+              cursor={{ stroke: "var(--border)" }}
               content={<EctsTooltip />}
             />
             <Line
@@ -351,11 +377,13 @@ export function EctsHistory() {
               activeDot={false}
               isAnimationActive={false}
             />
-            <Line
+            <Area
               dataKey="actual"
               type="linear"
               stroke="var(--color-actual)"
               strokeWidth={3}
+              fill="var(--accent-soft)"
+              fillOpacity={1}
               dot={EARNED_DOT}
               activeDot={false}
               isAnimationActive={false}
@@ -363,43 +391,39 @@ export function EctsHistory() {
           </ComposedChart>
         </ChartContainer>
       </div>
-      <details className="mt-3">
-        <summary className="w-fit cursor-pointer rounded-sm text-meta font-medium text-muted-foreground hover:text-foreground">
+      <details open={wide || undefined}>
+        <summary className="w-fit cursor-pointer rounded-sm text-meta font-medium text-muted-foreground hover:text-foreground lg:hidden">
           Werte als Tabelle
         </summary>
-        <p className="mt-2 text-meta text-muted-foreground">
-          Kumuliert je Semester; das laufende und die folgenden Semester als
-          Prognose, wenn du alle angemeldeten Prüfungen bestehst.
-        </p>
-        <table className="mt-2 w-full max-w-xl text-meta tabular-nums">
+        <table className="mt-2 w-full text-meta tabular-nums lg:mt-0">
           <caption className="sr-only">ECTS je Semester</caption>
           <thead className="text-muted-foreground">
-            <tr className="border-b">
-              <th scope="col" className="py-1 text-left font-medium">
+            <tr>
+              <th scope="col" className="py-0.5 text-left font-medium">
                 Semester
               </th>
-              <th scope="col" className="py-1 text-right font-medium">
+              <th scope="col" className="py-0.5 text-right font-medium">
                 Ist / Prognose
               </th>
-              <th scope="col" className="py-1 text-right font-medium">
+              <th scope="col" className="py-0.5 text-right font-medium">
                 Soll
               </th>
-              <th scope="col" className="py-1 text-right font-medium">
+              <th scope="col" className="py-0.5 text-right font-medium">
                 Differenz
               </th>
             </tr>
           </thead>
           <tbody>
             {semesters.map((point) => (
-              <tr key={point.term} className="border-b last:border-b-0">
-                <th scope="row" className="py-1 text-left font-medium">
+              <tr key={point.term}>
+                <th scope="row" className="py-0.5 text-left font-medium">
                   {point.term}
                 </th>
-                <td className="py-1 text-right">
+                <td className="py-0.5 text-right">
                   {point.actual ?? `${point.forecast ?? "–"} (Prognose)`}
                 </td>
-                <td className="py-1 text-right">{point.target}</td>
-                <td className="py-1 text-right">
+                <td className="py-0.5 text-right">{point.target}</td>
+                <td className="py-0.5 text-right">
                   {signedGap(point.actual ?? point.forecast ?? 0, point.target)}
                 </td>
               </tr>
@@ -407,6 +431,6 @@ export function EctsHistory() {
           </tbody>
         </table>
       </details>
-    </>
+    </div>
   );
 }

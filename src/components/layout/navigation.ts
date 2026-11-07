@@ -6,7 +6,6 @@ import {
   MessageCircleQuestionMark,
   Route,
   Settings,
-  ContactRound,
   type LucideIcon,
 } from "lucide-react";
 
@@ -21,7 +20,7 @@ export interface NavItem {
   end?: boolean;
 }
 
-/** Main navigation. */
+/** Main navigation. The Anlaufstellen page has no entry of its own: the assistant leads there. */
 export const NAV_ITEMS: readonly NavItem[] = [
   {
     to: "/",
@@ -34,15 +33,14 @@ export const NAV_ITEMS: readonly NavItem[] = [
     label: "Studienverlauf",
     icon: Route,
   },
-  { to: "/module", label: "Module & Noten", icon: BookOpen },
   { to: "/fristen", label: "Fristen", icon: CalendarClock },
-  { to: "/postfach", label: "Postfach", icon: Inbox },
   {
     to: "/assistent",
     label: "Assistent",
     icon: MessageCircleQuestionMark,
   },
-  { to: "/anlaufstellen", label: "Anlaufstellen", icon: ContactRound },
+  { to: "/postfach", label: "Postfach", icon: Inbox },
+  { to: "/module", label: "Module & Noten", icon: BookOpen },
 ];
 
 /** Settings in the full menu; there is no login/logout. */

@@ -432,6 +432,16 @@ export function AssistantChat({
                       />
                     </Button>
                   ))}
+                <Link
+                  to="/anlaufstellen"
+                  className="flex min-h-10 items-center justify-between gap-2 px-4 py-2 text-body font-medium transition-colors hover:bg-muted focus-visible:-outline-offset-2"
+                >
+                  Alle Anlaufstellen: Wer ist wofür zuständig?
+                  <ArrowRight
+                    className="size-4 shrink-0 text-muted-foreground"
+                    aria-hidden="true"
+                  />
+                </Link>
               </div>
             </div>
           )}
@@ -521,6 +531,16 @@ export function AssistantChat({
               >
                 {data.fallback.question}
               </Button>
+              {exchanges > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={cn(QUESTION_CHIP)}
+                  asChild
+                >
+                  <Link to="/anlaufstellen">Alle Anlaufstellen</Link>
+                </Button>
+              )}
             </div>
           </details>
           {!panel && composer}

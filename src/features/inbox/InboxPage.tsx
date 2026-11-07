@@ -146,7 +146,6 @@ export function InboxPage() {
             Nur ungelesene
           </label>
         </div>
-        <ChannelStatus />
       </div>
       {busy && (
         <Skeleton
@@ -157,8 +156,8 @@ export function InboxPage() {
       )}
       {!busy && incomplete && (
         <p role="status" className="text-body text-muted-foreground">
-          Das Postfach ist unvollständig. Prüfe den Sync-Status und verbinde
-          getrennte Kanäle in den Einstellungen erneut.
+          Das Postfach ist unvollständig. Prüfe den Sync-Status am Seitenende
+          und verbinde getrennte Kanäle in den Einstellungen erneut.
         </p>
       )}
       {high.length > 0 && (
@@ -191,6 +190,9 @@ export function InboxPage() {
           description="Wähle einen anderen Kanal oder zeige auch gelesene Nachrichten."
         />
       )}
+      <div className="border-t pt-4">
+        <ChannelStatus />
+      </div>
       <Sheet
         open={!!id}
         onOpenChange={(value) => {

@@ -127,8 +127,8 @@
   --chart-2: var(--muted-foreground);
   --radius: 0.625rem;
   /*
-   * The one dark surface: it carries the course line. .surface-hero maps these onto the regular names, so
-   * links, focus ring and tooltip inside work without special classes. This is a surface, not a theme.
+   * The one dark surface: the header of the assistant window. .surface-hero maps these onto the regular names,
+   * so its text, buttons and focus ring work without special classes. This is a surface, not a theme.
    */
   --hero: #1b1b1f;
   --hero-foreground: #ffffff;
@@ -255,7 +255,7 @@
     color-mix(in srgb, var(--foreground) 28%, transparent);
 }
 
-/* The dark hero surface: redefines the regular names locally (not .dark, see the variant above). */
+/* The dark surface: redefines the regular names locally (not .dark, see the variant above). */
 .surface-hero {
   --background: var(--hero);
   --foreground: var(--hero-foreground);

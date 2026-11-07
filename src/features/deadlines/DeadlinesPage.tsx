@@ -125,7 +125,6 @@ export function DeadlinesPage() {
             </Button>
           </div>
         </div>
-        <ChannelStatus />
       </div>
       {loading && (
         <Skeleton
@@ -136,8 +135,8 @@ export function DeadlinesPage() {
       )}
       {!loading && incomplete && (
         <p role="status" className="text-body text-muted-foreground">
-          Die Fristen sind unvollständig. Prüfe den Sync-Status und verbinde
-          getrennte Kanäle in den Einstellungen erneut.
+          Die Fristen sind unvollständig. Prüfe den Sync-Status am Seitenende
+          und verbinde getrennte Kanäle in den Einstellungen erneut.
         </p>
       )}
       {calendar ? (
@@ -168,6 +167,9 @@ export function DeadlinesPage() {
       {!calendar && future.length === 0 && !loading && !incomplete && (
         <EmptyState title="Keine anstehenden Fristen" />
       )}
+      <div className="border-t pt-4">
+        <ChannelStatus />
+      </div>
       {dialog && (
         <DeadlineDialog
           key={dialog === "new" ? "new" : dialog.id}

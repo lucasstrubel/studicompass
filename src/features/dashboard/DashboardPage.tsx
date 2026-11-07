@@ -39,16 +39,16 @@ function OverviewHeader() {
 /** Line samples for the course line; the chart itself has no legend, so this also shows while it loads. */
 function CourseLegend() {
   const items = [
-    { label: "Ist", className: "stroke-(--hero-line) [stroke-width:3]" },
+    { label: "Ist", className: "stroke-accent [stroke-width:3]" },
     {
       label: "Prognose",
       className:
-        "stroke-(--hero-line) [stroke-width:2] [stroke-dasharray:1_6] [stroke-linecap:round]",
+        "stroke-accent [stroke-width:2] [stroke-dasharray:1_6] [stroke-linecap:round]",
     },
     {
       label: "Soll",
       className:
-        "stroke-(--hero-target) [stroke-width:1.5] [stroke-dasharray:6_5]",
+        "stroke-muted-foreground [stroke-width:1.5] [stroke-dasharray:6_5]",
     },
   ];
   return (
@@ -71,15 +71,15 @@ function CourseLegend() {
 const chartSkeleton = (
   <Skeleton
     role="status"
-    className="h-48 md:h-60"
+    className="mt-3 h-56 md:h-64"
     aria-label="ECTS-Verlauf wird geladen"
   />
 );
 
 /**
- * Übersicht: the hero joins Studienstand and course line, followed by Jetzt wichtig and this semester; on
+ * Übersicht: one card joins Studienstand and course line, followed by Jetzt wichtig and this semester; on
  * small screens the next deadline follows Jetzt wichtig. The right column is DashboardRail.
- * The hero's two sections stay separate regions, because screen readers meet them as different things.
+ * The card's two sections stay separate regions, because screen readers meet them as different things.
  */
 export function DashboardPage() {
   return (
@@ -88,8 +88,8 @@ export function DashboardPage() {
       <ResourceBoundary services={["pos"]} skeleton={null}>
         {() => <WithdrawalNotice />}
       </ResourceBoundary>
-      <div className="surface-hero rounded-2xl pt-5 pb-5 md:pt-6">
-        <section aria-labelledby="study-progress" className="px-5 md:px-7">
+      <div className="rounded-2xl border bg-card p-5 md:p-7">
+        <section aria-labelledby="study-progress">
           <ResourceBoundary
             services={["pos", "rules"]}
             skeleton={
@@ -103,22 +103,24 @@ export function DashboardPage() {
             {() => <StudyProgressCard />}
           </ResourceBoundary>
         </section>
-        <section aria-labelledby="ects-history" className="mt-6">
-          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 md:px-7">
-            <h2 id="ects-history" className="text-card-title">
+        <section aria-labelledby="ects-history" className="mt-6 border-t pt-6">
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+            <h2 id="ects-history" className="text-section-title">
               ECTS-Verlauf
             </h2>
             <CourseLegend />
           </div>
-          <div className="mt-2 px-5 md:px-7">
-            <ResourceBoundary services={["pos"]} skeleton={chartSkeleton}>
-              {() => (
-                <Suspense fallback={chartSkeleton}>
-                  <EctsHistory />
-                </Suspense>
-              )}
-            </ResourceBoundary>
-          </div>
+          <p className="mt-1 text-body text-muted-foreground">
+            Kumuliert je Semester; das laufende und die folgenden Semester als
+            Prognose, wenn du alle angemeldeten Prüfungen bestehst.
+          </p>
+          <ResourceBoundary services={["pos"]} skeleton={chartSkeleton}>
+            {() => (
+              <Suspense fallback={chartSkeleton}>
+                <EctsHistory />
+              </Suspense>
+            )}
+          </ResourceBoundary>
         </section>
       </div>
       <ResourceBoundary
