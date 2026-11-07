@@ -5,19 +5,22 @@ import { useDemoStore } from "@/store/use-demo-store";
 import { formatShortDateTime } from "@/lib/format";
 import { CHANNELS } from "@/services/types";
 
-/** Individual boundaries keep healthy channels usable when another one fails. */
+/**
+ * One quiet line while everything is fine; errors and disconnects take the room they need. Individual boundaries
+ * keep healthy channels usable when another one fails.
+ */
 export function ChannelStatus() {
   const resources = useDemoStore((state) => state.resources);
   const connected = useDemoStore((state) => state.connectedChannels);
   return (
     <section
       aria-label="Sync-Status"
-      className="grid gap-2 text-meta sm:grid-cols-2 xl:grid-cols-4"
+      className="flex flex-wrap gap-x-5 gap-y-1 text-meta text-muted-foreground"
     >
       {CHANNELS.map((channel) => (
-        <div key={channel} className="min-w-0 rounded-lg border bg-card p-3">
+        <div key={channel} className="max-w-full min-w-0">
           {!connected[channel] && resources[channel].data && (
-            <p className="mb-2 font-semibold">
+            <p className="font-semibold text-foreground">
               Verbindung getrennt · vorhandene Daten bleiben sichtbar
             </p>
           )}
@@ -27,7 +30,7 @@ export function ChannelStatus() {
               <Skeleton
                 role="status"
                 aria-label={`${CHANNEL_LABELS[channel]} wird geladen`}
-                className="h-10"
+                className="h-5 w-48"
               />
             }
           >

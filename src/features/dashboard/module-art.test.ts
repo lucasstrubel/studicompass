@@ -7,11 +7,6 @@ describe("module colours", () => {
     expect(new Set(tones).size).toBe(5);
   });
 
-  it("gives the three recent grades different colours", () => {
-    const tones = ["m-klr", "m-bsrn", "m-mathe2"].map(moduleTone);
-    expect(new Set(tones).size).toBe(3);
-  });
-
   it("keeps the colour of modules without an entry stable", () => {
     expect(moduleTone("m-web")).toBe(moduleTone("m-web"));
   });

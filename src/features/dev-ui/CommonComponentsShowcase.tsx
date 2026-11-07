@@ -7,7 +7,10 @@ import { CitationList } from "@/components/common/CitationList";
 import { ConsequenceItem } from "@/components/common/ConsequenceItem";
 import { Countdown } from "@/components/common/Countdown";
 import { DemoBadge } from "@/components/common/DemoBadge";
+import { BrandMark } from "@/components/common/BrandMark";
+import { CourseDot, CourseLine } from "@/components/common/CourseDot";
 import { EctsProgress } from "@/components/common/EctsProgress";
+import { SegmentedButton, SegmentedGroup } from "@/components/common/Segmented";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ErrorState } from "@/components/common/ErrorState";
 import { PageHeader } from "@/components/common/PageHeader";
@@ -121,6 +124,37 @@ export function CommonComponentsShowcase() {
             <Countdown until={EXPIRED} />
           </dd>
         </dl>
+      </Section>
+
+      <Section name="BrandMark">
+        <div className="flex items-center gap-4">
+          <BrandMark className="size-10" />
+          <span className="rounded-lg bg-foreground p-2 text-background">
+            <BrandMark className="size-10" />
+          </span>
+          <span className="rounded-full bg-accent p-2 text-accent-foreground">
+            <BrandMark mono className="size-6" />
+          </span>
+        </div>
+      </Section>
+
+      <Section name="CourseDot">
+        <div className="flex max-w-xs items-center">
+          <CourseDot state="done">1</CourseDot>
+          <CourseLine state="done" className="flex-1" />
+          <CourseDot state="current">2</CourseDot>
+          <CourseLine state="current" className="flex-1" />
+          <CourseDot state="planned" last>
+            3
+          </CourseDot>
+        </div>
+      </Section>
+
+      <Section name="Segmented">
+        <SegmentedGroup label="Beispielansicht">
+          <SegmentedButton pressed>Liste</SegmentedButton>
+          <SegmentedButton pressed={false}>Kalender</SegmentedButton>
+        </SegmentedGroup>
       </Section>
 
       <Section name="EctsProgress">

@@ -93,11 +93,10 @@ describe("AppShell", () => {
     expect(links.map((link) => link.textContent)).toEqual([
       "Übersicht",
       "Studienverlauf",
-      "Module & Noten",
       "Fristen",
-      "Postfach",
       "Assistent",
-      "Anlaufstellen",
+      "Postfach",
+      "Module & Noten",
     ]);
     // jsdom applies no media queries, so the breakpoint is checked on the wrapper class.
     expect(trigger().closest(".xl\\:hidden")).not.toBeNull();

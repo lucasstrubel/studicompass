@@ -46,38 +46,44 @@ export function ConsequenceItem({
   return (
     <div
       data-severity={consequence.severity}
-      className={cn("flex gap-3 rounded-xl border bg-card p-3", className)}
+      className={cn("flex gap-3 px-4 py-3", className)}
     >
       <Icon
         className={cn("mt-0.5 size-4.5 shrink-0", severityClassName)}
         aria-hidden="true"
       />
       <div className="min-w-0 flex-1">
-        <p className="text-body font-semibold">
-          <span className={cn("mr-1.5 text-meta", severityClassName)}>
-            {label}:
-          </span>
-          {consequence.title}
-        </p>
-        {/* The invisible ::after enlarges the hit area to 30 px without moving the layout (P5-07). */}
-        <button
-          type="button"
-          aria-expanded={open}
-          aria-controls={detailsId}
-          onClick={() => setOpen((value) => !value)}
-          className="relative mt-1 inline-flex items-center gap-1 rounded-sm text-meta text-accent-strong after:absolute after:-inset-x-1 after:-inset-y-1.5 hover:underline"
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4">
+          <p className="text-body font-semibold">
+            <span className={cn("mr-1.5 text-meta", severityClassName)}>
+              {label}:
+            </span>
+            {consequence.title}
+          </p>
+          {/* The invisible ::after enlarges the hit area to 30 px without moving the layout (P5-07). */}
+          <button
+            type="button"
+            aria-expanded={open}
+            aria-controls={detailsId}
+            onClick={() => setOpen((value) => !value)}
+            className="relative inline-flex items-center gap-1 rounded-sm text-meta text-muted-foreground after:absolute after:-inset-x-1 after:-inset-y-1.5 hover:text-foreground"
+          >
+            Warum?
+            <span className="sr-only"> – {consequence.title}</span>
+            <ChevronDown
+              className={cn(
+                "size-3.5 transition-transform",
+                open && "rotate-180",
+              )}
+              aria-hidden="true"
+            />
+          </button>
+        </div>
+        <div
+          id={detailsId}
+          hidden={!open}
+          className="mt-2 space-y-2 motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-150"
         >
-          Warum?
-          <span className="sr-only"> – {consequence.title}</span>
-          <ChevronDown
-            className={cn(
-              "size-3.5 transition-transform",
-              open && "rotate-180",
-            )}
-            aria-hidden="true"
-          />
-        </button>
-        <div id={detailsId} hidden={!open} className="mt-2 space-y-2">
           <p className="text-body">{consequence.detail}</p>
           <CitationList citations={citations} />
         </div>

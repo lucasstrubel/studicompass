@@ -127,7 +127,7 @@ function OwnLink({ moduleId, link }: { moduleId: string; link: CourseLink }) {
   const [editing, setEditing] = useState(false);
   if (editing)
     return (
-      <li className="rounded-lg border p-3">
+      <li className="rounded-lg bg-muted p-3">
         <LinkForm
           withLabel
           initial={link}
@@ -203,10 +203,7 @@ export function CourseLinks({
   const id = useId();
 
   return (
-    <section
-      className="space-y-4 rounded-xl border bg-card p-4"
-      aria-labelledby={id}
-    >
+    <section className="space-y-3 p-4" aria-labelledby={id}>
       <h3 id={id} className="text-card-title">
         Links zum Kurs
       </h3>
@@ -292,7 +289,7 @@ export function CourseLinks({
           )
         )}
         {editing === "new" ? (
-          <div className="rounded-lg border p-3">
+          <div className="rounded-lg bg-muted p-3">
             <LinkForm
               withLabel
               submitLabel="Link hinzufügen"

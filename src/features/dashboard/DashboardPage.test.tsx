@@ -42,12 +42,8 @@ describe("Übersicht", () => {
     expect(within(progress).getByText("48")).toBeInTheDocument();
     expect(within(progress).getByText("ECTS von 210")).toBeInTheDocument();
     expect(within(progress).getByText("Knapp")).toBeInTheDocument();
-    expect(progress).toHaveTextContent(
-      "12 ECTS hinter dem Regelverlauf (Soll nach 2 Semestern: 60)",
-    );
-    expect(progress).toHaveTextContent(
-      "78 von 90 – wenn du alle angemeldeten Prüfungen bestehst",
-    );
+    expect(progress).toHaveTextContent("12 ECTS hinter dem Soll von 60");
+    expect(progress).toHaveTextContent("78 von 90");
     expect(progress).toHaveTextContent("WS 2028/29 – in Regelstudienzeit");
   });
 
@@ -71,7 +67,7 @@ describe("Übersicht", () => {
     ).toHaveAttribute("href", "/entscheidung/e-stat-ws26");
   });
 
-  it("lists the five modules of this semester and the next milestone", () => {
+  it("lists the five modules of this semester", () => {
     renderOverview();
 
     const modules = region("Dieses Semester (WS 2026/27)");
@@ -80,15 +76,6 @@ describe("Übersicht", () => {
     );
     expect(modules).toHaveTextContent("Übungsblätter 5/12");
     expect(modules).toHaveTextContent("nur im WS");
-
-    const milestone = region(/^Praxissemester/);
-    expect(milestone).toHaveTextContent("Praxissemester · WS 2027/28");
-    expect(milestone).toHaveTextContent(
-      "Noch offen: 7 Module des Grundstudiums (5 davon in diesem Semester angemeldet)",
-    );
-    expect(milestone).toHaveTextContent(
-      "Erreichbar, wenn du Programmieren 2 und Wirtschaftsprivatrecht im SS 2027 bestehst.",
-    );
   });
 
   it("shows the new state after a simulated withdrawal and restores it with Rückgängig", () => {
@@ -103,12 +90,7 @@ describe("Übersicht", () => {
       "Dein Praxissemester verschiebt sich voraussichtlich auf SS 2028.",
     );
     expect(progress).toHaveTextContent("72 von 90");
-    expect(progress).toHaveTextContent(
-      "SS 2029 – 1 Semester nach der Regelstudienzeit",
-    );
-    expect(region(/^Praxissemester/)).toHaveTextContent(
-      "Praxissemester · SS 2028 (+1 Semester)",
-    );
+    expect(progress).toHaveTextContent("SS 2029 – 1 Semester später");
     expect(region("Jetzt wichtig")).toHaveTextContent(
       "Gerade steht keine Entscheidung mit Sonderregel an.",
     );
@@ -118,9 +100,6 @@ describe("Übersicht", () => {
     expect(
       within(region("Dein Studienstand")).getByText("Knapp"),
     ).toBeInTheDocument();
-    expect(region(/^Praxissemester/)).toHaveTextContent(
-      "Praxissemester · WS 2027/28",
-    );
     expect(screen.queryByText(/Simulierte Abmeldung/)).not.toBeInTheDocument();
   });
 
@@ -137,16 +116,15 @@ describe("Übersicht", () => {
     );
   });
 
-  it("keeps the order: Studienstand, Jetzt wichtig, (mobile: Nächste Frist), ECTS-Verlauf, Dieses Semester, Meilenstein", () => {
+  it("keeps the order: Studienstand, ECTS-Verlauf, Jetzt wichtig, (mobile: Nächste Frist), Dieses Semester", () => {
     renderOverview();
     const main = screen.getByRole("main");
     const order = [
       "Dein Studienstand",
+      "ECTS-Verlauf",
       "Jetzt wichtig",
       "Nächste Frist",
-      "ECTS-Verlauf",
       "Dieses Semester (WS 2026/27)",
-      "Praxissemester · WS 2027/28",
     ].map((name) =>
       within(main)
         .getAllByRole("heading", { level: 2 })
@@ -173,9 +151,6 @@ describe("Übersicht", () => {
     expect(
       screen.getAllByText("POS konnte nicht geladen werden").length,
     ).toBeGreaterThan(0);
-    expect(
-      screen.getByRole("button", { name: "Assistent erneut laden" }),
-    ).toBeInTheDocument();
 
     FLAGS.simulateErrors = false;
     for (const name of ["Regelwerk erneut laden", "POS erneut laden"])
@@ -218,7 +193,7 @@ describe("Übersicht (P3-06 review)", () => {
 });
 
 describe("ECTS-Verlauf (P5-12)", () => {
-  it("lists the gap to the target per semester in the value table", async () => {
+  it("lists the gap to the target per semester up to the graduation in the value table", async () => {
     vi.useRealTimers();
     renderOverview();
     const table = await screen.findByRole(
@@ -234,6 +209,10 @@ describe("ECTS-Verlauf (P5-12)", () => {
       "WS 2025/263030±0",
       "SS 20264860−12",
       "WS 2026/2778 (Prognose)90−12",
+      "SS 2027120 (Prognose)120±0",
+      "WS 2027/28150 (Prognose)150±0",
+      "SS 2028180 (Prognose)180±0",
+      "WS 2028/29210 (Prognose)210±0",
     ]);
   });
 });

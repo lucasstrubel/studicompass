@@ -10,6 +10,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SegmentedButton, SegmentedGroup } from "@/components/common/Segmented";
 import { ChannelBadge } from "@/components/common/ChannelBadge";
 import { ChannelStatus } from "@/components/common/ChannelStatus";
 import { CHANNEL_LABELS } from "@/components/common/labels";
@@ -39,29 +40,39 @@ function Message({
     <li>
       <button
         onClick={(event) => open(item.id, event.currentTarget)}
-        className="w-full space-y-2 rounded-xl border bg-card p-4 text-left hover:bg-muted"
+        className="block w-full space-y-0.5 px-4 py-3 text-left transition-colors hover:bg-muted focus-visible:-outline-offset-2"
       >
-        <span className="flex flex-wrap items-center gap-2">
-          <ChannelBadge channel={item.channel} />
-          <span className="text-meta text-muted-foreground">{item.sender}</span>
-          {!item.read && (
-            <span className="text-meta font-semibold">● Ungelesen</span>
-          )}
+        <span className="flex flex-wrap items-baseline justify-between gap-x-4">
+          <span className="min-w-0 text-card-title">{item.subject}</span>
+          <span className="text-meta text-muted-foreground">
+            {formatDistanceStrict(new Date(item.receivedAt), DEMO_NOW, {
+              locale: de,
+              addSuffix: true,
+            })}
+          </span>
         </span>
-        <span className="block text-card-title">{item.subject}</span>
         <span className="block text-body text-muted-foreground">
           {item.preview}
         </span>
-        <span className="block text-meta text-muted-foreground">
-          {formatDistanceStrict(new Date(item.receivedAt), DEMO_NOW, {
-            locale: de,
-            addSuffix: true,
-          })}
-          {module && ` · ${module.title}`}
-        </span>
         {reason && (
-          <span className="block text-meta font-semibold">{reason}</span>
+          <span className="block text-meta font-medium">{reason}</span>
         )}
+        <span className="flex flex-wrap items-center gap-x-2 text-meta text-muted-foreground">
+          <ChannelBadge channel={item.channel} />
+          <span>{item.sender}</span>
+          {module && module.title !== item.sender && (
+            <span>· {module.title}</span>
+          )}
+          {!item.read && (
+            <span className="flex items-center gap-1 font-medium text-accent-strong">
+              <span
+                aria-hidden="true"
+                className="size-2 rounded-full bg-accent-strong"
+              />
+              Ungelesen
+            </span>
+          )}
+        </span>
       </button>
     </li>
   );
@@ -105,40 +116,37 @@ export function InboxPage() {
     setParams(next, { preventScrollReset: true });
   }
   return (
-    <div className="space-y-5">
-      <ChannelStatus />
-      <div
-        className="flex flex-wrap gap-2"
-        role="group"
-        aria-label="Nach Kanal filtern"
-      >
-        <Button
-          variant={channel === "all" ? "default" : "outline"}
-          aria-pressed={channel === "all"}
-          onClick={() => setChannel("all")}
-        >
-          Alle
-        </Button>
-        {CHANNELS.map((key) => (
-          <Button
-            key={key}
-            variant={channel === key ? "default" : "outline"}
-            aria-pressed={channel === key}
-            onClick={() => setChannel(key)}
-          >
-            {CHANNEL_LABELS[key]}
-          </Button>
-        ))}
+    <div className="space-y-6">
+      <div className="space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+          <SegmentedGroup label="Nach Kanal filtern">
+            <SegmentedButton
+              pressed={channel === "all"}
+              onClick={() => setChannel("all")}
+            >
+              Alle
+            </SegmentedButton>
+            {CHANNELS.map((key) => (
+              <SegmentedButton
+                key={key}
+                pressed={channel === key}
+                onClick={() => setChannel(key)}
+              >
+                {CHANNEL_LABELS[key]}
+              </SegmentedButton>
+            ))}
+          </SegmentedGroup>
+          <label className="flex items-center gap-2 text-body">
+            <input
+              className="accent-primary"
+              type="checkbox"
+              checked={unread}
+              onChange={(event) => setUnread(event.target.checked)}
+            />
+            Nur ungelesene
+          </label>
+        </div>
       </div>
-      <label className="flex items-center gap-2 text-body">
-        <input
-          className="accent-primary"
-          type="checkbox"
-          checked={unread}
-          onChange={(event) => setUnread(event.target.checked)}
-        />
-        Nur ungelesene
-      </label>
       {busy && (
         <Skeleton
           role="status"
@@ -148,8 +156,8 @@ export function InboxPage() {
       )}
       {!busy && incomplete && (
         <p role="status" className="text-body text-muted-foreground">
-          Das Postfach ist unvollständig. Prüfe den Sync-Status und verbinde
-          getrennte Kanäle in den Einstellungen erneut.
+          Das Postfach ist unvollständig. Prüfe den Sync-Status am Seitenende
+          und verbinde getrennte Kanäle in den Einstellungen erneut.
         </p>
       )}
       {high.length > 0 && (
@@ -157,7 +165,7 @@ export function InboxPage() {
           <h2 id="important-inbox" className="mb-3 text-section-title">
             Für dich wichtig
           </h2>
-          <ul className="grid gap-3 lg:grid-cols-2">
+          <ul className="divide-y overflow-hidden rounded-xl border bg-card">
             {high.map((item) => (
               <Message key={item.id} item={item} open={open} />
             ))}
@@ -169,7 +177,7 @@ export function InboxPage() {
           <h2 id="other-inbox" className="mb-3 text-section-title">
             Weitere Nachrichten
           </h2>
-          <ul className="grid gap-3 lg:grid-cols-2">
+          <ul className="divide-y overflow-hidden rounded-xl border bg-card">
             {normal.map((item) => (
               <Message key={item.id} item={item} open={open} />
             ))}
@@ -182,6 +190,9 @@ export function InboxPage() {
           description="Wähle einen anderen Kanal oder zeige auch gelesene Nachrichten."
         />
       )}
+      <div className="border-t pt-4">
+        <ChannelStatus />
+      </div>
       <Sheet
         open={!!id}
         onOpenChange={(value) => {

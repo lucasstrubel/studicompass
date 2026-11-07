@@ -133,3 +133,22 @@ test("asks the assistant in place from the Folgen-Check (P5-06)", async ({
     }),
   ).toBeVisible();
 });
+
+test("stays on its own origin, also with the chat loaded", async ({ page }) => {
+  const foreign: string[] = [];
+  const own = new URL(test.info().project.use.baseURL ?? "http://localhost")
+    .origin;
+  page.on("request", (request) => {
+    const { protocol, origin } = new URL(request.url());
+    if (protocol.startsWith("http") && origin !== own) foreign.push(origin);
+  });
+  await openOverview(page);
+  await page.getByRole("button", { name: "Assistent öffnen" }).click();
+  const chat = page.getByRole("dialog", { name: "Assistent" });
+  await chat
+    .getByRole("textbox", { name: "Deine Frage" })
+    .fill("Wann wird Statistik angeboten?");
+  await chat.getByRole("button", { name: "Frage stellen" }).click();
+  await expect(chat.getByRole("article")).toContainText("KI-Antwort");
+  expect(foreign).toEqual([]);
+});

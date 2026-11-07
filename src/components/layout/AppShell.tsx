@@ -31,18 +31,16 @@ export function AppShell() {
       >
         Zum Inhalt
       </a>
-      <div className="app-frame mx-auto flex min-h-dvh min-w-0 max-w-400 flex-col bg-background md:my-6 md:min-h-[calc(100dvh-3rem)] md:w-[calc(100%-3rem)] md:rounded-3xl md:border">
-        <div className="md:rounded-t-3xl md:[&>header]:rounded-t-3xl">
-          <Topbar />
-        </div>
+      <div className="flex min-h-dvh min-w-0 flex-col">
+        <Topbar />
         <main
           id="inhalt"
           ref={mainRef}
           tabIndex={-1}
-          className="grid min-w-0 flex-1 outline-none xl:grid-cols-[minmax(0,1fr)_auto]"
+          className="mx-auto grid w-full max-w-360 min-w-0 flex-1 outline-none xl:grid-cols-[minmax(0,1fr)_auto]"
         >
           {/* The last column (content or right column) keeps its end clear of the assistant button. */}
-          <div className="min-w-0 px-4 py-6 last:pb-24 md:px-6 md:py-7 md:last:pb-24 xl:px-8">
+          <div className="min-w-0 px-4 py-6 last:pb-24 md:px-6 md:py-8 md:last:pb-24 xl:px-8">
             {!handle?.ownHeader && (
               <h1 className="mb-6 text-page-title">
                 {handle?.title ?? APP_NAME}

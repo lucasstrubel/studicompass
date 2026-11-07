@@ -15,7 +15,7 @@ export function ModuleIllustration({ kind }: { kind: IllustrationKind }) {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className="size-20 shrink-0 text-foreground/75"
+      className="size-16 shrink-0 text-foreground/75"
     >
       <path
         d="M9 69Q44 81 79 67L76 74Q41 86 12 75Z"

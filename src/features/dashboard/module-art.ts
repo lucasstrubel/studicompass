@@ -1,8 +1,7 @@
 import type { CSSProperties } from "react";
 import type { IllustrationKind } from "./ModuleIllustration";
 
-// Presentation only: which local line drawing and which colour of the family
-// stand next to which module.
+// Presentation only: which line drawing and which colour of the family stand next to which module.
 const MODULE_ART: Record<string, IllustrationKind> = {
   "m-stat": "chart",
   "m-db": "database",
@@ -11,26 +10,23 @@ const MODULE_ART: Record<string, IllustrationKind> = {
   "m-mkt": "globe",
 };
 
-export type ModuleTone = "violet" | "teal" | "blue" | "plum" | "terracotta";
+export type ModuleTone = "violet" | "teal" | "blue" | "plum" | "slate";
 
 const TONES: readonly ModuleTone[] = [
   "violet",
   "teal",
   "blue",
   "plum",
-  "terracotta",
+  "slate",
 ];
 
-// The modules of the overview: this semester's exams and the recent grades, each in its own colour.
+// The modules of the overview, each in its own colour.
 const MODULE_TONES: Record<string, ModuleTone> = {
   "m-stat": "violet",
   "m-db": "teal",
   "m-se1": "blue",
   "m-gpm": "plum",
-  "m-mkt": "terracotta",
-  "m-klr": "teal",
-  "m-bsrn": "blue",
-  "m-mathe2": "violet",
+  "m-mkt": "slate",
 };
 
 export function moduleArt(moduleId: string): IllustrationKind {
@@ -46,7 +42,7 @@ export function moduleTone(moduleId: string): ModuleTone {
   return MODULE_TONES[moduleId] ?? TONES[sum % TONES.length];
 }
 
-/** Sets --module-tone and --module-tone-soft for the illustration, progress bar or grade below. */
+/** Sets --module-tone and --module-tone-soft for the drawing, progress bar or grade below. */
 export function moduleToneStyle(moduleId: string): CSSProperties {
   const tone = moduleTone(moduleId);
   return {

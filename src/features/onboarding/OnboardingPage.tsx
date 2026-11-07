@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
+import { BrandMark } from "@/components/common/BrandMark";
+import { CourseDot, CourseLine } from "@/components/common/CourseDot";
 import { Button } from "@/components/ui/button";
 import { ResourceBoundary } from "@/components/common/ResourceBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -79,12 +81,37 @@ export function OnboardingPage() {
   }
   return (
     <main className="mx-auto flex min-h-dvh max-w-2xl flex-col justify-center gap-5 px-4 py-8">
-      <p className="text-card-title">{APP_NAME}</p>
-      <h1 className="text-page-title">Onboarding</h1>
-      <p role="status" className="text-meta text-muted-foreground tabular-nums">
-        Schritt {step + 1} von 4
+      <p className="flex items-center gap-1.5 text-section-title">
+        <BrandMark />
+        {APP_NAME}
       </p>
-      <h2 ref={title} tabIndex={-1} className="text-section-title">
+      <h1 className="sr-only">Onboarding</h1>
+      <div className="space-y-2">
+        <div aria-hidden="true" className="flex max-w-xs items-center">
+          {STEPS.map((_, index) => {
+            const state =
+              index < step ? "done" : index === step ? "current" : "planned";
+            return (
+              <Fragment key={index}>
+                <CourseDot state={state} last={index === STEPS.length - 1}>
+                  {index + 1}
+                </CourseDot>
+                {index < STEPS.length - 1 && (
+                  <CourseLine state={state} className="flex-1" />
+                )}
+              </Fragment>
+            );
+          })}
+        </div>
+        <p
+          role="status"
+          className="text-meta text-muted-foreground tabular-nums"
+        >
+          Schritt {step + 1} von 4
+        </p>
+      </div>
+      {/* Focus target for screen readers on each step, not a control: no ring, like the main landmark. */}
+      <h2 ref={title} tabIndex={-1} className="text-page-title outline-none">
         {STEPS[step]}
       </h2>
       {step === 0 && (
@@ -97,12 +124,18 @@ export function OnboardingPage() {
             Du erkundest einen Prototyp mit fiktiven Daten. Es werden keine
             Zugangsdaten benötigt.
           </p>
-          <Button onClick={() => setStep(1)}>
-            Mit Hochschul-Login anmelden (Demo)
-          </Button>
-          <Button variant="link" onClick={() => finish(true)}>
-            Demo ohne Einrichtung starten
-          </Button>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <Button onClick={() => setStep(1)}>
+              Mit Hochschul-Login anmelden (Demo)
+            </Button>
+            <Button
+              variant="link"
+              className="h-auto px-0"
+              onClick={() => finish(true)}
+            >
+              Demo ohne Einrichtung starten
+            </Button>
+          </div>
         </>
       )}
       {step === 1 && (
@@ -116,11 +149,11 @@ export function OnboardingPage() {
             deinem Browser gespeichert. Es werden keine Hochschuldaten
             übertragen.
           </p>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="divide-y rounded-xl border bg-card">
             {CHANNELS.map((channel) => (
               <label
                 key={channel}
-                className="space-y-2 rounded-xl border bg-card p-4"
+                className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-3"
               >
                 <span className="flex items-center gap-2 text-card-title">
                   <input
@@ -137,7 +170,7 @@ export function OnboardingPage() {
                   />
                   {CHANNEL_LABELS[channel]}
                 </span>
-                <span role="status" className="block text-meta">
+                <span role="status" className="text-meta text-muted-foreground">
                   {!state.connectedChannels[channel]
                     ? "Nicht verbunden"
                     : state.resources[channel].status === "loading"
@@ -206,7 +239,7 @@ export function OnboardingPage() {
       )}
       {step === 3 && (
         <>
-          <fieldset className="space-y-3">
+          <fieldset className="divide-y rounded-xl border bg-card">
             <legend className="sr-only">Hinweis-Stil wählen</legend>
             {(
               [
@@ -214,10 +247,7 @@ export function OnboardingPage() {
                 { value: "direct", label: "Direkt" },
               ] as const
             ).map((tone) => (
-              <label
-                key={tone.value}
-                className="block space-y-2 rounded-xl border bg-card p-4"
-              >
+              <label key={tone.value} className="block space-y-1 px-4 py-3">
                 <span className="flex items-center gap-2 text-card-title">
                   <input
                     className="accent-primary"

@@ -47,7 +47,8 @@ export function validateDeadline(input: DeadlineInput, now: Date) {
       errors.time =
         "Diese Uhrzeit existiert wegen der Zeitumstellung nicht. Wähle eine andere Uhrzeit.";
     else if (Date.parse(deadlineInstant(dueAt)) < now.getTime())
-      errors.date = "Der Termin liegt vor dem heutigen Demo-Datum (25.01.2027).";
+      errors.date =
+        "Der Termin liegt vor dem heutigen Demo-Datum (25.01.2027).";
   }
   return errors;
 }

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { FlaskConical, ListChecks, Target, X } from "lucide-react";
+import { FlaskConical, ListChecks, X } from "lucide-react";
 import { toast } from "sonner";
 import { CitationList } from "@/components/common/CitationList";
 import { ConsequenceItem } from "@/components/common/ConsequenceItem";
@@ -244,146 +244,39 @@ function PlannerContent() {
         title="Studienverlauf"
         meta={<StatusBadge status={progress.trafficLight} />}
         description={
-          basePlan.graduationTerm ? (
-            <p className="text-foreground">
-              {timeline.simulating
-                ? "Echter Plan ohne Simulation – voraussichtlicher Abschluss: "
-                : "Voraussichtlicher Abschluss: "}
-              <span className="font-semibold">
-                {format(basePlan.graduationTerm)}
-              </span>{" "}
-              –{" "}
-              {inRegularTime
-                ? "in Regelstudienzeit"
-                : "nach der Regelstudienzeit"}
-            </p>
-          ) : (
-            "Ohne weiteren Prüfungsversuch lässt sich kein Abschluss planen. Wende dich an das Prüfungsamt."
-          )
+          <>
+            {basePlan.graduationTerm ? (
+              <p className="text-foreground">
+                {timeline.simulating
+                  ? "Echter Plan ohne Simulation – voraussichtlicher Abschluss: "
+                  : "Voraussichtlicher Abschluss: "}
+                <span className="font-semibold">
+                  {format(basePlan.graduationTerm)}
+                </span>{" "}
+                –{" "}
+                {inRegularTime
+                  ? "in Regelstudienzeit"
+                  : "nach der Regelstudienzeit"}
+              </p>
+            ) : (
+              <p>
+                Ohne weiteren Prüfungsversuch lässt sich kein Abschluss planen.
+                Wende dich an das Prüfungsamt.
+              </p>
+            )}
+            {goalRegularTime && (
+              <p>
+                Dein Ziel: Abschluss in Regelstudienzeit (
+                {format(regularGraduation)})
+              </p>
+            )}
+          </>
         }
       />
       <WithdrawalNotice />
-      {goalRegularTime && (
-        <p className="flex flex-wrap items-center gap-2 rounded-xl border bg-card p-3 text-body">
-          <Target className="size-4 shrink-0" aria-hidden="true" />
-          Dein Ziel: Abschluss in Regelstudienzeit ({format(regularGraduation)})
-        </p>
-      )}
-
-      <section
-        aria-labelledby="what-if"
-        className="space-y-3 rounded-xl border p-4"
-      >
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h2
-              id="what-if"
-              className="flex items-center gap-2 text-section-title"
-            >
-              <FlaskConical className="size-5" aria-hidden="true" />
-              Was-wäre-wenn
-            </h2>
-            <p className="text-meta text-muted-foreground">
-              Verschiebe offene Module in zulässige Semester. Deine echten Daten
-              bleiben unverändert.
-            </p>
-          </div>
-          <label className="flex items-center gap-2 text-body font-medium">
-            <Switch
-              ref={switchRef}
-              checked={simulation}
-              onCheckedChange={(checked) =>
-                checked ? setSimulation(true) : stopSimulation()
-              }
-            />
-            Simulation
-          </label>
-        </div>
-        <p className="text-meta text-muted-foreground">
-          {simulation
-            ? "Ziehe ein offenes Modul in ein anderes Semester oder nutze „Verschieben“. Danach siehst du sofort, was sich ändert."
-            : "Schalte die Simulation ein, um Module zu verschieben."}
-        </p>
-      </section>
-
-      {timeline.simulating && (
-        // Stays at the top while scrolling through the semesters (P5-11, feedback: scrolling was awkward).
-        <div
-          role="status"
-          aria-label="Simulationsstatus"
-          className="panel-shadow sticky top-2 z-10 flex flex-wrap items-center gap-3 rounded-xl border border-status-info bg-status-info-soft p-3 text-status-info-foreground"
-        >
-          <DemoBadge variant="simulation" className="bg-card" />
-          <StatusBadge status={plan.trafficLight} />
-          <p className="min-w-0 flex-1 text-body">
-            Abschluss in der Simulation:{" "}
-            <span className="font-semibold">
-              {plan.graduationTerm
-                ? format(plan.graduationTerm)
-                : "nicht planbar"}
-            </span>
-            {basePlan.graduationTerm &&
-              ` (echter Plan: ${format(basePlan.graduationTerm)})`}
-            {plan.internshipTerm &&
-              ` · Praxissemester ${format(plan.internshipTerm)}`}
-          </p>
-          <div className="flex flex-wrap gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-card"
-              onClick={() => {
-                focusAfterClose.current = null;
-                setResultOpen(true);
-              }}
-            >
-              <ListChecks aria-hidden="true" />
-              Folgen ansehen
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-card"
-              onClick={stopSimulation}
-            >
-              <X aria-hidden="true" />
-              Simulation verwerfen
-            </Button>
-          </div>
-        </div>
-      )}
-      <SimulationResultDialog
-        open={resultOpen && timeline.simulating}
-        onOpenChange={setResultOpen}
-        move={lastMove}
-        plan={plan}
-        basePlan={basePlan}
-        shifted={shifted}
-        consequences={
-          plan.consequences.length > 0 && (
-            <ul className="space-y-2">
-              {plan.consequences.map((consequence) => (
-                <li key={consequence.id}>
-                  <ConsequenceItem
-                    consequence={consequence}
-                    citations={consequenceCitations(
-                      consequence,
-                      academic.modules,
-                      rules,
-                    )}
-                  />
-                </li>
-              ))}
-            </ul>
-          )
-        }
-        onUndoMove={undoMove}
-        onDiscard={discardFromDialog}
-        onCloseAutoFocus={restoreFocus}
-      />
 
       <section aria-labelledby="timeline" className="space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
           <h2 id="timeline" className="text-section-title">
             Semester für Semester
             {timeline.simulating && (
@@ -392,26 +285,117 @@ function PlannerContent() {
               </span>
             )}
           </h2>
-          <label className="flex items-center gap-2 text-body font-medium">
-            <Switch
-              checked={hideCompleted}
-              onCheckedChange={setHideCompleted}
-            />
-            Abgeschlossenes ausblenden
-          </label>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <label className="flex items-center gap-2 text-body font-medium">
+              <Switch
+                ref={switchRef}
+                checked={simulation}
+                onCheckedChange={(checked) =>
+                  checked ? setSimulation(true) : stopSimulation()
+                }
+              />
+              <FlaskConical className="size-4" aria-hidden="true" />
+              Simulation
+            </label>
+            <label className="flex items-center gap-2 text-body font-medium">
+              <Switch
+                checked={hideCompleted}
+                onCheckedChange={setHideCompleted}
+              />
+              Abgeschlossenes ausblenden
+            </label>
+          </div>
         </div>
-        <p className="text-meta text-muted-foreground">
-          Tipp: Ein Klick auf einen Meilenstein markiert die Module, die dazu
-          gehören.
+        <p className="max-w-3xl text-meta text-muted-foreground">
+          {simulation
+            ? "Was-wäre-wenn: Ziehe ein offenes Modul in ein anderes Semester oder nutze „Verschieben“. Danach siehst du sofort, was sich ändert; deine echten Daten bleiben unverändert."
+            : "Was-wäre-wenn: Schalte die Simulation ein, um offene Module in zulässige Semester zu verschieben. Ein Klick auf einen Meilenstein markiert die zugehörigen Module."}
           {hideCompleted &&
             hiddenTerms > 0 &&
             ` ${hiddenTerms} abgeschlossene ${hiddenTerms === 1 ? "Semester ist" : "Semester sind"} ausgeblendet, bestandene Module ebenso.`}
         </p>
+
+        {timeline.simulating && (
+          // Stays at the top while scrolling through the semesters (P5-11, feedback: scrolling was awkward).
+          <div
+            role="status"
+            aria-label="Simulationsstatus"
+            className="panel-shadow sticky top-2 z-10 flex flex-wrap items-center gap-3 rounded-xl bg-status-info-soft p-3 text-status-info-foreground"
+          >
+            <DemoBadge variant="simulation" className="bg-card" />
+            <StatusBadge status={plan.trafficLight} />
+            <p className="min-w-0 flex-1 text-body">
+              Abschluss in der Simulation:{" "}
+              <span className="font-semibold">
+                {plan.graduationTerm
+                  ? format(plan.graduationTerm)
+                  : "nicht planbar"}
+              </span>
+              {basePlan.graduationTerm &&
+                ` (echter Plan: ${format(basePlan.graduationTerm)})`}
+              {plan.internshipTerm &&
+                ` · Praxissemester ${format(plan.internshipTerm)}`}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-card"
+                onClick={() => {
+                  focusAfterClose.current = null;
+                  setResultOpen(true);
+                }}
+              >
+                <ListChecks aria-hidden="true" />
+                Folgen ansehen
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-card"
+                onClick={stopSimulation}
+              >
+                <X aria-hidden="true" />
+                Simulation verwerfen
+              </Button>
+            </div>
+          </div>
+        )}
+        <SimulationResultDialog
+          open={resultOpen && timeline.simulating}
+          onOpenChange={setResultOpen}
+          move={lastMove}
+          plan={plan}
+          basePlan={basePlan}
+          shifted={shifted}
+          consequences={
+            plan.consequences.length > 0 && (
+              <ul className="divide-y rounded-xl border">
+                {plan.consequences.map((consequence) => (
+                  <li key={consequence.id}>
+                    <ConsequenceItem
+                      consequence={consequence}
+                      citations={consequenceCitations(
+                        consequence,
+                        academic.modules,
+                        rules,
+                      )}
+                    />
+                  </li>
+                ))}
+              </ul>
+            )
+          }
+          onUndoMove={undoMove}
+          onDiscard={discardFromDialog}
+          onCloseAutoFocus={restoreFocus}
+        />
+
         {milestone && markingRule && (
           <div
             role="status"
             aria-label="Markierte Module"
-            className="rounded-xl border border-tone-violet bg-tone-violet-soft p-3 text-body"
+            className="rounded-xl bg-tone-violet-soft p-3 text-body"
           >
             <p>
               <span className="font-semibold">
@@ -421,7 +405,7 @@ function PlannerContent() {
             </p>
             <CitationList
               variant="footer"
-              className="mt-2 pt-2"
+              className="mt-1"
               citations={[markingRule.citation]}
             />
           </div>

@@ -10,7 +10,6 @@ import { selectAcademicState, selectProfileName } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 import { NextDeadline } from "./DashboardRail";
 import { ImportantCard } from "./ImportantCard";
-import { MilestoneCard } from "./MilestoneCard";
 import { SemesterModules } from "./SemesterModules";
 import { StudyProgressCard } from "./StudyProgressCard";
 
@@ -25,10 +24,9 @@ function OverviewHeader() {
   return (
     <PageHeader
       title={`${greeting(DEMO_NOW)}${firstName ? `, ${firstName}` : ""}`}
-      description="Dein Studium auf einen Blick."
       meta={
         academic && (
-          <span className="rounded-full border px-3 py-1 text-meta text-muted-foreground">
+          <span>
             {semesterNumber(academic.currentTerm, academic.student.startTerm)}.
             Semester · {format(academic.currentTerm)}
           </span>
@@ -38,26 +36,66 @@ function OverviewHeader() {
   );
 }
 
+/** Line samples for the course line; the chart itself has no legend, so this also shows while it loads. */
+function CourseLegend() {
+  const items = [
+    { label: "Ist", className: "stroke-accent [stroke-width:3]" },
+    {
+      label: "Prognose",
+      className:
+        "stroke-accent [stroke-width:2] [stroke-dasharray:1_6] [stroke-linecap:round]",
+    },
+    {
+      label: "Soll",
+      className:
+        "stroke-muted-foreground [stroke-width:1.5] [stroke-dasharray:6_5]",
+    },
+  ];
+  return (
+    <ul
+      aria-hidden="true"
+      className="flex flex-wrap items-center gap-x-4 gap-y-1 text-meta text-muted-foreground"
+    >
+      {items.map((item) => (
+        <li key={item.label} className="flex items-center gap-1.5">
+          <svg viewBox="0 0 20 4" className="h-1 w-5">
+            <line x1="0" y1="2" x2="20" y2="2" className={item.className} />
+          </svg>
+          {item.label}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+const chartSkeleton = (
+  <Skeleton
+    role="status"
+    className="mt-3 h-56 md:h-64"
+    aria-label="ECTS-Verlauf wird geladen"
+  />
+);
+
 /**
- * Übersicht: Studienstand and Jetzt wichtig, below them the ECTS-Verlauf (Lucas, P5-06), then
- * this semester and the milestone; on small screens the next deadline follows Jetzt wichtig. The right
- * column is DashboardRail.
+ * Übersicht: one card joins Studienstand and course line, followed by Jetzt wichtig and this semester; on
+ * small screens the next deadline follows Jetzt wichtig. The right column is DashboardRail.
+ * The card's two sections stay separate regions, because screen readers meet them as different things.
  */
 export function DashboardPage() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <OverviewHeader />
       <ResourceBoundary services={["pos"]} skeleton={null}>
         {() => <WithdrawalNotice />}
       </ResourceBoundary>
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className="rounded-2xl border bg-card p-5 md:p-7">
         <section aria-labelledby="study-progress">
           <ResourceBoundary
             services={["pos", "rules"]}
             skeleton={
               <Skeleton
                 role="status"
-                className="h-80"
+                className="h-36"
                 aria-label="Studienstand wird geladen"
               />
             }
@@ -65,53 +103,35 @@ export function DashboardPage() {
             {() => <StudyProgressCard />}
           </ResourceBoundary>
         </section>
-        <ResourceBoundary
-          services={["pos", "website", "rules"]}
-          skeleton={
-            <Skeleton
-              role="status"
-              className="h-80"
-              aria-label="Jetzt wichtig wird geladen"
-            />
-          }
-        >
-          {() => <ImportantCard />}
-        </ResourceBoundary>
+        <section aria-labelledby="ects-history" className="mt-6 border-t pt-6">
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+            <h2 id="ects-history" className="text-section-title">
+              ECTS-Verlauf
+            </h2>
+            <CourseLegend />
+          </div>
+          <ResourceBoundary services={["pos"]} skeleton={chartSkeleton}>
+            {() => (
+              <Suspense fallback={chartSkeleton}>
+                <EctsHistory />
+              </Suspense>
+            )}
+          </ResourceBoundary>
+        </section>
       </div>
+      <ResourceBoundary
+        services={["pos", "website", "rules"]}
+        skeleton={
+          <Skeleton
+            role="status"
+            className="h-40"
+            aria-label="Jetzt wichtig wird geladen"
+          />
+        }
+      >
+        {() => <ImportantCard />}
+      </ResourceBoundary>
       <NextDeadline className="xl:hidden" />
-      <section aria-labelledby="ects-history" className="rounded-xl border p-5">
-        <h2 id="ects-history" className="text-section-title">
-          ECTS-Verlauf
-        </h2>
-        <p className="mt-1 text-meta text-muted-foreground">
-          Kumuliert je Semester; das laufende Semester als Prognose, wenn du
-          alle angemeldeten Prüfungen bestehst.
-        </p>
-        <ResourceBoundary
-          services={["pos"]}
-          skeleton={
-            <Skeleton
-              role="status"
-              className="mt-3 h-48"
-              aria-label="ECTS-Verlauf wird geladen"
-            />
-          }
-        >
-          {() => (
-            <Suspense
-              fallback={
-                <Skeleton
-                  role="status"
-                  className="mt-3 h-48"
-                  aria-label="ECTS-Verlauf wird geladen"
-                />
-              }
-            >
-              <EctsHistory />
-            </Suspense>
-          )}
-        </ResourceBoundary>
-      </section>
       <section aria-labelledby="semester-modules">
         <ResourceBoundary
           services={["pos"]}
@@ -131,20 +151,6 @@ export function DashboardPage() {
               <SemesterModules />
             </>
           )}
-        </ResourceBoundary>
-      </section>
-      <section aria-labelledby="milestone" className="rounded-xl border p-5">
-        <ResourceBoundary
-          services={["pos", "rules"]}
-          skeleton={
-            <Skeleton
-              role="status"
-              className="h-40"
-              aria-label="Meilenstein wird geladen"
-            />
-          }
-        >
-          {() => <MilestoneCard />}
         </ResourceBoundary>
       </section>
     </div>

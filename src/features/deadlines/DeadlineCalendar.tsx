@@ -115,8 +115,11 @@ export function DeadlineCalendar({
         </div>
         <p id={helpId} className="mb-3 text-meta text-muted-foreground">
           Heute im Demo-Szenario:{" "}
-          {formatDate(new Date(`${DEMO_DAY}T12:00:00Z`))}. Wähle einen Tag. Mit
-          den Pfeiltasten wechselst du den Tag, mit Bild auf/ab den Monat.
+          {formatDate(new Date(`${DEMO_DAY}T12:00:00Z`))}.{" "}
+          <span className="sr-only">
+            Wähle einen Tag. Mit den Pfeiltasten wechselst du den Tag, mit Bild
+            auf/ab den Monat.
+          </span>
         </p>
         <table
           aria-labelledby={titleId}
@@ -215,7 +218,9 @@ export function DeadlineCalendar({
           {countLabel(selectedItems.length)}
         </h2>
         {selectedItems.length ? (
-          <ul className="space-y-3">{selectedItems.map(renderItem)}</ul>
+          <ul className="divide-y rounded-xl border bg-card">
+            {selectedItems.map(renderItem)}
+          </ul>
         ) : !loading && !incomplete ? (
           <p className="text-body text-muted-foreground">
             Keine Einträge an diesem Tag.

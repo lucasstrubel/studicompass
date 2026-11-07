@@ -52,7 +52,7 @@ function CourseworkForm({
     <form
       noValidate
       onSubmit={submit}
-      className="space-y-3 rounded-lg border p-3"
+      className="space-y-3 rounded-lg bg-muted p-3"
     >
       <div className="space-y-1">
         <label htmlFor={`${id}-title`} className="text-meta font-semibold">
@@ -127,10 +127,7 @@ export function CourseworkCard({
   const admission = examAdmission(items);
 
   return (
-    <section
-      className="space-y-3 rounded-xl border bg-card p-4"
-      aria-labelledby={headingId}
-    >
+    <section className="space-y-2 p-4" aria-labelledby={headingId}>
       <h3 id={headingId} className="text-card-title">
         Prüfungsvorleistung
       </h3>
@@ -142,7 +139,7 @@ export function CourseworkCard({
       )}
       <AdmissionStatus admission={admission} />
       {items.length > 0 && (
-        <ul className="space-y-2">
+        <ul className="divide-y">
           {items.map((item) =>
             editing === item.id ? (
               <li key={item.id}>
@@ -158,7 +155,7 @@ export function CourseworkCard({
             ) : (
               <li
                 key={item.id}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border p-3"
+                className="flex flex-wrap items-center justify-between gap-2 py-2"
               >
                 <span className="min-w-0">
                   <span className="block font-semibold break-words">

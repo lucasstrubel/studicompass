@@ -4,6 +4,7 @@ import { CalendarDays, List, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SegmentedButton, SegmentedGroup } from "@/components/common/Segmented";
 import { ChannelStatus } from "@/components/common/ChannelStatus";
 import { EmptyState } from "@/components/common/EmptyState";
 import { useDemoStore } from "@/store/use-demo-store";
@@ -91,28 +92,40 @@ export function DeadlinesPage() {
     );
   };
   return (
-    <div className="space-y-5">
-      <div role="group" aria-label="Fristenansicht" className="flex gap-2">
-        <Button
-          variant="outline"
-          className="aria-pressed:border-accent-strong aria-pressed:bg-muted aria-pressed:font-semibold"
-          aria-pressed={!calendar}
-          onClick={() => setView("liste")}
-        >
-          <List aria-hidden="true" />
-          Liste
-        </Button>
-        <Button
-          variant="outline"
-          className="aria-pressed:border-accent-strong aria-pressed:bg-muted aria-pressed:font-semibold"
-          aria-pressed={calendar}
-          onClick={() => setView("kalender")}
-        >
-          <CalendarDays aria-hidden="true" />
-          Kalender
-        </Button>
+    <div className="space-y-6">
+      <div className="space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+          <SegmentedGroup label="Fristenansicht">
+            <SegmentedButton
+              pressed={!calendar}
+              onClick={() => setView("liste")}
+            >
+              <List aria-hidden="true" />
+              Liste
+            </SegmentedButton>
+            <SegmentedButton
+              pressed={calendar}
+              onClick={() => setView("kalender")}
+            >
+              <CalendarDays aria-hidden="true" />
+              Kalender
+            </SegmentedButton>
+          </SegmentedGroup>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              disabled={future.length === 0}
+              onClick={() => downloadDeadlines(future)}
+            >
+              Alle Fristen zum Kalender hinzufügen
+            </Button>
+            <Button onClick={(event) => openDialog("new", event.currentTarget)}>
+              <Plus aria-hidden="true" />
+              Termin hinzufügen
+            </Button>
+          </div>
+        </div>
       </div>
-      <ChannelStatus />
       {loading && (
         <Skeleton
           role="status"
@@ -122,23 +135,10 @@ export function DeadlinesPage() {
       )}
       {!loading && incomplete && (
         <p role="status" className="text-body text-muted-foreground">
-          Die Fristen sind unvollständig. Prüfe den Sync-Status und verbinde
-          getrennte Kanäle in den Einstellungen erneut.
+          Die Fristen sind unvollständig. Prüfe den Sync-Status am Seitenende
+          und verbinde getrennte Kanäle in den Einstellungen erneut.
         </p>
       )}
-      <div className="flex flex-wrap gap-2">
-        <Button onClick={(event) => openDialog("new", event.currentTarget)}>
-          <Plus aria-hidden="true" />
-          Termin hinzufügen
-        </Button>
-        <Button
-          variant="outline"
-          disabled={future.length === 0}
-          onClick={() => downloadDeadlines(future)}
-        >
-          Alle Fristen zum Kalender hinzufügen
-        </Button>
-      </div>
       {calendar ? (
         <DeadlineCalendar
           items={calendarItems(agenda, academic)}
@@ -157,7 +157,9 @@ export function DeadlinesPage() {
                 </p>
               )
             ) : (
-              <ul className="space-y-3">{group.items.map(renderItem)}</ul>
+              <ul className="divide-y rounded-xl border bg-card">
+                {group.items.map(renderItem)}
+              </ul>
             )}
           </section>
         ))
@@ -165,6 +167,9 @@ export function DeadlinesPage() {
       {!calendar && future.length === 0 && !loading && !incomplete && (
         <EmptyState title="Keine anstehenden Fristen" />
       )}
+      <div className="border-t pt-4">
+        <ChannelStatus />
+      </div>
       {dialog && (
         <DeadlineDialog
           key={dialog === "new" ? "new" : dialog.id}

@@ -10,9 +10,9 @@ import { selectImportantDecisions, selectRulesById } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 
 /**
- * "Jetzt wichtig" (US-07): at most two decisions where a special rule applies, text in
- * the chosen hint tone. Soft terracotta tint with a terracotta edge and ink text (P5-06): marked as
- * important without outshining the study progress next to it.
+ * "Jetzt wichtig" (US-07): at most two decisions where a special rule applies, text in the chosen hint tone.
+ * The soft brand surface marks it as important without any further decoration; its one button is the main
+ * action of the page.
  */
 export function ImportantCard() {
   const decisions = useDemoStore(selectImportantDecisions);
@@ -22,13 +22,13 @@ export function ImportantCard() {
     return (
       <section
         aria-labelledby="important"
-        className="h-full rounded-xl border bg-card p-4"
+        className="rounded-2xl border bg-card p-5 md:px-7"
       >
         <h2
           id="important"
-          className="mb-3 flex items-center gap-2 text-card-title"
+          className="flex items-center gap-2 text-section-title"
         >
-          <CalendarClock className="size-4" aria-hidden="true" />
+          <CalendarClock className="size-5" aria-hidden="true" />
           Jetzt wichtig
         </h2>
         <EmptyState
@@ -37,7 +37,7 @@ export function ImportantCard() {
           action={
             <Link
               to="/fristen"
-              className="inline-flex items-center gap-1 text-meta font-semibold text-accent-strong"
+              className="inline-flex items-center gap-1 rounded-sm text-meta font-semibold text-accent-strong"
             >
               Alle Fristen
               <ArrowRight className="size-4" aria-hidden="true" />
@@ -51,39 +51,41 @@ export function ImportantCard() {
   return (
     <section
       aria-labelledby="important"
-      className="h-full rounded-xl border border-l-4 border-l-accent bg-accent-soft p-5 text-foreground"
+      className="rounded-2xl bg-accent-soft p-5 text-foreground md:px-7 md:py-6"
     >
-      <h2 id="important" className="flex items-center gap-2 text-card-title">
+      <h2 id="important" className="flex items-center gap-2 text-section-title">
         <CalendarClock
-          className="size-4 text-accent-strong"
+          className="size-5 text-accent-strong"
           aria-hidden="true"
         />
         Jetzt wichtig
       </h2>
-      <ul className="mt-3 space-y-5">
+      <ul className="mt-3 space-y-6">
         {decisions.map((decision) => {
           const deadline = new Date(decision.exam.withdrawalDeadline ?? "");
           return (
             <li key={decision.notificationId}>
-              <h3 className="text-section-title">
-                {decision.module.title}: Abmeldung nur noch bis{" "}
-                {formatRelativeDay(deadline, DEMO_NOW)}, {formatTime(deadline)}{" "}
-                Uhr
-              </h3>
-              <p className="mt-2 text-body font-medium">{decision.message}</p>
-              <p className="mt-2 text-meta">
-                Abmeldefrist:{" "}
-                <Countdown
-                  until={decision.exam.withdrawalDeadline ?? ""}
-                  className="font-semibold"
-                />
-              </p>
-              <Button asChild className="mt-4">
-                <Link to={`/entscheidung/${decision.exam.id}`}>
-                  Folgen prüfen
-                  <ArrowRight aria-hidden="true" />
-                </Link>
-              </Button>
+              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-10">
+                <div className="min-w-0 max-w-prose">
+                  <h3 className="text-card-title">
+                    {decision.module.title}: Abmeldung nur noch bis{" "}
+                    {formatRelativeDay(deadline, DEMO_NOW)},{" "}
+                    {formatTime(deadline)} Uhr
+                  </h3>
+                  <p className="mt-1 text-body">{decision.message}</p>
+                </div>
+                <div className="flex shrink-0 flex-col items-start gap-2 md:items-end">
+                  <Button asChild>
+                    <Link to={`/entscheidung/${decision.exam.id}`}>
+                      Folgen prüfen
+                      <ArrowRight aria-hidden="true" />
+                    </Link>
+                  </Button>
+                  <p className="text-body font-semibold tabular-nums">
+                    <Countdown until={decision.exam.withdrawalDeadline ?? ""} />
+                  </p>
+                </div>
+              </div>
               <CitationList
                 variant="footer"
                 citations={decision.ruleIds.flatMap((id) =>

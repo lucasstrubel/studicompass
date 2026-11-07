@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { CommonComponentsShowcase } from "./CommonComponentsShowcase";
 import { DemoDataPanel } from "./DemoDataPanel";
 import {
+  BookOpen,
   CircleCheck,
   CircleHelp,
   Info,
@@ -110,7 +111,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { ModuleIllustration } from "@/features/dashboard/ModuleIllustration";
 import {
   moduleToneStyle,
   type ModuleTone,
@@ -204,21 +204,21 @@ const TONES: { tone: ModuleTone; label: string }[] = [
   { tone: "teal", label: "Petrol" },
   { tone: "blue", label: "Blau" },
   { tone: "plum", label: "Pflaume" },
-  { tone: "terracotta", label: "Terrakotta" },
+  { tone: "slate", label: "Schiefer" },
 ];
 const TONE_SURFACES: Record<ModuleTone, string> = {
   violet: "bg-tone-violet-soft",
   teal: "bg-tone-teal-soft",
   blue: "bg-tone-blue-soft",
   plum: "bg-tone-plum-soft",
-  terracotta: "bg-tone-terracotta-soft",
+  slate: "bg-tone-slate-soft",
 };
 const TONE_BARS: Record<ModuleTone, string> = {
   violet: "bg-tone-violet",
   teal: "bg-tone-teal",
   blue: "bg-tone-blue",
   plum: "bg-tone-plum",
-  terracotta: "bg-tone-terracotta",
+  slate: "bg-tone-slate",
 };
 
 // Status colours: soft surface with text, plus the surface/icon colour; always icon and text.
@@ -252,12 +252,12 @@ const STATUSES = [
 // Type scale with example texts.
 const TYPE_SCALE = [
   {
-    token: "text-page-title · 28/36 · 600",
+    token: "text-page-title · 32/40 · 600 · Bricolage",
     className: "text-page-title",
     text: "Übersicht",
   },
   {
-    token: "text-section-title · 20/28 · 600",
+    token: "text-section-title · 20/28 · 600 · Bricolage",
     className: "text-section-title",
     text: "Dieses Semester (WS 2026/27)",
   },
@@ -267,17 +267,17 @@ const TYPE_SCALE = [
     text: "Studienstand",
   },
   {
-    token: "text-body · 15/22",
+    token: "text-body · 15/24",
     className: "text-body",
     text: "Die Abmeldefrist für Statistik endet morgen um 23:59 Uhr.",
   },
   {
-    token: "text-meta · 13/18 · 500",
+    token: "text-meta · 13/20 · 400",
     className: "text-meta text-muted-foreground",
     text: "Moodle · aktualisiert vor 12 Min.",
   },
   {
-    token: "text-figure · 40/44 · 700",
+    token: "text-figure · 44/48 · 700 · Bricolage",
     className: "text-figure tabular-nums",
     text: "48 ECTS",
   },
@@ -452,12 +452,15 @@ export function UiShowcasePage() {
 
           <Section name="card">
             <div className="flex items-center gap-3">
-              <div style={moduleToneStyle("m-se1")}>
-                <ModuleIllustration kind="books" />
-              </div>
+              <span
+                className="flex size-9 items-center justify-center rounded-lg bg-(--module-tone-soft) text-(--module-tone)"
+                style={moduleToneStyle("m-se1")}
+              >
+                <BookOpen className="size-5" aria-hidden="true" />
+              </span>
               <p className="text-meta text-muted-foreground">
-                Referenz 1: kompakte Karten, feine Rahmen, lokale
-                Linienillustrationen.
+                Fläche: weiß mit Haarlinie, ohne Schatten und nie in einer
+                anderen Fläche. Modul-Icons kommen aus Lucide.
               </p>
             </div>
             <Card>

@@ -3,13 +3,13 @@ import {
   ArrowRight,
   CalendarClock,
   Mail,
-  MessageCircleQuestionMark,
   Target,
   Undo2,
 } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 import { AdmissionStatus } from "@/components/common/AdmissionStatus";
+import { BrandMark } from "@/components/common/BrandMark";
 import { ChannelBadge } from "@/components/common/ChannelBadge";
 import { CitationList } from "@/components/common/CitationList";
 import { ConsequenceItem } from "@/components/common/ConsequenceItem";
@@ -88,7 +88,7 @@ function ConsequenceList({
   return (
     <section aria-label={title} className="space-y-2">
       <h3 className="text-card-title">{title}</h3>
-      <ul className="space-y-2">
+      <ul className="divide-y rounded-xl border bg-card">
         {consequences.map((consequence) => (
           <li key={consequence.id}>
             <ConsequenceItem
@@ -132,48 +132,46 @@ function HelpOffers({ exam, module }: { exam: ExamRecord; module: Module }) {
       >
         {() => null}
       </ResourceBoundary>
-      <ul className="grid gap-3 md:grid-cols-2">
+      {/* The 1 px gap shows the border colour behind the cells: hairlines for one or two columns. */}
+      <ul className="grid gap-px overflow-hidden rounded-xl border bg-border md:grid-cols-2">
         {inbox.map((item) => (
-          <li key={item.id}>
+          <li key={item.id} className="bg-card">
             <Link
               to={`/postfach?eintrag=${item.id}`}
-              className="flex h-full flex-col gap-1 rounded-xl border bg-card p-3 hover:bg-muted"
+              className="flex h-full flex-col gap-0.5 px-4 py-3 transition-colors hover:bg-muted focus-visible:-outline-offset-2"
             >
+              <span className="text-body font-medium">{item.subject}</span>
+              <span className="text-meta text-muted-foreground">
+                {item.preview}
+              </span>
               <span className="flex items-center gap-2">
                 <ChannelBadge channel={item.channel} />
                 <span className="text-meta text-muted-foreground">
                   {item.sender}
                 </span>
               </span>
-              <span className="text-body font-semibold">{item.subject}</span>
-              <span className="text-meta text-muted-foreground">
-                {item.preview}
-              </span>
             </Link>
           </li>
         ))}
         {progress && (
-          <li className="flex flex-col gap-1 rounded-xl border bg-card p-3">
-            <ChannelBadge channel="moodle" />
-            <span className="text-body font-semibold">
+          <li className="flex flex-col gap-0.5 bg-card px-4 py-3">
+            <span className="text-body font-medium">
               Moodle-Kurs {module.title}
             </span>
             <span className="text-meta text-muted-foreground">
               {progress.label}
               {progress.detail && ` · ${progress.detail}`}
             </span>
+            <ChannelBadge channel="moodle" />
           </li>
         )}
-        <li>
+        <li className="bg-card">
           <Link
             to={`/assistent?module=${module.id}`}
-            className="flex h-full flex-col gap-1 rounded-xl border bg-card p-3 hover:bg-muted"
+            className="flex h-full flex-col gap-0.5 px-4 py-3 transition-colors hover:bg-muted focus-visible:-outline-offset-2"
           >
-            <span className="flex items-center gap-2 text-body font-semibold">
-              <MessageCircleQuestionMark
-                className="size-4"
-                aria-hidden="true"
-              />
+            <span className="flex items-center gap-2 text-body font-medium">
+              <BrandMark className="size-4" />
               Assistent fragen
             </span>
             <span className="text-meta text-muted-foreground">
@@ -182,8 +180,8 @@ function HelpOffers({ exam, module }: { exam: ExamRecord; module: Module }) {
           </Link>
         </li>
         {advice && (
-          <li className="flex flex-col gap-1 rounded-xl border bg-card p-3">
-            <span className="flex items-center gap-2 text-body font-semibold">
+          <li className="flex flex-col gap-0.5 bg-card px-4 py-3">
+            <span className="flex items-center gap-2 text-body font-medium">
               <Mail className="size-4" aria-hidden="true" />
               {advice.name}
             </span>
@@ -215,7 +213,10 @@ function DecisionActions({
   const confirmAttend = useDemoStore((state) => state.confirmAttend);
 
   return (
-    <section aria-labelledby="decide" className="space-y-3">
+    <section
+      aria-labelledby="decide"
+      className="space-y-3 rounded-2xl border bg-card p-5 md:px-7 md:py-6"
+    >
       <h2 id="decide" className="text-section-title">
         Deine Entscheidung
       </h2>
@@ -294,8 +295,8 @@ function ReadyView({
         title={`${module.title} – antreten oder abmelden?`}
         meta={
           exam.withdrawalDeadline && (
-            <span className="inline-flex flex-wrap items-center gap-1.5 rounded-full border border-input px-3 py-1 text-meta">
-              <CalendarClock className="size-3.5" aria-hidden="true" />
+            <span className="inline-flex flex-wrap items-center gap-1.5 font-medium text-foreground">
+              <CalendarClock className="size-4" aria-hidden="true" />
               Abmeldung bis{" "}
               {formatShortDateTime(new Date(exam.withdrawalDeadline))} ·{" "}
               <Countdown until={exam.withdrawalDeadline} />
@@ -307,7 +308,7 @@ function ReadyView({
         }
       />
       <div className="space-y-3">
-        <p className="flex flex-wrap items-center gap-2 rounded-xl border bg-card p-3 text-body">
+        <p className="flex flex-wrap items-center gap-2 text-body">
           <Target className="size-4 shrink-0" aria-hidden="true" />
           <span>
             {goalRegularTime
@@ -322,7 +323,7 @@ function ReadyView({
         </p>
         {/* Admission from the entered Prüfungsvorleistungen (P5-13); the comparison stays unchanged. */}
         {admission !== "none" && (
-          <div className="rounded-xl border bg-card p-3">
+          <div className="rounded-xl bg-muted p-3">
             <AdmissionStatus admission={admission} />
             <p className="mt-1 text-meta text-muted-foreground">
               Der Vergleich unten geht davon aus, dass du antreten darfst.{" "}
@@ -336,7 +337,7 @@ function ReadyView({
             {rules["DR-13"] && (
               <CitationList
                 variant="footer"
-                className="mt-2 pt-2"
+                className="mt-1"
                 citations={[rules["DR-13"].citation]}
               />
             )}

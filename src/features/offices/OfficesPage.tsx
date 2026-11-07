@@ -1,6 +1,6 @@
 import { useEffect } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link, useLocation } from "react-router";
-import { Button } from "@/components/ui/button";
 import { CitationList } from "@/components/common/CitationList";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ResourceBoundary } from "@/components/common/ResourceBoundary";
@@ -22,6 +22,14 @@ export function OfficesPage() {
   }, [hash, offices]);
   return (
     <div className="space-y-5">
+      {/* The page has no navigation entry of its own; visitors come from the assistant. */}
+      <Link
+        to="/assistent"
+        className="inline-flex items-center gap-1 rounded-sm text-meta font-semibold text-accent-strong"
+      >
+        <ArrowLeft className="size-4" aria-hidden="true" />
+        Zum Assistenten
+      </Link>
       <p className="max-w-3xl text-body text-muted-foreground">
         Hier findest du die passende Stelle für dein Anliegen. Zuständigkeiten
         und Kontaktdaten sind Beispiele; im echten Betrieb gelten die Angaben
@@ -48,15 +56,15 @@ export function OfficesPage() {
                   id={office.id}
                   tabIndex={-1}
                   aria-labelledby={`${office.id}-title`}
-                  className="min-w-0 scroll-mt-24 space-y-4 rounded-xl border bg-card p-4"
+                  className="min-w-0 scroll-mt-24 space-y-4 rounded-xl border bg-card p-5"
                 >
                   <h2 id={`${office.id}-title`} className="text-section-title">
                     {office.name}
                   </h2>
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <h3 className="text-card-title">Zuständig für</h3>
                     {office.topics?.length ? (
-                      <ul className="list-disc space-y-1 pl-5 text-body">
+                      <ul className="list-disc pl-5 text-body">
                         {office.topics.map((topic) => (
                           <li key={topic}>{topic}</li>
                         ))}
@@ -86,7 +94,7 @@ export function OfficesPage() {
                       </div>
                     )}
                   </dl>
-                  <div className="space-y-2">
+                  <div>
                     <h3 className="text-card-title">Passende Fragen</h3>
                     <ResourceBoundary
                       services={["assistant"]}
@@ -99,34 +107,34 @@ export function OfficesPage() {
                       }
                     >
                       {() => (
-                        <div className="flex flex-wrap gap-2">
+                        <ul className="divide-y">
                           {catalog
                             ?.filter((entry) =>
                               entry.officeIds.includes(office.id),
                             )
                             .map((entry) => (
-                              <Button
-                                key={entry.id}
-                                variant="outline"
-                                className="h-auto min-h-9 max-w-full whitespace-normal text-left"
-                                asChild
-                              >
+                              <li key={entry.id}>
                                 <Link
                                   to={`/assistent?frage=${encodeURIComponent(entry.id)}`}
+                                  className="flex min-h-9 items-center justify-between gap-3 rounded-sm py-2 text-body transition-colors hover:text-accent-strong"
                                 >
                                   {entry.question}
+                                  <ArrowRight
+                                    className="size-4 shrink-0 text-muted-foreground"
+                                    aria-hidden="true"
+                                  />
                                 </Link>
-                              </Button>
+                              </li>
                             ))}
                           {!catalog?.some((entry) =>
                             entry.officeIds.includes(office.id),
                           ) && (
-                            <p className="text-body text-muted-foreground">
+                            <li className="py-2 text-body text-muted-foreground">
                               Für diese Stelle sind keine Beispielfragen
                               hinterlegt.
-                            </p>
+                            </li>
                           )}
-                        </div>
+                        </ul>
                       )}
                     </ResourceBoundary>
                   </div>

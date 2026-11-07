@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Inbox } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/** Area without content: short title, optional explanation and a way out. */
+/** Area without content: short title, optional explanation and a way out; no box of its own. */
 export function EmptyState({
   title,
   description,
@@ -15,16 +15,13 @@ export function EmptyState({
   className?: string;
 }) {
   return (
-    <div
-      className={cn(
-        "flex flex-col items-start gap-2 rounded-xl border border-dashed border-input p-4",
-        className,
-      )}
-    >
-      <Inbox className="size-4.5 text-muted-foreground" aria-hidden="true" />
+    <div className={cn("flex flex-col items-start gap-1.5 py-3", className)}>
+      <Inbox className="size-5 text-muted-foreground" aria-hidden="true" />
       <p className="text-card-title">{title}</p>
       {description && (
-        <p className="text-meta text-muted-foreground">{description}</p>
+        <p className="max-w-prose text-body text-muted-foreground">
+          {description}
+        </p>
       )}
       {action}
     </div>
