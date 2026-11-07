@@ -22,7 +22,7 @@ import { useDemoStore } from "@/store/use-demo-store";
 
 const CALCULATION_RULES = ["DR-1", "DR-2", "DR-3"];
 
-/** Hero card of the overview (KONZEPT §8 S1 no. 1, US-03): actual, target, gap, status and forecast. */
+/** Hero card of the overview (US-03): actual, target, gap, status and forecast. */
 export function StudyProgressCard() {
   const progress = useDemoStore(selectProgress);
   const plan = useDemoStore(selectBasePlan);

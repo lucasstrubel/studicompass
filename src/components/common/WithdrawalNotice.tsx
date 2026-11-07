@@ -8,7 +8,7 @@ import { DemoBadge } from "./DemoBadge";
 
 /**
  * Marks a simulated withdrawal wherever its effects show (overview, timeline) and offers to undo the latest
- * one (KONZEPT §10.6).
+ * one.
  */
 export function WithdrawalNotice() {
   const withdrawn = useDemoStore(selectCurrentExams).filter(

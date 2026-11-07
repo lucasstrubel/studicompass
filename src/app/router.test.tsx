@@ -32,7 +32,7 @@ const pageTitle = () => screen.getByRole("heading", { level: 1 });
 const currentLinks = (links: HTMLElement[]) =>
   links.filter((link) => link.hasAttribute("aria-current"));
 
-describe("routes (KONZEPT §7)", () => {
+describe("routes", () => {
   it.each([
     ["/verlauf", "Studienverlauf"],
     ["/module", "Module & Noten"],

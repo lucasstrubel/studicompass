@@ -31,7 +31,7 @@ function renderOverview() {
 
 const region = (name: string | RegExp) => screen.getByRole("region", { name });
 
-describe("Übersicht (KONZEPT §8 S1, §10.4)", () => {
+describe("Übersicht", () => {
   it("shows the study progress from the store: 48 of 210, target 60, Knapp, forecast 78 of 90", () => {
     renderOverview();
 
@@ -91,7 +91,7 @@ describe("Übersicht (KONZEPT §8 S1, §10.4)", () => {
     );
   });
 
-  it("shows the new state after a simulated withdrawal and restores it with Rückgängig (§9)", () => {
+  it("shows the new state after a simulated withdrawal and restores it with Rückgängig", () => {
     renderOverview();
     act(() => {
       demoStore.getState().withdrawExam("e-stat-ws26");

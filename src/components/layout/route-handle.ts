@@ -5,7 +5,7 @@ import { useMatches } from "react-router";
 export interface RouteHandle {
   /** Page title: h1 in the content area and browser tab title "<title> · StudiCompass". */
   title: string;
-  /** Content of the right column (KONZEPT §7): next to the main area on desktop, below it otherwise. */
+  /** Content of the right column: next to the main area on desktop, below it otherwise. */
   rightRail?: ComponentType;
   /** The page renders its own h1 (PageHeader); the shell then leaves its h1 out. */
   ownHeader?: boolean;

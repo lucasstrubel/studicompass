@@ -1,6 +1,6 @@
 import type { MoodleProgress } from "@/domain/types";
 
-// Beispieldaten aus docs/INHALTE.md; fachlich noch nicht verifiziert.
+// Beispieldaten; fachlich noch nicht verifiziert.
 export const moodleProgress: MoodleProgress[] = [
   {
     moduleId: "m-stat",

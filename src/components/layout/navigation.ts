@@ -21,7 +21,7 @@ export interface NavItem {
   end?: boolean;
 }
 
-/** Main navigation in the order of KONZEPT §7. */
+/** Main navigation. */
 export const NAV_ITEMS: readonly NavItem[] = [
   {
     to: "/",

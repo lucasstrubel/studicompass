@@ -4,7 +4,7 @@ import { AppProviders } from "@/app/providers";
 import { COMMON_COMPONENTS } from "@/features/dev-ui/common-components";
 import { UiShowcasePage } from "@/features/dev-ui/UiShowcasePage";
 
-// Component list from ROADMAP P1-02 (kept separate from the page on purpose).
+// Component list (kept separate from the page on purpose).
 const REQUIRED_COMPONENTS = [
   "button",
   "card",
@@ -53,7 +53,7 @@ describe("UiShowcasePage", () => {
     ).toHaveLength(REQUIRED_COMPONENTS.length);
   });
 
-  it("shows every shared component from KONZEPT §12.4 with all its states", () => {
+  it("shows every shared component with all its states", () => {
     renderPage();
     const common = screen.getByTestId("ui-common");
 

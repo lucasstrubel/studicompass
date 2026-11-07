@@ -19,7 +19,7 @@ import { COMMON_COMPONENTS } from "./common-components";
 
 type CommonComponent = (typeof COMMON_COMPONENTS)[number];
 
-// Showcase values from INHALTE §4, §7 and KONZEPT §10.4 (presentation only, no store access).
+// Showcase values (presentation only, no store access).
 const CITATIONS: Citation[] = [
   {
     document: "Modulhandbuch Wirtschaftsinformatik, Modul Statistik",

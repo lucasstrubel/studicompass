@@ -162,7 +162,7 @@ function SemesterTable({
 }
 
 /**
- * Module & Noten (KONZEPT §8 S3): key figures and a compact table per Fachsemester. Semesters fold away;
+ * Module & Noten: key figures and a compact table per Fachsemester. Semesters fold away;
  * only the current one starts open (P5-12, feedback: less scrolling).
  */
 export function ModuleList() {

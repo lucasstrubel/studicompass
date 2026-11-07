@@ -3,7 +3,7 @@ import { academicFixture } from "@/test/academic-fixture";
 import { compareDecision } from "./decision";
 import { projectPlan } from "./projection";
 
-describe("KONZEPT §10.4: binding demo scenarios", () => {
+describe("demo scenarios", () => {
   it("Basis: 78/90 ECTS, tight, two open exams, internship WS 2027, graduation WS 2028, summer load 42", () => {
     const plan = projectPlan(academicFixture());
     expect(plan).toMatchObject({

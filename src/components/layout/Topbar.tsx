@@ -16,7 +16,7 @@ import { NotificationsButton } from "@/features/notifications/NotificationsButto
 import { useDemoStore } from "@/store/use-demo-store";
 import { selectProfileName } from "@/store/selectors";
 
-/** Avatar menu with the student's initials (KONZEPT A-6); the icon stands in while the POS data loads. */
+/** Avatar menu with the student's initials; the icon stands in while the POS data loads. */
 function ProfileMenu() {
   const focusProfile = useRef(false);
   const name = useDemoStore(selectProfileName);

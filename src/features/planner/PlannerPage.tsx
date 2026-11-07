@@ -477,7 +477,7 @@ function PlannerContent() {
   );
 }
 
-/** Studienverlauf (KONZEPT §8 S2, US-04, US-09, US-10). */
+/** Studienverlauf (US-04, US-09, US-10). */
 export function PlannerPage() {
   return (
     <ResourceBoundary

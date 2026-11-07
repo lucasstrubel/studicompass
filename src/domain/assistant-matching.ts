@@ -1,6 +1,6 @@
 import type { AssistantEntry } from "./types";
 
-/** KONZEPT §11: deterministic local matching; ambiguity never invents an answer. */
+/** Deterministic local matching; ambiguity never invents an answer. */
 export function normalizeQuestion(value: string): string {
   return value
     .toLowerCase()

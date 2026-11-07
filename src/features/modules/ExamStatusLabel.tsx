@@ -2,7 +2,7 @@ import { CheckCircle2, Circle, CircleAlert } from "lucide-react";
 import type { ExamRecord } from "@/domain/types";
 import { EXAM_STATUS } from "./module-labels";
 
-/** Exam status as icon and text (KONZEPT §8 S3); "Geplant" when no exam exists yet. */
+/** Exam status as icon and text; "Geplant" when no exam exists yet. */
 export function ExamStatusLabel({ exam }: { exam: ExamRecord | null }) {
   const Icon =
     exam?.status === "passed"

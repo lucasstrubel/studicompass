@@ -22,7 +22,7 @@ import { moduleArt, moduleToneStyle } from "./module-art";
 
 const OFFERING_LABELS = { WS: "nur im WS", SS: "nur im SS" } as const;
 
-// Source of the offering labels ("nur im WS"); unchecked until P0-02 (INHALTE §2).
+// Source of the offering labels ("nur im WS").
 const OFFERING_SOURCE: Citation = {
   document: "Modulhandbuch Wirtschaftsinformatik",
   summary: "Angebotsturnus der Module",
@@ -135,7 +135,7 @@ function ModuleCard({
   );
 }
 
-/** "Dieses Semester" (KONZEPT §8 S1 no. 3): registered exams of the current semester as module cards. */
+/** "Dieses Semester": registered exams of the current semester as module cards. */
 export function SemesterModules() {
   const exams = useDemoStore(selectCurrentExams);
   const moodle = useDemoStore((state): MoodleState => {

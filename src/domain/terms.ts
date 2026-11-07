@@ -1,11 +1,11 @@
 import type { Offering, Term } from "./types";
 
-// SS precedes WS in the same calendar year (KONZEPT §10.2).
+// SS precedes WS in the same calendar year.
 function termIndex(term: Term): number {
   return term.year * 2 + (term.season === "WS" ? 1 : 0);
 }
 
-/** The semester immediately after term (KONZEPT §10.2). */
+/** The semester immediately after term. */
 export function next(term: Term): Term {
   return term.season === "WS"
     ? { season: "SS", year: term.year + 1 }
@@ -17,14 +17,14 @@ export function compare(left: Term, right: Term): number {
   return Math.sign(termIndex(left) - termIndex(right));
 }
 
-/** One-based semester number relative to startTerm (KONZEPT §10.2).
+/** One-based semester number relative to startTerm.
  * Terms before the start yield zero or negative numbers.
  */
 export function semesterNumber(term: Term, startTerm: Term): number {
   return termIndex(term) - termIndex(startTerm) + 1;
 }
 
-/** Display a semester as „WS 2026/27“ or „SS 2027“ (KONZEPT §10.2). */
+/** Display a semester as „WS 2026/27“ or „SS 2027“. */
 export function format(term: Term): string {
   if (term.season === "SS") return `SS ${term.year}`;
   const followingYear = String((term.year + 1) % 100).padStart(2, "0");

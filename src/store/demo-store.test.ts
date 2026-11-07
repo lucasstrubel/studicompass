@@ -224,7 +224,7 @@ describe("P2-05: simulations and persistence", () => {
     expect(store.getState().assistantPending).toBeNull();
     expect(store.getState().assistantThread).toEqual([
       { question: "Wann wird Statistik angeboten?", id: "A-08" },
-      // Free text is matched; a special case leads to the fallback (id null, KONZEPT §11).
+      // Free text is matched; a special case leads to the fallback (id null).
       { question: "Kann ich Statistik im Ausland schreiben?", id: null },
     ]);
     expect(localStorage.getItem(DEMO_STORAGE_KEY)).not.toContain("Ausland");

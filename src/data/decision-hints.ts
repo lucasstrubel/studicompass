@@ -1,6 +1,6 @@
 import type { DecisionHint } from "@/domain/types";
 
-// Beispieltexte aus docs/INHALTE.md §9 („Hinweise im Folgen-Check“); Statistik wie Benachrichtigung n-01.
+// Beispieltexte für die Hinweise im Folgen-Check; Statistik wie Benachrichtigung n-01.
 export const decisionHints: DecisionHint[] = [
   {
     examId: "e-stat-ws26",

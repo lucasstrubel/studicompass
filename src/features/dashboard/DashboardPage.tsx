@@ -39,7 +39,7 @@ function OverviewHeader() {
 }
 
 /**
- * Übersicht (KONZEPT §8 S1): Studienstand and Jetzt wichtig, below them the ECTS-Verlauf (Lucas, P5-06), then
+ * Übersicht: Studienstand and Jetzt wichtig, below them the ECTS-Verlauf (Lucas, P5-06), then
  * this semester and the milestone; on small screens the next deadline follows Jetzt wichtig. The right
  * column is DashboardRail.
  */

@@ -4,7 +4,7 @@ import type { ExamRecord, Module } from "./types";
 import { earnedEcts, openFoundationModules, targetEcts } from "./progress";
 import { gradeAverage } from "./grades";
 
-describe("KONZEPT §10.3–10.4: progress and grades", () => {
+describe("progress and grades", () => {
   it("Basis / DR-1, DR-2, DR-9: 48 ECTS, target 60/90, seven open modules, average 2.4", () => {
     const { modules, exams } = academicFixture();
     expect(earnedEcts(modules, exams)).toBe(48);

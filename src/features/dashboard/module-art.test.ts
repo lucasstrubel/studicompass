@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { moduleTone, moduleToneStyle } from "./module-art";
 
-describe("module colours (KONZEPT §12.2 Farbfamilie)", () => {
+describe("module colours", () => {
   it("gives each module of this semester its own colour", () => {
     const tones = ["m-stat", "m-db", "m-se1", "m-gpm", "m-mkt"].map(moduleTone);
     expect(new Set(tones).size).toBe(5);

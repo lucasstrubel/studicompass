@@ -1,6 +1,6 @@
 import type { AssistantFallback } from "@/domain/types";
 
-// Beispieldaten aus docs/INHALTE.md; fachlich noch nicht verifiziert.
+// Beispieldaten; fachlich noch nicht verifiziert.
 export const assistantFallback: AssistantFallback = {
   id: "F-01",
   question:

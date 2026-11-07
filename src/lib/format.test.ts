@@ -20,7 +20,7 @@ const STAT_DEADLINE = new Date("2027-01-26T23:59:00+01:00");
 describe("formatDate", () => {
   // Node applies a changed TZ immediately, so the test can move the "device" to another time zone.
   it.each(["Europe/Berlin", "Asia/Tokyo", "America/Los_Angeles"])(
-    "shows the demo time as in KONZEPT §10.2, also on a device in %s",
+    "shows the demo time, also on a device in %s",
     (deviceTimeZone) => {
       vi.stubEnv("TZ", deviceTimeZone);
 
@@ -48,7 +48,7 @@ describe("formatRelativeDay", () => {
 });
 
 describe("formatCountdown", () => {
-  it("shows the Statistik deadline as in KONZEPT §10.2", () => {
+  it("shows the Statistik deadline", () => {
     expect(formatCountdown(STAT_DEADLINE, DEMO_NOW)).toBe("noch 1 Tag, 4 Std.");
   });
 

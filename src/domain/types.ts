@@ -1,4 +1,4 @@
-/** Domain objects from KONZEPT §10.1; WS years denote the starting year. */
+/** Domain objects; WS years denote the starting year. */
 export type Season = "WS" | "SS";
 export interface Term {
   season: Season;
@@ -23,7 +23,7 @@ export interface Office {
   name: string;
   email: string;
   hours?: string;
-  /** Example responsibilities from INHALTE §8 (P5-15). */
+  /** Example responsibilities (P5-15). */
   topics?: string[];
 }
 
@@ -142,7 +142,7 @@ export interface Program {
 
 export type HintTone = "neutral" | "direct";
 
-/** Hint at the top of the Folgen-Check for one exam, in both hint tones (KONZEPT §12.5, INHALTE §9). */
+/** Hint at the top of the Folgen-Check for one exam, in both hint tones. */
 export interface DecisionHint {
   examId: string;
   text: Record<HintTone, string>;

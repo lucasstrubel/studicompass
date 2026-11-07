@@ -1,6 +1,6 @@
 import type { Rule } from "@/domain/types";
 
-// Beispieldaten aus docs/INHALTE.md; fachlich noch nicht verifiziert.
+// Beispieldaten; fachlich noch nicht verifiziert.
 export const rules: Rule[] = [
   {
     id: "DR-1",
@@ -130,7 +130,7 @@ export const rules: Rule[] = [
     },
   },
   // P5-08: example rules that only mark the modules of a milestone in the planner; the projection does
-  // not use them (KONZEPT §10.3).
+  // not use them.
   {
     id: "DR-11",
     title:

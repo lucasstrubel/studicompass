@@ -89,7 +89,7 @@ function rows(module: Module, currentTerm: Term, target: number): Row[] {
   ];
 }
 
-/** The rule behind a row in plain language with its sources ("Warum?", KONZEPT §8 S4). */
+/** The rule behind a row in plain language with its sources ("Warum?"). */
 function Why({ row, rules }: { row: Row; rules: Record<string, Rule> }) {
   const used = row.ruleIds.flatMap((id) => (rules[id] ? [rules[id]] : []));
   return (
@@ -135,7 +135,7 @@ function WhyButton({
 }
 
 /**
- * Comparison of the three options (KONZEPT §8 S4): a table from md upwards, a switcher with the same rows
+ * Comparison of the three options: a table from md upwards, a switcher with the same rows
  * below. Values come from compareDecision; every row explains its rule on demand.
  */
 export function ComparisonTable({

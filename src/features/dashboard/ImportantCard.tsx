@@ -10,8 +10,8 @@ import { selectImportantDecisions, selectRulesById } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 
 /**
- * "Jetzt wichtig" (KONZEPT §8 S1 no. 2, US-07): at most two decisions where a special rule applies, text in
- * the chosen hint tone. Soft terracotta tint with a terracotta edge and ink text (§12.2, P5-06): marked as
+ * "Jetzt wichtig" (US-07): at most two decisions where a special rule applies, text in
+ * the chosen hint tone. Soft terracotta tint with a terracotta edge and ink text (P5-06): marked as
  * important without outshining the study progress next to it.
  */
 export function ImportantCard() {

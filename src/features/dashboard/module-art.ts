@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import type { IllustrationKind } from "./ModuleIllustration";
 
-// Presentation only: which local line drawing and which colour of the family (KONZEPT §12.2, §12.4)
+// Presentation only: which local line drawing and which colour of the family
 // stand next to which module.
 const MODULE_ART: Record<string, IllustrationKind> = {
   "m-stat": "chart",

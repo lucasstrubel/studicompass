@@ -1,6 +1,6 @@
 import type { Module } from "./types";
 
-/** Milestone markers of the planner (KONZEPT §8 S2). */
+/** Milestone markers of the planner. */
 export type MilestoneKind =
   "foundationEnd" | "internship" | "project" | "thesis";
 
@@ -11,7 +11,7 @@ export interface MilestoneModules {
 }
 
 /**
- * Modules that belong to a milestone (P5-08, KONZEPT §8 S2): the foundation modules for the end of the
+ * Modules that belong to a milestone (P5-08): the foundation modules for the end of the
  * foundation phase and the internship (DR-6), the internship for the project semester (DR-11), internship
  * and project semester for the thesis (DR-12). Display only – the projection does not use DR-11 or DR-12.
  */

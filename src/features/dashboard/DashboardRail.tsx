@@ -302,7 +302,7 @@ function RailSection({
   );
 }
 
-/** Right column of the overview (KONZEPT §8 S1): deadline, inbox, grades, assistant. */
+/** Right column of the overview: deadline, inbox, grades, assistant. */
 export function DashboardRail() {
   return (
     <div className="space-y-7">

@@ -17,7 +17,7 @@ import { compare, format } from "@/domain/terms";
 import { selectAcademicState, selectBasePlan } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 
-// KONZEPT §12.2 diagrams: ECTS are blue throughout – actual = line with soft area, forecast = dashed line,
+// Diagrams: ECTS are blue throughout – actual = line with soft area, forecast = dashed line,
 // target = dashed muted line. Both tones reach at least 3:1 on the card.
 const CHART_CONFIG = {
   actual: { label: "Ist", color: "var(--tone-blue)" },
@@ -82,7 +82,7 @@ function EctsTooltip({
 }
 
 /**
- * Chart and value table of the ECTS-Verlauf (KONZEPT §8 S1 no. 3): cumulative actual vs. target up to this
+ * Chart and value table of the ECTS-Verlauf: cumulative actual vs. target up to this
  * semester. The section heading lives on the page, so it shows while this lazy chunk loads.
  */
 export function EctsHistory() {

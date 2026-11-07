@@ -229,7 +229,7 @@ describe("validation fixes", () => {
     expect(plan.openFoundationAfterTerm).toBe(3);
   });
 
-  it("§10.5 step 9: every decision option lists only differences from the baseline", () => {
+  it("every decision option lists only differences from the baseline", () => {
     const outcomes = compareDecision(academicFixture(), "e-stat-ws26");
     expect(
       outcomes.find((item) => item.option === "attendPass")?.consequences,

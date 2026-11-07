@@ -108,10 +108,10 @@ function validDueAt(value: unknown, dateOnly = false): value is string {
   );
 }
 
-/** Typing indicator of the assistant (KONZEPT §8 S5: 0.6–1.2 s). */
+/** Typing indicator of the assistant (0.6–1.2 s). */
 export const ASSISTANT_DELAY_MS = 800;
 
-/** One question in the assistant conversation; id = catalog entry, null = fallback (KONZEPT §11). */
+/** One question in the assistant conversation; id = catalog entry, null = fallback. */
 export interface AssistantMessage {
   question: string;
   id: string | null;

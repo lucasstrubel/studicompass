@@ -12,7 +12,7 @@ import { APP_NAME } from "@/config/demo";
 
 const TITLE = "Alle Bereiche";
 
-// One light panel below the hamburger for preview and pinned menu (KONZEPT §7, P5-06).
+// One light panel below the hamburger for preview and pinned menu (P5-06).
 const PANEL =
   "panel-shadow absolute top-full left-0 z-50 mt-2 flex max-h-[calc(100dvh-6rem)] w-70 max-w-[calc(100vw-2rem)] flex-col overflow-y-auto rounded-2xl border bg-card text-card-foreground";
 

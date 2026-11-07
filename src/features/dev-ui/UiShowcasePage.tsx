@@ -116,7 +116,7 @@ import {
   type ModuleTone,
 } from "@/features/dashboard/module-art";
 
-// The components from ROADMAP P1-02; each one gets its own section.
+// The components; each one gets its own section.
 type ShowcaseComponent =
   | "button"
   | "card"
@@ -140,7 +140,7 @@ type ShowcaseComponent =
   | "accordion"
   | "toggle-group"
   | "chart";
-// Design tokens from KONZEPT §12.2 and §12.3, shown above the components.
+// Design tokens, shown above the components.
 type TokenGroup = "farben" | "typografie";
 
 // Sample texts for this developer page only; the app's data comes from src/data via services (P2).
@@ -163,13 +163,13 @@ const ECTS_DATA = [
   { term: "2. Sem.", actual: 48, target: 60 },
 ];
 
-// KONZEPT §12.2 charts: Ist = line --tone-blue with surface --tone-blue-soft, Soll = dashed --muted-foreground.
+// Charts: Ist = line --tone-blue with surface --tone-blue-soft, Soll = dashed --muted-foreground.
 const ECTS_CHART_CONFIG = {
   actual: { label: "Ist", color: "var(--chart-1)" },
   target: { label: "Soll", color: "var(--chart-2)" },
 } satisfies ChartConfig;
 
-// Text on surface for the token pairs from KONZEPT §12.2.
+// Text on surface for the token pairs
 const COLOR_PAIRS = [
   {
     label: "foreground auf background",
@@ -198,7 +198,7 @@ const COLOR_PAIRS = [
   },
 ];
 
-// Colour family (KONZEPT §12.2): strong tone as bar, soft tone as surface under ink.
+// Colour family: strong tone as bar, soft tone as surface under ink.
 const TONES: { tone: ModuleTone; label: string }[] = [
   { tone: "violet", label: "Violett" },
   { tone: "teal", label: "Petrol" },
@@ -221,7 +221,7 @@ const TONE_BARS: Record<ModuleTone, string> = {
   terracotta: "bg-tone-terracotta",
 };
 
-// Status colours: soft surface with text, plus the surface/icon colour; always icon and text (KONZEPT §12.2).
+// Status colours: soft surface with text, plus the surface/icon colour; always icon and text.
 const STATUSES = [
   {
     label: "Im Plan",
@@ -249,7 +249,7 @@ const STATUSES = [
   },
 ];
 
-// Type scale from KONZEPT §12.3 with texts from KONZEPT and docs/INHALTE.md.
+// Type scale with example texts.
 const TYPE_SCALE = [
   {
     token: "text-page-title · 28/36 · 600",
@@ -320,7 +320,7 @@ export function UiShowcasePage() {
             <h1 className="text-2xl font-semibold">Komponenten</h1>
             <p className="text-sm text-muted-foreground">
               Entwickler-Route, nur im Dev-Build. Farben, Schrift und Fokusring
-              kommen aus den Design-Tokens (KONZEPT §12).
+              kommen aus den Design-Tokens.
             </p>
           </div>
         </header>

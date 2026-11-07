@@ -246,7 +246,7 @@ export interface ImportantDecision {
 }
 
 /**
- * "Jetzt wichtig" (KONZEPT §8 S1): decision notifications whose exam is still registered, whose withdrawal
+ * "Jetzt wichtig": decision notifications whose exam is still registered, whose withdrawal
  * deadline lies after DEMO_NOW and where a special rule applies; at most two.
  */
 function importantDecisions(state: DemoState): ImportantDecision[] {
@@ -316,7 +316,7 @@ export interface MilestoneSummary {
   later: { module: Module; term: Term }[];
 }
 
-/** Next milestone (KONZEPT §8 S1 no. 4): internship term and what is still missing for it (DR-6). */
+/** Next milestone: internship term and what is still missing for it (DR-6). */
 function milestone(state: DemoState): MilestoneSummary | null {
   const plan = selectBasePlan(state);
   const progress = selectProgress(state);
@@ -463,7 +463,7 @@ function decisionView(state: DemoState, examId: string): DecisionView {
 
 const decisionCache = new WeakMap<DemoState, Map<string, DecisionView>>();
 
-/** Folgen-Check of one exam (KONZEPT §8 S4); cached per store state and exam, like the other selectors. */
+/** Folgen-Check of one exam; cached per store state and exam, like the other selectors. */
 export function selectDecision(state: DemoState, examId: string): DecisionView {
   let byExam = decisionCache.get(state);
   if (!byExam) {
@@ -525,7 +525,7 @@ export interface Timeline {
   simulating: boolean;
 }
 
-/** Studienverlauf (KONZEPT §8 S2): semesters with modules, status, ECTS and milestone markers. */
+/** Studienverlauf: semesters with modules, status, ECTS and milestone markers. */
 function timeline(state: DemoState): Timeline | null {
   const academic = selectAcademicState(state);
   const plan = selectPlan(state);

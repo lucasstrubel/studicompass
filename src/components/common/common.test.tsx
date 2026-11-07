@@ -40,7 +40,7 @@ describe("ChannelBadge", () => {
 });
 
 describe("Countdown", () => {
-  it("counts from DEMO_NOW (KONZEPT §10.2)", () => {
+  it("counts from DEMO_NOW", () => {
     render(<Countdown until="2027-01-26T23:59:00+01:00" />);
     const time = screen.getByText("noch 1 Tag, 4 Std.");
     expect(time).toHaveAttribute("datetime", "2027-01-26T23:59:00+01:00");
