@@ -35,7 +35,7 @@ describe("P2 selectors: stable snapshots and connected simulation", () => {
     expect(selectInbox(store.getState())).not.toBe(selectInbox(state));
   });
 
-  it("connects withdrawal, what-if and undo to the binding oracle values", async () => {
+  it("connects withdrawal, what-if and undo to the expected values", async () => {
     const store = createDemoStore(createMockServices({ latencyMs: 0 }));
     await store.getState().hydrate();
     expect(selectProgress(store.getState())).toMatchObject({
@@ -87,7 +87,7 @@ describe("P2 selectors: stable snapshots and connected simulation", () => {
   });
 });
 
-describe("P3-02 overview selectors (KONZEPT §8 S1)", () => {
+describe("P3-02 overview selectors", () => {
   async function loadedStore() {
     const store = createDemoStore(createMockServices({ latencyMs: 0 }));
     await store.getState().hydrate();

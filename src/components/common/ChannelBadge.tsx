@@ -10,7 +10,7 @@ const CHANNEL_ICONS: Record<Channel, typeof Mail> = {
   website: Globe,
 };
 
-/** Origin system of a piece of information (Kanal, KONZEPT §14) as icon + name. */
+/** Origin system of a piece of information (Kanal) as icon + name. */
 export function ChannelBadge({
   channel,
   className,

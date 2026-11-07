@@ -34,7 +34,7 @@ export function rulesForModule(
   return { ...rules, "DR-4": offeringRule(module, rules["DR-4"]) };
 }
 
-/** DR-4 as a general rule (KONZEPT §10.3), for rule lists that are not about one module. */
+/** DR-4 as a general rule, for rule lists that are not about one module. */
 export function generalOfferingRule(rule: Rule | undefined): Rule {
   const summary =
     "Ein Modul, das nur im Winter- oder nur im Sommersemester angeboten wird, kannst du frühestens im nächsten Semester dieses Typs ablegen; Module mit Angebot in jedem Semester schon im nächsten Semester.";

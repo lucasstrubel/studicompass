@@ -70,7 +70,7 @@ export interface ServiceData {
   assistant: AssistantData;
 }
 export type ServiceKey = keyof ServiceData;
-/** The four channels among the services (Kanal, KONZEPT §14). */
+/** The four channels among the services (Kanal). */
 export const CHANNELS = [
   "pos",
   "moodle",

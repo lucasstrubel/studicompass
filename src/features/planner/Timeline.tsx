@@ -92,7 +92,7 @@ const MARKS: Record<MilestoneKind, string> = {
   thesis: "für Bachelorarbeit",
 };
 
-/** Modules the active milestone toggle marks (KONZEPT §8 S2, P5-10). */
+/** Modules the active milestone toggle marks (P5-10). */
 export interface MilestoneMarking {
   kind: MilestoneKind;
   moduleIds: ReadonlySet<string>;
@@ -380,7 +380,7 @@ function announcements(title: (id: string | number) => string): Announcements {
 }
 
 /**
- * Timeline of all semesters (KONZEPT §8 S2): columns from xl upwards, a list below. Each semester shows
+ * Timeline of all semesters: columns from xl upwards, a list below. Each semester shows
  * term, Fachsemester, planned/earned ECTS, milestone markers and its modules with status (icon + text).
  */
 export function Timeline({

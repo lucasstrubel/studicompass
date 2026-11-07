@@ -1,6 +1,6 @@
 import type { Office } from "@/domain/types";
 
-// Beispieldaten aus docs/INHALTE.md; fachlich noch nicht verifiziert.
+// Beispieldaten; fachlich noch nicht verifiziert.
 export const offices: Office[] = [
   {
     id: "o-pa",

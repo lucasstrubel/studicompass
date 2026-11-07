@@ -17,7 +17,7 @@ import { OfficesPage } from "@/features/offices/OfficesPage";
 
 type PageRoute = RouteObject & { handle: RouteHandle };
 
-/** Pages inside the app shell (KONZEPT §7). */
+/** Pages inside the app shell. */
 const shellRoutes: PageRoute[] = [
   {
     index: true,

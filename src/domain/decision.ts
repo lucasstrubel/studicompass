@@ -4,7 +4,7 @@ import { nextOfferingTerm } from "./rules";
 import { projectPlan } from "./projection";
 import { usedAttempts } from "./progress";
 
-/** KONZEPT §10.4/§10.5: attendPass / attendFail / withdraw, with DR-5/DR-8 attempts.
+/** AttendPass / attendFail / withdraw, with DR-5/DR-8 attempts.
  * Requires a registered current-term exam; rejects unknown or already settled exams.
  */
 export function compareDecision(
@@ -26,7 +26,7 @@ export function compareDecision(
   if (attemptsBefore >= 3)
     throw new RangeError("Es sind bereits drei Prüfungsversuche genutzt.");
   const options: DecisionOption[] = ["attendPass", "attendFail", "withdraw"];
-  // §10.5 step 9: every option lists only differences from the baseline, attendPass included.
+  // Every option lists only differences from the baseline, attendPass included.
   const baseline = projectPlan(state).consequences;
   return options.map((option) => {
     const projection = projectPlan(
@@ -91,7 +91,7 @@ export function compareDecision(
 }
 
 /**
- * True if withdrawing would trigger a special rule (KONZEPT §1 design rule): a critical consequence such
+ * True if withdrawing would trigger a special rule: a critical consequence such
  * as a delayed milestone (DR-4/DR-6), more than three open foundation exams (DR-7) or a blocked plan.
  * Only then does the overview raise the decision under "Jetzt wichtig".
  */

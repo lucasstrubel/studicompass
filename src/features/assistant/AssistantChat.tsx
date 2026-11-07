@@ -139,7 +139,7 @@ function Answer({
 }
 
 /**
- * Assistant conversation (KONZEPT §8 S5, §11). The page shows it full width; the assistant window (P5-06)
+ * Assistant conversation. The page shows it full width; the assistant window (P5-06)
  * shows the same conversation compactly with the input pinned at the bottom. Both read and extend the
  * conversation in the store, so a question asked in the window continues on the page.
  */

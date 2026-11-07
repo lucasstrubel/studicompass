@@ -45,7 +45,7 @@ function Change({
 }
 
 /**
- * Result of a what-if move (KONZEPT §8 S2, P5-11): opens right where Niklas moved a module, so the
+ * Result of a what-if move (P5-11): opens right where Niklas moved a module, so the
  * consequences no longer require scrolling back to the top (feedback P5-F19). The page keeps a compact
  * simulation status that reopens it.
  */

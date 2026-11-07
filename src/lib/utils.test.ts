@@ -3,7 +3,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 describe("cn", () => {
-  it("keeps text colours next to the type scale (KONZEPT §12.3)", () => {
+  it("keeps text colours next to the type scale", () => {
     expect(cn("text-primary-foreground text-meta")).toBe(
       "text-primary-foreground text-meta",
     );

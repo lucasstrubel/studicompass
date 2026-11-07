@@ -43,7 +43,7 @@ function row(label: string) {
   return cells.map((cell) => cell.textContent);
 }
 
-describe("Folgen-Check (KONZEPT §8 S4, §10.4)", () => {
+describe("Folgen-Check", () => {
   it("shows head, deadline chip, hint and goal for Statistik", () => {
     renderCheck("e-stat-ws26");
 
@@ -153,7 +153,7 @@ describe("Folgen-Check (KONZEPT §8 S4, §10.4)", () => {
     expect(attend.className).toBe(withdraw.className);
   });
 
-  it("simulates the withdrawal after confirmation, updates the overview and undoes it (hero flow §9)", async () => {
+  it("simulates the withdrawal after confirmation, updates the overview and undoes it", async () => {
     const router = renderCheck("e-stat-ws26");
 
     fireEvent.click(
@@ -366,7 +366,7 @@ describe("Folgen-Check: Zulassung (P5-13)", () => {
         name: "Prüfungsvorleistung im Modul ansehen",
       }),
     ).toHaveAttribute("href", "/module/m-stat");
-    // The comparison (KONZEPT §10.4) is untouched.
+    // The comparison is untouched.
     expect(screen.getAllByText("SS 2029").length).toBeGreaterThan(0);
   });
 

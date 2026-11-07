@@ -1,6 +1,6 @@
 import type { Program } from "@/domain/types";
 
-// Beispieldaten aus docs/INHALTE.md; fachlich noch nicht verifiziert.
+// Beispieldaten; fachlich noch nicht verifiziert.
 export const program: Program = {
   id: "wi",
   title: "Wirtschaftsinformatik (B. Sc.)",

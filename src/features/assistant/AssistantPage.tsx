@@ -3,7 +3,7 @@ import { ResourceBoundary } from "@/components/common/ResourceBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AssistantChat } from "./AssistantChat";
 
-/** Assistent (KONZEPT §8 S5): `?frage=` asks a catalog question or free text, `?module=` sets the context. */
+/** Assistent: `?frage=` asks a catalog question or free text, `?module=` sets the context. */
 export function AssistantPage() {
   const [params] = useSearchParams();
   return (

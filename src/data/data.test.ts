@@ -9,7 +9,7 @@ import { notifications } from "./notifications";
 import { assistantCatalog } from "./assistant-catalog";
 import { assistantFallback } from "./assistant-fallback";
 
-describe("INHALTE: consistent example data", () => {
+describe("consistent example data", () => {
   it("contains 210 ECTS, 30 per semester and 48 passed ECTS", () => {
     expect(modules.reduce((sum, module) => sum + module.ects, 0)).toBe(210);
     for (let semester = 1; semester <= 7; semester++) {

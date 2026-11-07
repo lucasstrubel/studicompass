@@ -1,7 +1,7 @@
 import { PenLine } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/** Marks a date or Prüfungsvorleistung Niklas entered himself; it has no Kanal (KONZEPT §12.4, P5-13). */
+/** Marks a date or Prüfungsvorleistung Niklas entered himself; it has no Kanal (P5-13). */
 export function OwnEntryBadge({ className }: { className?: string }) {
   return (
     <span

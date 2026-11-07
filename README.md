@@ -20,16 +20,6 @@ Die App läuft dann unter http://localhost:5173.
 
 Beim ersten Aufruf der Übersicht öffnet sich das vierstufige Onboarding. „Demo ohne Einrichtung starten“ überspringt es mit den Standardwerten und ohne Tour. Ab Schritt 2 behält „Überspringen“ deine Eingaben; die Produkt-Tour ist standardmäßig angehakt und lässt sich abwählen. Direkte Links auf andere Seiten bleiben erreichbar. Unter Einstellungen kannst du dein lokales Profil bearbeiten, die Einrichtung erneut starten oder die Demo zurücksetzen.
 
-## Präsentation und Offline-Backup (P6)
-
-- [Demo-Anleitung](docs/praesentation/DEMO-ANLEITUNG.md): Start, Zurücksetzen, feste Demo-Zeit und Verhalten bei Ausfall.
-- [Demo-Skript](docs/praesentation/DEMO-SKRIPT.md): Hero-Flow mit Sprechtext in 3:40 Minuten, einschließlich Marketing-Vergleich, Quelle und Sonderfall.
-- [Folien als HTML](docs/praesentation/studicompass.html) und [PDF](docs/praesentation/studicompass.pdf), [Sprechhinweise und Quellen](docs/praesentation/FOLIEN-NOTIZEN.md).
-- Lokale Ausgaben: `artifacts/presentation/hero-flow.webm` (ohne Ton) und `artifacts/presentation/studicompass-lokal.zip`. Das entpackte Build-Paket startet mit vorhandenem Node.js über `START.cmd`, ohne npm-Installation oder Internet.
-- Reproduzieren und prüfen: [P6-Prüfbericht](docs/reviews/P6.md). Die lokalen Video-/Build-Ausgaben sind nicht versioniert; die Skripte liegen unter `scripts/presentation/`.
-
-M5 ist [durch Lucas am 31.10.2026 formal abgenommen](docs/abnahmen/M5.md). Content-Freeze, Tags/Release und die Generalprobe am tatsächlichen Präsentationsgerät bleiben separat.
-
 ## Befehle
 
 | Befehl                 | Zweck                                                                    |
@@ -45,28 +35,25 @@ M5 ist [durch Lucas am 31.10.2026 formal abgenommen](docs/abnahmen/M5.md). Conte
 | `npm run format:check` | Prettier prüft die Formatierung                                          |
 | `npm run check`        | Prüf-Gate: typecheck, lint, test und build – muss vor jedem PR grün sein |
 | `npm run e2e`          | Playwright: Hero-Flow (Desktop und 390 px) gegen den Produktions-Build   |
-| `npm run screens`      | Playwright: Screenshots der Kernscreens nach `docs/screens/`             |
 
-### End-to-End-Tests und Screenshots (P3-05, Phase 4)
+### End-to-End-Tests
 
-- Playwright nutzt das lokal installierte **Google Chrome** (`channel: "chrome"`); ein Browser-Download ist nicht nötig. Ohne Chrome schlagen `e2e` und `screens` fehl.
-- Beide Befehle bauen die App (`npm run build`) und starten `vite preview` auf Port 4173. Läuft dort schon ein Server, wird er wiederverwendet.
+- Playwright nutzt das lokal installierte **Google Chrome** (`channel: "chrome"`); ein Browser-Download ist nicht nötig. Ohne Chrome schlägt `e2e` fehl.
+- Der Befehl baut die App (`npm run build`) und startet `vite preview` auf Port 4173. Läuft dort schon ein Server, wird er wiederverwendet.
 - `npm run e2e` prüft Übersicht → Folgen-Check → simulierte Abmeldung → Übersicht (Kritisch, SS 2028, SS 2029) → „Rückgängig“, dazu denselben Weg nur per Tastatur und horizontales Scrollen auf den Kernscreens.
 - Zusätzlich prüft `e2e` Onboarding und Tour per Tastatur, Postfach-Deep-Links und Gelesenstatus nach Neuladen, neun Assistentenfragen per Klick und Freitext, Fallback, ICS-Download, Profiländerungen, Kanalverbindungen und Demo-Reset. Kalender und Anlaufstellen gehören zu den ergänzenden Screens bei 360 bis 1920 px; der Kalender hat außerdem einen Touchtest bei 360 px. Der Hero-Flow-Test fragt den Assistenten im Fenster vom Folgen-Check aus.
-- `npm run screens` schreibt 66 Aufnahmen (33 Ansichten in 1440×900 und 390×844; das Menü nur bei 390 px, zusätzlich die Kanal-Schaltflächen bei 320 px, nur helles Design) als `<ansicht>-<breite>.png` nach `docs/screens/`: Kernscreens, Module und Detail, Prüfungsvorleistung, Postfach und Detail, Assistent mit Antwort, Anlaufstellen-Antwort, Fallback und Wartezustand, Anlaufstellen, Fristen (auch Kalender, eigener Termin, Sommerzeit-Feldfehler und Ladezustand), Einstellungen, Glocken-Sheet, Menü, Assistent-Fenster über dem Folgen-Check und vier Onboarding-Schritte.
 - `npm run check` enthält die End-to-End-Tests nicht; Playwright-Dateien enden auf `.e2e.ts`, damit Vitest sie nicht aufgreift.
 
-## Daten und Berechnungen (Phase 2)
+## Daten und Berechnungen
 
-- `src/data/` enthält die Beispieldaten aus `docs/INHALTE.md`; ungeprüfte Regeln bleiben mit `verified: false` gekennzeichnet.
+- `src/data/` enthält die Beispieldaten; ungeprüfte Regeln bleiben mit `verified: false` gekennzeichnet.
 - Sechs Services laden POS, Moodle, Mail, Website, Regelwerk und Assistent unabhängig voneinander. Die Mocks warten 500 ms; `FLAGS.simulateErrors` in `src/config/demo.ts` aktiviert Fehler. Es gibt keine Hochschul-Requests.
 - `src/store/demo-store.ts` hält Ladezustände, Einstellungen und Simulationen. `hydrate()` lädt die Daten, `retry()` wiederholt einen einzelnen Service. Unter `/_ui` lassen sich Ladezustände und Fehler beobachten; Übersicht, Folgen-Check und Studienverlauf zeigen sie je Kanal (Phase 3).
 - `src/store/selectors.ts` liefert akademischen Zustand, Studienstand, Prognose, Postfach, Fristen und Benachrichtigungen. Berechnete Selektoren liefern bei unverändertem Store stabile Referenzen für React.
 - Abmeldung speichert einen Snapshot; `undo()` stellt ihn wieder her, auch nach einem Neuladen. Was-wäre-wenn bleibt temporär. Nutzeränderungen werden unter `DEMO_STORAGE_KEY` gespeichert und durch `resetDemo()` zurückgesetzt. Nach Änderungen an den Beispieldaten `DATA_VERSION` erhöhen. Version 4 (P5-15: Zuständigkeiten und A-09) übernimmt Einstellungen, Simulationen und gültige eigene Einträge aus Version 2 und 3 additiv; ältere Datenversionen werden verworfen. Der Profilname ersetzt nur die Anzeige, nicht die POS-Daten oder akademische Berechnungen. Der Gesprächsverlauf des Assistenten (`assistantThread`) liegt nur im Speicher; `resetDemo()` leert ihn.
-- `src/domain/` enthält ausschließlich reine TypeScript-Berechnungen nach KONZEPT §10. Die Spezifikationstests wurden vor der Implementierung ausgeführt und bleiben unverändert. Nach drei Fehlversuchen wird die Prognose blockiert; zukünftige Praxis- und Abschlusstermine bleiben offen.
-- Prüfnachweis, Testorakel und Übergabe: [Phase-2-Review](docs/reviews/P2.md).
+- `src/domain/` enthält ausschließlich reine TypeScript-Berechnungen. Nach drei Fehlversuchen wird die Prognose blockiert; zukünftige Praxis- und Abschlusstermine bleiben offen.
 
-## Ergänzende Funktionen (Phase 4)
+## Ergänzende Funktionen
 
 - Der Assistent ordnet Fragen lokal einem vorbereiteten Antwortkatalog zu. Persönliche Zeilen stammen aus dem aktuellen Studienstand; bei Sonderfällen wird ein kopierbarer Anfrageentwurf vorbereitet. Es wird nichts gesendet.
 - Das Postfach bündelt die vier Kanäle mit Filtern, Wichtigkeitsbegründungen und gespeicherten Gelesenmarkierungen. Beispiel: `/postfach?eintrag=i-02`.
@@ -75,7 +62,6 @@ M5 ist [durch Lucas am 31.10.2026 formal abgenommen](docs/abnahmen/M5.md). Conte
 - Die Fristen haben eine Kalenderansicht (`/fristen?ansicht=kalender`) mit deutschen Kalendertagen, Fristen, eigenen Terminen, Prüfungsvorleistungen und Prüfungsterminen. Liste und Kalender teilen Quellen und Aktionen.
 - Anlaufstellen zeigt Zuständigkeiten, Kontakt und Sprechzeiten mit Beispielquellen. Passende Fragen führen in den Assistenten; seine zuständigen Stellen verlinken zurück zur jeweiligen Karte.
 - Einstellungen steuern Hinweis-Stil und Benachrichtigungstypen. Getrennte Kanäle behalten geladene Daten in der Sitzung; nach Neuladen lädt ein getrennter Kanal erst beim Wiederverbinden.
-- Umsetzung, Prüfungen und offene Abnahmen: [Phasenbericht P4](docs/reviews/P4.md), [Umsetzungsnachweis](docs/reviews/P4-implementation.md).
 
 ## Deployment
 
@@ -94,13 +80,13 @@ Unter http://localhost:5173/_ui zeigt `npm run dev` die Farb-Tokens, die Typogra
 Neue shadcn-Komponenten kommen mit `npx shadcn@latest add <name>` nach `src/components/ui/`. Danach:
 
 - `npm run format`
-- den Diff von `src/styles/globals.css` prüfen: Die CLI ergänzt dort Variablen. `npm run test` meldet überschriebene Token-Werte.
+- den Diff von `src/styles/globals.css` prüfen: Die CLI ergänzt dort Variablen und kann Token-Werte überschreiben.
 - `bg-accent`/`text-accent-foreground` als Hover- oder Auswahlfläche durch `bg-muted`/`text-foreground` ersetzen (`--accent` ist hier Terrakotta)
 - eigene Fokus-Ringe (`focus-visible:ring-…`) und `outline-none` an fokussierbaren Elementen entfernen
 
 Nie `shadcn add --overwrite` für vorhandene Komponenten: Die Wrapper weichen bewusst vom Registry-Stand ab. Abweichungen:
 
-- A11y-Korrekturen aus P1-02 ([docs/reviews/P1-02.md](docs/reviews/P1-02.md))
+- A11y-Korrekturen
 - zentraler Fokusring
 - neutrale Hover-Fläche in Menü und Select
 - `destructive` mit 10 % bzw. 15 % Tönung
@@ -111,14 +97,14 @@ Nie `shadcn add --overwrite` für vorhandene Komponenten: Die Wrapper weichen be
 
 ## Design-Tokens und Darstellung
 
-- **Farben:** [`src/styles/globals.css`](src/styles/globals.css) enthält die Werte aus KONZEPT §12.2 in `:root`: Grundfarben, Farbfamilie und Statusfarben. Die shadcn-Variablen sind darauf abgebildet. Eigene Tokens gibt es als Tailwind-Klassen, z. B. `text-accent-strong`, `bg-accent-soft`, `bg-tone-blue`, `bg-status-critical-soft`, `text-status-critical-foreground`. Die Modulfarben ordnet `moduleTone()` in [`src/features/dashboard/module-art.ts`](src/features/dashboard/module-art.ts) zu; `moduleToneStyle()` setzt `--module-tone` und `--module-tone-soft` für Illustration, Balken und Notenkreis. Komponenten verwenden nur Tokens, keine Hex-Werte. [`src/styles/tokens.test.ts`](src/styles/tokens.test.ts) vergleicht die Werte mit den Tabellen in KONZEPT §12.2, rechnet die Kontrastpaare nach und prüft die Quelltexte auf Hex-Werte.
-- **Schrift:** Manrope, lokal über Fontsource; es gibt keine Requests an fremde Server. Größen über die Typo-Klassen aus KONZEPT §12.3: `text-page-title`, `text-section-title`, `text-card-title`, `text-body` (Standard), `text-meta`, `text-figure`. Zahlen mit `tabular-nums`.
+- **Farben:** [`src/styles/globals.css`](src/styles/globals.css) enthält die Werte in `:root`: Grundfarben, Farbfamilie und Statusfarben. Die shadcn-Variablen sind darauf abgebildet. Eigene Tokens gibt es als Tailwind-Klassen, z. B. `text-accent-strong`, `bg-accent-soft`, `bg-tone-blue`, `bg-status-critical-soft`, `text-status-critical-foreground`. Die Modulfarben ordnet `moduleTone()` in [`src/features/dashboard/module-art.ts`](src/features/dashboard/module-art.ts) zu; `moduleToneStyle()` setzt `--module-tone` und `--module-tone-soft` für Illustration, Balken und Notenkreis. Komponenten verwenden nur Tokens, keine Hex-Werte. [`src/styles/tokens.test.ts`](src/styles/tokens.test.ts) prüft die Mindestkontraste und die Quelltexte auf Hex-Werte.
+- **Schrift:** Manrope, lokal über Fontsource; es gibt keine Requests an fremde Server. Größen über die Typo-Klassen: `text-page-title`, `text-section-title`, `text-card-title`, `text-body` (Standard), `text-meta`, `text-figure`. Zahlen mit `tabular-nums`.
 - **Fokus:** Ein Fokusring für alle fokussierbaren Elemente steht zentral in `globals.css`: 2 px `--ring` (= `--accent-strong`), 2 px Abstand. Schneidet ein Elternteil mit `overflow-hidden` ihn ab, kommt er mit `focus-visible:-outline-offset-2` nach innen.
-- **Nur helles Design** (P5-06): Es gibt keinen Dark Mode. `@custom-variant dark` bleibt an die nie gesetzte Klasse `.dark` gebunden, damit die generierten `dark:`-Klassen von shadcn/ui auch bei dunkler Systemeinstellung wirkungslos bleiben.
+- **Nur helles Design:** Es gibt keinen Dark Mode. `@custom-variant dark` bleibt an die nie gesetzte Klasse `.dark` gebunden, damit die generierten `dark:`-Klassen von shadcn/ui auch bei dunkler Systemeinstellung wirkungslos bleiben.
 
 ## App-Shell und Navigation
 
-- **Routen:** [`src/app/router.tsx`](src/app/router.tsx), wie in KONZEPT §7.
+- **Routen:** [`src/app/router.tsx`](src/app/router.tsx).
   - Jede Route trägt ihren Titel im `handle`. Er erscheint als Überschrift im Inhaltsbereich und als Browser-Tab-Titel „‹Titel› · StudiCompass“; Seiten mit eigenem Kopf setzen `ownHeader`.
   - Unbekannte Pfade zeigen die 404-Seite. Das Onboarding (`/start`) läuft ohne Shell.
 - **Layout:** [`src/components/layout/`](src/components/layout/), Einträge einmal in `navigation.ts`.
@@ -152,14 +138,4 @@ src/
   styles/       globale Styles und Design-Tokens
 ```
 
-Verbindlich beschrieben sind Ordner und Architekturregeln in [CLAUDE.md](CLAUDE.md).
-
-## Dokumentation
-
-- [docs/KONZEPT.md](docs/KONZEPT.md) – Scope, Screens, Domänenmodell, Regeln, Testorakel, Gestaltung
-- [docs/ROADMAP.md](docs/ROADMAP.md) – Tasks, Akzeptanzkriterien, Gates
-- [docs/INHALTE.md](docs/INHALTE.md) – Dummy-Inhalte
-- [docs/TESTPLAN.md](docs/TESTPLAN.md) – Evaluation
-- [CLAUDE.md](CLAUDE.md) und [AGENTS.md](AGENTS.md) – Regeln für Claude Code und Codex
-
-Aktueller Abnahmestand mit erledigter Teamrunde und verbleibenden Aufgaben: [Abschlussübersicht](docs/README-abnahme.md).
+Ordner, Architektur- und Gestaltungskonventionen stehen in [CLAUDE.md](CLAUDE.md).

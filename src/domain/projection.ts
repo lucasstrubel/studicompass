@@ -133,7 +133,7 @@ function calculate(
     semesterNumber(internshipTerm, regularInternship) - 1,
   );
 
-  // §10.5 steps 6–7: shift every unpassed module from the internship onward, then reapply DR-4.
+  // Shift every unpassed module from the internship onward, then reapply DR-4.
   planned = planned.map((entry) => {
     const module = byId.get(entry.moduleId);
     if (
@@ -301,7 +301,7 @@ function severityOrder(consequences: Consequence[]): Consequence[] {
   );
 }
 
-/** KONZEPT §10.5: pure projection under DR-1–DR-10; current registrations are assumed passed.
+/** Pure projection under DR-1–DR-10; current registrations are assumed passed.
  * Overrides may fail, withdraw or move unpassed modules. Invalid moves throw a RangeError.
  */
 export function projectPlan(
@@ -427,7 +427,7 @@ export function projectPlan(
 }
 
 /**
- * Terms a what-if may move an unpassed module to (KONZEPT §8 S2, US-10): after the current term, not before
+ * Terms a what-if may move an unpassed module to (US-10): after the current term, not before
  * its curriculum slot and only when the module is offered then (DR-4) – the same checks projectPlan applies.
  * Returns the first `count` such terms; passed modules cannot be moved.
  */

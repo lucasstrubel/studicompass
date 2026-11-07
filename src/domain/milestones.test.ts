@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { modules } from "@/data/modules";
 import { milestoneModules } from "./milestones";
 
-describe("milestoneModules (P5-08, KONZEPT §8 S2)", () => {
+describe("milestoneModules (P5-08)", () => {
   it("assigns the 15 foundation modules to the end of the foundation phase and to the internship (DR-6)", () => {
     const end = milestoneModules("foundationEnd", modules);
     const internship = milestoneModules("internship", modules);

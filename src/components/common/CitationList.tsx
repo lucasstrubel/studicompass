@@ -35,8 +35,8 @@ function ExampleLabel({ className }: { className?: string }) {
 }
 
 /**
- * Sources (Quelle, KONZEPT §14) of a statement; unverified rules carry the label "Beispiel". The variant
- * "footer" is the last line of a card, below its actions, in one compact line (KONZEPT §12.4, P5-09);
+ * Sources (Quelle) of a statement; unverified rules carry the label "Beispiel". The variant
+ * "footer" is the last line of a card, below its actions, in one compact line (P5-09);
  * the default list stays inside explanations such as "Warum?".
  */
 export function CitationList({

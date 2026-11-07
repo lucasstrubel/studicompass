@@ -6,7 +6,7 @@ import { SERVICE_LABELS } from "./labels";
 import { EmptyState } from "./EmptyState";
 
 /**
- * Loading and error state of a data area (KONZEPT §8, Q-2): the skeleton while one of the services has no
+ * Loading and error state of a data area (Q-2): the skeleton while one of the services has no
  * data yet, one error with retry per failed service, otherwise the content. After a failed reload the
  * older data stays visible next to the error.
  */

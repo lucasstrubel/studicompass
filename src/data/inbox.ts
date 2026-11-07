@@ -1,6 +1,6 @@
 import type { InboxItem } from "@/domain/types";
 
-// Beispieldaten aus docs/INHALTE.md; fachlich noch nicht verifiziert.
+// Beispieldaten; fachlich noch nicht verifiziert.
 export const inbox: InboxItem[] = [
   {
     id: "i-01",

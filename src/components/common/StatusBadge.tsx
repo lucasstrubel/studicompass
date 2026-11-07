@@ -21,7 +21,7 @@ const STATUS_STYLES: Record<
   },
 };
 
-/** Traffic-light status as icon + text + colour (KONZEPT §12.4), never colour alone. */
+/** Traffic-light status as icon + text + colour, never colour alone. */
 export function StatusBadge({
   status,
   className,

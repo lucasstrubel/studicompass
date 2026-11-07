@@ -10,7 +10,7 @@ import { AssistantLauncher } from "@/features/assistant/AssistantLauncher";
 import { ProductTour } from "@/features/onboarding/ProductTour";
 import { CHANNELS } from "@/services/types";
 
-/** Layout of every app page (KONZEPT §7, §12.1); the route's handle supplies title and right column. */
+/** Layout of every app page; the route's handle supplies title and right column. */
 export function AppShell() {
   const handle = useRouteHandle();
   const mainRef = useRef<HTMLElement>(null);

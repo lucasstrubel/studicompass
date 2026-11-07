@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { academicFixture } from "@/test/academic-fixture";
 import { nextOfferingTerm, trafficLight } from "./rules";
 
-describe("KONZEPT §10.3: rules", () => {
+describe("rules", () => {
   it.each([
     [6, "onTrack"],
     [7, "tight"],

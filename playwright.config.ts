@@ -3,8 +3,8 @@ import { defineConfig, devices } from "@playwright/test";
 const PORT = 4173;
 
 /**
- * Smoke test of the hero flow and screenshots of the core screens (ROADMAP P3-05). Runs against the
- * production build in the locally installed Google Chrome (channel "chrome"); no browser download.
+ * End-to-end tests of the hero flow and the core screens. Runs against the production build in the
+ * locally installed Google Chrome (channel "chrome"); no browser download.
  * Files end in .e2e.ts so Vitest does not pick them up.
  */
 export default defineConfig({
@@ -25,23 +25,16 @@ export default defineConfig({
   projects: [
     {
       name: "hero",
-      testIgnore: /screens\.e2e\.ts/,
       use: { ...devices["Desktop Chrome"], channel: "chrome" },
     },
     {
       name: "hero-mobile",
-      testIgnore: /screens\.e2e\.ts/,
       use: {
         viewport: { width: 390, height: 844 },
         hasTouch: true,
         isMobile: true,
         channel: "chrome",
       },
-    },
-    {
-      name: "screens",
-      testMatch: /screens\.e2e\.ts/,
-      use: { channel: "chrome" },
     },
   ],
   webServer: {

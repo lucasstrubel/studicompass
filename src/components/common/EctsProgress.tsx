@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-/** ECTS bar (always blue, KONZEPT §12.2) with the target marker; the numbers stay visible below it (§12.4). */
+/** ECTS bar (always blue) with the target marker; the numbers stay visible below it. */
 export function EctsProgress({
   earned,
   total,

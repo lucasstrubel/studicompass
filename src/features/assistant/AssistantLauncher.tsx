@@ -15,8 +15,8 @@ const HINT_ID = "assistant-hint";
 const HINT_SCROLL_PX = 40;
 
 /**
- * Assistant button at the bottom right of every shell page except the assistant page (KONZEPT §7, §8 S5;
- * P5-06): the key feature is visible right away. A speech bubble introduces it once per demo state
+ * Assistant button at the bottom right of every shell page except the assistant page
+ * (P5-06): the key feature is visible right away. A speech bubble introduces it once per demo state
  * (P5-07); the button opens the assistant window, which continues the conversation of the assistant page.
  */
 export function AssistantLauncher() {

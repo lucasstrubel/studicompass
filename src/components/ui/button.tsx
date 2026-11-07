@@ -15,7 +15,7 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ghost:
           "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
-        // Tints of at most 15 % keep the Kritisch red at 4.5:1 or more, light and dark (KONZEPT §12.2).
+        // Tints of at most 15 % keep the Kritisch red at 4.5:1 or more, light and dark.
         destructive:
           "bg-destructive/10 text-destructive hover:bg-destructive/15",
         link: "text-accent-strong underline-offset-4 hover:underline",

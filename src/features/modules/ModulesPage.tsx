@@ -4,7 +4,7 @@ import { ResourceBoundary } from "@/components/common/ResourceBoundary";
 import { ModuleDetail } from "./ModuleDetail";
 import { ModuleList } from "./ModuleList";
 
-/** Module & Noten (KONZEPT §8 S3): list at /module, detail at /module/:moduleId. */
+/** Module & Noten: list at /module, detail at /module/:moduleId. */
 export function ModulesPage() {
   const { moduleId } = useParams();
   return (

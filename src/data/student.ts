@@ -1,6 +1,6 @@
 import type { Student } from "@/domain/types";
 
-// Beispieldaten aus docs/INHALTE.md; fachlich noch nicht verifiziert.
+// Beispieldaten; fachlich noch nicht verifiziert.
 export const student: Student = {
   id: "niklas",
   firstName: "Niklas",

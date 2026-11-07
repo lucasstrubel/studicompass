@@ -132,7 +132,7 @@ describe("AppShell", () => {
     expect(document.body.style.pointerEvents).not.toBe("none");
   });
 
-  it("shows the student's initials in the profile button (KONZEPT A-6)", async () => {
+  it("shows the student's initials in the profile button", async () => {
     renderShell();
     const profile = screen.getByRole("button", { name: "Profil" });
     expect(await within(profile).findByText("NB")).toBeInTheDocument();

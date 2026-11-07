@@ -1,7 +1,7 @@
 import { createCn } from "cn/config";
 
 /**
- * Class merger that knows the KONZEPT §12.3 type scale. Without this, "text-meta" would count as a text
+ * Class merger that knows the type scale. Without this, "text-meta" would count as a text
  * colour and remove e.g. "text-primary-foreground" (P3-01 review). Import cn only from here.
  */
 export const cn = createCn({

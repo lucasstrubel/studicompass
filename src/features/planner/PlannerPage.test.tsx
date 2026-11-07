@@ -41,7 +41,7 @@ async function continueSimulating(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole("button", { name: "Weiter simulieren" }));
 }
 
-describe("Studienverlauf (KONZEPT §8 S2, §10.4)", () => {
+describe("Studienverlauf", () => {
   it("shows the forecast, status and goal consistent with overview and Folgen-Check", async () => {
     await renderPlanner();
     expect(

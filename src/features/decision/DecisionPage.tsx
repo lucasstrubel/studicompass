@@ -503,7 +503,7 @@ function DecisionContent({ examId }: { examId: string }) {
   }
 }
 
-/** Folgen-Check (KONZEPT §8 S4, hero flow §9): compare attending and withdrawing before deciding. */
+/** Folgen-Check: compare attending and withdrawing before deciding. */
 export function DecisionPage() {
   const { examId = "" } = useParams();
   return (

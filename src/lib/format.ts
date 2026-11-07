@@ -32,7 +32,7 @@ function inDemoTimeZone(date: Date): Date {
   );
 }
 
-/** Date as shown in the UI (KONZEPT §10.2), e.g. "Mo, 25.01.2027", in German time on every device. */
+/** Date as shown in the UI, e.g. "Mo, 25.01.2027", in German time on every device. */
 export function formatDate(date: Date): string {
   return format(inDemoTimeZone(date), "EEEEEE, dd.MM.yyyy", { locale: de });
 }
@@ -70,7 +70,7 @@ export function formatRelativeDay(date: Date, now: Date): string {
   return formatDate(date);
 }
 
-/** Remaining time as in KONZEPT §10.2, e.g. "noch 1 Tag, 4 Std."; "abgelaufen" once it has passed. */
+/** Remaining time, e.g. "noch 1 Tag, 4 Std."; "abgelaufen" once it has passed. */
 export function formatCountdown(until: Date, now: Date): string {
   const remaining = until.getTime() - now.getTime();
   if (remaining <= 0) return "abgelaufen";

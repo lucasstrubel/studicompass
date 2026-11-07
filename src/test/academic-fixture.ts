@@ -4,7 +4,7 @@ import { student } from "@/data/student";
 import { DEMO_CURRENT_TERM } from "@/config/demo";
 import type { AcademicState } from "@/domain/types";
 
-/** Test input only. Expected results always come from KONZEPT §10.4. */
+/** Test input only. */
 export function academicFixture(): AcademicState {
   return structuredClone({
     modules,

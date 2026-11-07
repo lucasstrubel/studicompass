@@ -1,10 +1,5 @@
-# Kit- und Agentendateien bleiben, wie sie sind
+# Agentenregeln bleiben, wie sie sind
 CLAUDE.md
-AGENTS.md
-docs/
-.agents/
-.claude/
-.codex/
 
 # Von npm erzeugt
 package-lock.json

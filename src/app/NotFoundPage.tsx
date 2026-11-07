@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 
-/** 404 (KONZEPT §8); the title "Seite nicht gefunden" comes from the route. */
+/** 404; the title "Seite nicht gefunden" comes from the route. */
 export function NotFoundPage() {
   return (
     <div className="flex flex-col items-start gap-4">

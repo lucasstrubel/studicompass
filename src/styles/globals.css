@@ -64,7 +64,7 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* KONZEPT §12.3 type scale (text-page-title … text-figure) and §12.6 motion (state changes ease out). */
+/* Type scale (text-page-title … text-figure) and motion (state changes ease out). */
 @theme {
   --text-page-title: 1.75rem;
   --text-page-title--line-height: 2.25rem;
@@ -87,8 +87,8 @@
 }
 
 /*
- * Colour tokens from KONZEPT §12.2 ("Warm Ink"); src/styles/tokens.test.ts compares them with the tables
- * there and checks the contrast pairs. The shadcn names are mapped onto these tokens.
+ * Colour tokens ("Warm Ink"); src/styles/tokens.test.ts checks their minimum contrast.
+ * The shadcn names are mapped onto these tokens.
  */
 :root {
   color-scheme: light;
@@ -131,7 +131,7 @@
   --status-info-foreground: #3b6694;
   --status-info-soft: #e3ecf6;
   /*
-   * Colour family (KONZEPT §12.2): module identities, grades and the ECTS figures, so the page is not
+   * Colour family: module identities, grades and the ECTS figures, so the page is not
    * terracotta only. Strong tones are lines, bars and illustration strokes (at least 3:1 on page, card
    * and track); soft tones are surfaces under ink. Never a status colour: green, ochre and red stay
    * reserved for Im Plan, Knapp and Kritisch.
@@ -146,7 +146,7 @@
   --tone-plum-soft: #f5e3ec;
   --tone-terracotta: var(--accent-strong);
   --tone-terracotta-soft: var(--accent-soft);
-  /* Backdrop behind dialogs and sheets (KONZEPT §12.2, below the tables). */
+  /* Backdrop behind dialogs and sheets. */
   --overlay: rgb(26 25 23 / 0.3);
 }
 
@@ -161,7 +161,7 @@
     @apply font-sans;
   }
   /*
-   * KONZEPT §12.4: one focus ring for every focusable element, 2 px --ring (= --accent-strong) with 2 px
+   * One focus ring for every focusable element, 2 px --ring (= --accent-strong) with 2 px
    * offset. Components neither draw their own ring nor switch this one off with outline-none; where an
    * overflow-hidden parent would clip it, they move it inside (focus-visible:-outline-offset-2).
    */
@@ -171,7 +171,7 @@
   }
 }
 
-/* KONZEPT §12.6: prefers-reduced-motion switches animations off (skeleton pulse, overlay transitions). */
+/* prefers-reduced-motion switches animations off (skeleton pulse, overlay transitions). */
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

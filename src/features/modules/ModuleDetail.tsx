@@ -18,7 +18,7 @@ import { ModuleNotes } from "./ModuleNotes";
 import { OFFERING } from "./module-labels";
 
 /**
- * Module detail (KONZEPT §8 S3): profile, exam and Moodle progress on the left; from 1024 px the
+ * Module detail: profile, exam and Moodle progress on the left; from 1024 px the
  * right column holds what Niklas adds himself – course links and notes (P5-12).
  */
 export function ModuleDetail({ id }: { id: string }) {

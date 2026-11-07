@@ -169,7 +169,7 @@ describe("shadcn wrapper accessibility", () => {
   });
 });
 
-// The registry versions label these in English (decision of 26.10.2026, ROADMAP P1-04).
+// The registry versions label these in English (decision of 26.10.2026).
 describe("German labels", () => {
   it("Sheet names its close button Schließen", () => {
     render(

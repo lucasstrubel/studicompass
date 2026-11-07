@@ -1,10 +1,8 @@
 import { describe, expect, it } from "vitest";
-import konzept from "../../docs/KONZEPT.md?raw";
 import globalsCss from "@/styles/globals.css?raw";
 
-// KONZEPT §12.2 is the oracle for the colour tokens: the values are read from its tables, so this file
-// contains no colour values of its own; the contrast ratios below are the ones documented there.
-// The prototype has only the light design (P5-06), so there is one palette: the :root block.
+// Colours may change freely as long as these contrast minimums and token rules hold; this file contains
+// no colour values of its own. The prototype has only the light design, so there is one palette: :root.
 
 // --- Tokens in globals.css ---------------------------------------------------------------------------
 
@@ -31,72 +29,6 @@ function token(name: string): string {
   }
   return value.toUpperCase();
 }
-
-// --- Token tables in KONZEPT §12.2 -------------------------------------------------------------------
-
-function between(text: string, start: string, end: string): string {
-  const from = text.indexOf(start);
-  const to = text.indexOf(end, from + start.length);
-  if (from < 0 || to < 0) throw new Error(`"${start}" … "${end}" not found`);
-  return text.slice(from + start.length, to);
-}
-
-function tableRows(table: string): string[][] {
-  return table
-    .split("\n")
-    .filter((line) => line.startsWith("|") && !/^\|[\s|:-]+\|$/.test(line))
-    .map((line) =>
-      line
-        .split("|")
-        .slice(1, -1)
-        .map((cell) => cell.trim()),
-    );
-}
-
-const quoted = (cell: string, pattern: RegExp) =>
-  [...cell.matchAll(pattern)].map((match) => match[1].toUpperCase());
-const tokenNames = (cell: string) =>
-  [...cell.matchAll(/`(--[\w-]+)`/g)].map((m) => m[1]);
-const colours = (cell: string) => quoted(cell, /`(#[0-9a-f]{6})`/gi);
-
-/** Rows like "| `--primary` / `--primary-foreground` | `…` / `…` | …" (first colours = the tokens). */
-function tokenTable(table: string): Map<string, string> {
-  const expected = new Map<string, string>();
-  for (const [names = "", values = ""] of tableRows(table)) {
-    tokenNames(names).forEach((name, index) => {
-      expected.set(name, colours(values)[index]);
-    });
-  }
-  return expected;
-}
-
-const STATUS_KEYS: Record<string, string> = {
-  "Im Plan": "on-track",
-  Knapp: "tight",
-  Kritisch: "critical",
-  Info: "info",
-};
-
-/** Status rows: surface/icon · text · soft surface. */
-function statusTable(table: string): Map<string, string> {
-  const expected = new Map<string, string>();
-  for (const [status = "", values = ""] of tableRows(table)) {
-    const key = STATUS_KEYS[status];
-    if (!key) continue;
-    const [surface, text, soft] = colours(values);
-    expected.set(`--status-${key}`, surface);
-    expected.set(`--status-${key}-foreground`, text);
-    expected.set(`--status-${key}-soft`, soft);
-  }
-  return expected;
-}
-
-const SECTION = between(konzept, "### 12.2", "### 12.3");
-const KONZEPT_TOKENS = new Map([
-  ...tokenTable(between(SECTION, "**Grundfarben**", "**Farbfamilie**")),
-  ...tokenTable(between(SECTION, "**Farbfamilie**", "**Statusfarben**")),
-  ...statusTable(between(SECTION, "**Statusfarben**", "Regeln:")),
-]);
 
 // --- WCAG 2 contrast ---------------------------------------------------------------------------------
 
@@ -129,85 +61,8 @@ function blend(foreground: string, alpha: number, background: string): string {
     .join("")}`;
 }
 
-// Pairs documented in KONZEPT §12.2: [text or graphic, surface, ratio as given there].
-const DOCUMENTED_PAIRS: [string, string, number][] = [
-  ["--foreground", "--background", 16.7],
-  ["--muted-foreground", "--background", 7.3],
-  ["--muted-foreground", "--card", 7.7],
-  ["--muted-foreground", "--muted", 6.4],
-  ["--input", "--card", 4.2],
-  ["--primary-foreground", "--primary", 16.7],
-  ["--accent", "--background", 2.96],
-  ["--accent-foreground", "--accent", 5.6],
-  ["--card", "--accent", 3.1],
-  ["--accent-strong", "--background", 5.6],
-  ["--accent-strong", "--card", 5.9],
-  ["--accent-soft-foreground", "--accent-soft", 5.4],
-  ["--tone-violet", "--card", 5.9],
-  ["--tone-violet", "--muted", 4.9],
-  // Milestone chip in the planner (P5-08): flag on the soft fill, ink text on it.
-  ["--tone-violet", "--tone-violet-soft", 4.9],
-  ["--foreground", "--tone-violet-soft", 14.6],
-  ["--tone-teal", "--card", 5.7],
-  ["--tone-teal", "--muted", 4.7],
-  ["--tone-blue", "--card", 5.8],
-  ["--tone-blue", "--muted", 4.8],
-  ["--tone-plum", "--card", 5.9],
-  ["--tone-plum", "--muted", 4.9],
-  ["--tone-terracotta", "--card", 5.9],
-  ["--tone-terracotta", "--muted", 4.9],
-  ["--status-on-track", "--card", 3.7],
-  ["--status-on-track-foreground", "--card", 5.8],
-  ["--status-on-track-foreground", "--status-on-track-soft", 5.0],
-  ["--status-tight", "--card", 3.7],
-  ["--status-tight-foreground", "--card", 5.9],
-  ["--status-tight-foreground", "--status-tight-soft", 5.2],
-  ["--status-critical", "--card", 4.8],
-  ["--status-critical-foreground", "--card", 6.5],
-  ["--status-critical-foreground", "--status-critical-soft", 5.3],
-  ["--status-info-foreground", "--card", 6.0],
-  ["--status-info-foreground", "--status-info-soft", 5.0],
-];
-
-const round = (value: number, decimals: number) =>
-  Math.round(value * 10 ** decimals) / 10 ** decimals;
-
-/**
- * True if `ratio` rounds to the value given in KONZEPT, to as many decimals as given there (at least one).
- * Two values in §12.2 were rounded via two decimals first (4.646 → 4.65 → 4.7, 5.449 → 5.45 → 5.5);
- * that reading counts as a match too.
- */
-function matchesDocumented(ratio: number, documented: number): boolean {
-  const decimals = Math.max(
-    1,
-    documented.toString().split(".")[1]?.length ?? 0,
-  );
-  return (
-    round(ratio, decimals) === documented ||
-    round(round(ratio, decimals + 1), decimals) === documented
-  );
-}
-
-describe("design tokens (KONZEPT §12.2)", () => {
-  it("every token has the value from the KONZEPT tables", () => {
-    // 14 base tokens, 10 tones plus 3 per status; fails if the tables can no longer be read.
-    expect(KONZEPT_TOKENS.size).toBe(36);
-    for (const [name, value] of KONZEPT_TOKENS) {
-      expect(token(name), name).toBe(value);
-    }
-  });
-
-  it("contrast pairs match KONZEPT §12.2", () => {
-    for (const [foreground, background, documented] of DOCUMENTED_PAIRS) {
-      const ratio = contrast(token(foreground), token(background));
-      expect(
-        matchesDocumented(ratio, documented),
-        `${foreground} on ${background}: ${ratio.toFixed(3)}:1, KONZEPT ${documented}:1`,
-      ).toBe(true);
-    }
-  });
-
-  // Pairs that arise from mapping the tokens onto shadcn (Q-4: text 4.5:1, controls 3:1).
+describe("design tokens", () => {
+  // Pairs that arise from mapping the tokens onto shadcn (text 4.5:1, controls 3:1).
   it("mapped shadcn states keep AA contrast", () => {
     for (const surface of ["--background", "--card", "--muted"]) {
       expect(
@@ -279,7 +134,7 @@ describe("token usage in the source files", () => {
     expect(Object.keys(SOURCES).length).toBeGreaterThan(20);
   });
 
-  it("has no hex colours outside globals.css (ROADMAP P1-03)", () => {
+  it("has no hex colours outside globals.css", () => {
     // chart.tsx selects the stroke attributes in which Recharts writes its default colours; selectors, no values.
     const rechartsSelector = /\[(?:stroke|fill)='#[0-9a-f]{3,6}'\]/gi;
     for (const [path, source] of Object.entries(SOURCES)) {
@@ -289,7 +144,7 @@ describe("token usage in the source files", () => {
     }
   });
 
-  it("leaves the focus ring to globals.css (KONZEPT §12.4)", () => {
+  it("leaves the focus ring to globals.css", () => {
     for (const [path, source] of Object.entries(SOURCES)) {
       if (!path.endsWith(".tsx") || path.includes(".test.")) continue;
       const ownFocusStyles =

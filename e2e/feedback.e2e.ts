@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 
-// Feedback round of 28.10.2026 (ROADMAP P5-09 ff.): checks that need a real layout engine.
+// Feedback round of 28.10.2026: checks that need a real layout engine.
 
 test("P5-09: ab 1280 px alle Bereiche in einer Topbar-Zeile, ohne Hamburger", async ({
   page,

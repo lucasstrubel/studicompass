@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 
-// Hero flow (KONZEPT §9): overview → Folgen-Check → simulated withdrawal → overview → Rückgängig.
+// Hero flow: overview → Folgen-Check → simulated withdrawal → overview → Rückgängig.
 
 async function openOverview(page: Page) {
   await page.goto("/");

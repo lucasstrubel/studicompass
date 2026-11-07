@@ -1,6 +1,6 @@
 import type { Module } from "@/domain/types";
 
-// Beispieldaten aus docs/INHALTE.md; fachlich noch nicht verifiziert.
+// Beispieldaten; fachlich noch nicht verifiziert.
 export const modules: Module[] = [
   {
     id: "m-gwi",

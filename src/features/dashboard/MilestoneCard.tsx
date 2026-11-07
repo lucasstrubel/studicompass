@@ -11,7 +11,7 @@ function joinNames(names: string[]): string {
     : `${names.slice(0, -1).join(", ")} und ${names.at(-1)}`;
 }
 
-/** "Nächster Meilenstein" (KONZEPT §8 S1 no. 4, US-04): internship term, condition (DR-6) and what is open. */
+/** "Nächster Meilenstein" (US-04): internship term, condition (DR-6) and what is open. */
 export function MilestoneCard() {
   const milestone = useDemoStore(selectMilestone);
   const rules = useDemoStore(selectRulesById);

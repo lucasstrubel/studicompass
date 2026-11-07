@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { compare, format, next, nextOffering, semesterNumber } from "./terms";
 import type { Term } from "./types";
 
-describe("KONZEPT §10.2: semester sequence", () => {
+describe("semester sequence", () => {
   it("advances WS 2026 to SS 2027 and then WS 2027 without mutating the input", () => {
     const winter = Object.freeze({ season: "WS", year: 2026 } as const);
     const summer = next(winter);

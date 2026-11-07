@@ -3,7 +3,7 @@ import { assistantCatalog } from "@/data/assistant-catalog";
 import { assistantFallback } from "@/data/assistant-fallback";
 import { matchAssistant, normalizeQuestion } from "./assistant-matching";
 
-describe("KONZEPT §11: lokale Fragenzuordnung", () => {
+describe("lokale Fragenzuordnung", () => {
   it.each(assistantCatalog)("erkennt die Originalfrage $id", (entry) => {
     expect(matchAssistant(entry.question, assistantCatalog)).toBe(entry.id);
     expect(matchAssistant(entry.question.toUpperCase(), assistantCatalog)).toBe(
