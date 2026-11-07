@@ -499,7 +499,7 @@ export function Timeline({
         role="region"
         aria-label="Zeitleiste, horizontal scrollbar"
         tabIndex={0}
-        className="focus-visible:-outline-offset-2 xl:overflow-x-auto xl:pb-2"
+        className="relative focus-visible:-outline-offset-2 xl:overflow-x-auto xl:pb-2"
       >
         <ol className="grid gap-3 xl:auto-cols-[minmax(11rem,1fr)] xl:grid-flow-col xl:gap-2">
           {terms.map((item, index) => {

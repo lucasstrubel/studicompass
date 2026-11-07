@@ -81,7 +81,7 @@ Neue shadcn-Komponenten kommen mit `npx shadcn@latest add <name>` nach `src/comp
 
 - `npm run format`
 - den Diff von `src/styles/globals.css` prüfen: Die CLI ergänzt dort Variablen und kann Token-Werte überschreiben.
-- `bg-accent`/`text-accent-foreground` als Hover- oder Auswahlfläche durch `bg-muted`/`text-foreground` ersetzen (`--accent` ist hier Terrakotta)
+- `bg-accent`/`text-accent-foreground` als Hover- oder Auswahlfläche durch `bg-muted`/`text-foreground` ersetzen (`--accent` ist hier Mandarine)
 - eigene Fokus-Ringe (`focus-visible:ring-…`) und `outline-none` an fokussierbaren Elementen entfernen
 
 Nie `shadcn add --overwrite` für vorhandene Komponenten: Die Wrapper weichen bewusst vom Registry-Stand ab. Abweichungen:
@@ -91,15 +91,18 @@ Nie `shadcn add --overwrite` für vorhandene Komponenten: Die Wrapper weichen be
 - neutrale Hover-Fläche in Menü und Select
 - `destructive` mit 10 % bzw. 15 % Tönung
 - `link` in `--accent-strong`
+- Radien ohne Pills, Druckfeedback `scale(0.97)`, Überblendungen mit `ease-strong`, kein `transition-all`
 - Recharts-Fläche mit sichtbarem Fokus
 - sonner ohne next-themes
 - deutsche Beschriftungen: „Schließen“ in Dialog und Sheet; bei sonner der Bereich „Meldungen“ und der Button „Meldung schließen“
 
 ## Design-Tokens und Darstellung
 
-- **Farben:** [`src/styles/globals.css`](src/styles/globals.css) enthält die Werte in `:root`: Grundfarben, Farbfamilie und Statusfarben. Die shadcn-Variablen sind darauf abgebildet. Eigene Tokens gibt es als Tailwind-Klassen, z. B. `text-accent-strong`, `bg-accent-soft`, `bg-tone-blue`, `bg-status-critical-soft`, `text-status-critical-foreground`. Die Modulfarben ordnet `moduleTone()` in [`src/features/dashboard/module-art.ts`](src/features/dashboard/module-art.ts) zu; `moduleToneStyle()` setzt `--module-tone` und `--module-tone-soft` für Illustration, Balken und Notenkreis. Komponenten verwenden nur Tokens, keine Hex-Werte. [`src/styles/tokens.test.ts`](src/styles/tokens.test.ts) prüft die Mindestkontraste und die Quelltexte auf Hex-Werte.
-- **Schrift:** Manrope, lokal über Fontsource; es gibt keine Requests an fremde Server. Größen über die Typo-Klassen: `text-page-title`, `text-section-title`, `text-card-title`, `text-body` (Standard), `text-meta`, `text-figure`. Zahlen mit `tabular-nums`.
+- **Farben:** [`src/styles/globals.css`](src/styles/globals.css) enthält die Werte in `:root`: Grundfarben, Farbfamilie und Statusfarben. Die shadcn-Variablen sind darauf abgebildet. Eigene Tokens gibt es als Tailwind-Klassen, z. B. `text-accent-strong`, `bg-accent-soft`, `bg-tone-blue`, `bg-status-critical-soft`, `text-status-critical-foreground`. Die Modulfarben ordnet `moduleTone()` in [`src/features/dashboard/module-art.ts`](src/features/dashboard/module-art.ts) zu; `moduleToneStyle()` setzt `--module-tone` und `--module-tone-soft` für Modul-Icon, Balken und Notenkreis. Komponenten verwenden nur Tokens, keine Hex-Werte. [`src/styles/tokens.test.ts`](src/styles/tokens.test.ts) prüft die Mindestkontraste und die Quelltexte auf Hex-Werte.
+- **Identität:** Graphit und Mandarine, Signatur ist die Kurslinie (`EctsHistory`, `CourseDot`), Marke die Nadel (`BrandMark`). Die einzige dunkle Fläche ist `.surface-hero`; sie belegt die Token-Namen lokal neu.
+- **Schrift:** Bricolage Grotesque für Titel und die Standortzahl, Hanken Grotesk für die Oberfläche, beide lokal über Fontsource; es gibt keine Requests an fremde Server. Größen über die Typo-Klassen: `text-page-title`, `text-section-title`, `text-card-title`, `text-body` (Standard), `text-meta`, `text-figure`. Zahlen mit `tabular-nums`.
 - **Fokus:** Ein Fokusring für alle fokussierbaren Elemente steht zentral in `globals.css`: 2 px `--ring` (= `--accent-strong`), 2 px Abstand. Schneidet ein Elternteil mit `overflow-hidden` ihn ab, kommt er mit `focus-visible:-outline-offset-2` nach innen.
+- **Bewegung:** Normalfall CSS mit `--ease-strong`. Motion nur für Nadel und Navigations-Indikator; seine Funktionen laden asynchron (`src/lib/motion-features.ts`). Der Chat mit assistant-ui ist ein eigener Chunk (`AssistantChatLoader`); Tests laden ihn mit `preloadAssistantChat()` vor. `prefers-reduced-motion` schaltet Bewegung ab.
 - **Nur helles Design:** Es gibt keinen Dark Mode. `@custom-variant dark` bleibt an die nie gesetzte Klasse `.dark` gebunden, damit die generierten `dark:`-Klassen von shadcn/ui auch bei dunkler Systemeinstellung wirkungslos bleiben.
 
 ## App-Shell und Navigation
