@@ -9,18 +9,15 @@ import { Countdown } from "@/components/common/Countdown";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ResourceBoundary } from "@/components/common/ResourceBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatDate, formatDateTime, formatGrade } from "@/lib/format";
+import { formatDate, formatDateTime } from "@/lib/format";
 import {
   selectImportantDecisions,
   selectInbox,
   selectNextDeadline,
-  selectRecentGrades,
   selectRulesById,
 } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
 import { CHANNELS } from "@/services/types";
-import { MilestoneCard } from "./MilestoneCard";
-import { moduleToneStyle } from "./module-art";
 
 /** Next deadline with countdown (US-05). Rendered in the rail on desktop and in the main column below. */
 export function NextDeadline({ className }: { className?: string }) {
@@ -141,40 +138,6 @@ function InboxPreview() {
   );
 }
 
-function RecentGrades() {
-  const grades = useDemoStore(selectRecentGrades);
-  if (grades.length === 0)
-    return <EmptyState title="Noch keine bestandenen Prüfungen" />;
-  return (
-    <>
-      <ul className="divide-y rounded-xl border bg-card">
-        {grades.map(({ exam, module }) => (
-          <li key={exam.id} className="flex items-center gap-3 px-4 py-3">
-            <span className="min-w-0 flex-1 text-body font-medium">
-              {module.title}
-              {exam.date && (
-                <span className="block text-meta font-normal text-muted-foreground">
-                  {formatDate(new Date(exam.date))}
-                </span>
-              )}
-            </span>
-            <span
-              className="flex size-9 shrink-0 items-center justify-center rounded-full bg-(--module-tone-soft) text-body font-semibold tabular-nums"
-              style={moduleToneStyle(module.id)}
-            >
-              <span className="sr-only">Note </span>
-              {formatGrade(exam.grade ?? 0)}
-            </span>
-          </li>
-        ))}
-      </ul>
-      <p className="mt-2 flex items-center gap-2 text-meta text-muted-foreground">
-        Kanal: <ChannelBadge channel="pos" />
-      </p>
-    </>
-  );
-}
-
 function RailSection({
   id,
   title,
@@ -194,25 +157,11 @@ function RailSection({
   );
 }
 
-/** Right column of the overview: deadline, milestone, inbox, grades. */
+/** Right column of the overview: deadline and inbox. */
 export function DashboardRail() {
   return (
     <div className="space-y-8">
       <NextDeadline className="hidden xl:block" />
-      <section aria-labelledby="milestone">
-        <ResourceBoundary
-          services={["pos", "rules"]}
-          skeleton={
-            <Skeleton
-              role="status"
-              className="h-40"
-              aria-label="Meilenstein wird geladen"
-            />
-          }
-        >
-          {() => <MilestoneCard />}
-        </ResourceBoundary>
-      </section>
       <RailSection id="inbox-title" title="Neu im Postfach">
         <ResourceBoundary
           services={[...CHANNELS]}
@@ -225,20 +174,6 @@ export function DashboardRail() {
           }
         >
           {() => <InboxPreview />}
-        </ResourceBoundary>
-      </RailSection>
-      <RailSection id="grades-title" title="Letzte Noten">
-        <ResourceBoundary
-          services={["pos"]}
-          skeleton={
-            <Skeleton
-              role="status"
-              aria-label="Noten werden geladen"
-              className="h-44"
-            />
-          }
-        >
-          {() => <RecentGrades />}
         </ResourceBoundary>
       </RailSection>
     </div>

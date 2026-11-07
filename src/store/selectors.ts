@@ -287,63 +287,6 @@ function importantDecisions(state: DemoState): ImportantDecision[] {
     .slice(0, 2);
 }
 
-export interface RecentGrade {
-  exam: ExamRecord;
-  module: Module;
-}
-
-/** The three most recent passed exams (right column "Letzte Noten"). */
-function recentGrades(state: DemoState): RecentGrade[] {
-  const academic = selectAcademicState(state);
-  if (!academic) return [];
-  return academic.exams
-    .filter((exam) => exam.status === "passed" && exam.grade !== undefined)
-    .sort((left, right) => (right.date ?? "").localeCompare(left.date ?? ""))
-    .slice(0, 3)
-    .flatMap((exam) => {
-      const module = academic.modules.find((item) => item.id === exam.moduleId);
-      return module ? [{ exam, module }] : [];
-    });
-}
-
-export interface MilestoneSummary {
-  internshipTerm: Term | null;
-  internshipShift: number | null;
-  graduationTerm: Term | null;
-  openFoundation: Module[];
-  registeredNow: Module[];
-  /** Open foundation modules that are not registered now, with the term the plan expects them in. */
-  later: { module: Module; term: Term }[];
-}
-
-/** Next milestone: internship term and what is still missing for it (DR-6). */
-function milestone(state: DemoState): MilestoneSummary | null {
-  const plan = selectBasePlan(state);
-  const progress = selectProgress(state);
-  if (!plan || !progress) return null;
-  const registered = new Set(
-    selectCurrentExams(state)
-      .filter((item) => item.exam.status === "registered")
-      .map((item) => item.module.id),
-  );
-  const open = progress.openFoundationModules;
-  return {
-    internshipTerm: plan.internshipTerm,
-    internshipShift: plan.internshipShift,
-    graduationTerm: plan.graduationTerm,
-    openFoundation: open,
-    registeredNow: open.filter((module) => registered.has(module.id)),
-    later: open
-      .filter((module) => !registered.has(module.id))
-      .flatMap((module) => {
-        const term = plan.modules.find(
-          (item) => item.moduleId === module.id,
-        )?.term;
-        return term ? [{ module, term }] : [];
-      }),
-  };
-}
-
 function rulesById(state: DemoState): Record<string, Rule> {
   return Object.fromEntries(
     (state.resources.rules.data?.rules ?? []).map((rule) => [rule.id, rule]),
@@ -393,8 +336,6 @@ export const selectBasePlan = memoize(basePlan);
 export const selectCurrentExams = memoize(currentExams);
 export const selectNextDeadline = memoize(nextDeadline);
 export const selectImportantDecisions = memoize(importantDecisions);
-export const selectRecentGrades = memoize(recentGrades);
-export const selectMilestone = memoize(milestone);
 export const selectRulesById = memoize(rulesById);
 
 export type DecisionView =

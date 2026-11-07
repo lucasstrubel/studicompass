@@ -8,11 +8,6 @@ test("P5: T1, T3 und T4 auf Demodaten", async ({ page }) => {
   const progress = page.getByRole("region", { name: "Dein Studienstand" });
   await expect(progress).toContainText("12 ECTS hinter dem Soll");
   await expect(progress).toContainText("78 von 90");
-  const milestone = page.getByRole("region", { name: /^Praxissemester/ });
-  await expect(milestone).toContainText("7 Module des Grundstudiums");
-  await expect(milestone).toContainText(
-    "Programmieren 2 und Wirtschaftsprivatrecht",
-  );
   await page.goto("/assistent");
   await page
     .getByRole("button", {

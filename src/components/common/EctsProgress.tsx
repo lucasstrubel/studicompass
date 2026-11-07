@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-/** ECTS bar (always blue) with the target marker; the numbers stay visible below it. */
+/** ECTS bar in the colour of the course line with the target marker; the numbers stay visible below it. */
 export function EctsProgress({
   earned,
   total,
@@ -25,10 +25,10 @@ export function EctsProgress({
         aria-valuemax={total}
         aria-valuenow={earned}
         aria-valuetext={`${earned} von ${total} ECTS, Soll ${target}`}
-        className="relative h-2 rounded-full bg-muted"
+        className="relative h-2 rounded-full border bg-card"
       >
         <div
-          className="h-full rounded-full bg-tone-blue"
+          className="-m-px h-2 rounded-full bg-accent"
           style={{ width: `${percent(earned)}%` }}
         />
         <span

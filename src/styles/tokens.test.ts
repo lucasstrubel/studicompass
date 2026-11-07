@@ -98,6 +98,11 @@ describe("design tokens", () => {
     expect(
       contrast(token("--accent-strong"), token("--muted")),
     ).toBeGreaterThanOrEqual(3);
+    // Course line and ECTS bar run in Mandarine on white.
+    expect(
+      contrast(token("--accent"), token("--card")),
+      "Mandarine line and bar on white",
+    ).toBeGreaterThanOrEqual(3);
     // Colour family: lines, bars and strokes on every surface they appear on; ink on the soft tones.
     for (const tone of ["violet", "teal", "blue", "plum", "slate"]) {
       for (const surface of ["--background", "--card", "--muted"]) {

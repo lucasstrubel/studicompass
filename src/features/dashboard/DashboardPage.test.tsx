@@ -67,7 +67,7 @@ describe("Übersicht", () => {
     ).toHaveAttribute("href", "/entscheidung/e-stat-ws26");
   });
 
-  it("lists the five modules of this semester and the next milestone", () => {
+  it("lists the five modules of this semester", () => {
     renderOverview();
 
     const modules = region("Dieses Semester (WS 2026/27)");
@@ -76,15 +76,6 @@ describe("Übersicht", () => {
     );
     expect(modules).toHaveTextContent("Übungsblätter 5/12");
     expect(modules).toHaveTextContent("nur im WS");
-
-    const milestone = region(/^Praxissemester/);
-    expect(milestone).toHaveTextContent("Praxissemester · WS 2027/28");
-    expect(milestone).toHaveTextContent(
-      "Noch offen: 7 Module des Grundstudiums (5 davon in diesem Semester angemeldet)",
-    );
-    expect(milestone).toHaveTextContent(
-      "Erreichbar, wenn du Programmieren 2 und Wirtschaftsprivatrecht im SS 2027 bestehst.",
-    );
   });
 
   it("shows the new state after a simulated withdrawal and restores it with Rückgängig", () => {
@@ -100,9 +91,6 @@ describe("Übersicht", () => {
     );
     expect(progress).toHaveTextContent("72 von 90");
     expect(progress).toHaveTextContent("SS 2029 – 1 Semester später");
-    expect(region(/^Praxissemester/)).toHaveTextContent(
-      "Praxissemester · SS 2028 (+1 Semester)",
-    );
     expect(region("Jetzt wichtig")).toHaveTextContent(
       "Gerade steht keine Entscheidung mit Sonderregel an.",
     );
@@ -112,9 +100,6 @@ describe("Übersicht", () => {
     expect(
       within(region("Dein Studienstand")).getByText("Knapp"),
     ).toBeInTheDocument();
-    expect(region(/^Praxissemester/)).toHaveTextContent(
-      "Praxissemester · WS 2027/28",
-    );
     expect(screen.queryByText(/Simulierte Abmeldung/)).not.toBeInTheDocument();
   });
 
@@ -131,7 +116,7 @@ describe("Übersicht", () => {
     );
   });
 
-  it("keeps the order: Studienstand, ECTS-Verlauf, Jetzt wichtig, (mobile: Nächste Frist), Dieses Semester, Meilenstein", () => {
+  it("keeps the order: Studienstand, ECTS-Verlauf, Jetzt wichtig, (mobile: Nächste Frist), Dieses Semester", () => {
     renderOverview();
     const main = screen.getByRole("main");
     const order = [
@@ -140,7 +125,6 @@ describe("Übersicht", () => {
       "Jetzt wichtig",
       "Nächste Frist",
       "Dieses Semester (WS 2026/27)",
-      "Praxissemester · WS 2027/28",
     ].map((name) =>
       within(main)
         .getAllByRole("heading", { level: 2 })

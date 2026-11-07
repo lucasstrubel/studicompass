@@ -1,20 +1,13 @@
 import type { CSSProperties } from "react";
-import {
-  BookOpen,
-  ChartColumn,
-  Database,
-  Globe,
-  Workflow,
-  type LucideIcon,
-} from "lucide-react";
+import type { IllustrationKind } from "./ModuleIllustration";
 
-// Presentation only: which icon and which colour of the family stand next to which module.
-const MODULE_ICONS: Record<string, LucideIcon> = {
-  "m-stat": ChartColumn,
-  "m-db": Database,
-  "m-se1": BookOpen,
-  "m-gpm": Workflow,
-  "m-mkt": Globe,
+// Presentation only: which line drawing and which colour of the family stand next to which module.
+const MODULE_ART: Record<string, IllustrationKind> = {
+  "m-stat": "chart",
+  "m-db": "database",
+  "m-se1": "books",
+  "m-gpm": "process",
+  "m-mkt": "globe",
 };
 
 export type ModuleTone = "violet" | "teal" | "blue" | "plum" | "slate";
@@ -27,20 +20,17 @@ const TONES: readonly ModuleTone[] = [
   "slate",
 ];
 
-// The modules of the overview: this semester's exams and the recent grades, each in its own colour.
+// The modules of the overview, each in its own colour.
 const MODULE_TONES: Record<string, ModuleTone> = {
   "m-stat": "violet",
   "m-db": "teal",
   "m-se1": "blue",
   "m-gpm": "plum",
   "m-mkt": "slate",
-  "m-klr": "teal",
-  "m-bsrn": "blue",
-  "m-mathe2": "violet",
 };
 
-export function moduleIcon(moduleId: string): LucideIcon {
-  return MODULE_ICONS[moduleId] ?? BookOpen;
+export function moduleArt(moduleId: string): IllustrationKind {
+  return MODULE_ART[moduleId] ?? "books";
 }
 
 /** Fixed colour per module; modules without an entry get a stable one from their id. */
@@ -52,7 +42,7 @@ export function moduleTone(moduleId: string): ModuleTone {
   return MODULE_TONES[moduleId] ?? TONES[sum % TONES.length];
 }
 
-/** Sets --module-tone and --module-tone-soft for the icon, progress bar or grade below. */
+/** Sets --module-tone and --module-tone-soft for the drawing, progress bar or grade below. */
 export function moduleToneStyle(moduleId: string): CSSProperties {
   const tone = moduleTone(moduleId);
   return {

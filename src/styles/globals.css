@@ -127,7 +127,7 @@
   --chart-2: var(--muted-foreground);
   --radius: 0.625rem;
   /*
-   * The dark surface: the head of the overview's main card and of the assistant window. .surface-hero maps these onto the regular names,
+   * The dark surface: the header of the assistant window. .surface-hero maps these onto the regular names,
    * so its text, buttons and focus ring work without special classes. This is a surface, not a theme.
    */
   --hero: #1b1b1f;

@@ -88,11 +88,8 @@ export function DashboardPage() {
       <ResourceBoundary services={["pos"]} skeleton={null}>
         {() => <WithdrawalNotice />}
       </ResourceBoundary>
-      <div className="overflow-hidden rounded-2xl border bg-card">
-        <section
-          aria-labelledby="study-progress"
-          className="surface-hero p-5 md:px-7 md:py-6"
-        >
+      <div className="rounded-2xl border bg-card p-5 md:p-7">
+        <section aria-labelledby="study-progress">
           <ResourceBoundary
             services={["pos", "rules"]}
             skeleton={
@@ -106,7 +103,7 @@ export function DashboardPage() {
             {() => <StudyProgressCard />}
           </ResourceBoundary>
         </section>
-        <section aria-labelledby="ects-history" className="p-5 md:px-7 md:py-6">
+        <section aria-labelledby="ects-history" className="mt-6 border-t pt-6">
           <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
             <h2 id="ects-history" className="text-section-title">
               ECTS-Verlauf

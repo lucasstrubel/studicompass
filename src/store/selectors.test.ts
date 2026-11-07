@@ -6,11 +6,9 @@ import {
   selectBasePlan,
   selectCurrentExams,
   selectImportantDecisions,
-  selectMilestone,
   selectAdmission,
   selectAgenda,
   selectNextDeadline,
-  selectRecentGrades,
   selectUndoableExamId,
   selectDeadlines,
   selectInbox,
@@ -123,34 +121,16 @@ describe("P3-02 overview selectors", () => {
     expect(selectImportantDecisions(store.getState())).toEqual([]);
   });
 
-  it("shows the three latest grades", async () => {
-    const grades = selectRecentGrades((await loadedStore()).getState());
-    expect(grades.map((item) => item.module.id)).toEqual([
-      "m-klr",
-      "m-bsrn",
-      "m-mathe2",
-    ]);
-  });
-
-  it("summarises the internship milestone, before and after withdrawing Statistik", async () => {
+  it("moves internship and graduation when Statistik is withdrawn", async () => {
     const store = await loadedStore();
-    const before = selectMilestone(store.getState());
-    expect(before).toMatchObject({
+    expect(selectBasePlan(store.getState())).toMatchObject({
       internshipTerm: { season: "WS", year: 2027 },
       internshipShift: 0,
       graduationTerm: { season: "WS", year: 2028 },
     });
-    expect(before?.openFoundation).toHaveLength(7);
-    expect(before?.registeredNow).toHaveLength(5);
-    expect(
-      before?.later.map((item) => [item.module.id, item.term.season]),
-    ).toEqual([
-      ["m-prog2", "SS"],
-      ["m-recht", "SS"],
-    ]);
 
     store.getState().withdrawExam("e-stat-ws26");
-    expect(selectMilestone(store.getState())).toMatchObject({
+    expect(selectBasePlan(store.getState())).toMatchObject({
       internshipTerm: { season: "SS", year: 2028 },
       internshipShift: 1,
       graduationTerm: { season: "SS", year: 2029 },

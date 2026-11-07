@@ -1,4 +1,3 @@
-import { createElement } from "react";
 import { ArrowRight, Undo2 } from "lucide-react";
 import { Link } from "react-router";
 import { AdmissionStatus } from "@/components/common/AdmissionStatus";
@@ -17,7 +16,8 @@ import {
   type CurrentExam,
 } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
-import { moduleIcon, moduleToneStyle } from "./module-art";
+import { moduleArt, moduleToneStyle } from "./module-art";
+import { ModuleIllustration } from "./ModuleIllustration";
 
 const OFFERING_LABELS = { WS: "nur im WS", SS: "nur im SS" } as const;
 
@@ -42,15 +42,10 @@ function ModuleRow({
   const admission = useDemoStore((state) => selectAdmission(state, module.id));
   return (
     <li
-      className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-2 p-4 md:grid-cols-[auto_minmax(0,1fr)_minmax(0,15rem)] md:gap-x-4"
+      className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 gap-y-2 p-4 md:grid-cols-[auto_minmax(0,1fr)_minmax(0,15rem)] md:gap-x-4"
       style={moduleToneStyle(module.id)}
     >
-      <span className="flex size-9 items-center justify-center rounded-lg bg-(--module-tone-soft) text-(--module-tone)">
-        {createElement(moduleIcon(module.id), {
-          className: "size-5",
-          "aria-hidden": true,
-        })}
-      </span>
+      <ModuleIllustration kind={moduleArt(module.id)} />
       <div className="min-w-0">
         <h3 className="text-card-title">
           <Link
