@@ -17,6 +17,7 @@ import {
   selectRulesById,
 } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
+import { cn } from "@/lib/utils";
 import { CHANNELS } from "@/services/types";
 
 /** Next deadline with countdown (US-05). Rendered in the rail on desktop and in the main column below. */
@@ -24,7 +25,10 @@ export function NextDeadline({ className }: { className?: string }) {
   // Rendered twice (main column below xl, rail from xl), so the heading id must be unique.
   const headingId = useId();
   return (
-    <section aria-labelledby={headingId} className={className}>
+    <section
+      aria-labelledby={headingId}
+      className={cn("rounded-xl border bg-card p-4 xl:pt-7", className)}
+    >
       <h2 id={headingId} className="mb-3 text-section-title">
         Nächste Frist
       </h2>
@@ -63,7 +67,7 @@ function NextDeadlineCard() {
     (decision) => decision.exam.id === deadline.examId,
   );
   return (
-    <div className="rounded-xl border bg-card p-4">
+    <div>
       <h3 className="text-card-title">{deadline.title}</h3>
       <p className="mt-1 text-section-title tabular-nums">
         <Countdown until={deadlineInstant(deadline.dueAt)} />

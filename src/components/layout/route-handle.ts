@@ -7,6 +7,8 @@ export interface RouteHandle {
   title: string;
   /** Content of the right column: next to the main area on desktop, below it otherwise. */
   rightRail?: ComponentType;
+  /** Spans main area and right column above both, so their first cards start at the same height. */
+  pageTop?: ComponentType;
   /** The page renders its own h1 (PageHeader); the shell then leaves its h1 out. */
   ownHeader?: boolean;
 }
@@ -20,6 +22,9 @@ function isRouteHandle(handle: unknown): handle is RouteHandle {
     (!("rightRail" in handle) ||
       handle.rightRail === undefined ||
       typeof handle.rightRail === "function") &&
+    (!("pageTop" in handle) ||
+      handle.pageTop === undefined ||
+      typeof handle.pageTop === "function") &&
     (!("ownHeader" in handle) ||
       handle.ownHeader === undefined ||
       typeof handle.ownHeader === "boolean")
