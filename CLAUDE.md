@@ -47,6 +47,7 @@ src/
   config/       demo.ts (APP_NAME, DEMO_NOW, LATENCY_MS, FLAGS)
   lib/          cn, Formatierung (Datum, Countdown, ECTS, Noten), ics
   styles/       globals.css (Tailwind, Design-Tokens)
+public/praesentation/   reveal.js-Folien für SE2 (statisch, nicht von Vite gebaut); Quelle: docs/praesentation/konzept.md
 ```
 
 ## Architektur

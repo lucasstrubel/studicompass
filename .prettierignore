@@ -3,3 +3,6 @@ CLAUDE.md
 
 # Von npm erzeugt
 package-lock.json
+
+# Eingechecktes reveal.js
+public/praesentation/vendor
