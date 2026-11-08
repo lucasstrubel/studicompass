@@ -5,6 +5,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import type { RouteHandle } from "@/components/layout/route-handle";
 import { OverviewEntry } from "@/features/onboarding/OverviewEntry";
 import { DashboardRail } from "@/features/dashboard/DashboardRail";
+import { OverviewTop } from "@/features/dashboard/OverviewTop";
 import { DecisionPage } from "@/features/decision/DecisionPage";
 import { PlannerRoute, PlannerRouteError } from "@/app/PlannerRoute";
 import { OnboardingPage } from "@/features/onboarding/OnboardingPage";
@@ -22,7 +23,12 @@ const shellRoutes: PageRoute[] = [
   {
     index: true,
     Component: OverviewEntry,
-    handle: { title: "Übersicht", rightRail: DashboardRail, ownHeader: true },
+    handle: {
+      title: "Übersicht",
+      pageTop: OverviewTop,
+      rightRail: DashboardRail,
+      ownHeader: true,
+    },
   },
   {
     path: "verlauf",

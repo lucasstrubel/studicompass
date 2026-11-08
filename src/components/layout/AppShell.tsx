@@ -9,12 +9,14 @@ import { CHANNEL_LABELS } from "@/components/common/labels";
 import { AssistantLauncher } from "@/features/assistant/AssistantLauncher";
 import { ProductTour } from "@/features/onboarding/ProductTour";
 import { CHANNELS } from "@/services/types";
+import { cn } from "@/lib/utils";
 
 /** Layout of every app page; the route's handle supplies title and right column. */
 export function AppShell() {
   const handle = useRouteHandle();
   const mainRef = useRef<HTMLElement>(null);
   const RightRailContent = handle?.rightRail;
+  const PageTop = handle?.pageTop;
   const connected = useDemoStore((state) => state.connectedChannels);
   const disconnected = CHANNELS.filter((channel) => !connected[channel]);
 
@@ -37,10 +39,23 @@ export function AppShell() {
           id="inhalt"
           ref={mainRef}
           tabIndex={-1}
-          className="mx-auto grid w-full max-w-360 min-w-0 flex-1 outline-none xl:grid-cols-[minmax(0,1fr)_auto]"
+          className={cn(
+            "mx-auto grid w-full max-w-360 min-w-0 flex-1 outline-none xl:grid-cols-[minmax(0,1fr)_auto]",
+            PageTop && "content-start",
+          )}
         >
           {/* The last column (content or right column) keeps its end clear of the assistant button. */}
-          <div className="min-w-0 px-4 py-6 last:pb-24 md:px-6 md:py-8 md:last:pb-24 xl:px-8">
+          {PageTop && (
+            <div className="min-w-0 px-4 pt-6 md:px-6 md:pt-8 xl:col-span-2 xl:px-8">
+              <PageTop />
+            </div>
+          )}
+          <div
+            className={cn(
+              "min-w-0 px-4 py-6 last:pb-24 md:px-6 md:py-8 md:last:pb-24 xl:px-8",
+              PageTop && "pt-0 md:pt-0",
+            )}
+          >
             {!handle?.ownHeader && (
               <h1 className="mb-6 text-page-title">
                 {handle?.title ?? APP_NAME}
@@ -62,7 +77,7 @@ export function AppShell() {
             )}
           </div>
           {RightRailContent && (
-            <RightRail>
+            <RightRail belowPageTop={Boolean(PageTop)}>
               <RightRailContent />
             </RightRail>
           )}

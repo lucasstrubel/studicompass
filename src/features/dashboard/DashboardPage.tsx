@@ -1,13 +1,6 @@
 import { lazy, Suspense } from "react";
-import { PageHeader } from "@/components/common/PageHeader";
-import { WithdrawalNotice } from "@/components/common/WithdrawalNotice";
 import { ResourceBoundary } from "@/components/common/ResourceBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DEMO_NOW } from "@/config/demo";
-import { format, semesterNumber } from "@/domain/terms";
-import { greeting } from "@/lib/format";
-import { selectAcademicState, selectProfileName } from "@/store/selectors";
-import { useDemoStore } from "@/store/use-demo-store";
 import { NextDeadline } from "./DashboardRail";
 import { ImportantCard } from "./ImportantCard";
 import { SemesterModules } from "./SemesterModules";
@@ -17,24 +10,6 @@ import { StudyProgressCard } from "./StudyProgressCard";
 const EctsHistory = lazy(() =>
   import("./EctsHistory").then((module) => ({ default: module.EctsHistory })),
 );
-
-function OverviewHeader() {
-  const academic = useDemoStore(selectAcademicState);
-  const firstName = useDemoStore(selectProfileName)?.firstName;
-  return (
-    <PageHeader
-      title={`${greeting(DEMO_NOW)}${firstName ? `, ${firstName}` : ""}`}
-      meta={
-        academic && (
-          <span>
-            {semesterNumber(academic.currentTerm, academic.student.startTerm)}.
-            Semester · {format(academic.currentTerm)}
-          </span>
-        )
-      }
-    />
-  );
-}
 
 /** Line samples for the course line; the chart itself has no legend, so this also shows while it loads. */
 function CourseLegend() {
@@ -84,10 +59,6 @@ const chartSkeleton = (
 export function DashboardPage() {
   return (
     <div className="space-y-8">
-      <OverviewHeader />
-      <ResourceBoundary services={["pos"]} skeleton={null}>
-        {() => <WithdrawalNotice />}
-      </ResourceBoundary>
       <div className="rounded-2xl border bg-card p-5 md:p-7">
         <section aria-labelledby="study-progress">
           <ResourceBoundary
