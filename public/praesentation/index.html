@@ -1,0 +1,1330 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>StudiCompass Präsentation</title>
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/praesentation/vendor/reveal/reset.css" />
+    <link rel="stylesheet" href="/praesentation/vendor/reveal/reveal.css" />
+    <link rel="stylesheet" href="/praesentation/deck.css" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <div class="course" aria-hidden="true" hidden>
+          <div class="course-track"></div>
+          <div class="course-done"></div>
+          <div class="course-stops">
+            <div class="course-stop is-start" style="left: 0">
+              <div class="course-mark">
+                <svg viewBox="0 0 36 36">
+                  <path
+                    d="M18 5 32 30H4Z"
+                    fill="none"
+                    stroke="#17171a"
+                    stroke-width="3"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="course-stop" style="left: 338.4px">
+              <div class="course-mark">1</div>
+              <div class="course-label">Entdecken</div>
+            </div>
+            <div class="course-stop" style="left: 684px">
+              <div class="course-mark">2</div>
+              <div class="course-label">Definieren</div>
+            </div>
+            <div class="course-stop" style="left: 1029.6px">
+              <div class="course-mark">3</div>
+              <div class="course-label">Lösen</div>
+            </div>
+            <div class="course-stop" style="left: 1375.2px">
+              <div class="course-mark">4</div>
+              <div class="course-label">Prototyping</div>
+            </div>
+            <div class="course-stop is-finish" style="left: 1692px">
+              <div class="course-mark"></div>
+            </div>
+          </div>
+          <svg class="course-needle" viewBox="0 0 24 24">
+            <path
+              class="needle-tip"
+              d="M20 4 14.5 14.5 9.5 9.5Z"
+              stroke-width="1"
+              stroke-linejoin="round"
+            />
+            <path
+              class="needle-tail"
+              d="M4 20 9.5 9.5 14.5 14.5Z"
+              stroke-width="1"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+
+        <!-- 0 Titel -->
+        <section data-phase="start" data-course="low">
+          <div class="title-page">
+            <div class="brand">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  class="needle-tip"
+                  d="M20 4 14.5 14.5 9.5 9.5Z"
+                  stroke-width="1"
+                  stroke-linejoin="round"
+                />
+                <path
+                  class="needle-tail"
+                  d="M4 20 9.5 9.5 14.5 14.5Z"
+                  stroke-width="1"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              StudiCompass
+            </div>
+            <p class="core-message">
+              Dein Studium auf einen Blick – und die Folgen deiner
+              Entscheidungen, bevor du sie triffst.
+            </p>
+            <p class="title-meta">SE2 · Gruppe A · WS 26/27</p>
+          </div>
+          <aside class="notes">
+            <p>Zeit: 0:20 (kumuliert 0:20)</p>
+            <p>
+              Begrüßung, Teamnamen nennen (sie stehen bewusst nicht auf der
+              öffentlichen Folie). Ein Satz zum Thema.
+            </p>
+          </aside>
+        </section>
+
+        <!-- 1 Einstieg -->
+        <section>
+          <div class="evening">
+            <p class="evening-time">Montag, 19:30</p>
+            <ul>
+              <li>
+                Niklas fühlt sich in Programmierung 2 schlecht vorbereitet.
+              </li>
+              <li>
+                Er meldet sich ab. Das Modul kommt ja nächstes Semester wieder.
+              </li>
+              <li>Wochen später geht sein Plan nicht mehr auf.</li>
+            </ul>
+          </div>
+          <aside class="notes">
+            <p>Zeit: 1:00 (kumuliert 1:20)</p>
+            <p>
+              Niklas fühlt sich in Programmierung 2 schlecht vorbereitet und
+              meldet sich ab. Er denkt: „Das Modul kommt ja nächstes Semester
+              wieder.“ Dass ihm damit die Bachelorvorprüfung fehlt, die das
+              Unternehmensinformatikprojekt voraussetzt, zeigt ihm kein System.
+              Das Projekt gibt es nur im Sommer. Wochen später merkt er, dass
+              sein Plan nicht mehr aufgeht.
+            </p>
+            <p>
+              Leitfrage: „Wie könnte Niklas die Folgen sehen, bevor er
+              entscheidet?“
+            </p>
+          </aside>
+        </section>
+
+        <!-- 2 Weg -->
+        <section data-phase="start">
+          <div class="page">
+            <h2>Unser Weg: vier Phasen, ein Problem</h2>
+            <div class="body stack">
+              <div>
+                <svg
+                  class="diamond"
+                  viewBox="0 0 1728 420"
+                  role="img"
+                  aria-label="Double Diamond mit Problemraum und Lösungsraum"
+                >
+                  <path
+                    d="M4 230 432 44 860 230 432 416Z"
+                    fill="#ffffff"
+                    stroke="#17171a"
+                    stroke-width="3"
+                  />
+                  <path
+                    d="M868 230 1296 44 1724 230 1296 416Z"
+                    fill="#ffffff"
+                    stroke="#17171a"
+                    stroke-width="3"
+                  />
+                  <path
+                    d="M432 44V416M1296 44V416"
+                    stroke="#e3e3e6"
+                    stroke-width="3"
+                  />
+                  <text class="space" x="432" y="28">Problemraum</text>
+                  <text class="space" x="1296" y="28">Lösungsraum</text>
+                  <text x="264" y="242">Entdecken</text>
+                  <text x="598" y="242">Definieren</text>
+                  <text x="1128" y="242">Lösen</text>
+                  <text x="1466" y="242">Prototyping</text>
+                </svg>
+                <div class="artifacts">
+                  <ul>
+                    <li>Stakeholder</li>
+                    <li>5 Interviews</li>
+                    <li>Umfrage (n = 8)</li>
+                  </ul>
+                  <ul>
+                    <li>Persona</li>
+                    <li>Nutzungskontext</li>
+                    <li>Value Proposition</li>
+                  </ul>
+                  <ul>
+                    <li>Exposé</li>
+                    <li>UX Flow Chart</li>
+                    <li>Moodboard und Skizzen</li>
+                  </ul>
+                  <ul>
+                    <li>Hi-Fi-Prototyp</li>
+                    <li>Teaminterner Test</li>
+                    <li>Iteration</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Zeit: 0:40 (kumuliert 2:00)</p>
+            <p>
+              Die Vorlesung folgt dem Double Diamond, unser Projekt auch.
+              Divergieren: viele Möglichkeiten öffnen. Konvergieren: auf eine
+              Entscheidung zuspitzen. Die Linie oben zeigt, wo wir gerade sind.
+            </p>
+          </aside>
+        </section>
+
+        <!-- 3 Entdecken -->
+        <section data-phase="entdecken">
+          <div class="page">
+            <h2>Wir wussten, was nervt – aber nicht, was wirklich fehlt</h2>
+            <p class="method">Stakeholder-Analyse und Forschungsfragen</p>
+            <div class="body">
+              <svg
+                class="rings"
+                viewBox="0 0 640 640"
+                role="img"
+                aria-label="Stakeholder nach Betroffenheit: Studierende sehr nah, Professoren, Fakultäten und Verwaltung in der Nähe, Prüfungsamt weiter entfernt"
+              >
+                <circle cx="320" cy="320" r="312" fill="#ececee" />
+                <circle cx="320" cy="320" r="222" fill="#dcdce0" />
+                <circle cx="320" cy="320" r="120" fill="#17171a" />
+                <text x="320" y="330" style="fill: #ffffff">Studierende</text>
+                <text x="320" y="164">Professoren</text>
+                <text x="176" y="436">Fakultäten</text>
+                <text x="464" y="436">Verwaltung</text>
+                <text x="320" y="596">Prüfungsamt</text>
+              </svg>
+              <div class="grow surface">
+                <ol class="questions rows">
+                  <li>
+                    Wie sehr stört es, Informationen aus vielen Kanälen
+                    zusammenzusuchen?
+                  </li>
+                  <li>
+                    Wie gut überblicken Studierende ihren eigenen Studienstand?
+                  </li>
+                  <li>
+                    Kennen sie die Folgen ihrer Entscheidungen und die
+                    Voraussetzungen im Studienverlauf?
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <p class="decision">
+              <strong>Entscheidung</strong>Fokus auf Studierende als
+              Hauptnutzer.
+            </p>
+          </div>
+          <aside class="notes">
+            <p>Zeit: 0:40 (kumuliert 2:40)</p>
+            <p>
+              Frage: Was wissen wir, wer ist betroffen? Ergebnis: Studierende
+              als Hauptnutzer; Professoren, Fakultäten, Verwaltung im Umfeld.
+              Daraus Forschungsfragen zu Kanälen, Studienstand und Folgen von
+              Entscheidungen.
+            </p>
+          </aside>
+        </section>
+
+        <!-- 4 Entdecken -->
+        <section data-phase="entdecken">
+          <div class="page">
+            <h2>Nicht die Fristen fehlen, sondern der Überblick</h2>
+            <p class="method">
+              5 Interviews (3 mit TH-Studierenden) und Umfrage (n = 8)
+            </p>
+            <div class="body stack">
+              <div class="figures surface">
+                <div class="figure">
+                  <b>4 / 8</b>wissen kaum, wie viele ECTS ihnen fehlen
+                </div>
+                <div class="figure">
+                  <b>Ø 3,7 / 5</b>Infos auf vielen Kanälen „stören“ (WI)
+                </div>
+                <div class="figure">
+                  <b>Ø 2,1 / 5</b>Planung über mehrere Semester
+                </div>
+              </div>
+              <p class="surprise fragment">
+                <s>„Studierende verpassen Fristen“</s> → <b>8 / 8</b> ohne
+                verpasste Frist
+              </p>
+            </div>
+            <p class="decision">
+              <strong>Entscheidung</strong>Der Studienstand wird das zentrale
+              Element, kein Kalender.
+            </p>
+          </div>
+          <aside class="notes">
+            <p>Zeit: 1:30 (kumuliert 4:10)</p>
+            <p>
+              Erst die drei Zahlen, dann PageDown für die Überraschung: Die ist
+              der Höhepunkt der Folie.
+            </p>
+            <p>
+              Zweiter Befund: Folgen sind nur bei Sonderregeln unklar, etwa bei
+              Zulassungen zum Projekt- oder Praxissemester. Kleine Stichprobe,
+              also Tendenzen.
+            </p>
+          </aside>
+        </section>
+
+        <!-- 5 Definieren -->
+        <section data-phase="definieren">
+          <div class="page">
+            <h2>Niklas plant kurzfristig und entscheidet unter Druck</h2>
+            <p class="method">Persona und Nutzungskontext</p>
+            <div class="body">
+              <div class="persona surface">
+                <div class="avatar" aria-hidden="true">NB</div>
+                <h3>Niklas Brandt, 20</h3>
+                <ul>
+                  <li>Unternehmens- und Wirtschaftsinformatik</li>
+                  <li>3. Semester</li>
+                  <li>Nebenjob, pendelt</li>
+                </ul>
+              </div>
+              <div class="grow surface context rows">
+                <div>
+                  <h3><span class="key">N</span>Nutzer</h3>
+                  <ul>
+                    <li>Plant semesterweise, braucht klare Ansagen</li>
+                    <li>Will wissen, wo eine KI-Antwort steht</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3><span class="key">A</span>Aufgaben</h3>
+                  <ul>
+                    <li>Studienstand prüfen</li>
+                    <li>Prüfung schreiben oder abmelden?</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3><span class="key">U</span>Umgebung</h3>
+                  <ul>
+                    <li>Abends zu Hause, am Laptop</li>
+                    <li>Abgelenkt durch Chats</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <p class="decision">
+              <strong>Entscheidung</strong>Desktop-first (8/8 zu Hause, 6/8 am
+              Laptop), Kernflow trotzdem mobil.
+            </p>
+          </div>
+          <aside class="notes">
+            <p>Zeit: 0:50 (kumuliert 5:00)</p>
+            <p>
+              Nur was später im Prototyp sichtbar wird: kurzfristige Planung,
+              Druck, klare Ansagen, Quelle bei KI-Antworten.
+            </p>
+          </aside>
+        </section>
+
+        <!-- 6 Definieren -->
+        <section data-phase="definieren">
+          <div class="page">
+            <h2>Folgen werden erst sichtbar, wenn es zu spät ist</h2>
+            <p class="method">Value Proposition Canvas: 5 Pains, 4 Gains</p>
+            <div class="body stack">
+              <div class="vpc surface">
+                <div class="head">Pain</div>
+                <div class="head"></div>
+                <div class="head">Pain Reliever</div>
+                <div>P1 Infos auf viele Plattformen verteilt</div>
+                <div class="arrow">→</div>
+                <div>Bündelt POS, Mail, Moodle und Website</div>
+                <div>P2 ECTS-Stand selbst ausrechnen</div>
+                <div class="arrow">→</div>
+                <div>Berechnet den ECTS-Stand automatisch</div>
+                <div class="hit">
+                  P3 Folgen von Sonderregeln schwer abschätzbar
+                </div>
+                <div class="arrow hit">→</div>
+                <div class="hit">Folgen-Check vor jeder Abmeldung</div>
+              </div>
+              <p class="problem">
+                Studierende entscheiden unter Druck, weil ihnen niemand zeigt,
+                was eine Sonderregel für die nächsten Semester bedeutet.
+              </p>
+            </div>
+            <p class="decision">
+              <strong>Entscheidung</strong>Warnen nur, wenn eine Sonderregel
+              greift.
+            </p>
+          </div>
+          <aside class="notes">
+            <p>Zeit: 1:00 (kumuliert 6:00)</p>
+            <p>
+              Hier schließt sich der erste Diamant. Pauschale Warnungen erzeugen
+              Hinweis-Müdigkeit und sind durch die Daten nicht gedeckt.
+            </p>
+          </aside>
+        </section>
+
+        <!-- 7 Lösen -->
+        <section data-phase="loesen">
+          <div class="page">
+            <h2>Ein Flow im Zentrum: prüfen, bevor man entscheidet</h2>
+            <p class="method">Exposé, User Story Map, UX Flow Chart</p>
+            <div class="body stack">
+              <div>
+                <svg
+                  class="flow"
+                  viewBox="0 0 1728 400"
+                  role="img"
+                  aria-label="Hero-Flow von der Unsicherheit über Übersicht und Folgen-Check bis zur eigenen Entscheidung"
+                >
+                  <defs>
+                    <marker
+                      id="arrow"
+                      viewBox="0 0 10 10"
+                      refX="9"
+                      refY="5"
+                      markerWidth="6"
+                      markerHeight="6"
+                      orient="auto-start-reverse"
+                    >
+                      <path d="M0 0 10 5 0 10Z" fill="#17171a" />
+                    </marker>
+                  </defs>
+                  <path
+                    class="line"
+                    d="M226 200H262"
+                    marker-end="url(#arrow)"
+                  />
+                  <path
+                    class="line"
+                    d="M494 200H530"
+                    marker-end="url(#arrow)"
+                  />
+                  <path
+                    class="line"
+                    d="M762 200H798"
+                    marker-end="url(#arrow)"
+                  />
+                  <path
+                    class="line"
+                    d="M1000 200C1030 200 1020 92 1060 92H1092"
+                    marker-end="url(#arrow)"
+                  />
+                  <path
+                    class="line"
+                    d="M1000 200C1030 200 1020 308 1060 308H1092"
+                    marker-end="url(#arrow)"
+                  />
+                  <path
+                    class="line"
+                    d="M1336 92C1370 92 1360 200 1394 200H1420"
+                    marker-end="url(#arrow)"
+                  />
+                  <path
+                    class="line"
+                    d="M1336 308C1370 308 1360 200 1394 200H1420"
+                    marker-end="url(#arrow)"
+                  />
+                  <rect
+                    class="quiet"
+                    x="0"
+                    y="140"
+                    width="226"
+                    height="120"
+                    rx="60"
+                  />
+                  <text class="quiet-text" x="113" y="194">Unsicher vor</text>
+                  <text class="quiet-text" x="113" y="226">
+                    der Abmeldefrist
+                  </text>
+                  <rect
+                    class="quiet"
+                    x="268"
+                    y="140"
+                    width="226"
+                    height="120"
+                    rx="14"
+                  />
+                  <text class="quiet-text" x="381" y="194">
+                    Übersicht: Ampel
+                  </text>
+                  <text class="quiet-text" x="381" y="226">und ECTS-Stand</text>
+                  <rect
+                    class="node"
+                    x="536"
+                    y="140"
+                    width="226"
+                    height="120"
+                    rx="14"
+                  />
+                  <text class="node-text" x="649" y="208">Folgen-Check</text>
+                  <path class="node" d="M902 88 1000 200 902 312 804 200Z" />
+                  <text class="node-text" x="902" y="194">Sonderregel</text>
+                  <text class="node-text" x="902" y="226">greift?</text>
+                  <text class="label" x="1036" y="84">Ja</text>
+                  <text class="label" x="1036" y="344">Nein</text>
+                  <rect
+                    class="node"
+                    x="1098"
+                    y="32"
+                    width="238"
+                    height="120"
+                    rx="14"
+                  />
+                  <text class="node-text" x="1217" y="86">
+                    Zeigt Folgen für
+                  </text>
+                  <text class="node-text" x="1217" y="118">
+                    Projekt, Abschluss
+                  </text>
+                  <rect
+                    class="node"
+                    x="1098"
+                    y="248"
+                    width="238"
+                    height="120"
+                    rx="14"
+                  />
+                  <text class="node-text" x="1217" y="302">
+                    Kein Meilenstein
+                  </text>
+                  <text class="node-text" x="1217" y="334">verschoben</text>
+                  <rect
+                    class="node"
+                    x="1426"
+                    y="140"
+                    width="302"
+                    height="120"
+                    rx="60"
+                  />
+                  <text class="node-text" x="1577" y="194">
+                    Niklas entscheidet:
+                  </text>
+                  <text class="node-text" x="1577" y="226">
+                    antreten oder abmelden
+                  </text>
+                </svg>
+                <ol class="backbone">
+                  <li>Einsteigen</li>
+                  <li>Studienstand erfassen</li>
+                  <li class="hero-step">Entscheidung prüfen</li>
+                  <li>Studium planen</li>
+                  <li>Fragen klären</li>
+                  <li>Informiert bleiben</li>
+                </ol>
+              </div>
+            </div>
+            <p class="decision">
+              <strong>Entscheidung</strong>Ein Hero-Flow. Der Rest wird
+              priorisiert oder kommt auf den Ideenparkplatz.
+            </p>
+          </div>
+          <aside class="notes">
+            <p>Zeit: 0:50 (kumuliert 6:50)</p>
+            <p>
+              MVP als Querschnitt: lieber ein Flow vollständig als viele
+              halbfertige Screens.
+            </p>
+            <p>
+              Hinweis: Im Flow Chart auf dem Miro-Board „befürwortet“ die App
+              die Abmeldung oder warnt. Im Prototyp informiert sie nur, die
+              Entscheidung bleibt bei Niklas. Darum ist der Ablauf hier so
+              gezeichnet.
+            </p>
+          </aside>
+        </section>
+
+        <!-- 8 Lösen -->
+        <section data-phase="loesen">
+          <div class="page">
+            <h2>Vom Moodboard über Skizzen zum Hi-Fi-Prototyp</h2>
+            <div class="body stack">
+              <div class="fidelity">
+                <div class="stage">
+                  <h3>Moodboard</h3>
+                  <div class="visual mood">
+                    <div class="swatches" aria-hidden="true">
+                      <i style="background: #17171a"></i>
+                      <i style="background: #6b6660"></i>
+                      <i style="background: #efe9e1"></i>
+                      <i style="background: #c9694a"></i>
+                    </div>
+                    <p>„Warm Ink“: ruhige Neutraltöne, ein Akzent</p>
+                    <p>Dashboard mit Karten und feinen Rahmen</p>
+                    <p>Kursraster mit Linienzeichnungen</p>
+                    <p>In der Referenz im Mittelpunkt: ein großer Kalender</p>
+                  </div>
+                </div>
+                <div class="stage">
+                  <h3>Skizze (Lo-Fi)</h3>
+                  <div class="visual fit">
+                    <img
+                      src="/praesentation/img/wireframe-uebersicht.svg"
+                      alt="Handgezeichnetes Wireframe der Übersicht"
+                    />
+                  </div>
+                </div>
+                <div class="stage">
+                  <h3>Prototyp (Hi-Fi)</h3>
+                  <div class="visual cover">
+                    <img
+                      src="/praesentation/img/uebersicht.jpg"
+                      alt="Heutige Übersicht mit Studienstand und Jetzt wichtig"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="decision">
+              <strong>Entscheidung</strong>Studienstand und „Jetzt wichtig“
+              ersetzen den Kalender der Referenz.
+            </p>
+          </div>
+          <aside class="notes">
+            <p>Zeit: 0:40 (kumuliert 7:30)</p>
+            <p>
+              Begriffe aus VL05: Lo-Fi für schnelle Iteration, Hi-Fi für Test
+              und Kommunikation. Das Moodboard ist hier als eigene
+              Zusammenfassung dargestellt, weil die Referenzbilder nicht von uns
+              stammen.
+            </p>
+            <p>
+              Optional: Die visuelle Sprache wurde während der Iteration
+              weiterentwickelt, von „Warm Ink“ zu Graphit und Mandarine mit der
+              Kurslinie als Signatur. [TEAM: Grund in eigenen Worten ergänzen]
+            </p>
+          </aside>
+        </section>
+
+        <!-- 9 Lösen -->
+        <section data-phase="loesen">
+          <div class="page">
+            <h2>
+              Breit klickbar, im Kern echt gerechnet – auf Basis der echten
+              StuPO
+            </h2>
+            <div class="body">
+              <div
+                class="layers"
+                role="img"
+                aria-label="Schichten: breit über die GUI, schmal durch GUI, Anwendungslogik und Daten"
+              >
+                <div class="layer broad">GUI · breit klickbar</div>
+                <div class="deep">tief</div>
+                <div class="layer">Application Logic</div>
+                <div class="deep">tief</div>
+                <div class="layer">Network</div>
+                <div class="gap"></div>
+                <div class="layer">OS</div>
+                <div class="gap"></div>
+                <div class="layer">Data</div>
+                <div class="deep">tief</div>
+                <div class="layer">Other Systems</div>
+                <div></div>
+              </div>
+              <div class="grow real-sim">
+                <div>
+                  <h3>Echt</h3>
+                  <ul>
+                    <li>Module laut Modulhandbuch UIB</li>
+                    <li>
+                      Regeln aus der StuPO Bachelor (ab 01.09.2026) mit Paragraf
+                    </li>
+                    <li>ECTS, Ampel, Prognose</li>
+                    <li>Unit-getestet</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3>Simuliert</h3>
+                  <ul>
+                    <li>POS, Moodle, Mail, Website</li>
+                    <li>Assistent mit vorbereitetem Antwortkatalog</li>
+                    <li>Abmeldung</li>
+                    <li>Niklas' Noten und Termine</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Zeit: 0:50 (kumuliert 8:20)</p>
+            <p>
+              Die Regeln sind keine Erfindung mehr, sondern stehen mit Paragraf
+              in der StuPO. Eigene Rechenregeln der App (Ampel-Schwellen,
+              Belastungshinweis) tragen in der App das Label „Beispiel“. Der
+              Assistent ist bewusst keine echte KI: deterministisch, keine
+              Halluzination, jede Antwort mit Quelle.
+            </p>
+            <p>
+              O-1: „Mit der echten StuPO hat sich das Beispiel gegenüber dem
+              Miro-Board geändert, das Muster nicht.“
+            </p>
+          </aside>
+        </section>
+
+        <!-- 10 Prototyping -->
+        <section data-phase="prototyping">
+          <div class="page">
+            <h2>Ein Faden vom Interview bis zum Screen</h2>
+            <ol class="thread">
+              <li>
+                <b>Interview</b>
+                <q
+                  >Was es bedeutet, eine Klausur zu schieben, merkt man erst,
+                  wenn es zu spät ist.</q
+                >
+                <p class="small">sinngemäß, verdichtet aus I1 und I2</p>
+              </li>
+              <li><b>P3</b>Folgen von Sonderregeln schwer abschätzbar</li>
+              <li><b>US-06</b>Folgen vor der Abmeldung sehen</li>
+              <li><b>S4</b>Folgen-Check</li>
+              <li><b>Demo</b>Jetzt live</li>
+            </ol>
+          </div>
+          <aside class="notes">
+            <p>Zeit: 0:20 (kumuliert 8:40)</p>
+            <p>
+              „So hängt alles zusammen. Jetzt sehen wir, wie das für Niklas
+              aussieht.“ Ohne Pause in die Demo.
+            </p>
+            <p>
+              O-2: Zitat stammt aus der Persona auf dem Miro-Board. [TEAM:
+              prüfen oder durch eine andere anonymisierte Aussage ersetzen]
+            </p>
+          </aside>
+        </section>
+
+        <!-- 11 Demo -->
+        <section data-phase="demo" class="demo">
+          <iframe
+            id="demo-app"
+            title="StudiCompass, Live-Demo"
+            allow="clipboard-write"
+          ></iframe>
+          <img
+            id="demo-still"
+            src="/praesentation/img/demo-1-uebersicht.jpg"
+            alt="Standbild der Live-Demo"
+            hidden
+          />
+          <aside class="notes">
+            <p>
+              Zeit: 3:40 (kumuliert 12:20). PageDown und PageUp blättern auch
+              aus der App heraus weiter.
+            </p>
+            <p>
+              Vorher: Einstellungen, „Demo zurücksetzen“, „Demo ohne Einrichtung
+              starten“. Hinweis-Stil festlegen (O-3).
+            </p>
+            <p>
+              <b>0:00 Übersicht, nicht klicken.</b> 45 ECTS, Soll 60, Knapp, 75
+              von 90. „Das ist Niklas' Abend. Er muss nichts mehr selbst
+              rechnen. Und die App meldet sich nur, weil hier eine Sonderregel
+              greift.“
+            </p>
+            <p>
+              <b>0:30 „Folgen prüfen“.</b> Abmelden: nächster Termin schon SS
+              2027, aber 65 ECTS, Kritisch; Projekt SS 2027 → SS 2028; Abschluss
+              WS 2028/29 → SS 2029. Einmal „Warum?“ öffnen: § 56 Abs. 2. „Das
+              Modul selbst kommt nächstes Semester wieder – das Projekt wartet
+              trotzdem ein Jahr.“
+            </p>
+            <p>
+              <b>1:30 „Abmeldung vornehmen“, bestätigen.</b> Übersicht:
+              Kritisch, 65 von 90. „Beide Optionen sind gleich gewichtet. Und
+              alles lässt sich zurücknehmen.“ Zurück in den Folgen-Check, dort
+              Rückgängig (nicht den Toast).
+            </p>
+            <p>
+              <b
+                >2:05 Module &amp; Noten → Wirtschaftsinformatik 3 → „Folgen
+                einer Abmeldung prüfen“.</b
+              >
+              70, bleibt Knapp, kein Meilenstein verschoben. Unter die Tabelle
+              scrollen, bei „Hohe Belastung“ auf „Warum?“: SS 2027 mit 45 ECTS.
+              „Ob eine Abmeldung harmlos ist, hängt nicht am Modul, sondern an
+              der Regel dahinter.“
+            </p>
+            <p>
+              <b>2:40 Assistent:</b> „Was passiert, wenn ich Programmierung 2
+              schiebe?“ „Dieselbe Regel in Alltagssprache, mit Quelle.“
+            </p>
+            <p>
+              <b>3:10 Freitext:</b> „Kann ich das Praxissemester im Ausland
+              machen und Betriebswirtschaftslehre 3 im selben Semester
+              schreiben?“ → „Anfrage vorbereiten“. „Bei echten Sonderfällen
+              erfindet der Assistent nichts. Gesendet wird nichts.“
+            </p>
+            <p>
+              Zeit knapp: zuerst Fallback streichen, dann Assistent. Niemals den
+              Vergleich Programmierung 2 / Wirtschaftsinformatik 3.
+            </p>
+          </aside>
+        </section>
+
+        <!-- 12 Prototyping -->
+        <section data-phase="prototyping">
+          <div class="page">
+            <h2>23 Befunde aus dem Teamtest – und eine bewusste Abwägung</h2>
+            <p class="method">
+              Vier Teammitglieder, je alle Funktionen, gemeinsame Sammelliste ·
+              22 umgesetzt, 1 auf dem Ideenparkplatz
+            </p>
+            <div class="body">
+              <div class="compare">
+                <div class="shot">
+                  <h3>Vorher</h3>
+                  <div class="shot-image">
+                    <img
+                      src="/praesentation/img/studienverlauf-vorher.png"
+                      alt="Studienverlauf vor der Iteration"
+                    />
+                    <span class="pin" style="top: 19%"
+                      >Hier stand das Ergebnis</span
+                    >
+                    <span class="pin" style="top: 58%"
+                      >Hier passiert die Aktion</span
+                    >
+                  </div>
+                </div>
+                <div class="shot">
+                  <h3>Nachher</h3>
+                  <div class="shot-image">
+                    <img
+                      src="/praesentation/img/studienverlauf-nachher.jpg"
+                      alt="Ergebnis-Dialog direkt an der Verschiebung"
+                    />
+                  </div>
+                  <p>Das Ergebnis erscheint direkt an der Aktion.</p>
+                </div>
+                <div class="weigh">
+                  <h3>Feedback gegen Forschung abwägen</h3>
+                  <p>Das Team wünschte sich einen Kalender.</p>
+                  <p>Die Forschung sagt: Fristen sind der schwächste Pain.</p>
+                  <p>
+                    <strong>Lösung:</strong> Kalender als zusätzliche Ansicht
+                    unter „Fristen“, nicht auf der Übersicht.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Zeit: 1:10 (kumuliert 13:30)</p>
+            <p>
+              Beim Vorher-Bild geht es um den Ort des Ergebnisses, nicht ums
+              Design: Der Screenshot stammt aus einem älteren Design-Stand.
+            </p>
+            <p>
+              Die Abwägung ist die interessanteste Aussage: Feedback nicht blind
+              umgesetzt, sondern mit der eigenen Forschung abgeglichen.
+            </p>
+            <p>
+              Grenze ehrlich nennen: Getestet hat das Team selbst. Wer das
+              System gebaut hat, stolpert anders als jemand aus der Zielgruppe.
+              Ein Test mit unabhängigen Studierenden (Thinking Aloud) ist der
+              nächste Schritt.
+            </p>
+          </aside>
+        </section>
+
+        <!-- 13 Abschluss -->
+        <section data-phase="prototyping">
+          <div class="page">
+            <h2>Was der Prototyp bewusst (noch) nicht kann</h2>
+            <div class="body stack">
+              <div class="limits">
+                <div class="surface">
+                  <h3>Grenzen</h3>
+                  <ul class="rows">
+                    <li>Daten von Niklas erfunden, Module und Regeln echt</li>
+                    <li>Keine echten Schnittstellen</li>
+                    <li>Assistent ohne echte KI</li>
+                    <li>Nur teaminterner Test</li>
+                  </ul>
+                </div>
+                <div class="surface">
+                  <h3>Nächste Schritte</h3>
+                  <ul class="rows">
+                    <li>
+                      Usability-Test mit Studierenden aus dem Persona-Segment
+                      (Aufgaben T1–T5 liegen vor)
+                    </li>
+                    <li>Anbindung klären: IT/Rechenzentrum, Datenschutz</li>
+                    <li>Inhalte abstimmen: Praktikantenamt, Studienberatung</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="small">
+                Ideenparkplatz: zweite Persona im 4. Semester · echtes
+                Sprachmodell mit Quellen · Push-Benachrichtigungen
+              </p>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Zeit: 0:50 (kumuliert 14:20)</p>
+            <p>
+              Kurz und sachlich bleiben. Die Folie nimmt kritische Rückfragen
+              vorweg.
+            </p>
+          </aside>
+        </section>
+
+        <!-- 14 Schluss -->
+        <section data-phase="ziel" data-course="low">
+          <div class="title-page end">
+            <p class="core-message">
+              Dein Studium auf einen Blick – und die Folgen deiner
+              Entscheidungen, bevor du sie triffst.
+            </p>
+            <div class="qr">
+              <img
+                src="/praesentation/img/qr-studicompass.svg"
+                alt="QR-Code zu studicompass-six.vercel.app"
+              />
+              <p>studicompass-six.vercel.app</p>
+            </div>
+            <p class="title-meta">Danke. Eure Fragen?</p>
+          </div>
+          <aside class="notes">
+            <p>Zeit: 0:20 (kumuliert 14:40)</p>
+            <p>
+              Ein Satz zurück zu Niklas: Er entscheidet jetzt informiert statt
+              aus dem Bauch. Danach Fragen.
+            </p>
+          </aside>
+        </section>
+
+        <!-- B1 -->
+        <section class="backup" data-visibility="uncounted">
+          <div class="page">
+            <h2>B1 · ISO 9241-110: Dialogprinzipien in der Umsetzung</h2>
+            <div class="body">
+              <table class="table surface">
+                <tr>
+                  <th>Aufgabenangemessenheit</th>
+                  <td>
+                    Übersicht beantwortet „Wo stehe ich?“ ohne Klick;
+                    Folgen-Check zeigt nur entscheidungsrelevante Zeilen
+                  </td>
+                </tr>
+                <tr>
+                  <th>Selbstbeschreibungsfähigkeit</th>
+                  <td>
+                    „Wie wird das berechnet?“ und „Warum?“; Kanal-Badges zeigen
+                    die Herkunft
+                  </td>
+                </tr>
+                <tr>
+                  <th>Steuerbarkeit</th>
+                  <td>
+                    Folgen-Check erzwingt keine Entscheidung; Simulationen
+                    jederzeit verwerfbar
+                  </td>
+                </tr>
+                <tr>
+                  <th>Erwartungskonformität</th>
+                  <td>
+                    Bekannte Dashboard-Muster; deutsche Datums- und Zahlformate;
+                    einheitliche Begriffe
+                  </td>
+                </tr>
+                <tr>
+                  <th>Fehlertoleranz</th>
+                  <td>
+                    Bestätigung vor folgenreicher Aktion; Rückgängig; Fallback
+                    statt erfundener Antwort; Fehlerzustand je Kanal
+                  </td>
+                </tr>
+                <tr>
+                  <th>Individualisierbarkeit</th>
+                  <td>
+                    Hinweis-Stil, Benachrichtigungen, Profil, Notizen,
+                    Kurs-Links, eigene Termine
+                  </td>
+                </tr>
+                <tr>
+                  <th>Lernförderlichkeit</th>
+                  <td>
+                    Onboarding und kurze Tour; Vorschlagsfragen; Erklärungen
+                    direkt am Ort der Information
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Nur bei Rückfrage „Welche Usability-Prinzipien?“</p>
+          </aside>
+        </section>
+
+        <!-- B2 -->
+        <section class="backup" data-visibility="uncounted">
+          <div class="page">
+            <h2>B2 · Regeln DR-1 bis DR-16</h2>
+            <div class="body">
+              <div class="two-col">
+                <table class="table surface tabular">
+                  <tr>
+                    <th>DR-1</th>
+                    <td>Nur bestandene Prüfungen zählen · § 13 Abs. 1</td>
+                  </tr>
+                  <tr>
+                    <th>DR-2</th>
+                    <td>210 ECTS, 30 pro Semester · § 3 Abs. 5, § 56</td>
+                  </tr>
+                  <tr>
+                    <th>DR-3</th>
+                    <td>
+                      Ampel-Schwellen: bis 6 im Plan, ab 24 kritisch
+                      <span class="tag">Beispiel</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>DR-4</th>
+                    <td>Angebotsturnus der Module · Modulhandbuch UIB</td>
+                  </tr>
+                  <tr>
+                    <th>DR-5</th>
+                    <td>
+                      Abmeldung bis zum Tag vor der Prüfung · § 7 Abs. 2, § 12
+                      Abs. 1
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>DR-6</th>
+                    <td>
+                      Praxissemester: Vorprüfung und 30 ECTS Hauptstudium · § 56
+                      Abs. 4
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>DR-7</th>
+                    <td>
+                      Hauptstudium bei höchstens 3 offenen Vorprüfungen · § 24
+                      Abs. 1
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>DR-8</th>
+                    <td>Höchstens drei Versuche · § 14 Abs. 2 und 6</td>
+                  </tr>
+                </table>
+                <table class="table surface tabular">
+                  <tr>
+                    <th>DR-9</th>
+                    <td>
+                      Notenschnitt nach ECTS gewichtet · § 11 Abs. 4 und 7, § 28
+                      Abs. 1
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>DR-10</th>
+                    <td>
+                      Belastungshinweis ab 36 ECTS
+                      <span class="tag">Beispiel</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>DR-11</th>
+                    <td>
+                      Projekt setzt Bachelorvorprüfung voraus · § 56 Abs. 2
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>DR-12</th>
+                    <td>
+                      Voraussetzungen der Bachelorarbeit · § 24 Abs. 2, § 26
+                      Abs. 1 und 4
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>DR-13</th>
+                    <td>
+                      Prüfungsvorleistung vor der Modulprüfung · § 56 Abs. 1
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>DR-14</th>
+                    <td>Frist für die Bachelorvorprüfung · § 6 Abs. 1–3</td>
+                  </tr>
+                  <tr>
+                    <th>DR-15</th>
+                    <td>
+                      Wiederholung im folgenden Prüfungszeitraum · § 14 Abs. 1
+                      und 3
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>DR-16</th>
+                    <td>
+                      Rücktritt nach Frist nur mit triftigem Grund · § 12 Abs. 1
+                      und 2
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>
+              Nur bei Rückfrage „Stimmen die Regeln?“ Quelle: StuPO Bachelor,
+              Fassung ab 01.09.2026; in der App src/data/rules.ts.
+            </p>
+          </aside>
+        </section>
+
+        <!-- B3 -->
+        <section class="backup" data-visibility="uncounted">
+          <div class="page">
+            <h2>B3 · Priorisierung und User Story Map</h2>
+            <ol class="backbone">
+              <li>1 Einsteigen und Kanäle verbinden</li>
+              <li>2 Studienstand erfassen</li>
+              <li class="hero-step">3 Entscheidung prüfen</li>
+              <li>4 Studium planen</li>
+              <li>5 Fragen klären</li>
+              <li>6 Informiert bleiben</li>
+            </ol>
+            <div class="body">
+              <table class="table surface">
+                <tr>
+                  <th>Hoch</th>
+                  <td>
+                    Studienstand mit Ampel und Meilenstein · Folgen-Check mit
+                    simulierter Abmeldung · Studienverlauf mit Prognose ·
+                    Assistent mit Quellen und Fallback · Postfach · mobil
+                    bedienbarer Kernflow
+                  </td>
+                </tr>
+                <tr>
+                  <th>Mittel</th>
+                  <td>
+                    Onboarding mit Kanälen · Fristenliste · Rückgängig ·
+                    Was-wäre-wenn · Hinweis-Stil · eigene Termine ·
+                    Prüfungsvorleistung · Profil
+                  </td>
+                </tr>
+                <tr>
+                  <th>Niedrig</th>
+                  <td>
+                    Belastungshinweis · Restverlauf-Vorschlag · ICS-Export ·
+                    Produkt-Tour · Fehler-Simulation · ECTS-Verlauf · Kalender ·
+                    Notizen · Kurs-Links · Anlaufstellen · Drag &amp; Drop
+                  </td>
+                </tr>
+                <tr>
+                  <th>Parkplatz</th>
+                  <td>
+                    Echte Anbindung · echtes Sprachmodell · Push, native App ·
+                    Stundenplan, Mensa · Lerngruppen · Sicht für das Prüfungsamt
+                    · zweite Persona
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Nur bei Rückfrage „Was habt ihr weggelassen?“</p>
+          </aside>
+        </section>
+
+        <!-- B4 -->
+        <section class="backup" data-visibility="uncounted">
+          <div class="page">
+            <h2>B4 · Tech-Stack und Arbeitsweise</h2>
+            <div class="body">
+              <table class="table surface">
+                <tr>
+                  <th>Oberfläche</th>
+                  <td>
+                    Vite, React, TypeScript (strict), React Router, Tailwind
+                    CSS, shadcn/ui
+                  </td>
+                </tr>
+                <tr>
+                  <th>Zustand und Regeln</th>
+                  <td>
+                    Zustand mit Persistenz; Regeln und Prognose als reines
+                    TypeScript, vollständig unit-getestet
+                  </td>
+                </tr>
+                <tr>
+                  <th>Daten</th>
+                  <td>
+                    Kein Backend; je Kanal ein Service-Interface mit
+                    Dummy-Daten, Latenz und optionalem Fehler
+                  </td>
+                </tr>
+                <tr>
+                  <th>Tests</th>
+                  <td>
+                    Vitest und Testing Library, Playwright für den Hero-Flow;
+                    alle Prüfungen vor jedem Merge
+                  </td>
+                </tr>
+                <tr>
+                  <th>Arbeitsweise</th>
+                  <td>
+                    Claude Code als Programmierer, Codex als Review, Branch und
+                    Pull Request pro Änderung
+                  </td>
+                </tr>
+                <tr>
+                  <th>Deployment</th>
+                  <td>
+                    Vercel: Hauptzweig als Produktion, jeder Branch mit eigener
+                    Vorschau
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>Nur bei Rückfrage „Wie habt ihr das gebaut?“</p>
+          </aside>
+        </section>
+
+        <!-- B5 -->
+        <section class="backup" data-visibility="uncounted">
+          <div class="page">
+            <h2>B5 · 23 Befunde der Teamrunde vom 28.10.</h2>
+            <div class="body">
+              <table class="table surface tabular">
+                <tr>
+                  <th>2 Übersicht</th>
+                  <td>
+                    ECTS-Kurve beginnt nicht bei 0; Differenz zum Soll nur in
+                    der Tabelle
+                  </td>
+                </tr>
+                <tr>
+                  <th>8 Studienverlauf</th>
+                  <td>
+                    Modulname ohne Link; Module und Meilensteine nicht
+                    zugeordnet; Chip wirkt wie Warnung; Abgeschlossenes nicht
+                    ausblendbar; enge Spalten; Praxissemester ohne Begründung
+                    fest; Ergebnis weit von der Aktion; Wunsch nach Drag &amp;
+                    Drop
+                  </td>
+                </tr>
+                <tr>
+                  <th>4 Module</th>
+                  <td>
+                    Lange Liste; Notizblock gewünscht; kein Weg zum Kurs;
+                    Prüfungsvorleistungen nicht eintragbar
+                  </td>
+                </tr>
+                <tr>
+                  <th>3 Fristen, Navigation</th>
+                  <td>
+                    Keine eigenen Termine; kein Reiter und kein Kalender;
+                    Hamburger doppelt die Topbar
+                  </td>
+                </tr>
+                <tr>
+                  <th>3 Onboarding, Profil</th>
+                  <td>
+                    Kein eigenes Profil anlegbar, nicht bearbeitbar; Tour nicht
+                    standardmäßig aktiv
+                  </td>
+                </tr>
+                <tr>
+                  <th>2 Quellen, Assistent</th>
+                  <td>
+                    Quellen unterbrechen den Lesefluss; Wunsch nach Hilfe bei
+                    der richtigen Anlaufstelle
+                  </td>
+                </tr>
+                <tr>
+                  <th>1 Demo-Szenario</th>
+                  <td>
+                    Persona im 4. Semester als Grenzfall: bewusst auf dem
+                    Ideenparkplatz
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <aside class="notes">
+            <p>
+              Nur bei Rückfrage „Was kam im Test heraus?“ Die Liste ist
+              qualitativ; es gibt keine Messwerte oder Vorher-Nachher-Zeiten.
+            </p>
+          </aside>
+        </section>
+
+        <!-- B6 -->
+        <section class="backup" data-visibility="uncounted">
+          <div class="step-stack">
+            <img
+              src="/praesentation/img/demo-1-uebersicht.jpg"
+              alt="Übersicht: 45 ECTS, Knapp, 75 von 90"
+            />
+            <img
+              class="fragment"
+              src="/praesentation/img/demo-2-folgen-check.jpg"
+              alt="Folgen-Check Programmierung 2"
+            />
+            <img
+              class="fragment"
+              src="/praesentation/img/demo-3-nach-abmeldung.jpg"
+              alt="Übersicht nach der simulierten Abmeldung: Kritisch"
+            />
+            <img
+              class="fragment"
+              src="/praesentation/img/demo-4-wi3.jpg"
+              alt="Folgen-Check Wirtschaftsinformatik 3: bleibt Knapp"
+            />
+            <img
+              class="fragment"
+              src="/praesentation/img/demo-5-assistent.jpg"
+              alt="Assistent mit Antwort und Quelle"
+            />
+            <img
+              class="fragment"
+              src="/praesentation/img/demo-6-anfrage.jpg"
+              alt="Vorbereitete Anfrage an die zuständige Stelle"
+            />
+          </div>
+          <aside class="notes">
+            <p>
+              Fallback bei Demo-Ausfall: PageDown zeigt den nächsten Schritt.
+              Text wie im Drehbuch auf Folie 11.
+            </p>
+          </aside>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="/praesentation/deck.js"></script>
+  </body>
+</html>
