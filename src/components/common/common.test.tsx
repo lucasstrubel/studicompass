@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { Consequence } from "@/domain/types";
 import { ChannelBadge } from "./ChannelBadge";
 import { CitationList } from "./CitationList";
+import { CompoundText } from "./CompoundText";
 import { ConsequenceItem } from "./ConsequenceItem";
 import { Countdown } from "./Countdown";
 import { EctsProgress } from "./EctsProgress";
@@ -198,5 +199,20 @@ describe("CitationList (duplicates)", () => {
       <CitationList citations={[spo, { ...spo, summary: "andere Regel" }]} />,
     );
     expect(screen.getAllByRole("listitem")).toHaveLength(1);
+  });
+});
+
+describe("CompoundText", () => {
+  it("marks the joints of a compound without changing its text", () => {
+    const { container } = render(
+      <p>
+        <CompoundText>Betriebswirtschaftslehre 2</CompoundText>
+      </p>,
+    );
+    // The hyphen at a line break comes from CSS; copying and searching still see the plain title.
+    expect(container.querySelector("p")?.textContent).toBe(
+      "Betriebswirtschaftslehre 2",
+    );
+    expect(container.querySelectorAll(".soft-hyphen")).toHaveLength(2);
   });
 });

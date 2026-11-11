@@ -44,7 +44,11 @@ export function AppShell() {
             PageTop && "content-start",
           )}
         >
-          {/* The last column (content or right column) keeps its end clear of the assistant button. */}
+          {/*
+            The last column (content or right column) keeps its end clear of the assistant button. Full-width
+            pages also keep their right edge clear of it from 1280 px, where tables and columns reach that
+            edge; from 1600 px the button sits beside the centred page anyway.
+          */}
           {PageTop && (
             <div className="min-w-0 px-4 pt-6 md:px-6 md:pt-8 xl:col-span-2 xl:px-8">
               <PageTop />
@@ -52,7 +56,7 @@ export function AppShell() {
           )}
           <div
             className={cn(
-              "min-w-0 px-4 py-6 last:pb-24 md:px-6 md:py-8 md:last:pb-24 xl:px-8",
+              "min-w-0 px-4 py-6 last:pb-24 md:px-6 md:py-8 md:last:pb-24 xl:px-8 xl:last:pr-24 min-[100rem]:last:pr-8",
               PageTop && "pt-0 md:pt-0",
             )}
           >
