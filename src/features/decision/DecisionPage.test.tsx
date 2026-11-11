@@ -332,11 +332,13 @@ describe("Folgen-Check (P3-03 review)", () => {
 
   it("does not repeat a base hint that an option changes (scenario D: 48, not 42 ECTS)", () => {
     renderCheck("e-wi3-ws26");
-    expect(
-      screen.queryByRole("region", {
-        name: "Gilt unabhängig von deiner Entscheidung",
-      }),
-    ).not.toBeInTheDocument();
+    // With 15 job hours the WS 2027/28 (35 ECTS) is heavy whatever Niklas decides; the SS 2027 is not
+    // listed here, because withdrawing changes its load.
+    const independent = screen.getByRole("region", {
+      name: "Gilt unabhängig von deiner Entscheidung",
+    });
+    expect(independent).toHaveTextContent("Hohe Belastung im WS 2027/28");
+    expect(independent).not.toHaveTextContent("Hohe Belastung im SS 2027");
     expect(screen.queryByText(/42 ECTS geplant/)).not.toBeInTheDocument();
   });
 

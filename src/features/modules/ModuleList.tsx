@@ -22,6 +22,7 @@ import {
 } from "@/store/module-selectors";
 import {
   selectAcademicState,
+  selectBasePlan,
   selectProgress,
   selectRulesById,
 } from "@/store/selectors";
@@ -32,6 +33,8 @@ import { OFFERING } from "./module-labels";
 interface Row {
   module: Module;
   exam: ExamRecord | null;
+  /** Set when the module sits in another semester than the regular plan puts it. */
+  regularSemester?: number;
 }
 
 interface SemesterGroup {
@@ -109,7 +112,7 @@ function SemesterTable({
         </tr>
       </thead>
       <tbody>
-        {group.rows.map(({ module, exam }) => (
+        {group.rows.map(({ module, exam, regularSemester }) => (
           <tr key={module.id} className="border-t align-top">
             <th scope="row" className="py-2 pr-3 text-left font-normal">
               <Link
@@ -118,6 +121,11 @@ function SemesterTable({
               >
                 {module.title}
               </Link>
+              {regularSemester !== undefined && (
+                <span className="block text-meta text-muted-foreground">
+                  laut Studienplan im {regularSemester}. Semester
+                </span>
+              )}
               {/* Narrow screens: the hidden columns as one line under the name. */}
               <span className="block text-meta text-muted-foreground tabular-nums md:hidden">
                 <span className="sm:hidden">{module.ects} ECTS · </span>
@@ -164,7 +172,9 @@ function SemesterTable({
 
 /**
  * Module & Noten: key figures and a compact table per Fachsemester. Semesters fold away;
- * only the current one starts open (P5-12, feedback: less scrolling).
+ * only the current one starts open (P5-12, feedback: less scrolling). A module stands in the semester
+ * in which Niklas takes it, the same one as on the Übersicht and in the Studienverlauf; a module moved
+ * out of its regular semester says where the Studienplan puts it.
  */
 export function ModuleList() {
   const academic = useDemoStore(selectAcademicState);
@@ -172,21 +182,35 @@ export function ModuleList() {
   const program = useDemoStore((state) => state.resources.pos.data?.program);
   const rules = useDemoStore(selectRulesById);
   const passed = useDemoStore(selectPassedModuleCount);
+  const plan = useDemoStore(selectBasePlan);
   const coursework = useDemoStore((state) => state.coursework);
   const admissionOf = (moduleId: string) =>
     examAdmission(coursework.filter((item) => item.moduleId === moduleId));
   const showsAdmission = coursework.length > 0;
+  // Without a plan (e.g. no attempt left) the regular semester is all there is to go by.
+  const semesterOf = (module: Module) => {
+    const term = plan?.modules.find(
+      (item) => item.moduleId === module.id,
+    )?.term;
+    return term && academic
+      ? semesterNumber(term, academic.student.startTerm)
+      : module.plannedSemester;
+  };
   const groups: SemesterGroup[] = academic
-    ? [...new Set(academic.modules.map((module) => module.plannedSemester))]
+    ? [...new Set(academic.modules.map(semesterOf))]
         .sort((a, b) => a - b)
         .map((semester) => ({
           semester,
           term: termOfSemester(academic.student.startTerm, semester),
           rows: academic.modules
-            .filter((module) => module.plannedSemester === semester)
+            .filter((module) => semesterOf(module) === semester)
             .map((module) => ({
               module,
               exam: moduleRecord(academic.exams, module),
+              regularSemester:
+                module.plannedSemester === semester
+                  ? undefined
+                  : module.plannedSemester,
             })),
         }))
     : [];

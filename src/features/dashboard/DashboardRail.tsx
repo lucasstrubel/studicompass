@@ -11,9 +11,8 @@ import { ResourceBoundary } from "@/components/common/ResourceBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate, formatDateTime } from "@/lib/format";
 import {
-  selectImportantDecisions,
   selectInbox,
-  selectNextDeadline,
+  selectOverviewDeadline,
   selectRulesById,
 } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
@@ -24,13 +23,15 @@ import { CHANNELS } from "@/services/types";
 export function NextDeadline({ className }: { className?: string }) {
   // Rendered twice (main column below xl, rail from xl), so the heading id must be unique.
   const headingId = useId();
+  const afterImportant = useDemoStore(selectOverviewDeadline).afterImportant;
   return (
     <section
       aria-labelledby={headingId}
       className={cn("rounded-xl border bg-card p-4 xl:pt-7", className)}
     >
+      {/* "Jetzt wichtig" holds the most urgent deadline; this card then shows the one after it. */}
       <h2 id={headingId} className="mb-3 text-section-title">
-        Nächste Frist
+        {afterImportant ? "Nächste Frist danach" : "Nächste Frist"}
       </h2>
       <ResourceBoundary
         services={[...CHANNELS, "rules"]}
@@ -49,9 +50,8 @@ export function NextDeadline({ className }: { className?: string }) {
 }
 
 function NextDeadlineCard() {
-  const deadline = useDemoStore(selectNextDeadline);
+  const { deadline } = useDemoStore(selectOverviewDeadline);
   const rules = useDemoStore(selectRulesById);
-  const decisions = useDemoStore(selectImportantDecisions);
   if (!deadline)
     return (
       <EmptyState
@@ -62,10 +62,6 @@ function NextDeadlineCard() {
   // A date-only deadline runs until the end of its day and shows no time (P5-13 review).
   const dateOnly = deadline.dueAt.length === 10;
   const due = new Date(deadlineInstant(deadline.dueAt));
-  // "Jetzt wichtig" already leads to the Folgen-Check of this exam.
-  const raised = decisions.some(
-    (decision) => decision.exam.id === deadline.examId,
-  );
   return (
     <div>
       <h3 className="text-card-title">{deadline.title}</h3>
@@ -81,7 +77,7 @@ function NextDeadlineCard() {
         )}
       </p>
       <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
-        {deadline.examId && !raised && (
+        {deadline.examId && (
           <Link
             to={`/entscheidung/${deadline.examId}`}
             className="inline-flex items-center gap-1 rounded-sm text-meta font-semibold text-accent-strong"

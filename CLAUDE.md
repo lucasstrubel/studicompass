@@ -62,7 +62,7 @@ Abhängigkeiten nur in diese Richtung: UI → Store/Selektoren → Domain; Store
 - App-Starts und GUI-Tests öffnen Fenster auf Lucas' Desktop: vorher ankündigen.
 
 ## UI und Inhalte
-- Topnavigation und helles Menü-Panel unter dem Hamburger statt permanenter Sidebar und mobiler Tab-Leiste; ab 1280 px stehen alle Bereiche in der Topbar (Übersicht, Studienverlauf, Fristen, Assistent, Postfach, Module & Noten), den Hamburger gibt es nur darunter. Anlaufstellen hat keinen eigenen Eintrag, der Weg führt über den Assistenten. Assistent-Button mit Sprechblase und Fenster unten rechts.
+- Topnavigation und helles Menü-Panel unter dem Hamburger statt permanenter Sidebar und mobiler Tab-Leiste; ab 1280 px stehen alle Bereiche in der Topbar (Übersicht, Studienverlauf, Fristen, Assistent, Postfach, Module & Noten), den Hamburger gibt es nur darunter. Anlaufstellen hat keinen eigenen Eintrag in der Navigation; der Weg führt über den Assistenten und das Profilmenü. Assistent-Button mit Sprechblase und Fenster unten rechts.
 - Die Übersicht liest alle Werte über Store-Selektoren (`src/store/selectors.ts`); Lade- und Fehlerzustände je Kanal über `ResourceBoundary`.
 - UI auf Deutsch mit Du-Ansprache; Code, Bezeichner und Commits auf Englisch; README auf Deutsch. **Quelle** (Beleg) ≠ **Kanal** (Herkunftssystem).
 - Farben **nur über Tokens** aus `src/styles/globals.css`. Keine Hex-Werte in Komponenten.

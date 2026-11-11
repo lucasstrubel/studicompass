@@ -33,7 +33,8 @@ export function DeadlineItem({
 }) {
   const citation: Citation = item.channel
     ? {
-        document: `${CHANNEL_LABELS[item.channel]} – ${item.title} (Demodaten)`,
+        // The title stands right above; the source only names where the date comes from.
+        document: `${CHANNEL_LABELS[item.channel]} (Demodaten)`,
         summary: item.title,
         verified: false,
       }

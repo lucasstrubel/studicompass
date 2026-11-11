@@ -1,6 +1,11 @@
 import { lazy, Suspense } from "react";
 import { ResourceBoundary } from "@/components/common/ResourceBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DESKTOP_QUERY } from "@/components/layout/navigation";
+import { DEMO_NOW } from "@/config/demo";
+import { useMediaQuery } from "@/lib/use-media-query";
+import { selectImportantDecisions } from "@/store/selectors";
+import { useDemoStore } from "@/store/use-demo-store";
 import { NextDeadline } from "./DashboardRail";
 import { ImportantCard } from "./ImportantCard";
 import { SemesterModules } from "./SemesterModules";
@@ -10,6 +15,9 @@ import { StudyProgressCard } from "./StudyProgressCard";
 const EctsHistory = lazy(() =>
   import("./EctsHistory").then((module) => ({ default: module.EctsHistory })),
 );
+
+/** A withdrawal deadline this close leads the overview on narrow screens. */
+const URGENT_MS = 48 * 60 * 60 * 1000;
 
 /** Line samples for the course line; the chart itself has no legend, so this also shows while it loads. */
 function CourseLegend() {
@@ -53,12 +61,37 @@ const chartSkeleton = (
 
 /**
  * Übersicht: one card joins Studienstand and course line, followed by Jetzt wichtig and this semester; on
- * small screens the next deadline follows Jetzt wichtig. The right column is DashboardRail.
+ * small screens the next deadline follows Jetzt wichtig, and Jetzt wichtig leads the page while a deadline
+ * is less than two days away. The right column is DashboardRail.
  * The card's two sections stay separate regions, because screen readers meet them as different things.
  */
 export function DashboardPage() {
+  const desktop = useMediaQuery(DESKTOP_QUERY);
+  const urgent = useDemoStore(selectImportantDecisions).some(
+    (decision) =>
+      Date.parse(decision.exam.withdrawalDeadline ?? "") - DEMO_NOW.getTime() <
+      URGENT_MS,
+  );
+  // Below 1280 px the Studienstand fills the first screen. A deadline within two days must not wait
+  // behind it, so "Jetzt wichtig" leads there; with both columns it stays in its place below the card.
+  const importantFirst = urgent && !desktop;
+  const important = (
+    <ResourceBoundary
+      services={["pos", "website", "rules"]}
+      skeleton={
+        <Skeleton
+          role="status"
+          className="h-40"
+          aria-label="Jetzt wichtig wird geladen"
+        />
+      }
+    >
+      {() => <ImportantCard />}
+    </ResourceBoundary>
+  );
   return (
     <div className="space-y-8">
+      {importantFirst && important}
       <div className="rounded-2xl border bg-card p-5 md:p-7">
         <section aria-labelledby="study-progress">
           <ResourceBoundary
@@ -90,18 +123,7 @@ export function DashboardPage() {
           </ResourceBoundary>
         </section>
       </div>
-      <ResourceBoundary
-        services={["pos", "website", "rules"]}
-        skeleton={
-          <Skeleton
-            role="status"
-            className="h-40"
-            aria-label="Jetzt wichtig wird geladen"
-          />
-        }
-      >
-        {() => <ImportantCard />}
-      </ResourceBoundary>
+      {!importantFirst && important}
       <NextDeadline className="xl:hidden" />
       <section aria-labelledby="semester-modules">
         <ResourceBoundary

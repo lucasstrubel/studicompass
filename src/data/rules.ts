@@ -1,3 +1,4 @@
+import { LOAD_RULE } from "@/domain/load";
 import type { Citation, Rule } from "@/domain/types";
 
 /** Studien- und Prüfungsordnung, nichtamtliche Lesefassung; verbindlich sind die Originalfassungen. */
@@ -109,10 +110,10 @@ export const rules: Rule[] = [
   rule(
     "DR-10",
     ownRule(
-      "Bei mehr als 36 geplanten ECTS zeigt StudiCompass einen Belastungshinweis mit Nebenjob-Stunden.",
+      "StudiCompass zeigt einen Belastungshinweis bei mehr als 36 geplanten ECTS im Semester. Arbeitest du ab 15 Stunden pro Woche nebenher, schon bei mehr als 30 ECTS.",
     ),
     undefined,
-    { maxRegularLoad: 36 },
+    { ...LOAD_RULE },
   ),
   rule(
     "DR-11",

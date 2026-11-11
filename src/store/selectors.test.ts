@@ -9,6 +9,7 @@ import {
   selectAdmission,
   selectAgenda,
   selectNextDeadline,
+  selectOverviewDeadline,
   selectUndoableExamId,
   selectDeadlines,
   selectInbox,
@@ -110,6 +111,21 @@ describe("P3-02 overview selectors", () => {
     expect(selectNextDeadline(store.getState())?.id).toBe("d-pr2-abm");
     store.getState().withdrawExam("e-pr2-ws26");
     expect(selectNextDeadline(store.getState())?.id).toBe("d-dm-abm");
+  });
+
+  it("shows the deadline after the one that Jetzt wichtig already raises on the overview", async () => {
+    const store = await loadedStore();
+    // Programmierung 2 leads "Jetzt wichtig"; the card next to it adds Datenmanagement.
+    expect(selectOverviewDeadline(store.getState())).toMatchObject({
+      deadline: { id: "d-dm-abm" },
+      afterImportant: true,
+    });
+    store.getState().withdrawExam("e-pr2-ws26");
+    // Nothing is raised any more, so the card is the next deadline again.
+    expect(selectOverviewDeadline(store.getState())).toMatchObject({
+      deadline: { id: "d-dm-abm" },
+      afterImportant: false,
+    });
   });
 
   it("raises only Programmierung 2 under Jetzt wichtig, and nothing once it is withdrawn", async () => {
