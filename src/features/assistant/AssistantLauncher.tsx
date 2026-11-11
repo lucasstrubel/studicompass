@@ -35,7 +35,10 @@ export function AssistantLauncher() {
   const firstName = useDemoStore(selectProfileName)?.firstName;
   const onAssistantPage = location.pathname === "/assistent";
   // Only after the onboarding: before it, the overview renders the shell for a moment and then redirects.
-  const hint = hintVisible && onboardingComplete && !open && !onAssistantPage;
+  // The product tour explains the page in its own dialog; two things asking for attention at once is one too many.
+  const onTour = new URLSearchParams(location.search).has("tour");
+  const hint =
+    hintVisible && onboardingComplete && !open && !onAssistantPage && !onTour;
 
   // A page change closes the window (e.g. "Folgen-Check öffnen" in an answer) and retires the bubble.
   if (location.key !== pageKey) {
