@@ -102,6 +102,37 @@ describe("Folgen-Check", () => {
     ).toBeInTheDocument();
   });
 
+  it("says which criteria do not differ between the options", () => {
+    renderCheck("e-pr2-ws26");
+    const headers = within(screen.getByRole("table")).getAllByRole("rowheader");
+    const marked = headers
+      .filter((cell) => cell.textContent?.includes("Kein Unterschied"))
+      .map((cell) => cell.textContent);
+
+    // Only the Praxissemester stays the same whatever Niklas decides.
+    expect(marked).toHaveLength(1);
+    expect(marked[0]).toMatch(/^Praxissemester/);
+  });
+
+  it("lists all three values per criterion on narrow screens", () => {
+    renderCheck("e-pr2-ws26");
+    const list = screen.getByRole("list", {
+      name: "Vergleich der Optionen für Programmierung 2",
+    });
+    const graduation = within(list)
+      .getByRole("heading", { name: "Voraussichtlicher Abschluss" })
+      .closest("li")!;
+
+    expect(graduation).toHaveTextContent(
+      "Antreten & bestehenWS 2028/29Antreten & nicht bestehenSS 2029AbmeldenSS 2029",
+    );
+    expect(
+      within(list)
+        .getByRole("heading", { name: "Praxissemester" })
+        .closest("li"),
+    ).toHaveTextContent("In allen Fällen: WS 2027/28 – erreichbar");
+  });
+
   it("explains a row with its rule and source under Warum?", () => {
     renderCheck("e-pr2-ws26");
     const table = screen.getByRole("table");

@@ -41,14 +41,16 @@ test("P5: T5 Wirtschaftsinformatik 3 ohne Meilensteinverschiebung", async ({
 }) => {
   await page.goto("/entscheidung/e-wi3-ws26");
   if (isMobile) {
+    // Narrow screens list every criterion; one that no option changes shows a single value.
+    const criteria = page
+      .getByRole("list", { name: /^Vergleich der Optionen/ })
+      .getByRole("listitem");
+    await expect(criteria.filter({ hasText: "Praxissemester" })).toContainText(
+      "In allen Fällen: WS 2027/28 – erreichbar",
+    );
     await expect(
-      page
-        .getByRole("definition")
-        .filter({ hasText: "WS 2027/28 – erreichbar" }),
-    ).toBeVisible();
-    await expect(
-      page.getByRole("definition").filter({ hasText: "WS 2028/29" }),
-    ).toBeVisible();
+      criteria.filter({ hasText: "Voraussichtlicher Abschluss" }),
+    ).toContainText("In allen Fällen: WS 2028/29");
   } else {
     await expect(
       page.getByRole("row", { name: /^Praxissemester/ }),

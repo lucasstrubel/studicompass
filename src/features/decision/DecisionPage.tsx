@@ -277,6 +277,13 @@ function DecisionActions({
           </p>
         )}
       </div>
+      {/* Says what each button does, so neither comes as a surprise. */}
+      <p className="text-meta text-muted-foreground">
+        „Ich trete an“ hält deine Entscheidung nur hier fest; an deiner
+        Anmeldung ändert sich nichts.
+        {exam.withdrawalDeadline &&
+          " Vor der Abmeldung fragt StudiCompass noch einmal nach."}
+      </p>
     </section>
   );
 }
@@ -317,18 +324,21 @@ function ReadyView({
         }
       />
       <div className="space-y-3">
-        <p className="flex flex-wrap items-center gap-2 text-body">
-          <Target className="size-4 shrink-0" aria-hidden="true" />
+        {/* The icon keeps its place beside the first line, also where the text wraps. */}
+        <p className="flex items-start gap-2 text-body">
+          <Target className="mt-1 size-4 shrink-0" aria-hidden="true" />
           <span>
-            {goalRegularTime
-              ? `Dein Ziel: Abschluss in Regelstudienzeit (${format(view.regularGraduationTerm)})`
-              : "Dein Ziel: Studium im eigenen Tempo"}
+            <span>
+              {goalRegularTime
+                ? `Dein Ziel: Abschluss in Regelstudienzeit (${format(view.regularGraduationTerm)})`
+                : "Dein Ziel: Studium im eigenen Tempo"}
+            </span>{" "}
+            {baseline?.graduationTerm && (
+              <span className="text-muted-foreground">
+                · Prognose ohne Abmeldung: {format(baseline.graduationTerm)}
+              </span>
+            )}
           </span>
-          {baseline?.graduationTerm && (
-            <span className="text-muted-foreground">
-              · Prognose ohne Abmeldung: {format(baseline.graduationTerm)}
-            </span>
-          )}
         </p>
         {/* Admission from the entered Prüfungsvorleistungen (P5-13); the comparison stays unchanged. */}
         {admission !== "none" && (
