@@ -392,6 +392,21 @@ describe("Studienverlauf: Orientierung (P5-10)", () => {
 });
 
 describe("Was-wäre-wenn: Ergebnis-Dialog (P5-11)", () => {
+  it("names what a move leaves untouched instead of showing it as a change", async () => {
+    const user = userEvent.setup();
+    await renderPlanner();
+    await user.click(screen.getByRole("switch", { name: "Simulation" }));
+    await user.click(
+      screen.getByRole("button", { name: "Programmierung 2 verschieben" }),
+    );
+    await user.click(screen.getByRole("menuitem", { name: "SS 2027" }));
+    const dialog = screen.getByRole("dialog", {
+      name: "Simulation: Programmierung 2 → SS 2027",
+    });
+    expect(dialog).toHaveTextContent("PraxissemesterWS 2027/28 – unverändert");
+    expect(dialog).toHaveTextContent("AbschlussWS 2028/29wird zuSS 2029");
+  });
+
   it("shows what changes right after a move, including modules that moved along", async () => {
     const user = userEvent.setup();
     await renderPlanner();

@@ -22,6 +22,7 @@ import type { Channel, InboxItem } from "@/domain/types";
 import { CHANNELS } from "@/services/types";
 import { formatDateTime } from "@/lib/format";
 import { DEMO_NOW } from "@/config/demo";
+import { cn } from "@/lib/utils";
 
 function Message({
   item,
@@ -43,7 +44,15 @@ function Message({
         className="block w-full space-y-0.5 px-4 py-3 text-left transition-colors hover:bg-muted focus-visible:-outline-offset-2"
       >
         <span className="flex flex-wrap items-baseline justify-between gap-x-4">
-          <span className="min-w-0 text-card-title">{item.subject}</span>
+          {/* Read messages step back, so the unread ones stand out without reading the labels. */}
+          <span
+            className={cn(
+              "min-w-0 text-card-title",
+              item.read && "font-normal",
+            )}
+          >
+            {item.subject}
+          </span>
           <span className="text-meta text-muted-foreground">
             {formatDistanceStrict(new Date(item.receivedAt), DEMO_NOW, {
               locale: de,

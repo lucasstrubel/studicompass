@@ -1,6 +1,5 @@
-import { Fragment } from "react";
 import type { Citation } from "@/domain/types";
-import { compoundParts } from "@/lib/compound-breaks";
+import { CompoundText } from "./CompoundText";
 import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -8,12 +7,7 @@ function Source({ citation }: { citation: Citation }) {
   return (
     <>
       {/* Break long compounds at their joints in narrow columns (P5-10). */}
-      {compoundParts(citation.document).map((part, index) => (
-        <Fragment key={index}>
-          {index > 0 && <wbr />}
-          {part}
-        </Fragment>
-      ))}
+      <CompoundText>{citation.document}</CompoundText>
       {citation.section && `, ${citation.section}`}
       {citation.asOf && ` · Stand ${formatDate(new Date(citation.asOf))}`}
     </>

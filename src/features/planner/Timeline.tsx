@@ -9,7 +9,7 @@ import {
   RotateCcw,
   TriangleAlert,
 } from "lucide-react";
-import { Fragment, useRef, useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { Citation, Offering, Term } from "@/domain/types";
 import { CitationList } from "@/components/common/CitationList";
+import { CompoundText } from "@/components/common/CompoundText";
 import {
   CourseDot,
   CourseLine,
@@ -41,7 +42,6 @@ import {
 } from "@/components/common/CourseDot";
 import type { MilestoneKind } from "@/domain/milestones";
 import { compare, format } from "@/domain/terms";
-import { compoundParts } from "@/lib/compound-breaks";
 import { formatGrade } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type {
@@ -201,12 +201,7 @@ function ModuleChip({
           className="rounded-sm underline-offset-2 hover:underline"
         >
           {/* Break long compounds at their joints, not before the last letter (P5-10). */}
-          {compoundParts(module.title).map((part, index) => (
-            <Fragment key={index}>
-              {index > 0 && <wbr />}
-              {part}
-            </Fragment>
-          ))}
+          <CompoundText>{module.title}</CompoundText>
         </Link>
       </p>
       <p className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-muted-foreground">
@@ -284,7 +279,7 @@ function ModuleChip({
                 }}
               >
                 <DropdownMenuLabel>
-                  Verschieben nach … (zulässig laut Angebot, DR-4)
+                  Verschieben nach … (zulässig laut Modulhandbuch)
                 </DropdownMenuLabel>
                 <MoveTargets
                   targets={moveTargets}

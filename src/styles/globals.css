@@ -255,6 +255,14 @@
     color-mix(in srgb, var(--foreground) 28%, transparent);
 }
 
+/*
+ * Joint of a long German compound (CompoundText): the soft hyphen lives in generated content, so a line that
+ * breaks here ends in a hyphen while the text in the DOM stays unchanged.
+ */
+.soft-hyphen::after {
+  content: "\00AD";
+}
+
 /* The dark surface: redefines the regular names locally (not .dark, see the variant above). */
 .surface-hero {
   --background: var(--hero);

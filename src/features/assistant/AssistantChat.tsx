@@ -385,7 +385,7 @@ export function AssistantChat({
         </ComposerPrimitive.Send>
       </ComposerPrimitive.Root>
       <p className="mt-2 text-meta text-muted-foreground">
-        Antworten stützen sich auf StuPO und Modulhandbuch. Verbindlich ist das
+        Antworten stützen sich auf StuPO und Modulhandbuch. Verbindlich ist die
         Zentrale Prüfungsverwaltung; im Prototyp sind die Antworten vorbereitet.
       </p>
     </div>

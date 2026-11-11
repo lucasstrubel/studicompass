@@ -31,15 +31,23 @@ function Change({
   simulated: Term | null;
 }) {
   const text = (term: Term | null) => (term ? format(term) : "nicht planbar");
+  // Only a real change gets the arrow and the weight; the rest reads as what it is.
+  const unchanged = text(real) === text(simulated);
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-x-3 border-b py-2 last:border-b-0">
       <dt className="text-meta text-muted-foreground">{label}</dt>
-      <dd className="flex items-center gap-1.5 text-body tabular-nums">
-        <span>{text(real)}</span>
-        <ArrowRight className="size-3.5" aria-hidden="true" />
-        <span className="sr-only">wird zu</span>
-        <span className="font-semibold">{text(simulated)}</span>
-      </dd>
+      {unchanged ? (
+        <dd className="text-body text-muted-foreground tabular-nums">
+          {text(real)} – unverändert
+        </dd>
+      ) : (
+        <dd className="flex items-center gap-1.5 text-body tabular-nums">
+          <span>{text(real)}</span>
+          <ArrowRight className="size-3.5" aria-hidden="true" />
+          <span className="sr-only">wird zu</span>
+          <span className="font-semibold">{text(simulated)}</span>
+        </dd>
+      )}
     </div>
   );
 }
