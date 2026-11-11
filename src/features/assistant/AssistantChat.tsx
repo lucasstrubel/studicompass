@@ -23,6 +23,11 @@ import { selectAssistantPersonal } from "@/store/assistant-selectors";
 import type { AssistantEntry, Office } from "@/domain/types";
 import { selectAcademicState, selectProfileName } from "@/store/selectors";
 import { semesterNumber } from "@/domain/terms";
+import {
+  isSpecialCase,
+  normalizeQuestion,
+  suggestQuestions,
+} from "@/domain/assistant-matching";
 import { cn } from "@/lib/utils";
 import { AssistantAvatar } from "./AssistantAvatar";
 
@@ -77,6 +82,9 @@ function Responsible({
     </div>
   );
 }
+
+/** Where a question without an answer goes first: the Studienberatung points to the right office. */
+const GENERAL_OFFICES = ["o-sb"];
 
 const QUESTION_CHIP =
   "h-auto max-w-full rounded-full py-1 text-left text-meta whitespace-normal";
@@ -170,25 +178,64 @@ function Answer({
   );
 }
 
+/**
+ * Answer to a question without a catalog entry. Only the prepared special case gets its own text; any other
+ * question says plainly that there is no answer and offers the closest catalog questions instead.
+ */
 function FallbackAnswer({
   heading,
   answer,
+  suggestions,
+  ask,
+  pending,
   offices,
   onPrepare,
 }: {
   heading: Heading;
-  answer: string;
+  /** Text of the prepared special case; null for any other question. */
+  answer: string | null;
+  suggestions: AssistantEntry[];
+  ask: (question: string, id?: string) => void;
+  pending: boolean;
   offices: Office[];
   onPrepare: () => void;
 }) {
   return (
     <article className="min-w-0 space-y-3 text-body">
       <p className="text-meta font-medium text-muted-foreground">KI-Antwort</p>
-      <p>{answer}</p>
-      <p>
-        Quellenlage: In StuPO und Modulhandbuch ist dazu keine eindeutige Regel
-        hinterlegt.
-      </p>
+      {answer ? (
+        <>
+          <p>{answer}</p>
+          <p>
+            Quellenlage: In StuPO und Modulhandbuch ist dazu keine eindeutige
+            Regel hinterlegt.
+          </p>
+        </>
+      ) : (
+        <p>
+          Dazu habe ich keine belegte Antwort. Ich antworte nur, wenn ich eine
+          Regel aus StuPO oder Modulhandbuch nennen kann.
+        </p>
+      )}
+      {suggestions.length > 0 && (
+        <div className="space-y-1.5">
+          <p className="font-medium">Meintest du eine dieser Fragen?</p>
+          <div className="flex flex-wrap gap-1.5">
+            {suggestions.map((entry) => (
+              <Button
+                key={entry.id}
+                variant="outline"
+                size="sm"
+                className={QUESTION_CHIP}
+                disabled={pending}
+                onClick={() => ask(entry.question, entry.id)}
+              >
+                {entry.question}
+              </Button>
+            ))}
+          </div>
+        </div>
+      )}
       <Responsible heading={heading} offices={offices} />
       <Button variant="outline" size="sm" onClick={onPrepare}>
         Anfrage vorbereiten
@@ -343,6 +390,10 @@ export function AssistantChat({
     input.current?.focus();
   }, [messages.length]);
   if (!data) return null;
+  // The prepared special case and questions about cases the rules leave open get the special-case text.
+  const special = (question: string) =>
+    isSpecialCase(question) ||
+    normalizeQuestion(question) === normalizeQuestion(data.fallback.question);
   const signature = profileName
     ? `${profileName.firstName} ${profileName.lastName}`
     : "";
@@ -475,10 +526,24 @@ export function AssistantChat({
                   ) : (
                     <FallbackAnswer
                       heading={heading}
-                      answer={data.fallback.answer}
+                      answer={
+                        special(message.question) ? data.fallback.answer : null
+                      }
+                      suggestions={suggestQuestions(
+                        message.question,
+                        data.catalog,
+                      ).flatMap(
+                        (id) =>
+                          data.catalog.find((item) => item.id === id) ?? [],
+                      )}
+                      ask={ask}
+                      pending={pending}
                       offices={
                         offices?.filter((office) =>
-                          data.fallback.officeIds.includes(office.id),
+                          (special(message.question)
+                            ? data.fallback.officeIds
+                            : GENERAL_OFFICES
+                          ).includes(office.id),
                         ) ?? []
                       }
                       onPrepare={() => {

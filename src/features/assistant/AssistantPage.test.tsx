@@ -138,3 +138,49 @@ it.each(["Sonderfall", "Freitext"])(
     expect(draft.value).not.toContain("Niklas Brandt");
   },
 );
+
+async function askFreeText(question: string) {
+  vi.useFakeTimers();
+  const ready = demoStore.getState().resetDemo();
+  await vi.advanceTimersByTimeAsync(LATENCY_MS);
+  await ready;
+  render(
+    <RouterProvider
+      router={createMemoryRouter(
+        [{ path: "/assistent", Component: AssistantPage }],
+        {
+          initialEntries: [`/assistent?frage=${encodeURIComponent(question)}`],
+        },
+      )}
+    />,
+  );
+  await act(() => vi.advanceTimersByTimeAsync(800));
+  return within(screen.getByRole("article"));
+}
+
+it("answers an unknown question without the text of the prepared special case", async () => {
+  const answer = await askFreeText("Wie plane ich ein Urlaubssemester?");
+
+  expect(
+    answer.getByText(/Dazu habe ich keine belegte Antwort/),
+  ).toBeInTheDocument();
+  // The special case is about the Praxissemester abroad; it must not answer an unrelated question.
+  expect(answer.queryByText(/Auslandsaufenthalt/)).not.toBeInTheDocument();
+  expect(answer.queryByText(/Meintest du/)).not.toBeInTheDocument();
+  expect(answer.getByRole("link", { name: "Studienberatung" })).toBeVisible();
+});
+
+it("offers the closest catalog questions when a question is unclear", async () => {
+  const answer = await askFreeText("Kann ich mich abmelden?");
+
+  expect(answer.getByText("Meintest du eine dieser Fragen?")).toBeVisible();
+  fireEvent.click(
+    answer.getByRole("button", {
+      name: "Bis wann kann ich mich von einer Prüfung abmelden?",
+    }),
+  );
+  await act(() => vi.advanceTimersByTimeAsync(800));
+  expect(screen.getByRole("log")).toHaveTextContent(
+    "Bei Erstversuchen bis zum Tag vor der Prüfung",
+  );
+});

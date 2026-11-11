@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { assistantCatalog } from "@/data/assistant-catalog";
 import { assistantFallback } from "@/data/assistant-fallback";
-import { matchAssistant, normalizeQuestion } from "./assistant-matching";
+import {
+  isSpecialCase,
+  matchAssistant,
+  normalizeQuestion,
+  suggestQuestions,
+} from "./assistant-matching";
 
 describe("lokale Fragenzuordnung", () => {
   it.each(assistantCatalog)("erkennt die Originalfrage $id", (entry) => {
@@ -35,5 +40,32 @@ describe("lokale Fragenzuordnung", () => {
       .slice(0, 2)
       .map((entry) => ({ ...entry, keywords: ["eins", "zwei"] }));
     expect(matchAssistant("eins zwei", entries)).toBeNull();
+  });
+});
+
+describe("Vorschläge bei Fragen ohne eindeutige Antwort", () => {
+  it("bietet die Katalogfragen mit gemeinsamem Stichwort an, die beste zuerst", () => {
+    // "abmelden" alone fits two entries equally, so matchAssistant does not guess.
+    expect(
+      matchAssistant("Kann ich mich abmelden?", assistantCatalog),
+    ).toBeNull();
+    const ids = suggestQuestions("Kann ich mich abmelden?", assistantCatalog);
+    expect(ids).toContain("A-01");
+    expect(ids).toContain("A-02");
+    expect(ids.length).toBeLessThanOrEqual(3);
+  });
+  it("schlägt nichts vor, wenn kein Stichwort passt", () => {
+    expect(suggestQuestions("Pizza", assistantCatalog)).toEqual([]);
+    expect(suggestQuestions("", assistantCatalog)).toEqual([]);
+  });
+  it("schlägt bei Sonderfällen nichts vor: die gehen an eine Stelle", () => {
+    expect(isSpecialCase("Programmierung 2 im Ausland abmelden")).toBe(true);
+    expect(
+      suggestQuestions(
+        "Programmierung 2 im Ausland abmelden",
+        assistantCatalog,
+      ),
+    ).toEqual([]);
+    expect(isSpecialCase("Kann ich mich abmelden?")).toBe(false);
   });
 });
