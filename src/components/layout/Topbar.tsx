@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { m } from "motion/react";
-import { Settings, UserRound } from "lucide-react";
+import { Landmark, Settings, UserRound } from "lucide-react";
 import { Link, NavLink, useLocation } from "react-router";
 import { BrandMark } from "@/components/common/BrandMark";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -63,6 +63,13 @@ function ProfileMenu() {
           <Link to="/einstellungen#profil">
             <UserRound />
             Profil bearbeiten
+          </Link>
+        </DropdownMenuItem>
+        {/* Not an area of its own in the navigation, but findable without asking the assistant first. */}
+        <DropdownMenuItem asChild>
+          <Link to="/anlaufstellen">
+            <Landmark />
+            Anlaufstellen
           </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>

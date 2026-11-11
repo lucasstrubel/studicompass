@@ -1,3 +1,4 @@
+import { loadLimit } from "./load";
 import type {
   AcademicState,
   Consequence,
@@ -328,12 +329,15 @@ function calculate(
       detail: `${openFoundationAfterTerm} Prüfungen der Bachelorvorprüfung sind nach diesem Semester offen. Für Prüfungen des Hauptstudiums dürfen höchstens drei fehlen.`,
       ruleId: "DR-7",
     });
+  const heavyFrom = loadLimit(student.jobHoursPerWeek);
   for (const term of terms) {
-    if (compare(term.term, currentTerm) <= 0 || term.ects <= 36) continue;
+    if (compare(term.term, currentTerm) <= 0 || term.ects <= heavyFrom)
+      continue;
     consequences.push({
       id: `load-${term.term.season}-${term.term.year}`,
       severity: "tight",
-      title: "Hohe Belastung",
+      // Several semesters can be heavy at once; the title says which one.
+      title: `Hohe Belastung im ${format(term.term)}`,
       detail: `${format(term.term)}: ${term.ects} ECTS geplant, bei ${student.jobHoursPerWeek} Stunden Nebenjob pro Woche.`,
       ruleId: "DR-10",
     });

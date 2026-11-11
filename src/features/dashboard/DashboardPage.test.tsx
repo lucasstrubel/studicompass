@@ -109,9 +109,12 @@ describe("Übersicht", () => {
 
   it("cites the StuPO for the withdrawal deadline and the handbook for the offering labels", () => {
     renderOverview();
+    // "Jetzt wichtig" holds Programmierung 2; the card shows the withdrawal deadline after it.
     const deadline = screen.getAllByRole("region", {
-      name: "Nächste Frist",
+      name: "Nächste Frist danach",
     })[0];
+    expect(deadline).toHaveTextContent("Abmeldung Datenmanagement");
+    expect(deadline).not.toHaveTextContent("Programmierung 2");
     expect(deadline).toHaveTextContent(
       "Quelle: StuPO Bachelor (ab 01.09.2026), § 7 Abs. 2, § 12 Abs. 1",
     );
@@ -120,22 +123,58 @@ describe("Übersicht", () => {
     );
   });
 
-  it("keeps the order: Studienstand, ECTS-Verlauf, Jetzt wichtig, (mobile: Nächste Frist), Dieses Semester", () => {
-    renderOverview();
-    const main = screen.getByRole("main");
-    const order = [
-      "Dein Studienstand",
-      "ECTS-Verlauf",
-      "Jetzt wichtig",
-      "Nächste Frist",
-      "Dieses Semester (WS 2026/27)",
-    ].map((name) =>
-      within(main)
-        .getAllByRole("heading", { level: 2 })
-        .findIndex((heading) => heading.textContent === name),
+  const headingOrder = (names: string[]) => {
+    const headings = within(screen.getByRole("main")).getAllByRole("heading", {
+      level: 2,
+    });
+    return names.map((name) =>
+      headings.findIndex((heading) => heading.textContent === name),
     );
-    expect(order.every((index) => index >= 0)).toBe(true);
-    expect([...order].sort((a, b) => a - b)).toEqual(order);
+  };
+  const inOrder = (order: number[]) =>
+    order.every((index) => index >= 0) &&
+    [...order].sort((a, b) => a - b).join() === order.join();
+
+  it("leads with Jetzt wichtig below 1280 px while a deadline is less than two days away", () => {
+    renderOverview();
+    expect(
+      inOrder(
+        headingOrder([
+          "Jetzt wichtig",
+          "Dein Studienstand",
+          "ECTS-Verlauf",
+          "Nächste Frist danach",
+          "Dieses Semester (WS 2026/27)",
+        ]),
+      ),
+    ).toBe(true);
+  });
+
+  it("keeps the order from 1280 px: Studienstand, ECTS-Verlauf, Jetzt wichtig, Dieses Semester", () => {
+    const matchMedia = vi
+      .spyOn(window, "matchMedia")
+      .mockImplementation((query) => ({
+        matches: query === "(min-width: 80rem)",
+        media: query,
+        onchange: null,
+        addEventListener: () => undefined,
+        removeEventListener: () => undefined,
+        addListener: () => undefined,
+        removeListener: () => undefined,
+        dispatchEvent: () => false,
+      }));
+    renderOverview();
+    expect(
+      inOrder(
+        headingOrder([
+          "Dein Studienstand",
+          "ECTS-Verlauf",
+          "Jetzt wichtig",
+          "Dieses Semester (WS 2026/27)",
+        ]),
+      ),
+    ).toBe(true);
+    matchMedia.mockRestore();
   });
 
   it("shows skeletons while loading and an error with retry per channel", async () => {

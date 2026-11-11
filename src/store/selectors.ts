@@ -223,6 +223,14 @@ function agenda(state: DemoState): AgendaItem[] {
 
 /** The first date after DEMO_NOW (US-05), own entries included (P5-13); a withdrawal deadline ends with the (simulated) withdrawal. */
 function nextDeadline(state: DemoState): AgendaItem | null {
+  return upcomingDeadline(state, new Set());
+}
+
+/** The first date after DEMO_NOW that belongs neither to a settled exam nor to one of the skipped ones. */
+function upcomingDeadline(
+  state: DemoState,
+  skippedExamIds: ReadonlySet<string>,
+): AgendaItem | null {
   const settled = new Set(
     (selectAcademicState(state)?.exams ?? [])
       .filter((exam) => exam.status !== "registered")
@@ -232,9 +240,32 @@ function nextDeadline(state: DemoState): AgendaItem | null {
     selectAgenda(state).find(
       (deadline) =>
         Date.parse(deadlineInstant(deadline.dueAt)) > DEMO_NOW.getTime() &&
-        !(deadline.examId && settled.has(deadline.examId)),
+        !(
+          deadline.examId &&
+          (settled.has(deadline.examId) || skippedExamIds.has(deadline.examId))
+        ),
     ) ?? null
   );
+}
+
+export interface OverviewDeadline {
+  deadline: AgendaItem | null;
+  /** True when "Jetzt wichtig" already shows an earlier deadline. */
+  afterImportant: boolean;
+}
+
+/**
+ * "Nächste Frist" on the overview: the withdrawal deadlines that "Jetzt wichtig" raises on the same page
+ * are left out, so the card adds the date after them instead of repeating one.
+ */
+function overviewDeadline(state: DemoState): OverviewDeadline {
+  const raised = new Set(
+    selectImportantDecisions(state).map((decision) => decision.exam.id),
+  );
+  return {
+    deadline: upcomingDeadline(state, raised),
+    afterImportant: raised.size > 0,
+  };
 }
 
 export interface ImportantDecision {
@@ -335,6 +366,7 @@ export const selectPlan = memoize(plan);
 export const selectBasePlan = memoize(basePlan);
 export const selectCurrentExams = memoize(currentExams);
 export const selectNextDeadline = memoize(nextDeadline);
+export const selectOverviewDeadline = memoize(overviewDeadline);
 export const selectImportantDecisions = memoize(importantDecisions);
 export const selectRulesById = memoize(rulesById);
 

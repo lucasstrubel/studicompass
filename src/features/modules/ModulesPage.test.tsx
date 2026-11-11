@@ -81,8 +81,9 @@ describe("Module & Noten kompakt (P5-12)", () => {
       "aria-expanded",
       "false",
     );
+    // Programmierung 2 and Betriebswirtschaftslehre 2 moved on to the semester Niklas takes them in.
     expect(trigger(/^2\. Fachsemester/)).toHaveTextContent(
-      "5 Module · 30 ECTS · 3 bestanden, 2 offen",
+      "3 Module · 15 ECTS · alle bestanden",
     );
     expect(trigger(/^3\. Fachsemester/)).toHaveAttribute(
       "aria-expanded",
@@ -92,9 +93,18 @@ describe("Module & Noten kompakt (P5-12)", () => {
       "aria-expanded",
       "false",
     );
+    const current = screen.getByRole("table", {
+      name: "Module im 3. Fachsemester",
+    });
+    expect(current).toHaveTextContent("Datenmanagement");
+    // The same five modules as "Dieses Semester" on the Übersicht; the moved ones say where the plan puts them.
+    expect(trigger(/^3\. Fachsemester/)).toHaveTextContent(
+      "5 Module · 30 ECTS · noch keins bestanden",
+    );
     expect(
-      screen.getByRole("table", { name: "Module im 3. Fachsemester" }),
-    ).toHaveTextContent("Datenmanagement");
+      within(current).getByRole("rowheader", { name: /^Programmierung 2/ }),
+    ).toHaveTextContent("laut Studienplan im 2. Semester");
+    expect(current).not.toHaveTextContent("Software Engineering 2");
     await user.click(screen.getByRole("button", { name: "Alle aufklappen" }));
     expect(
       screen.getByRole("table", { name: "Module im 7. Fachsemester" }),

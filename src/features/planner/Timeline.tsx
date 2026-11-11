@@ -39,6 +39,7 @@ import {
   CourseLine,
   type CourseDotState,
 } from "@/components/common/CourseDot";
+import { loadLimit } from "@/domain/load";
 import type { MilestoneKind } from "@/domain/milestones";
 import { compare, format } from "@/domain/terms";
 import { compoundParts } from "@/lib/compound-breaks";
@@ -108,9 +109,6 @@ export interface FixedMilestoneNote {
   text: string;
   citation?: Citation;
 }
-
-/** Limit above which a semester counts as heavy (DR-10). */
-const LOAD_LIMIT = 36;
 
 /** Menu entries, computed only while the menu is open (each target is checked with a projection). */
 function MoveTargets({
@@ -506,7 +504,10 @@ export function Timeline({
             const current =
               item.term.season === currentTerm.season &&
               item.term.year === currentTerm.year;
-            const heavy = item.ects > LOAD_LIMIT;
+            // Past semesters are done; the hint is about what still lies ahead (DR-10).
+            const heavy =
+              compare(item.term, currentTerm) > 0 &&
+              item.ects > loadLimit(load.jobHours);
             const fixedCitations = item.modules.flatMap((entry) => {
               const citation = entry.module.isMilestone
                 ? fixedNotes[entry.module.isMilestone]?.citation
