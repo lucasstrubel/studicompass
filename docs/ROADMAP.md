@@ -2,6 +2,8 @@
 
 Version 1.0.0 ist der Prototyp, wie er im November 2026 als Prüfungsleistung vorgestellt wurde: in der Breite klickbar, im Kern echt gerechnet, alle Hochschulsysteme simuliert, getestet nur vom Projektteam. Die Weiterentwicklung schließt diese beiden Lücken: ein Test mit Studierenden, die den Prototyp nicht kennen, und eine echte Schnittstelle zu Moodle.
 
+Stand November 2026: Die Phasen 0 und 2 bis 6 sind umgesetzt. Aus Phase 1 steht der Test mit Studierenden aus; ihr automatisierbarer Teil (Barrierefreiheits-Check) ist erledigt. Phase 7 läuft mit jeder Phase mit.
+
 Der Arbeitsstand steht in den [Meilensteinen auf GitHub](https://github.com/lucasstrubel/studicompass/milestones). Die Entscheidungen dahinter stehen unter [`adr/`](adr/).
 
 ## Phasen
