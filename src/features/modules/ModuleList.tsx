@@ -27,6 +27,7 @@ import {
   selectRulesById,
 } from "@/store/selectors";
 import { useDemoStore } from "@/store/use-demo-store";
+import { CourseworkOverview } from "./CourseworkOverview";
 import { ExamStatusLabel } from "./ExamStatusLabel";
 import { OFFERING } from "./module-labels";
 
@@ -269,6 +270,7 @@ export function ModuleList() {
           ]}
         />
       </section>
+      <CourseworkOverview />
       {groups.length === 0 ? (
         <EmptyState title="Noch keine Module vorhanden" />
       ) : (
