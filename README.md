@@ -78,16 +78,19 @@ Die App läuft dann unter http://localhost:5173. Beim ersten Aufruf öffnet sich
 
 - [Wie es entstanden ist](docs/PROZESS.md): von der Nutzerforschung über Konzept und Prototyp bis zu den Iterationen
 - [Technische Dokumentation](docs/TECHNIK.md): Daten und Berechnungen, Design-Tokens, App-Shell, Tests, Deployment
+- [Roadmap](docs/ROADMAP.md) und [Architekturentscheidungen](docs/adr/): wie es weitergeht und warum
 - [CLAUDE.md](CLAUDE.md): Architektur- und Gestaltungskonventionen, an die sich auch die KI-gestützte Entwicklung hält
 - [Präsentationskonzept](docs/praesentation/konzept.md) zu den [Folien](https://studicompass-six.vercel.app/praesentation/)
 
 ## Stand
 
-Der Prototyp ist in dem Stand eingefroren, in dem er im November 2026 als Prüfungsleistung vorgestellt wurde. Getestet hat ihn bisher nur das Projektteam. Die nächsten Schritte:
+Version [1.0.0](https://github.com/lucasstrubel/studicompass/releases/tag/v1.0.0) ist der Prototyp, wie er im November 2026 als Prüfungsleistung vorgestellt wurde. Getestet hat ihn bisher nur das Projektteam, und alle Hochschulsysteme sind simuliert. Seitdem wird er weiterentwickelt:
 
-- Usability-Test mit Studierenden, die den Prototyp nicht kennen
+- Usability-Test mit Studierenden, die den Prototyp nicht kennen, samt Messung
+- Moodle als erste echte Schnittstelle: Änderungen in den Kursen je Modul sehen, Prüfungsvorleistungen planen und verfolgen
 - Import der ICS-Dateien in echte Kalender-Apps prüfen
-- klären, ob und wie sich die Hochschulsysteme anbinden lassen
+
+Phasen und Ideen stehen in der [Roadmap](docs/ROADMAP.md), die Entscheidungen dahinter unter [docs/adr/](docs/adr/), die Änderungen im [Changelog](CHANGELOG.md).
 
 ## Lizenz und Fremdinhalte
 
