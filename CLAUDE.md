@@ -48,6 +48,8 @@ src/
   lib/          cn, Formatierung (Datum, Countdown, ECTS, Noten), ics
   styles/       globals.css (Tailwind, Design-Tokens)
 public/praesentation/   reveal.js-Folien für SE2 (statisch, nicht von Vite gebaut); Quelle: docs/praesentation/konzept.md
+docs/                   PROZESS.md (Entstehung, für Besucher des Repos), TECHNIK.md (technische Details), img/ (Screenshots fürs README)
+.github/workflows/      check.yml: `npm run check` und `npm run e2e` bei jedem PR und auf main
 ```
 
 ## Architektur
