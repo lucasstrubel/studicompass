@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { SegmentedButton, SegmentedGroup } from "@/components/common/Segmented";
 import { useDemoStore } from "@/store/use-demo-store";
 import type { MoodleSource } from "@/store/demo-store";
+import { MoodleBackup } from "./MoodleBackup";
 
 const FIELD =
   "h-9 w-full min-w-0 rounded-lg border border-input bg-card px-3 text-body placeholder:text-muted-foreground aria-invalid:border-status-critical";
@@ -94,6 +95,7 @@ export function MoodleSourceSection() {
             >
               Moodle trennen
             </Button>
+            <MoodleBackup />
           </div>
         ) : (
           <form noValidate onSubmit={submit} className="space-y-4">

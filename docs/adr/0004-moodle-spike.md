@@ -47,7 +47,7 @@ Legt die Lehrperson eine Datei in den Kurs, meldet `core_course_get_updates_sinc
 ## Entscheidung
 
 - ADR 0003 gilt ohne Einschränkung: direkter Aufruf aus dem Browser, kein eigener Server.
-- Eigene Daten der App werden in Phase 5 als eine JSON-Datei in den privaten Dateien des Nutzers gespeichert, nicht in den Nutzereinstellungen.
+- Eigene Daten der App werden in Phase 5 als eine JSON-Datei in den privaten Dateien des Nutzers gespeichert, nicht in den Nutzereinstellungen. Umgesetzt als ausdrückliches Sichern und Laden statt eines stillen Abgleichs: ohne Konfliktregel, und keine Seite wird ungefragt überschrieben.
 - Kurse werden über die `idnumber` den Modulen zugeordnet. Fehlt sie oder passt sie nicht, ordnet der Nutzer den Kurs von Hand zu.
 - Alle Funktionen der Phasen 3 und 4 sind machbar.
 
