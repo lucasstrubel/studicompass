@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+// zod would probe for `new Function` to compile its checks; the Content Security Policy forbids that.
+z.config({ jitless: true });
+
 /**
  * The parts of the Moodle responses the app reads (Moodle 4.5, see docs/adr/0004-moodle-spike.md).
  * Unknown fields are dropped, so recordings stay small and only checked data reaches the mapping.

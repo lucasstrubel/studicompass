@@ -52,7 +52,7 @@ src/
   lib/          cn, Formatierung (Datum, Countdown, ECTS, Noten), ics
   styles/       globals.css (Tailwind, Design-Tokens)
 public/praesentation/   reveal.js-Folien für SE2 (statisch, nicht von Vite gebaut); Quelle: docs/praesentation/konzept.md
-docs/                   PROZESS.md (Entstehung, für Besucher des Repos), TECHNIK.md (technische Details), ROADMAP.md, adr/ (Architekturentscheidungen), img/ (Screenshots fürs README)
+docs/                   PROZESS.md (Entstehung, für Besucher des Repos), TECHNIK.md (technische Details), ROADMAP.md, SICHERHEIT.md, adr/ (Architekturentscheidungen), img/ (Screenshots fürs README)
 infra/moodle/           Moodle-Sandbox (Docker Compose, Seed-Skript); nur lokal und in der CI
 .github/workflows/      check.yml: `npm run check` und `npm run e2e` bei jedem PR und auf main; moodle.yml: Adapter gegen die Sandbox
 ```
@@ -83,7 +83,8 @@ Abhängigkeiten nur in diese Richtung: UI → Store/Selektoren → Domain; Store
 - Realistische deutsche Texte; kein Lorem Ipsum, keine Bildplatzhalter, keine sichtbaren TODOs.
 - Jede Aussage zu Regeln oder Fristen zeigt ihre Quelle (`CitationList`); Regeln aus der StuPO nennen ihren Paragraphen (`section`, `verified: true`); eigene Rechenregeln der App tragen das Label „Beispiel“. Quellen stehen als Fußzeile am Ende ihrer Karte oder Zeile, unter den Aktionen, immer sichtbar.
 - Jeder Datenbereich hat Lade-, Leer- und Fehlerzustand.
-- Barrierearm: Kontrast AA, sichtbarer Fokus, Kernflow per Tastatur, semantisches HTML, `aria-label` an Icon-Buttons, `prefers-reduced-motion`.
+- Barrierearm: Kontrast AA, sichtbarer Fokus, Kernflow per Tastatur, semantisches HTML, `aria-label` an Icon-Buttons, `prefers-reduced-motion`. `e2e/a11y.e2e.ts` prüft neue Seiten mit axe; dort eintragen.
+- Der Produktions-Build trägt eine Content-Security-Policy (`vite.config.ts`): keine Inline-Skripte, kein `eval`, keine fremden Quellen. Neue Bibliotheken müssen darunter laufen (`e2e/security.e2e.ts`).
 - Fokusring zentral aus `globals.css` (`:focus-visible`, 2 px `--ring` = `--accent-strong`, 2 px Abstand): Komponenten zeichnen keinen eigenen Ring und schalten ihn nicht mit `outline-none` ab (Ausnahme: nicht bedienbare Sprungziele mit `tabIndex={-1}`). Auf `.surface-hero` wird `--ring` lokal zur hellen Akzentfarbe. Schneidet ein Elternteil mit `overflow-hidden` ihn ab: `focus-visible:-outline-offset-2`.
 - Bewegung: Kurve `--ease-strong`, nur `transform`, `opacity` und `clip-path`, kein `transition-all`, Ausgänge schneller als Eingänge. CSS ist der Normalfall; Motion nur für Unterbrechbares (Nadel, Navigations-Indikator). Eine geplante Geste: Die Kurslinie zeichnet sich einmal je Sitzung und nach einer Entscheidung. Keine Seitenübergänge, keine hochzählenden Zahlen. `AnimatePresence` nicht um Radix-Flächen, weil es Knoten in Tests hält.
 - Keine Login- oder Passwortfelder. Einzige Eingabe eines Geheimnisses ist der Moodle-Zugriffsschlüssel in den Einstellungen. Keine Nachbildung echter POS- oder Moodle-Oberflächen; Übergaben an Originalsysteme nur als neutraler Hinweis („Im echten Betrieb …“).
