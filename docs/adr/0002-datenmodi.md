@@ -13,8 +13,8 @@ Die App kennt drei Datenmodi. Sie unterscheiden sich nur darin, welcher Service 
 | Modus        | Daten                                                        | Zeit       | Wo               |
 | ------------ | ------------------------------------------------------------ | ---------- | ---------------- |
 | Demo         | Beispieldaten aus `src/data/`                                | `DEMO_NOW` | öffentliche Demo |
-| Aufzeichnung | aufgezeichnete Antworten der eigenen Moodle-Instanz          | fest       | öffentliche Demo |
-| Live         | Antworten eines Moodle, mit dem der Nutzer die App verbindet | echte Zeit | lokal, in der CI |
+| Aufzeichnung | aufgezeichnete Antworten der eigenen Moodle-Instanz          | `DEMO_NOW` | öffentliche Demo |
+| Live         | Antworten eines Moodle, mit dem der Nutzer die App verbindet | `DEMO_NOW` | lokal, in der CI |
 
 ## Gründe
 
@@ -24,6 +24,6 @@ Die App kennt drei Datenmodi. Sie unterscheiden sich nur darin, welcher Service 
 
 ## Folgen
 
-- „Jetzt“ kommt nicht mehr überall aus `DEMO_NOW`, sondern aus einer Uhr, die je Modus die Demo-Zeit oder die echte Zeit liefert. Die Fachlogik bekommt die Zeit weiterhin als Argument.
+- „Jetzt“ bleibt in allen Modi `DEMO_NOW` (geändert am 13.11.2026 bei der Umsetzung). Solange POS simuliert ist, hängt das Szenario an diesem Datum; zwei Uhren in einer Oberfläche würden Fristen aus Moodle und aus dem POS gegeneinander verschieben. Die Sandbox ist deshalb auf dieses Datum befüllt. Der Adapter bekommt die Zeit als Argument; eine echte Uhr lässt sich dort einsetzen, sobald auch POS echt ist.
 - Die Oberfläche zeigt den Modus an.
 - Aufzeichnungen müssen neu erzeugt werden, wenn sich die Beispielkurse ändern.

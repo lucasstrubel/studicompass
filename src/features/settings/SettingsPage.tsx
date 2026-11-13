@@ -20,6 +20,7 @@ import { CitationList } from "@/components/common/CitationList";
 import type { Notification } from "@/domain/types";
 import { CHANNELS } from "@/services/types";
 import { ProfileSection } from "@/features/profile/ProfileSection";
+import { MoodleSourceSection } from "./MoodleSourceSection";
 
 const TYPES: { type: Notification["type"]; label: string }[] = [
   { type: "decision", label: "Entscheidungen" },
@@ -116,9 +117,10 @@ export function SettingsPage() {
           Verbundene Kanäle
         </h2>
         <p className="text-body">
-          Nur Lesezugriff. Alle Verbindungen sind simuliert. Beim Trennen
-          bleiben bereits geladene Daten sichtbar; nach Neuladen kann ein
-          getrennter Kanal erst nach erneutem Verbinden wieder geladen werden.
+          Nur Lesezugriff. Die Verbindungen sind simuliert, solange du unten
+          kein eigenes Moodle verbindest. Beim Trennen bleiben bereits geladene
+          Daten sichtbar; nach Neuladen kann ein getrennter Kanal erst nach
+          erneutem Verbinden wieder geladen werden.
         </p>
         <ChannelStatus />
         <div className="flex flex-wrap gap-2">
@@ -146,13 +148,15 @@ export function SettingsPage() {
           ))}
         </div>
       </section>
+      <MoodleSourceSection />
       <section className="space-y-3 p-5" aria-labelledby="demo-settings">
         <h2 id="demo-settings" className="text-section-title">
           Demo
         </h2>
         <p className="text-body">
-          {APP_NAME} ist ein Prototyp mit fiktiven Studiendaten. Es werden keine
-          Hochschulsysteme verbunden oder Daten an sie gesendet.
+          {APP_NAME} ist ein Prototyp mit fiktiven Studiendaten. Daten werden
+          nur abgerufen, wenn du oben ein eigenes Moodle verbindest; gesendet
+          wird dorthin nichts außer dem Zugriffsschlüssel.
         </p>
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" onClick={() => void navigate("/start")}>

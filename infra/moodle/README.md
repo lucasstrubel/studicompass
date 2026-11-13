@@ -36,6 +36,17 @@ Zugriffsschlüssel von Niklas für die Web Services: `5c0de5a1dbeef0000000000000
 
 Dazu je Kurs Dateien im Abschnitt „Vorlesung“ und Ankündigungen. Die Zahlen entsprechen den Beispieldaten in `src/data/moodle-progress.ts`.
 
+## Testen und aufzeichnen
+
+```sh
+npm run test:moodle     # Adapter der App gegen die laufende Sandbox
+npm run moodle:record   # dasselbe und src/data/recordings/moodle.json neu schreiben
+```
+
+Die Aufzeichnung gehört zum Beispielstand: Nach einer Änderung am Seed-Skript `npm run moodle:reset` und danach `npm run moodle:record` ausführen.
+
+In der App: Einstellungen → Moodle-Daten → „Eigenes Moodle“, Adresse `http://localhost:8080` und den Zugriffsschlüssel von oben eintragen.
+
 ## Eine Änderung auslösen
 
 Als Dozentin eine neue Datei in einen Kurs legen, ohne die Oberfläche von Moodle zu öffnen:

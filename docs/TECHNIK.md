@@ -13,11 +13,23 @@ Details zu Daten, Architektur, Gestaltung und Tests. Den Einstieg gibt das [READ
 ## Daten und Berechnungen
 
 - `src/data/` enthält die Demodaten. Regeln stammen aus der StuPO Bachelor der TH Mannheim (Fassung ab 01.09.2026, nichtamtliche Lesefassung, § 56 für UIB) und nennen ihren Paragraphen, Module aus dem [Modulhandbuch UIB](https://module.informatik.th-mannheim.de/UIB). Noten, Termine, Mails und Kontaktdaten sind erfunden; eigene Rechenregeln bleiben mit `verified: false` als „Beispiel“ gekennzeichnet.
-- Sechs Services laden POS, Moodle, Mail, Website, Regelwerk und Assistent unabhängig voneinander. Die Mocks warten 500 ms; `FLAGS.simulateErrors` in `src/config/demo.ts` aktiviert Fehler. Es gibt keine Hochschul-Requests.
+- Sechs Services laden POS, Moodle, Mail, Website, Regelwerk und Assistent unabhängig voneinander. Die Mocks warten 500 ms; `FLAGS.simulateErrors` in `src/config/demo.ts` aktiviert Fehler. Requests gibt es nur im Moodle-Modus `live` (siehe unten).
 - `src/store/demo-store.ts` hält Ladezustände, Einstellungen und Simulationen. `hydrate()` lädt die Daten, `retry()` wiederholt einen einzelnen Service. Unter `/_ui` lassen sich Ladezustände und Fehler beobachten; Übersicht, Folgen-Check und Studienverlauf zeigen sie je Kanal (Phase 3).
 - `src/store/selectors.ts` liefert akademischen Zustand, Studienstand, Prognose, Postfach, Fristen und Benachrichtigungen. Berechnete Selektoren liefern bei unverändertem Store stabile Referenzen für React.
 - Abmeldung speichert einen Snapshot; `undo()` stellt ihn wieder her, auch nach einem Neuladen. Was-wäre-wenn bleibt temporär. Nutzeränderungen werden unter `DEMO_STORAGE_KEY` gespeichert und durch `resetDemo()` zurückgesetzt. Nach Änderungen an den Beispieldaten `DATA_VERSION` erhöhen. Version 4 (P5-15: Zuständigkeiten und A-09) übernimmt Einstellungen, Simulationen und gültige eigene Einträge aus Version 2 und 3 additiv; ältere Datenversionen werden verworfen. Der Profilname ersetzt nur die Anzeige, nicht die POS-Daten oder akademische Berechnungen. Der Gesprächsverlauf des Assistenten (`assistantThread`) liegt nur im Speicher; `resetDemo()` leert ihn.
 - `src/domain/` enthält ausschließlich reine TypeScript-Berechnungen. Nach drei Fehlversuchen wird die Prognose blockiert; zukünftige Praxis- und Abschlusstermine bleiben offen.
+
+## Moodle-Anbindung
+
+Moodle ist der erste Kanal mit echter Schnittstelle. Die Entscheidungen stehen unter [`adr/`](adr/), die Sandbox unter [`infra/moodle/`](../infra/moodle/README.md).
+
+- **Datenmodi.** `moodleSource` im Store bestimmt, woher der Kanal liest: `demo` (Mock wie die anderen Kanäle), `recording` (aufgezeichnete Antworten der Sandbox) oder `live` (ein verbundenes Moodle). Umgestellt wird unter Einstellungen → Moodle-Daten. `recording` übersteht ein Neuladen, `live` nicht.
+- **Adapter** unter `src/services/moodle/`: `client.ts` ruft die REST-Web-Services direkt aus dem Browser auf (Zeitlimit 10 s), `schemas.ts` prüft jede Antwort mit zod und verwirft unbekannte Felder, `mapping.ts` bildet sie als reine Funktionen auf `MoodleData` ab (Fortschritt, Fristen, Postfach), `service.ts` setzt die Aufrufe zusammen. Bietet ein Moodle einzelne Funktionen nicht an, bleibt nur der davon abhängige Teil leer.
+- **Zuordnung.** Ein Kurs gehört zu dem Modul, dessen ID in seiner `idnumber` steht. Abgaben zählen als erledigt, wenn Moodle die Aktivität als abgeschlossen meldet. Ankündigungen kommen als reiner Text ins Postfach; HTML aus Moodle wird nie gerendert.
+- **Fehler.** Jeder Fehlschlag wird zu einem `MoodleError` mit einem Text für die Oberfläche: Moodle nicht erreichbar, Zeitüberschreitung, Schlüssel ungültig, Schnittstelle abgeschaltet, fehlende Rechte, unerwartete Antwort.
+- **Zugriffsschlüssel.** Er liegt nur in einer Variablen des Stores, nicht im State und nicht in `localStorage`, und geht ausschließlich an die eingegebene Adresse. Ein Passwort fragt die App nicht ab.
+- **Aufzeichnung.** `npm run moodle:record` lässt den Adapter gegen die Sandbox laufen und schreibt die geprüften Antworten nach `src/data/recordings/moodle.json`. Im Modus `recording` beantwortet `replay.ts` die Aufrufe daraus; Adapter und Zuordnung laufen unverändert. Der Adapter, zod und die Aufzeichnung werden erst beim Umstellen nachgeladen.
+- **Tests.** Unit-Tests prüfen Client, Zuordnung und Store gegen die Aufzeichnung. `npm run test:moodle` prüft den Adapter gegen die laufende Sandbox, `e2e/moodle.e2e.ts` verbindet die App im Browser mit ihr. Der Workflow `moodle.yml` baut die Sandbox dafür in GitHub Actions.
 
 ## Ergänzende Funktionen
 

@@ -4,7 +4,12 @@ import {
   persist,
   type StateStorage,
 } from "zustand/middleware";
-import { DATA_VERSION, DEMO_NOW, DEMO_STORAGE_KEY } from "@/config/demo";
+import {
+  DATA_VERSION,
+  DEMO_NOW,
+  DEMO_STORAGE_KEY,
+  DEMO_TIME_ZONE,
+} from "@/config/demo";
 import type {
   Channel,
   CourseLink,
@@ -25,10 +30,44 @@ import { selectAssistantMatch } from "./assistant-selectors";
 import { createMockServices } from "@/services/mock";
 import {
   isChannel,
+  type MoodleService,
   type ServiceData,
   type ServiceKey,
   type Services,
 } from "@/services/types";
+import { MoodleError } from "@/services/moodle/errors";
+
+/** Where the Moodle channel gets its data (ADR 0002): example data, a recording of the sandbox, or a connected site. */
+export type MoodleSource = "demo" | "recording" | "live";
+/** The connected Moodle site; the access key itself never enters the state. */
+export interface MoodleSite {
+  baseUrl: string;
+  siteName: string;
+  userName: string;
+}
+/** The real Moodle adapter, loaded on demand so the demo ships without it. */
+export interface MoodleSources {
+  recording: () => Promise<MoodleService>;
+  live: (connection: { baseUrl: string; token: string }) => Promise<{
+    service: MoodleService;
+    site: { siteName: string; userName: string };
+  }>;
+}
+// The sandbox is seeded for the demo date and POS stays simulated, so every mode shares the demo clock.
+const moodleOptions = { now: () => DEMO_NOW, timeZone: DEMO_TIME_ZONE };
+const defaultMoodleSources: MoodleSources = {
+  recording: async () =>
+    (await import("@/services/moodle")).createRecordedMoodleService(
+      moodleOptions,
+    ),
+  live: async (connection) =>
+    (await import("@/services/moodle")).connectMoodle(
+      connection,
+      moodleOptions,
+    ),
+};
+const LOAD_ERROR =
+  "Die Beispieldaten konnten nicht geladen werden. Versuch es erneut.";
 
 export interface LoadState<T> {
   status: "idle" | "loading" | "ready" | "error";
@@ -76,6 +115,8 @@ interface Preferences {
   coursework: Coursework[];
   /** Dates Niklas enters himself (P5-13, US-21). */
   personalDeadlines: PersonalDeadline[];
+  /** "live" lasts for the session only: after a reload the channel is back on example data. */
+  moodleSource: MoodleSource;
 }
 
 /** Upper bounds for own entries, so the local demo state stays small. */
@@ -119,6 +160,15 @@ export interface AssistantMessage {
 
 export interface DemoState extends Preferences {
   setChannelConnected: (channel: Channel, connected: boolean) => Promise<void>;
+  /** The connected site in data mode "live", otherwise null; never persisted. */
+  moodleSite: MoodleSite | null;
+  /** Switches the Moodle channel between example data and the recording and reloads it. */
+  setMoodleSource: (source: Exclude<MoodleSource, "live">) => Promise<void>;
+  /** Checks address and access key, then loads the channel from that site; the error text is for the user. */
+  connectMoodle: (
+    baseUrl: string,
+    token: string,
+  ) => Promise<{ ok: true } | { ok: false; error: string }>;
   setNotificationType: (type: Notification["type"], enabled: boolean) => void;
   resources: Resources;
   snapshot: SimulationSnapshot | null;
@@ -199,6 +249,7 @@ function defaultPreferences(): Preferences {
     moodleUrls: {},
     coursework: [],
     personalDeadlines: [],
+    moodleSource: "demo",
   };
 }
 function emptyResource<T>(): LoadState<T> {
@@ -301,6 +352,7 @@ function readPreferences(value: unknown): Preferences {
         : defaults.jobHoursPerWeek,
     assistantHintSeen: value.assistantHintSeen === true,
     plannerHideCompleted: value.plannerHideCompleted === true,
+    moodleSource: value.moodleSource === "recording" ? "recording" : "demo",
     ...readOwnEntries(value),
   };
 }
@@ -410,6 +462,7 @@ function readPersisted(
 export function createDemoStore(
   services: Services = createMockServices(),
   storage: StateStorage = safeStorage,
+  moodleSources: MoodleSources = defaultMoodleSources,
 ) {
   // A reset invalidates in-flight requests; a retry supersedes older requests for the same resource.
   const requests: Record<ServiceKey, number> = {
@@ -422,6 +475,8 @@ export function createDemoStore(
   };
   const pending = new Map<ServiceKey, Promise<void>>();
   let assistantTimer: ReturnType<typeof setTimeout> | undefined;
+  // Held outside the state so the access key is never persisted or exposed to the UI.
+  let liveMoodle: MoodleService | null = null;
   return createStore<DemoState>()(
     persist(
       (set, get) => {
@@ -445,7 +500,13 @@ export function createDemoStore(
                 [P in ServiceKey]: () => Promise<ServiceData[P]>;
               } = {
                 pos: () => services.pos.load(),
-                moodle: () => services.moodle.load(),
+                moodle: async () => {
+                  const source = get().moodleSource;
+                  if (source === "live" && liveMoodle) return liveMoodle.load();
+                  if (source === "recording")
+                    return (await moodleSources.recording()).load();
+                  return services.moodle.load();
+                },
                 mail: () => services.mail.load(),
                 website: () => services.website.load(),
                 rules: () => services.rules.load(),
@@ -459,13 +520,13 @@ export function createDemoStore(
                 updatedAt: DEMO_NOW.toISOString(),
                 error: null,
               });
-            } catch {
+            } catch (error) {
               if (requests[key] === request)
                 update({
                   ...get().resources[key],
                   status: "error",
                   error:
-                    "Die Beispieldaten konnten nicht geladen werden. Versuch es erneut.",
+                    error instanceof MoodleError ? error.message : LOAD_ERROR,
                 });
             } finally {
               if (requests[key] === request) pending.delete(key);
@@ -489,6 +550,42 @@ export function createDemoStore(
             await Promise.all(SERVICE_KEYS.map((key) => load(key)));
           },
           retry: (key) => load(key, true),
+          moodleSite: null,
+          async setMoodleSource(source) {
+            liveMoodle = null;
+            set({ moodleSource: source, moodleSite: null });
+            await load("moodle", true);
+          },
+          async connectMoodle(baseUrl, token) {
+            const address = parseWebUrl(baseUrl)?.replace(/\/+$/, "");
+            if (!address || !token.trim())
+              return {
+                ok: false,
+                error:
+                  "Gib die Adresse deines Moodle und den Zugriffsschlüssel an.",
+              };
+            try {
+              const { service, site } = await moodleSources.live({
+                baseUrl: address,
+                token: token.trim(),
+              });
+              liveMoodle = service;
+              set({
+                moodleSource: "live",
+                moodleSite: { baseUrl: address, ...site },
+              });
+            } catch (error) {
+              return {
+                ok: false,
+                error:
+                  error instanceof MoodleError
+                    ? error.message
+                    : "Die Verbindung zu Moodle ist fehlgeschlagen. Versuch es erneut.",
+              };
+            }
+            await load("moodle", true);
+            return { ok: true };
+          },
           async setChannelConnected(channel, connected) {
             if (!connected) {
               requests[channel]++;
@@ -748,8 +845,10 @@ export function createDemoStore(
             for (const key of SERVICE_KEYS) requests[key]++;
             pending.clear();
             clearTimeout(assistantTimer);
+            liveMoodle = null;
             set({
               ...defaultPreferences(),
+              moodleSite: null,
               resources: emptyResources(),
               snapshot: null,
               whatIf: [],

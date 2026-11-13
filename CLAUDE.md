@@ -4,15 +4,15 @@ Arbeitstitel „StudiCompass“ – der Name steht nur in `src/config/demo.ts` (
 
 ## Worum es geht
 Web-App, die Studierenden der TH Mannheim hilft, ihren Studienstand zu überblicken und Entscheidungen mit Folgen (z. B. eine Prüfungsabmeldung) informiert zu treffen. Sie bündelt POS, Moodle, Hochschul-Mail und Website und beantwortet Fragen zur Prüfungsordnung mit Quellenangabe.
-Selbsterklärender Hi-Fi-Prototyp, kein Produktivsystem. Alle Hochschul-Schnittstellen sind **Dummy-Daten**.
+Selbsterklärender Hi-Fi-Prototyp, kein Produktivsystem. POS, Mail und Website sind **Dummy-Daten**; Moodle hat zusätzlich eine echte Anbindung (Datenmodi Demo, Aufzeichnung, Live – `docs/adr/`). Wie es weitergeht: `docs/ROADMAP.md`.
 Primäre Persona: **Niklas Brandt**, 20, Unternehmens- und Wirtschaftsinformatik (UIB), 3. Semester, Nebenjob 15 Std./Woche.
 Regeln stammen aus der StuPO Bachelor (Fassung ab 01.09.2026, § 56 für UIB), Module aus dem Modulhandbuch UIB (module.informatik.th-mannheim.de). Noten, Termine, Mails und Kontaktdaten bleiben erfunden.
 
 **Der Code ist die Quelle der Wahrheit.** Die Konventionen unten beschreiben den aktuellen Stand; sie dürfen geändert werden, wenn Lucas es so entscheidet. Tests werden angepasst, wenn sich das Verhalten bewusst ändert.
 
 ## Stack
-Vite · React · TypeScript (strict) · React Router · Tailwind CSS · shadcn/ui (Radix) · lucide-react · Motion · assistant-ui (Runtime und Eingabe des Chats) · Zustand (persist) · Recharts (über shadcn `chart`) · date-fns (Locale `de`) · @dnd-kit/core · Vitest + Testing Library · Playwright · Fontsource (Bricolage Grotesque, Hanken Grotesk, lokal) · Deployment: Vercel (statisch, SPA-Rewrite).
-Kein Backend, keine Datenbank, keine Authentifizierung, keine Requests an fremde Server.
+Vite · React · TypeScript (strict) · React Router · Tailwind CSS · shadcn/ui (Radix) · lucide-react · Motion · assistant-ui (Runtime und Eingabe des Chats) · Zustand (persist) · Recharts (über shadcn `chart`) · date-fns (Locale `de`) · @dnd-kit/core · zod (nur im Moodle-Adapter) · Vitest + Testing Library · Playwright · Fontsource (Bricolage Grotesque, Hanken Grotesk, lokal) · Deployment: Vercel (statisch, SPA-Rewrite).
+Kein Backend, keine Datenbank, keine Authentifizierung. Requests gehen nur an ein Moodle, das der Nutzer in den Einstellungen selbst verbindet (Modus Live); sonst an keinen fremden Server.
 - Peer-Dependency-Konflikte nicht mit `--force` oder `--legacy-peer-deps` überdecken: stoppen und Konflikt samt Optionen an Lucas melden.
 
 ## Befehle
@@ -25,6 +25,9 @@ npm run typecheck  # tsc -b
 npm run test       # Vitest
 npm run check      # typecheck + lint + test + build  ← vor jedem PR grün
 npm run e2e        # Playwright gegen den Produktions-Build (installiertes Chrome, nicht Teil von check)
+npm run moodle:up  # Moodle-Sandbox starten (Docker, infra/moodle); moodle:down, moodle:reset
+npm run test:moodle    # Integrationstests gegen die Sandbox (nicht Teil von check)
+npm run moodle:record  # dasselbe und Aufzeichnung nach src/data/recordings/ schreiben
 ```
 
 ## Ordnerstruktur
@@ -41,15 +44,17 @@ src/
                 CitationList, DemoBadge, EmptyState, ErrorState, PageHeader, BrandMark, CourseDot, Segmented
   domain/       reines TypeScript: types, terms, progress, rules, projection, decision, grades,
                 assistant-matching (+ Tests daneben)
-  services/     Interfaces je Kanal und Regelwerk; mock/ mit Latenz und optionalem Fehler
-  data/         Dummy-Daten
+  services/     Interfaces je Kanal und Regelwerk; mock/ mit Latenz und optionalem Fehler;
+                moodle/ = echter Adapter (client, schemas, mapping, service, replay), per import() nachgeladen
+  data/         Dummy-Daten; recordings/ = aufgezeichnete Moodle-Antworten (erzeugt, nicht von Hand ändern)
   store/        Zustand-Store, Selektoren
   config/       demo.ts (APP_NAME, DEMO_NOW, LATENCY_MS, FLAGS)
   lib/          cn, Formatierung (Datum, Countdown, ECTS, Noten), ics
   styles/       globals.css (Tailwind, Design-Tokens)
 public/praesentation/   reveal.js-Folien für SE2 (statisch, nicht von Vite gebaut); Quelle: docs/praesentation/konzept.md
-docs/                   PROZESS.md (Entstehung, für Besucher des Repos), TECHNIK.md (technische Details), img/ (Screenshots fürs README)
-.github/workflows/      check.yml: `npm run check` und `npm run e2e` bei jedem PR und auf main
+docs/                   PROZESS.md (Entstehung, für Besucher des Repos), TECHNIK.md (technische Details), ROADMAP.md, adr/ (Architekturentscheidungen), img/ (Screenshots fürs README)
+infra/moodle/           Moodle-Sandbox (Docker Compose, Seed-Skript); nur lokal und in der CI
+.github/workflows/      check.yml: `npm run check` und `npm run e2e` bei jedem PR und auf main; moodle.yml: Adapter gegen die Sandbox
 ```
 
 ## Architektur
@@ -57,7 +62,8 @@ Abhängigkeiten nur in diese Richtung: UI → Store/Selektoren → Domain; Store
 - `src/domain` ist pure TypeScript: keine React-Imports, keine Seiteneffekte, vollständig unit-getestet.
 - UI importiert **nie** direkt aus `src/data`; Daten kommen über Services in den Store.
 - Jeder Kanal (POS, Moodle, Mail, Website) und das Regelwerk haben ein eigenes Service-Interface. Mocks simulieren Latenz und optional Fehler (`FLAGS.simulateErrors`).
-- „Jetzt“ ist ausschließlich `DEMO_NOW` – nie `new Date()` oder `Date.now()` in Komponenten oder Domäne.
+- Moodle kennt drei Datenmodi (`moodleSource` im Store): `demo` (Mock), `recording` (Aufzeichnung durch den echten Adapter), `live` (verbundenes Moodle). Antworten werden mit den Schemas geprüft, bevor sie ins Fachmodell kommen; Fehler sind `MoodleError` mit deutschem Text. Der Zugriffsschlüssel liegt nur im Speicher, nie im State oder in `persist`.
+- „Jetzt“ ist ausschließlich `DEMO_NOW` – nie `new Date()` oder `Date.now()` in Komponenten oder Domäne. Das gilt auch im Modus Live, solange POS simuliert ist; die Sandbox ist auf dieses Datum befüllt.
 - Simulierte Aktionen (z. B. Abmeldung) ändern nur den Store, speichern vorher einen Snapshot (Rückgängig) und sind im UI als Simulation erkennbar.
 - Persistenz über Zustand `persist` mit `version`. Ändern sich Dummy-Daten: Version erhöhen, damit alte Demo-Stände verworfen werden. „Demo zurücksetzen“ in den Einstellungen.
 - Nur helles Design: kein Theme-Code. `@custom-variant dark` in `globals.css` bleibt an die nie gesetzte Klasse `.dark` gebunden, damit die generierten `dark:`-Klassen von shadcn wirkungslos bleiben – nicht entfernen.
@@ -80,7 +86,7 @@ Abhängigkeiten nur in diese Richtung: UI → Store/Selektoren → Domain; Store
 - Barrierearm: Kontrast AA, sichtbarer Fokus, Kernflow per Tastatur, semantisches HTML, `aria-label` an Icon-Buttons, `prefers-reduced-motion`.
 - Fokusring zentral aus `globals.css` (`:focus-visible`, 2 px `--ring` = `--accent-strong`, 2 px Abstand): Komponenten zeichnen keinen eigenen Ring und schalten ihn nicht mit `outline-none` ab (Ausnahme: nicht bedienbare Sprungziele mit `tabIndex={-1}`). Auf `.surface-hero` wird `--ring` lokal zur hellen Akzentfarbe. Schneidet ein Elternteil mit `overflow-hidden` ihn ab: `focus-visible:-outline-offset-2`.
 - Bewegung: Kurve `--ease-strong`, nur `transform`, `opacity` und `clip-path`, kein `transition-all`, Ausgänge schneller als Eingänge. CSS ist der Normalfall; Motion nur für Unterbrechbares (Nadel, Navigations-Indikator). Eine geplante Geste: Die Kurslinie zeichnet sich einmal je Sitzung und nach einer Entscheidung. Keine Seitenübergänge, keine hochzählenden Zahlen. `AnimatePresence` nicht um Radix-Flächen, weil es Knoten in Tests hält.
-- Keine Login- oder Passwortfelder. Keine Nachbildung echter POS- oder Moodle-Oberflächen; Übergaben an Originalsysteme nur als neutraler Hinweis („Im echten Betrieb …“).
+- Keine Login- oder Passwortfelder. Einzige Eingabe eines Geheimnisses ist der Moodle-Zugriffsschlüssel in den Einstellungen. Keine Nachbildung echter POS- oder Moodle-Oberflächen; Übergaben an Originalsysteme nur als neutraler Hinweis („Im echten Betrieb …“).
 - Beim Folgen-Check sind „Ich trete an“ und „Abmeldung vornehmen“ visuell gleich gewichtet – die App informiert, sie lenkt nicht.
 
 ## Git
