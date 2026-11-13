@@ -16,7 +16,7 @@ const SOURCES: { value: MoodleSource; label: string; text: string }[] = [
   {
     value: "recording",
     label: "Aufzeichnung",
-    text: "Echte Antworten eines Moodle mit Beispielkursen, einmal aufgezeichnet. Sie laufen durch dieselbe Anbindung wie ein verbundenes Moodle; es wird nichts abgerufen.",
+    text: "Echte Antworten eines Moodle mit Beispielkursen, einmal aufgezeichnet. Sie laufen durch dieselbe Anbindung wie ein verbundenes Moodle; es wird nichts abgerufen. „Moodle abgleichen“ bei einem Modul spielt nach, was die Lehrenden danach geändert haben.",
   },
   {
     value: "live",

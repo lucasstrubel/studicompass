@@ -10,6 +10,7 @@ const liveData: MoodleData = {
   progress: [{ moduleId: "m-pr2", label: "Abgaben 6/12" }],
   deadlines: [],
   inbox: [],
+  courses: [],
 };
 function makeStore(sources: Partial<MoodleSources> = {}) {
   const live = vi.fn<MoodleSources["live"]>(() =>

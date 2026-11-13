@@ -16,6 +16,7 @@ import { CourseLinks } from "./CourseLinks";
 import { CourseworkCard } from "./CourseworkCard";
 import { ExamStatusLabel } from "./ExamStatusLabel";
 import { ModuleNotes } from "./ModuleNotes";
+import { MoodleCourseCard } from "./MoodleCourseCard";
 import { OFFERING } from "./module-labels";
 
 /**
@@ -30,9 +31,6 @@ export function ModuleDetail({ id }: { id: string }) {
     module ? selectModuleRecord(state, module) : null,
   );
   const rules = useDemoStore(selectRulesById);
-  const progress = useDemoStore((state) =>
-    state.resources.moodle.data?.progress.find((item) => item.moduleId === id),
-  );
   if (!module)
     return (
       <EmptyState
@@ -161,16 +159,7 @@ export function ModuleDetail({ id }: { id: string }) {
               />
             }
           >
-            {() => (
-              <section className="p-4">
-                <h3 className="text-card-title">Moodle-Fortschritt</h3>
-                <p className="mt-1 text-body">
-                  {progress
-                    ? `${progress.label}${progress.detail ? ` · ${progress.detail}` : ""}`
-                    : "Für dieses Modul ist kein Moodle-Fortschritt hinterlegt."}
-                </p>
-              </section>
-            )}
+            {() => <MoodleCourseCard moduleId={module.id} />}
           </ResourceBoundary>
         </div>
         <aside

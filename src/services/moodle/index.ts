@@ -16,8 +16,9 @@ export interface MoodleSite {
 /** Data mode "Aufzeichnung": recorded responses of the sandbox, no network. */
 export function createRecordedMoodleService(
   options: MoodleServiceOptions,
+  phase = 0,
 ): MoodleService {
-  return createMoodleService(createReplayClient(recording), options);
+  return createMoodleService(createReplayClient(recording, phase), options);
 }
 
 /** Data mode "Live": checks address and access key first, then returns the service for that site. */

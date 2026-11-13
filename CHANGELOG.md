@@ -13,6 +13,8 @@ Alle nennenswerten Änderungen an StudiCompass. Das Format folgt [Keep a Changel
 - Moodle-Adapter gegen die echten Web Services: Fortschritt, Fristen und Ankündigungen je Modul
 - Einstellungen → Moodle-Daten: Beispieldaten, Aufzeichnung oder ein eigenes Moodle per Zugriffsschlüssel
 - Integrationstests gegen die Sandbox (`npm run test:moodle`) und Workflow `moodle.yml`
+- „Neu in Moodle“: Änderungen in den Kursen seit dem letzten Abgleich am Modul, im Postfach und an der Glocke
+- Kursinhalt je Modul mit Dateien, Abgaben, Abgabestatus und Bewertung
 
 ## [1.0.0] – 2026-11-13
 

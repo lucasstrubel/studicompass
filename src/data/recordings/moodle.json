@@ -1,1964 +1,3257 @@
 {
-  "recordedAt": "2026-11-13T20:37:32.870Z",
+  "recordedAt": "2026-11-13T21:04:04.960Z",
   "release": "4.5.16 (Build: 20261112)",
-  "calls": {
-    "core_webservice_get_site_info?": {
-      "sitename": "Hochschul-Sandbox (StudiCompass)",
-      "userid": 3,
-      "fullname": "Niklas Brandt",
-      "release": "4.5.16 (Build: 20261112)",
-      "functions": [
-        {
-          "name": "core_badges_get_badge"
-        },
-        {
-          "name": "core_badges_get_user_badges"
-        },
-        {
-          "name": "core_badges_get_user_badge_by_hash"
-        },
-        {
-          "name": "core_blog_get_entries"
-        },
-        {
-          "name": "core_blog_view_entries"
-        },
-        {
-          "name": "core_blog_get_access_information"
-        },
-        {
-          "name": "core_blog_add_entry"
-        },
-        {
-          "name": "core_blog_delete_entry"
-        },
-        {
-          "name": "core_blog_prepare_entry_for_edition"
-        },
-        {
-          "name": "core_blog_update_entry"
-        },
-        {
-          "name": "core_calendar_get_calendar_monthly_view"
-        },
-        {
-          "name": "core_calendar_get_calendar_day_view"
-        },
-        {
-          "name": "core_calendar_get_calendar_upcoming_view"
-        },
-        {
-          "name": "core_calendar_update_event_start_day"
-        },
-        {
-          "name": "core_calendar_create_calendar_events"
-        },
-        {
-          "name": "core_calendar_delete_calendar_events"
-        },
-        {
-          "name": "core_calendar_get_calendar_events"
-        },
-        {
-          "name": "core_calendar_get_action_events_by_timesort"
-        },
-        {
-          "name": "core_calendar_get_action_events_by_course"
-        },
-        {
-          "name": "core_calendar_get_action_events_by_courses"
-        },
-        {
-          "name": "core_calendar_get_calendar_event_by_id"
-        },
-        {
-          "name": "core_calendar_submit_create_update_form"
-        },
-        {
-          "name": "core_calendar_get_calendar_access_information"
-        },
-        {
-          "name": "core_calendar_get_allowed_event_types"
-        },
-        {
-          "name": "core_calendar_get_calendar_export_token"
-        },
-        {
-          "name": "core_my_view_page"
-        },
-        {
-          "name": "core_comment_get_comments"
-        },
-        {
-          "name": "core_comment_add_comments"
-        },
-        {
-          "name": "core_comment_delete_comments"
-        },
-        {
-          "name": "core_completion_get_activities_completion_status"
-        },
-        {
-          "name": "core_completion_get_course_completion_status"
-        },
-        {
-          "name": "core_completion_mark_course_self_completed"
-        },
-        {
-          "name": "core_completion_update_activity_completion_status_manually"
-        },
-        {
-          "name": "core_course_get_categories"
-        },
-        {
-          "name": "core_course_get_contents"
-        },
-        {
-          "name": "core_course_get_course_module"
-        },
-        {
-          "name": "core_course_get_course_module_by_instance"
-        },
-        {
-          "name": "core_course_get_courses"
-        },
-        {
-          "name": "core_course_search_courses"
-        },
-        {
-          "name": "core_course_view_course"
-        },
-        {
-          "name": "core_course_get_user_navigation_options"
-        },
-        {
-          "name": "core_course_get_user_administration_options"
-        },
-        {
-          "name": "core_course_get_courses_by_field"
-        },
-        {
-          "name": "core_course_check_updates"
-        },
-        {
-          "name": "core_course_get_updates_since"
-        },
-        {
-          "name": "core_course_get_enrolled_courses_by_timeline_classification"
-        },
-        {
-          "name": "core_course_get_enrolled_courses_with_action_events_by_timeline_classification"
-        },
-        {
-          "name": "core_course_get_recent_courses"
-        },
-        {
-          "name": "core_course_set_favourite_courses"
-        },
-        {
-          "name": "core_enrol_get_course_enrolment_methods"
-        },
-        {
-          "name": "core_enrol_get_enrolled_users"
-        },
-        {
-          "name": "core_enrol_search_users"
-        },
-        {
-          "name": "core_enrol_get_users_courses"
-        },
-        {
-          "name": "core_files_get_files"
-        },
-        {
-          "name": "core_files_delete_draft_files"
-        },
-        {
-          "name": "core_files_get_unused_draft_itemid"
-        },
-        {
-          "name": "core_get_component_strings"
-        },
-        {
-          "name": "core_grades_grader_gradingpanel_point_fetch"
-        },
-        {
-          "name": "core_grades_grader_gradingpanel_point_store"
-        },
-        {
-          "name": "core_grades_grader_gradingpanel_scale_fetch"
-        },
-        {
-          "name": "core_grades_grader_gradingpanel_scale_store"
-        },
-        {
-          "name": "core_grades_get_enrolled_users_for_search_widget"
-        },
-        {
-          "name": "core_grades_get_enrolled_users_for_selector"
-        },
-        {
-          "name": "core_grades_get_groups_for_search_widget"
-        },
-        {
-          "name": "core_grades_get_groups_for_selector"
-        },
-        {
-          "name": "core_grades_get_gradeitems"
-        },
-        {
-          "name": "core_grades_get_gradable_users"
-        },
-        {
-          "name": "core_group_get_activity_allowed_groups"
-        },
-        {
-          "name": "core_group_get_activity_groupmode"
-        },
-        {
-          "name": "core_group_get_course_groupings"
-        },
-        {
-          "name": "core_group_get_course_groups"
-        },
-        {
-          "name": "core_group_get_course_user_groups"
-        },
-        {
-          "name": "core_group_get_groups_for_selector"
-        },
-        {
-          "name": "core_message_mute_conversations"
-        },
-        {
-          "name": "core_message_unmute_conversations"
-        },
-        {
-          "name": "core_message_block_user"
-        },
-        {
-          "name": "core_message_get_contact_requests"
-        },
-        {
-          "name": "core_message_create_contact_request"
-        },
-        {
-          "name": "core_message_confirm_contact_request"
-        },
-        {
-          "name": "core_message_decline_contact_request"
-        },
-        {
-          "name": "core_message_get_received_contact_requests_count"
-        },
-        {
-          "name": "core_message_delete_contacts"
-        },
-        {
-          "name": "core_message_delete_conversations_by_id"
-        },
-        {
-          "name": "core_message_delete_message"
-        },
-        {
-          "name": "core_message_get_blocked_users"
-        },
-        {
-          "name": "core_message_data_for_messagearea_search_messages"
-        },
-        {
-          "name": "core_message_message_search_users"
-        },
-        {
-          "name": "core_message_get_user_contacts"
-        },
-        {
-          "name": "core_message_get_conversations"
-        },
-        {
-          "name": "core_message_get_conversation"
-        },
-        {
-          "name": "core_message_get_conversation_between_users"
-        },
-        {
-          "name": "core_message_get_self_conversation"
-        },
-        {
-          "name": "core_message_get_messages"
-        },
-        {
-          "name": "core_message_get_conversation_counts"
-        },
-        {
-          "name": "core_message_get_unread_conversation_counts"
-        },
-        {
-          "name": "core_message_get_conversation_members"
-        },
-        {
-          "name": "core_message_get_member_info"
-        },
-        {
-          "name": "core_message_get_unread_conversations_count"
-        },
-        {
-          "name": "core_message_mark_all_notifications_as_read"
-        },
-        {
-          "name": "core_message_mark_all_conversation_messages_as_read"
-        },
-        {
-          "name": "core_message_mark_message_read"
-        },
-        {
-          "name": "core_message_mark_notification_read"
-        },
-        {
-          "name": "core_message_message_processor_config_form"
-        },
-        {
-          "name": "core_message_search_contacts"
-        },
-        {
-          "name": "core_message_send_instant_messages"
-        },
-        {
-          "name": "core_message_send_messages_to_conversation"
-        },
-        {
-          "name": "core_message_get_conversation_messages"
-        },
-        {
-          "name": "core_message_unblock_user"
-        },
-        {
-          "name": "core_message_get_user_notification_preferences"
-        },
-        {
-          "name": "core_message_get_user_message_preferences"
-        },
-        {
-          "name": "core_message_set_favourite_conversations"
-        },
-        {
-          "name": "core_message_unset_favourite_conversations"
-        },
-        {
-          "name": "core_message_delete_message_for_all_users"
-        },
-        {
-          "name": "core_message_get_unread_notification_count"
-        },
-        {
-          "name": "core_notes_create_notes"
-        },
-        {
-          "name": "core_notes_delete_notes"
-        },
-        {
-          "name": "core_notes_get_course_notes"
-        },
-        {
-          "name": "core_notes_view_notes"
-        },
-        {
-          "name": "core_question_update_flag"
-        },
-        {
-          "name": "core_rating_get_item_ratings"
-        },
-        {
-          "name": "core_rating_add_rating"
-        },
-        {
-          "name": "core_search_get_results"
-        },
-        {
-          "name": "core_search_get_search_areas_list"
-        },
-        {
-          "name": "core_search_view_results"
-        },
-        {
-          "name": "core_search_get_top_results"
-        },
-        {
-          "name": "core_tag_get_tagindex"
-        },
-        {
-          "name": "core_tag_get_tagindex_per_area"
-        },
-        {
-          "name": "core_tag_get_tag_areas"
-        },
-        {
-          "name": "core_tag_get_tag_collections"
-        },
-        {
-          "name": "core_tag_get_tag_cloud"
-        },
-        {
-          "name": "core_user_add_user_device"
-        },
-        {
-          "name": "core_user_update_user_device_public_key"
-        },
-        {
-          "name": "core_user_add_user_private_files"
-        },
-        {
-          "name": "core_user_get_course_user_profiles"
-        },
-        {
-          "name": "core_user_get_users_by_field"
-        },
-        {
-          "name": "core_user_remove_user_device"
-        },
-        {
-          "name": "core_user_update_user_preferences"
-        },
-        {
-          "name": "core_user_view_user_list"
-        },
-        {
-          "name": "core_user_view_user_profile"
-        },
-        {
-          "name": "core_user_get_user_preferences"
-        },
-        {
-          "name": "core_user_update_picture"
-        },
-        {
-          "name": "core_user_set_user_preferences"
-        },
-        {
-          "name": "core_user_agree_site_policy"
-        },
-        {
-          "name": "core_user_get_private_files_info"
-        },
-        {
-          "name": "core_user_prepare_private_files_for_edition"
-        },
-        {
-          "name": "core_user_update_private_files"
-        },
-        {
-          "name": "core_competency_competency_viewed"
-        },
-        {
-          "name": "core_competency_list_course_competencies"
-        },
-        {
-          "name": "core_competency_get_scale_values"
-        },
-        {
-          "name": "core_competency_user_competency_viewed"
-        },
-        {
-          "name": "core_competency_user_competency_viewed_in_plan"
-        },
-        {
-          "name": "core_competency_user_competency_viewed_in_course"
-        },
-        {
-          "name": "core_competency_user_competency_plan_viewed"
-        },
-        {
-          "name": "core_competency_grade_competency_in_course"
-        },
-        {
-          "name": "core_competency_delete_evidence"
-        },
-        {
-          "name": "core_webservice_get_site_info"
-        },
-        {
-          "name": "core_block_get_course_blocks"
-        },
-        {
-          "name": "core_block_get_dashboard_blocks"
-        },
-        {
-          "name": "core_block_fetch_addable_blocks"
-        },
-        {
-          "name": "core_filters_get_available_in_context"
-        },
-        {
-          "name": "core_filters_get_all_states"
-        },
-        {
-          "name": "core_h5p_get_trusted_h5p_file"
-        },
-        {
-          "name": "core_table_get_dynamic_table_content"
-        },
-        {
-          "name": "core_xapi_statement_post"
-        },
-        {
-          "name": "core_xapi_post_state"
-        },
-        {
-          "name": "core_xapi_get_state"
-        },
-        {
-          "name": "core_xapi_get_states"
-        },
-        {
-          "name": "core_xapi_delete_state"
-        },
-        {
-          "name": "core_xapi_delete_states"
-        },
-        {
-          "name": "core_reportbuilder_list_reports"
-        },
-        {
-          "name": "core_reportbuilder_retrieve_report"
-        },
-        {
-          "name": "core_reportbuilder_retrieve_system_report"
-        },
-        {
-          "name": "core_reportbuilder_can_view_system_report"
-        },
-        {
-          "name": "core_reportbuilder_view_report"
-        },
-        {
-          "name": "core_ai_set_policy_status"
-        },
-        {
-          "name": "core_ai_get_policy_status"
-        },
-        {
-          "name": "aiplacement_courseassist_summarise_text"
-        },
-        {
-          "name": "aiplacement_editor_generate_image"
-        },
-        {
-          "name": "aiplacement_editor_generate_text"
-        },
-        {
-          "name": "mod_assign_get_grades"
-        },
-        {
-          "name": "mod_assign_get_assignments"
-        },
-        {
-          "name": "mod_assign_get_submissions"
-        },
-        {
-          "name": "mod_assign_get_user_flags"
-        },
-        {
-          "name": "mod_assign_set_user_flags"
-        },
-        {
-          "name": "mod_assign_get_user_mappings"
-        },
-        {
-          "name": "mod_assign_revert_submissions_to_draft"
-        },
-        {
-          "name": "mod_assign_lock_submissions"
-        },
-        {
-          "name": "mod_assign_unlock_submissions"
-        },
-        {
-          "name": "mod_assign_save_submission"
-        },
-        {
-          "name": "mod_assign_submit_for_grading"
-        },
-        {
-          "name": "mod_assign_save_grade"
-        },
-        {
-          "name": "mod_assign_save_grades"
-        },
-        {
-          "name": "mod_assign_save_user_extensions"
-        },
-        {
-          "name": "mod_assign_reveal_identities"
-        },
-        {
-          "name": "mod_assign_view_grading_table"
-        },
-        {
-          "name": "mod_assign_view_submission_status"
-        },
-        {
-          "name": "mod_assign_get_submission_status"
-        },
-        {
-          "name": "mod_assign_list_participants"
-        },
-        {
-          "name": "mod_assign_submit_grading_form"
-        },
-        {
-          "name": "mod_assign_get_participant"
-        },
-        {
-          "name": "mod_assign_view_assign"
-        },
-        {
-          "name": "mod_assign_start_submission"
-        },
-        {
-          "name": "mod_assign_remove_submission"
-        },
-        {
-          "name": "mod_bigbluebuttonbn_can_join"
-        },
-        {
-          "name": "mod_bigbluebuttonbn_get_recordings"
-        },
-        {
-          "name": "mod_bigbluebuttonbn_get_recordings_to_import"
-        },
-        {
-          "name": "mod_bigbluebuttonbn_update_recording"
-        },
-        {
-          "name": "mod_bigbluebuttonbn_end_meeting"
-        },
-        {
-          "name": "mod_bigbluebuttonbn_completion_validate"
-        },
-        {
-          "name": "mod_bigbluebuttonbn_meeting_info"
-        },
-        {
-          "name": "mod_bigbluebuttonbn_get_bigbluebuttonbns_by_courses"
-        },
-        {
-          "name": "mod_bigbluebuttonbn_view_bigbluebuttonbn"
-        },
-        {
-          "name": "mod_bigbluebuttonbn_get_join_url"
-        },
-        {
-          "name": "mod_book_view_book"
-        },
-        {
-          "name": "mod_book_get_books_by_courses"
-        },
-        {
-          "name": "mod_chat_login_user"
-        },
-        {
-          "name": "mod_chat_get_chat_users"
-        },
-        {
-          "name": "mod_chat_send_chat_message"
-        },
-        {
-          "name": "mod_chat_get_chat_latest_messages"
-        },
-        {
-          "name": "mod_chat_view_chat"
-        },
-        {
-          "name": "mod_chat_get_chats_by_courses"
-        },
-        {
-          "name": "mod_chat_get_sessions"
-        },
-        {
-          "name": "mod_chat_get_session_messages"
-        },
-        {
-          "name": "mod_chat_view_sessions"
-        },
-        {
-          "name": "mod_choice_get_choice_results"
-        },
-        {
-          "name": "mod_choice_get_choice_options"
-        },
-        {
-          "name": "mod_choice_submit_choice_response"
-        },
-        {
-          "name": "mod_choice_view_choice"
-        },
-        {
-          "name": "mod_choice_get_choices_by_courses"
-        },
-        {
-          "name": "mod_choice_delete_choice_responses"
-        },
-        {
-          "name": "mod_data_get_databases_by_courses"
-        },
-        {
-          "name": "mod_data_view_database"
-        },
-        {
-          "name": "mod_data_get_data_access_information"
-        },
-        {
-          "name": "mod_data_get_entries"
-        },
-        {
-          "name": "mod_data_get_entry"
-        },
-        {
-          "name": "mod_data_get_fields"
-        },
-        {
-          "name": "mod_data_search_entries"
-        },
-        {
-          "name": "mod_data_approve_entry"
-        },
-        {
-          "name": "mod_data_delete_entry"
-        },
-        {
-          "name": "mod_data_add_entry"
-        },
-        {
-          "name": "mod_data_update_entry"
-        },
-        {
-          "name": "mod_feedback_get_feedbacks_by_courses"
-        },
-        {
-          "name": "mod_feedback_get_feedback_access_information"
-        },
-        {
-          "name": "mod_feedback_view_feedback"
-        },
-        {
-          "name": "mod_feedback_get_current_completed_tmp"
-        },
-        {
-          "name": "mod_feedback_get_items"
-        },
-        {
-          "name": "mod_feedback_launch_feedback"
-        },
-        {
-          "name": "mod_feedback_get_page_items"
-        },
-        {
-          "name": "mod_feedback_process_page"
-        },
-        {
-          "name": "mod_feedback_get_analysis"
-        },
-        {
-          "name": "mod_feedback_get_unfinished_responses"
-        },
-        {
-          "name": "mod_feedback_get_finished_responses"
-        },
-        {
-          "name": "mod_feedback_get_non_respondents"
-        },
-        {
-          "name": "mod_feedback_get_responses_analysis"
-        },
-        {
-          "name": "mod_feedback_get_last_completed"
-        },
-        {
-          "name": "mod_folder_view_folder"
-        },
-        {
-          "name": "mod_folder_get_folders_by_courses"
-        },
-        {
-          "name": "mod_forum_get_forums_by_courses"
-        },
-        {
-          "name": "mod_forum_get_discussion_posts"
-        },
-        {
-          "name": "mod_forum_get_forum_discussions"
-        },
-        {
-          "name": "mod_forum_view_forum"
-        },
-        {
-          "name": "mod_forum_view_forum_discussion"
-        },
-        {
-          "name": "mod_forum_add_discussion_post"
-        },
-        {
-          "name": "mod_forum_add_discussion"
-        },
-        {
-          "name": "mod_forum_can_add_discussion"
-        },
-        {
-          "name": "mod_forum_get_forum_access_information"
-        },
-        {
-          "name": "mod_forum_set_subscription_state"
-        },
-        {
-          "name": "mod_forum_set_lock_state"
-        },
-        {
-          "name": "mod_forum_toggle_favourite_state"
-        },
-        {
-          "name": "mod_forum_set_pin_state"
-        },
-        {
-          "name": "mod_forum_delete_post"
-        },
-        {
-          "name": "mod_forum_get_discussion_post"
-        },
-        {
-          "name": "mod_forum_prepare_draft_area_for_post"
-        },
-        {
-          "name": "mod_forum_update_discussion_post"
-        },
-        {
-          "name": "mod_glossary_get_glossaries_by_courses"
-        },
-        {
-          "name": "mod_glossary_view_glossary"
-        },
-        {
-          "name": "mod_glossary_view_entry"
-        },
-        {
-          "name": "mod_glossary_get_entries_by_letter"
-        },
-        {
-          "name": "mod_glossary_get_entries_by_date"
-        },
-        {
-          "name": "mod_glossary_get_categories"
-        },
-        {
-          "name": "mod_glossary_get_entries_by_category"
-        },
-        {
-          "name": "mod_glossary_get_authors"
-        },
-        {
-          "name": "mod_glossary_get_entries_by_author"
-        },
-        {
-          "name": "mod_glossary_get_entries_by_author_id"
-        },
-        {
-          "name": "mod_glossary_get_entries_by_search"
-        },
-        {
-          "name": "mod_glossary_get_entries_by_term"
-        },
-        {
-          "name": "mod_glossary_get_entries_to_approve"
-        },
-        {
-          "name": "mod_glossary_get_entry_by_id"
-        },
-        {
-          "name": "mod_glossary_add_entry"
-        },
-        {
-          "name": "mod_glossary_delete_entry"
-        },
-        {
-          "name": "mod_glossary_update_entry"
-        },
-        {
-          "name": "mod_glossary_prepare_entry_for_edition"
-        },
-        {
-          "name": "mod_h5pactivity_get_h5pactivity_access_information"
-        },
-        {
-          "name": "mod_h5pactivity_view_h5pactivity"
-        },
-        {
-          "name": "mod_h5pactivity_get_attempts"
-        },
-        {
-          "name": "mod_h5pactivity_get_results"
-        },
-        {
-          "name": "mod_h5pactivity_get_h5pactivities_by_courses"
-        },
-        {
-          "name": "mod_h5pactivity_log_report_viewed"
-        },
-        {
-          "name": "mod_h5pactivity_get_user_attempts"
-        },
-        {
-          "name": "mod_imscp_view_imscp"
-        },
-        {
-          "name": "mod_imscp_get_imscps_by_courses"
-        },
-        {
-          "name": "mod_label_get_labels_by_courses"
-        },
-        {
-          "name": "mod_lesson_get_lessons_by_courses"
-        },
-        {
-          "name": "mod_lesson_get_lesson_access_information"
-        },
-        {
-          "name": "mod_lesson_view_lesson"
-        },
-        {
-          "name": "mod_lesson_get_questions_attempts"
-        },
-        {
-          "name": "mod_lesson_get_user_grade"
-        },
-        {
-          "name": "mod_lesson_get_user_attempt_grade"
-        },
-        {
-          "name": "mod_lesson_get_content_pages_viewed"
-        },
-        {
-          "name": "mod_lesson_get_user_timers"
-        },
-        {
-          "name": "mod_lesson_get_pages"
-        },
-        {
-          "name": "mod_lesson_launch_attempt"
-        },
-        {
-          "name": "mod_lesson_get_page_data"
-        },
-        {
-          "name": "mod_lesson_process_page"
-        },
-        {
-          "name": "mod_lesson_finish_attempt"
-        },
-        {
-          "name": "mod_lesson_get_attempts_overview"
-        },
-        {
-          "name": "mod_lesson_get_user_attempt"
-        },
-        {
-          "name": "mod_lesson_get_pages_possible_jumps"
-        },
-        {
-          "name": "mod_lesson_get_lesson"
-        },
-        {
-          "name": "mod_lti_get_tool_launch_data"
-        },
-        {
-          "name": "mod_lti_get_ltis_by_courses"
-        },
-        {
-          "name": "mod_lti_view_lti"
-        },
-        {
-          "name": "mod_page_view_page"
-        },
-        {
-          "name": "mod_page_get_pages_by_courses"
-        },
-        {
-          "name": "mod_quiz_get_quizzes_by_courses"
-        },
-        {
-          "name": "mod_quiz_view_quiz"
-        },
-        {
-          "name": "mod_quiz_get_user_attempts"
-        },
-        {
-          "name": "mod_quiz_get_user_best_grade"
-        },
-        {
-          "name": "mod_quiz_get_combined_review_options"
-        },
-        {
-          "name": "mod_quiz_start_attempt"
-        },
-        {
-          "name": "mod_quiz_get_attempt_data"
-        },
-        {
-          "name": "mod_quiz_get_attempt_summary"
-        },
-        {
-          "name": "mod_quiz_save_attempt"
-        },
-        {
-          "name": "mod_quiz_process_attempt"
-        },
-        {
-          "name": "mod_quiz_get_attempt_review"
-        },
-        {
-          "name": "mod_quiz_view_attempt"
-        },
-        {
-          "name": "mod_quiz_view_attempt_summary"
-        },
-        {
-          "name": "mod_quiz_view_attempt_review"
-        },
-        {
-          "name": "mod_quiz_get_quiz_feedback_for_grade"
-        },
-        {
-          "name": "mod_quiz_get_quiz_access_information"
-        },
-        {
-          "name": "mod_quiz_get_attempt_access_information"
-        },
-        {
-          "name": "mod_quiz_get_quiz_required_qtypes"
-        },
-        {
-          "name": "mod_resource_view_resource"
-        },
-        {
-          "name": "mod_resource_get_resources_by_courses"
-        },
-        {
-          "name": "mod_scorm_view_scorm"
-        },
-        {
-          "name": "mod_scorm_get_scorm_attempt_count"
-        },
-        {
-          "name": "mod_scorm_get_scorm_scoes"
-        },
-        {
-          "name": "mod_scorm_get_scorm_user_data"
-        },
-        {
-          "name": "mod_scorm_insert_scorm_tracks"
-        },
-        {
-          "name": "mod_scorm_get_scorm_sco_tracks"
-        },
-        {
-          "name": "mod_scorm_get_scorms_by_courses"
-        },
-        {
-          "name": "mod_scorm_launch_sco"
-        },
-        {
-          "name": "mod_scorm_get_scorm_access_information"
-        },
-        {
-          "name": "mod_survey_get_surveys_by_courses"
-        },
-        {
-          "name": "mod_survey_view_survey"
-        },
-        {
-          "name": "mod_survey_get_questions"
-        },
-        {
-          "name": "mod_survey_submit_answers"
-        },
-        {
-          "name": "mod_url_view_url"
-        },
-        {
-          "name": "mod_url_get_urls_by_courses"
-        },
-        {
-          "name": "mod_wiki_get_wikis_by_courses"
-        },
-        {
-          "name": "mod_wiki_view_wiki"
-        },
-        {
-          "name": "mod_wiki_view_page"
-        },
-        {
-          "name": "mod_wiki_get_subwikis"
-        },
-        {
-          "name": "mod_wiki_get_subwiki_pages"
-        },
-        {
-          "name": "mod_wiki_get_subwiki_files"
-        },
-        {
-          "name": "mod_wiki_get_page_contents"
-        },
-        {
-          "name": "mod_wiki_get_page_for_editing"
-        },
-        {
-          "name": "mod_wiki_new_page"
-        },
-        {
-          "name": "mod_wiki_edit_page"
-        },
-        {
-          "name": "mod_workshop_get_workshops_by_courses"
-        },
-        {
-          "name": "mod_workshop_get_workshop_access_information"
-        },
-        {
-          "name": "mod_workshop_get_user_plan"
-        },
-        {
-          "name": "mod_workshop_view_workshop"
-        },
-        {
-          "name": "mod_workshop_add_submission"
-        },
-        {
-          "name": "mod_workshop_update_submission"
-        },
-        {
-          "name": "mod_workshop_delete_submission"
-        },
-        {
-          "name": "mod_workshop_get_submissions"
-        },
-        {
-          "name": "mod_workshop_get_submission"
-        },
-        {
-          "name": "mod_workshop_get_submission_assessments"
-        },
-        {
-          "name": "mod_workshop_get_assessment"
-        },
-        {
-          "name": "mod_workshop_get_assessment_form_definition"
-        },
-        {
-          "name": "mod_workshop_get_reviewer_assessments"
-        },
-        {
-          "name": "mod_workshop_update_assessment"
-        },
-        {
-          "name": "mod_workshop_get_grades"
-        },
-        {
-          "name": "mod_workshop_evaluate_assessment"
-        },
-        {
-          "name": "mod_workshop_get_grades_report"
-        },
-        {
-          "name": "mod_workshop_view_submission"
-        },
-        {
-          "name": "mod_workshop_evaluate_submission"
-        },
-        {
-          "name": "enrol_guest_get_instance_info"
-        },
-        {
-          "name": "enrol_guest_validate_password"
-        },
-        {
-          "name": "enrol_self_get_instance_info"
-        },
-        {
-          "name": "enrol_self_enrol_user"
-        },
-        {
-          "name": "message_airnotifier_is_system_configured"
-        },
-        {
-          "name": "message_airnotifier_are_notification_preferences_configured"
-        },
-        {
-          "name": "message_airnotifier_get_user_devices"
-        },
-        {
-          "name": "message_airnotifier_enable_device"
-        },
-        {
-          "name": "message_popup_get_popup_notifications"
-        },
-        {
-          "name": "message_popup_get_unread_popup_notification_count"
-        },
-        {
-          "name": "block_recentlyaccesseditems_get_recent_items"
-        },
-        {
-          "name": "block_starredcourses_get_starred_courses"
-        },
-        {
-          "name": "report_insights_set_notuseful_prediction"
-        },
-        {
-          "name": "report_insights_set_fixed_prediction"
-        },
-        {
-          "name": "report_insights_action_executed"
-        },
-        {
-          "name": "gradereport_grader_get_users_in_report"
-        },
-        {
-          "name": "gradereport_overview_get_course_grades"
-        },
-        {
-          "name": "gradereport_overview_view_grade_report"
-        },
-        {
-          "name": "gradereport_singleview_get_grade_items_for_search_widget"
-        },
-        {
-          "name": "gradereport_user_get_grades_table"
-        },
-        {
-          "name": "gradereport_user_view_grade_report"
-        },
-        {
-          "name": "gradereport_user_get_grade_items"
-        },
-        {
-          "name": "gradereport_user_get_access_information"
-        },
-        {
-          "name": "tool_analytics_potential_contexts"
-        },
-        {
-          "name": "tool_dataprivacy_cancel_data_request"
-        },
-        {
-          "name": "tool_dataprivacy_contact_dpo"
-        },
-        {
-          "name": "tool_dataprivacy_get_access_information"
-        },
-        {
-          "name": "tool_dataprivacy_create_data_request"
-        },
-        {
-          "name": "tool_dataprivacy_get_data_requests"
-        },
-        {
-          "name": "tool_lp_data_for_course_competencies_page"
-        },
-        {
-          "name": "tool_lp_data_for_plans_page"
-        },
-        {
-          "name": "tool_lp_data_for_plan_page"
-        },
-        {
-          "name": "tool_lp_data_for_user_evidence_list_page"
-        },
-        {
-          "name": "tool_lp_data_for_user_evidence_page"
-        },
-        {
-          "name": "tool_lp_data_for_user_competency_summary"
-        },
-        {
-          "name": "tool_lp_data_for_user_competency_summary_in_plan"
-        },
-        {
-          "name": "tool_lp_data_for_user_competency_summary_in_course"
-        },
-        {
-          "name": "tool_mobile_get_plugins_supporting_mobile"
-        },
-        {
-          "name": "tool_mobile_get_public_config"
-        },
-        {
-          "name": "tool_mobile_get_config"
-        },
-        {
-          "name": "tool_mobile_get_autologin_key"
-        },
-        {
-          "name": "tool_mobile_get_content"
-        },
-        {
-          "name": "tool_mobile_call_external_functions"
-        },
-        {
-          "name": "tool_mobile_validate_subscription_key"
-        },
-        {
-          "name": "tool_mobile_get_tokens_for_qr_login"
-        },
-        {
-          "name": "tool_moodlenet_verify_webfinger"
-        },
-        {
-          "name": "tool_moodlenet_search_courses"
-        },
-        {
-          "name": "tool_policy_get_user_acceptances"
-        },
-        {
-          "name": "tool_policy_set_acceptances_status"
-        }
-      ]
-    },
-    "core_enrol_get_users_courses?userid=3": [
-      {
-        "id": 6,
-        "shortname": "WI3-WS26",
-        "fullname": "Wirtschaftsinformatik 3",
-        "idnumber": "m-wi3"
+  "phases": [
+    {
+      "core_webservice_get_site_info?": {
+        "sitename": "Hochschul-Sandbox (StudiCompass)",
+        "siteurl": "http://localhost:8080",
+        "userid": 3,
+        "fullname": "Niklas Brandt",
+        "release": "4.5.16 (Build: 20261112)",
+        "functions": []
       },
-      {
-        "id": 5,
-        "shortname": "BWL2-WS26",
-        "fullname": "Betriebswirtschaftslehre 2",
-        "idnumber": "m-bwl2"
-      },
-      {
-        "id": 4,
-        "shortname": "WEB-WS26",
-        "fullname": "Webbasierte Systeme",
-        "idnumber": "m-web"
-      },
-      {
-        "id": 3,
-        "shortname": "DM-WS26",
-        "fullname": "Datenmanagement",
-        "idnumber": "m-dm"
-      },
-      {
-        "id": 2,
-        "shortname": "PR2-WS26",
-        "fullname": "Programmierung 2",
-        "idnumber": "m-pr2"
-      }
-    ],
-    "mod_forum_get_forums_by_courses?courseids%5B0%5D=6&courseids%5B1%5D=5&courseids%5B2%5D=4&courseids%5B3%5D=3&courseids%5B4%5D=2": [
-      {
-        "id": 4,
-        "course": 6,
-        "type": "news"
-      },
-      {
-        "id": 3,
-        "course": 4,
-        "type": "news"
-      },
-      {
-        "id": 2,
-        "course": 3,
-        "type": "news"
-      },
-      {
-        "id": 1,
-        "course": 2,
-        "type": "news"
-      }
-    ],
-    "core_completion_get_activities_completion_status?courseid=4&userid=3": {
-      "statuses": [
-        {
-          "cmid": 32,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        }
-      ]
-    },
-    "core_completion_get_activities_completion_status?courseid=6&userid=3": {
-      "statuses": [
-        {
-          "cmid": 46,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 47,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 48,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 49,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 50,
-          "modname": "assign",
-          "state": 0,
-          "hascompletion": true
-        },
-        {
-          "cmid": 51,
-          "modname": "assign",
-          "state": 0,
-          "hascompletion": true
-        }
-      ]
-    },
-    "core_completion_get_activities_completion_status?courseid=5&userid=3": {
-      "statuses": [
-        {
-          "cmid": 35,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 36,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 37,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 38,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 39,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 40,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 41,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 42,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 43,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 44,
-          "modname": "assign",
-          "state": 0,
-          "hascompletion": true
-        }
-      ]
-    },
-    "core_completion_get_activities_completion_status?courseid=2&userid=3": {
-      "statuses": [
-        {
-          "cmid": 3,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 4,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 5,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 6,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 7,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 8,
-          "modname": "assign",
-          "state": 0,
-          "hascompletion": true
-        },
-        {
-          "cmid": 9,
-          "modname": "assign",
-          "state": 0,
-          "hascompletion": true
-        },
-        {
-          "cmid": 10,
-          "modname": "assign",
-          "state": 0,
-          "hascompletion": true
-        },
-        {
-          "cmid": 11,
-          "modname": "assign",
-          "state": 0,
-          "hascompletion": true
-        },
-        {
-          "cmid": 12,
-          "modname": "assign",
-          "state": 0,
-          "hascompletion": true
-        },
-        {
-          "cmid": 13,
-          "modname": "assign",
-          "state": 0,
-          "hascompletion": true
-        },
-        {
-          "cmid": 14,
-          "modname": "assign",
-          "state": 0,
-          "hascompletion": true
-        }
-      ]
-    },
-    "core_completion_get_activities_completion_status?courseid=3&userid=3": {
-      "statuses": [
-        {
-          "cmid": 18,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 19,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 20,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 21,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 22,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 23,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 24,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 25,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 26,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 27,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 28,
-          "modname": "assign",
-          "state": 1,
-          "hascompletion": true
-        },
-        {
-          "cmid": 29,
-          "modname": "assign",
-          "state": 0,
-          "hascompletion": true
-        }
-      ]
-    },
-    "mod_assign_get_assignments?courseids%5B0%5D=6&courseids%5B1%5D=5&courseids%5B2%5D=4&courseids%5B3%5D=3&courseids%5B4%5D=2": {
-      "courses": [
+      "core_enrol_get_users_courses?userid=3": [
         {
           "id": 6,
-          "assignments": [
-            {
-              "id": 36,
-              "cmid": 46,
-              "name": "Pflichtübung 1",
-              "duedate": 1794783540
-            },
-            {
-              "id": 37,
-              "cmid": 47,
-              "name": "Pflichtübung 2",
-              "duedate": 1796425140
-            },
-            {
-              "id": 38,
-              "cmid": 48,
-              "name": "Pflichtübung 3",
-              "duedate": 1798066740
-            },
-            {
-              "id": 39,
-              "cmid": 49,
-              "name": "Pflichtübung 4",
-              "duedate": 1799708340
-            },
-            {
-              "id": 40,
-              "cmid": 50,
-              "name": "Pflichtübung 5",
-              "duedate": 1801436340
-            },
-            {
-              "id": 41,
-              "cmid": 51,
-              "name": "Pflichtübung 6",
-              "duedate": 1802991540
-            }
-          ]
+          "shortname": "WI3-WS26",
+          "fullname": "Wirtschaftsinformatik 3",
+          "idnumber": "m-wi3"
         },
         {
           "id": 5,
-          "assignments": [
-            {
-              "id": 27,
-              "cmid": 36,
-              "name": "Übung 2",
-              "duedate": 1794178740
-            },
-            {
-              "id": 26,
-              "cmid": 35,
-              "name": "Übung 1",
-              "duedate": 1793573940
-            },
-            {
-              "id": 28,
-              "cmid": 37,
-              "name": "Übung 3",
-              "duedate": 1794783540
-            },
-            {
-              "id": 29,
-              "cmid": 38,
-              "name": "Übung 4",
-              "duedate": 1795388340
-            },
-            {
-              "id": 30,
-              "cmid": 39,
-              "name": "Übung 5",
-              "duedate": 1795993140
-            },
-            {
-              "id": 31,
-              "cmid": 40,
-              "name": "Übung 6",
-              "duedate": 1796597940
-            },
-            {
-              "id": 32,
-              "cmid": 41,
-              "name": "Übung 7",
-              "duedate": 1797202740
-            },
-            {
-              "id": 33,
-              "cmid": 42,
-              "name": "Übung 8",
-              "duedate": 1797807540
-            },
-            {
-              "id": 34,
-              "cmid": 43,
-              "name": "Übung 9",
-              "duedate": 1798412340
-            },
-            {
-              "id": 35,
-              "cmid": 44,
-              "name": "Übung 10",
-              "duedate": 1799017140
-            }
-          ]
+          "shortname": "BWL2-WS26",
+          "fullname": "Betriebswirtschaftslehre 2",
+          "idnumber": "m-bwl2"
         },
         {
           "id": 4,
-          "assignments": [
-            {
-              "id": 25,
-              "cmid": 32,
-              "name": "Pflichtübung",
-              "duedate": 1797807540
-            }
-          ]
+          "shortname": "WEB-WS26",
+          "fullname": "Webbasierte Systeme",
+          "idnumber": "m-web"
         },
         {
           "id": 3,
-          "assignments": [
+          "shortname": "DM-WS26",
+          "fullname": "Datenmanagement",
+          "idnumber": "m-dm"
+        },
+        {
+          "id": 2,
+          "shortname": "PR2-WS26",
+          "fullname": "Programmierung 2",
+          "idnumber": "m-pr2"
+        }
+      ],
+      "mod_forum_get_forums_by_courses?courseids%5B0%5D=6&courseids%5B1%5D=5&courseids%5B2%5D=4&courseids%5B3%5D=3&courseids%5B4%5D=2": [
+        {
+          "id": 4,
+          "course": 6,
+          "type": "news"
+        },
+        {
+          "id": 3,
+          "course": 4,
+          "type": "news"
+        },
+        {
+          "id": 2,
+          "course": 3,
+          "type": "news"
+        },
+        {
+          "id": 1,
+          "course": 2,
+          "type": "news"
+        }
+      ],
+      "core_completion_get_activities_completion_status?courseid=6&userid=3": {
+        "statuses": [
+          {
+            "cmid": 46,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 47,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 48,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 49,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 50,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          },
+          {
+            "cmid": 51,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          }
+        ]
+      },
+      "core_completion_get_activities_completion_status?courseid=4&userid=3": {
+        "statuses": [
+          {
+            "cmid": 32,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          }
+        ]
+      },
+      "core_completion_get_activities_completion_status?courseid=5&userid=3": {
+        "statuses": [
+          {
+            "cmid": 35,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 36,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 37,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 38,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 39,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 40,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 41,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 42,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 43,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 44,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          }
+        ]
+      },
+      "mod_assign_get_assignments?courseids%5B0%5D=6&courseids%5B1%5D=5&courseids%5B2%5D=4&courseids%5B3%5D=3&courseids%5B4%5D=2": {
+        "courses": [
+          {
+            "id": 6,
+            "assignments": [
+              {
+                "id": 36,
+                "cmid": 46,
+                "name": "Pflichtübung 1",
+                "duedate": 1794783540,
+                "timemodified": 1794603832
+              },
+              {
+                "id": 37,
+                "cmid": 47,
+                "name": "Pflichtübung 2",
+                "duedate": 1796425140,
+                "timemodified": 1794603832
+              },
+              {
+                "id": 38,
+                "cmid": 48,
+                "name": "Pflichtübung 3",
+                "duedate": 1798066740,
+                "timemodified": 1794603833
+              },
+              {
+                "id": 39,
+                "cmid": 49,
+                "name": "Pflichtübung 4",
+                "duedate": 1799708340,
+                "timemodified": 1794603833
+              },
+              {
+                "id": 40,
+                "cmid": 50,
+                "name": "Pflichtübung 5",
+                "duedate": 1801436340,
+                "timemodified": 1794603833
+              },
+              {
+                "id": 41,
+                "cmid": 51,
+                "name": "Pflichtübung 6",
+                "duedate": 1802991540,
+                "timemodified": 1794603833
+              }
+            ]
+          },
+          {
+            "id": 5,
+            "assignments": [
+              {
+                "id": 27,
+                "cmid": 36,
+                "name": "Übung 2",
+                "duedate": 1794178740,
+                "timemodified": 1794603831
+              },
+              {
+                "id": 26,
+                "cmid": 35,
+                "name": "Übung 1",
+                "duedate": 1793573940,
+                "timemodified": 1794603831
+              },
+              {
+                "id": 28,
+                "cmid": 37,
+                "name": "Übung 3",
+                "duedate": 1794783540,
+                "timemodified": 1794603831
+              },
+              {
+                "id": 29,
+                "cmid": 38,
+                "name": "Übung 4",
+                "duedate": 1795388340,
+                "timemodified": 1794603831
+              },
+              {
+                "id": 30,
+                "cmid": 39,
+                "name": "Übung 5",
+                "duedate": 1795993140,
+                "timemodified": 1794603831
+              },
+              {
+                "id": 31,
+                "cmid": 40,
+                "name": "Übung 6",
+                "duedate": 1796597940,
+                "timemodified": 1794603832
+              },
+              {
+                "id": 32,
+                "cmid": 41,
+                "name": "Übung 7",
+                "duedate": 1797202740,
+                "timemodified": 1794603832
+              },
+              {
+                "id": 33,
+                "cmid": 42,
+                "name": "Übung 8",
+                "duedate": 1797807540,
+                "timemodified": 1794603832
+              },
+              {
+                "id": 34,
+                "cmid": 43,
+                "name": "Übung 9",
+                "duedate": 1798412340,
+                "timemodified": 1794603832
+              },
+              {
+                "id": 35,
+                "cmid": 44,
+                "name": "Übung 10",
+                "duedate": 1799017140,
+                "timemodified": 1794603832
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "assignments": [
+              {
+                "id": 25,
+                "cmid": 32,
+                "name": "Pflichtübung",
+                "duedate": 1797807540,
+                "timemodified": 1794603831
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "assignments": [
+              {
+                "id": 23,
+                "cmid": 28,
+                "name": "Übungsblatt 11",
+                "duedate": 1799017140,
+                "timemodified": 1794603830
+              },
+              {
+                "id": 13,
+                "cmid": 18,
+                "name": "Übungsblatt 1",
+                "duedate": 1792969140,
+                "timemodified": 1794603829
+              },
+              {
+                "id": 14,
+                "cmid": 19,
+                "name": "Übungsblatt 2",
+                "duedate": 1793573940,
+                "timemodified": 1794603829
+              },
+              {
+                "id": 15,
+                "cmid": 20,
+                "name": "Übungsblatt 3",
+                "duedate": 1794178740,
+                "timemodified": 1794603829
+              },
+              {
+                "id": 16,
+                "cmid": 21,
+                "name": "Übungsblatt 4",
+                "duedate": 1794783540,
+                "timemodified": 1794603829
+              },
+              {
+                "id": 17,
+                "cmid": 22,
+                "name": "Übungsblatt 5",
+                "duedate": 1795388340,
+                "timemodified": 1794603829
+              },
+              {
+                "id": 18,
+                "cmid": 23,
+                "name": "Übungsblatt 6",
+                "duedate": 1795993140,
+                "timemodified": 1794603830
+              },
+              {
+                "id": 19,
+                "cmid": 24,
+                "name": "Übungsblatt 7",
+                "duedate": 1796597940,
+                "timemodified": 1794603830
+              },
+              {
+                "id": 20,
+                "cmid": 25,
+                "name": "Übungsblatt 8",
+                "duedate": 1797202740,
+                "timemodified": 1794603830
+              },
+              {
+                "id": 21,
+                "cmid": 26,
+                "name": "Übungsblatt 9",
+                "duedate": 1797807540,
+                "timemodified": 1794603830
+              },
+              {
+                "id": 22,
+                "cmid": 27,
+                "name": "Übungsblatt 10",
+                "duedate": 1798412340,
+                "timemodified": 1794603830
+              },
+              {
+                "id": 24,
+                "cmid": 29,
+                "name": "Übungsblatt 12",
+                "duedate": 1799621940,
+                "timemodified": 1794603830
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "assignments": [
+              {
+                "id": 1,
+                "cmid": 3,
+                "name": "Übungsblatt 1",
+                "duedate": 1792969140,
+                "timemodified": 1794603827
+              },
+              {
+                "id": 2,
+                "cmid": 4,
+                "name": "Übungsblatt 2",
+                "duedate": 1793573940,
+                "timemodified": 1794603828
+              },
+              {
+                "id": 3,
+                "cmid": 5,
+                "name": "Übungsblatt 3",
+                "duedate": 1794178740,
+                "timemodified": 1794603828
+              },
+              {
+                "id": 4,
+                "cmid": 6,
+                "name": "Übungsblatt 4",
+                "duedate": 1794783540,
+                "timemodified": 1794603828
+              },
+              {
+                "id": 5,
+                "cmid": 7,
+                "name": "Übungsblatt 5",
+                "duedate": 1795388340,
+                "timemodified": 1794603828
+              },
+              {
+                "id": 6,
+                "cmid": 8,
+                "name": "Übungsblatt 6",
+                "duedate": 1795993140,
+                "timemodified": 1794603828
+              },
+              {
+                "id": 7,
+                "cmid": 9,
+                "name": "Übungsblatt 7",
+                "duedate": 1796597940,
+                "timemodified": 1794603828
+              },
+              {
+                "id": 8,
+                "cmid": 10,
+                "name": "Übungsblatt 8",
+                "duedate": 1797202740,
+                "timemodified": 1794603828
+              },
+              {
+                "id": 9,
+                "cmid": 11,
+                "name": "Übungsblatt 9",
+                "duedate": 1797807540,
+                "timemodified": 1794603828
+              },
+              {
+                "id": 10,
+                "cmid": 12,
+                "name": "Übungsblatt 10",
+                "duedate": 1798412340,
+                "timemodified": 1794603829
+              },
+              {
+                "id": 11,
+                "cmid": 13,
+                "name": "Übungsblatt 11",
+                "duedate": 1799017140,
+                "timemodified": 1794603829
+              },
+              {
+                "id": 12,
+                "cmid": 14,
+                "name": "Übungsblatt 12",
+                "duedate": 1799621940,
+                "timemodified": 1794603829
+              }
+            ]
+          }
+        ]
+      },
+      "core_completion_get_activities_completion_status?courseid=3&userid=3": {
+        "statuses": [
+          {
+            "cmid": 18,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 19,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 20,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 21,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 22,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 23,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 24,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 25,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 26,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 27,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 28,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 29,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          }
+        ]
+      },
+      "core_completion_get_activities_completion_status?courseid=2&userid=3": {
+        "statuses": [
+          {
+            "cmid": 3,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 4,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 5,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 6,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 7,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 8,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          },
+          {
+            "cmid": 9,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          },
+          {
+            "cmid": 10,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          },
+          {
+            "cmid": 11,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          },
+          {
+            "cmid": 12,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          },
+          {
+            "cmid": 13,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          },
+          {
+            "cmid": 14,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          }
+        ]
+      },
+      "mod_forum_get_forum_discussions?forumid=2": {
+        "discussions": [
+          {
+            "discussion": 2,
+            "name": "Probeklausur verfügbar",
+            "message": "Die Probeklausur steht im Abschnitt Klausurvorbereitung bereit.",
+            "userfullname": "Jana Hartwig",
+            "timemodified": 1794603831
+          }
+        ]
+      },
+      "mod_forum_get_forum_discussions?forumid=1": {
+        "discussions": [
+          {
+            "discussion": 1,
+            "name": "Klausurtermin Programmierung 2",
+            "message": "Die Klausur findet am 08.02.2027 um 09:00 Uhr statt. Abmeldungen sind bis 26.01.2027 im POS möglich.",
+            "userfullname": "Jana Hartwig",
+            "timemodified": 1794603829
+          }
+        ]
+      },
+      "mod_forum_get_forum_discussions?forumid=3": {
+        "discussions": [
+          {
+            "discussion": 3,
+            "name": "Feedback zur Pflichtübung",
+            "message": "Das Feedback zur Pflichtübung ist online.",
+            "userfullname": "Jana Hartwig",
+            "timemodified": 1794603831
+          }
+        ]
+      },
+      "mod_forum_get_forum_discussions?forumid=4": {
+        "discussions": [
+          {
+            "discussion": 4,
+            "name": "Pflichtübung 5",
+            "message": "Pflichtübung 5 ist bis 31.01.2027 abzugeben.",
+            "userfullname": "Jana Hartwig",
+            "timemodified": 1794603833
+          }
+        ]
+      },
+      "core_course_get_contents?courseid=4": [
+        {
+          "name": "General",
+          "modules": [
             {
-              "id": 23,
-              "cmid": 28,
-              "name": "Übungsblatt 11",
-              "duedate": 1799017140
-            },
-            {
-              "id": 13,
-              "cmid": 18,
-              "name": "Übungsblatt 1",
-              "duedate": 1792969140
-            },
-            {
-              "id": 14,
-              "cmid": 19,
-              "name": "Übungsblatt 2",
-              "duedate": 1793573940
-            },
-            {
-              "id": 15,
-              "cmid": 20,
-              "name": "Übungsblatt 3",
-              "duedate": 1794178740
-            },
-            {
-              "id": 16,
-              "cmid": 21,
-              "name": "Übungsblatt 4",
-              "duedate": 1794783540
-            },
-            {
-              "id": 17,
-              "cmid": 22,
-              "name": "Übungsblatt 5",
-              "duedate": 1795388340
-            },
-            {
-              "id": 18,
-              "cmid": 23,
-              "name": "Übungsblatt 6",
-              "duedate": 1795993140
-            },
-            {
-              "id": 19,
-              "cmid": 24,
-              "name": "Übungsblatt 7",
-              "duedate": 1796597940
-            },
-            {
-              "id": 20,
-              "cmid": 25,
-              "name": "Übungsblatt 8",
-              "duedate": 1797202740
-            },
-            {
-              "id": 21,
-              "cmid": 26,
-              "name": "Übungsblatt 9",
-              "duedate": 1797807540
-            },
-            {
-              "id": 22,
-              "cmid": 27,
-              "name": "Übungsblatt 10",
-              "duedate": 1798412340
-            },
-            {
-              "id": 24,
-              "cmid": 29,
-              "name": "Übungsblatt 12",
-              "duedate": 1799621940
+              "id": 33,
+              "name": "Announcements",
+              "modname": "forum",
+              "url": "http://localhost:8080/mod/forum/view.php?id=33",
+              "uservisible": true,
+              "contents": []
             }
           ]
         },
         {
-          "id": 2,
-          "assignments": [
+          "name": "Vorlesung",
+          "modules": [
+            {
+              "id": 31,
+              "name": "Folien HTTP und REST",
+              "modname": "resource",
+              "url": "http://localhost:8080/mod/resource/view.php?id=31",
+              "uservisible": true,
+              "contents": [
+                {
+                  "type": "file",
+                  "filename": "web-folien-http.txt",
+                  "timemodified": 1794603831
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Übungen",
+          "modules": [
+            {
+              "id": 32,
+              "name": "Pflichtübung",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=32",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Klausurvorbereitung",
+          "modules": []
+        }
+      ],
+      "core_course_get_contents?courseid=6": [
+        {
+          "name": "General",
+          "modules": [
+            {
+              "id": 52,
+              "name": "Announcements",
+              "modname": "forum",
+              "url": "http://localhost:8080/mod/forum/view.php?id=52",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Vorlesung",
+          "modules": [
+            {
+              "id": 45,
+              "name": "Foliensatz Geschäftsprozesse",
+              "modname": "resource",
+              "url": "http://localhost:8080/mod/resource/view.php?id=45",
+              "uservisible": true,
+              "contents": [
+                {
+                  "type": "file",
+                  "filename": "wi3-geschaeftsprozesse.txt",
+                  "timemodified": 1794603832
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Übungen",
+          "modules": [
+            {
+              "id": 46,
+              "name": "Pflichtübung 1",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=46",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 47,
+              "name": "Pflichtübung 2",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=47",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 48,
+              "name": "Pflichtübung 3",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=48",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 49,
+              "name": "Pflichtübung 4",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=49",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 50,
+              "name": "Pflichtübung 5",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=50",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 51,
+              "name": "Pflichtübung 6",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=51",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Klausurvorbereitung",
+          "modules": []
+        }
+      ],
+      "core_course_get_contents?courseid=5": [
+        {
+          "name": "General",
+          "modules": []
+        },
+        {
+          "name": "Vorlesung",
+          "modules": [
+            {
+              "id": 34,
+              "name": "Foliensatz Kostenrechnung",
+              "modname": "resource",
+              "url": "http://localhost:8080/mod/resource/view.php?id=34",
+              "uservisible": true,
+              "contents": [
+                {
+                  "type": "file",
+                  "filename": "bwl2-kostenrechnung.txt",
+                  "timemodified": 1794603831
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Übungen",
+          "modules": [
+            {
+              "id": 35,
+              "name": "Übung 1",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=35",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 36,
+              "name": "Übung 2",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=36",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 37,
+              "name": "Übung 3",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=37",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 38,
+              "name": "Übung 4",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=38",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 39,
+              "name": "Übung 5",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=39",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 40,
+              "name": "Übung 6",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=40",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 41,
+              "name": "Übung 7",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=41",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 42,
+              "name": "Übung 8",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=42",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 43,
+              "name": "Übung 9",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=43",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 44,
+              "name": "Übung 10",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=44",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Klausurvorbereitung",
+          "modules": []
+        }
+      ],
+      "core_course_get_contents?courseid=2": [
+        {
+          "name": "General",
+          "modules": [
+            {
+              "id": 15,
+              "name": "Announcements",
+              "modname": "forum",
+              "url": "http://localhost:8080/mod/forum/view.php?id=15",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Vorlesung",
+          "modules": [
             {
               "id": 1,
-              "cmid": 3,
-              "name": "Übungsblatt 1",
-              "duedate": 1792969140
+              "name": "Vorlesung 01: Vererbung und Polymorphie",
+              "modname": "resource",
+              "url": "http://localhost:8080/mod/resource/view.php?id=1",
+              "uservisible": true,
+              "contents": [
+                {
+                  "type": "file",
+                  "filename": "pr2-vorlesung-01.txt",
+                  "timemodified": 1794603827
+                }
+              ]
             },
             {
               "id": 2,
-              "cmid": 4,
-              "name": "Übungsblatt 2",
-              "duedate": 1793573940
-            },
+              "name": "Vorlesung 02: Generics und Collections",
+              "modname": "resource",
+              "url": "http://localhost:8080/mod/resource/view.php?id=2",
+              "uservisible": true,
+              "contents": [
+                {
+                  "type": "file",
+                  "filename": "pr2-vorlesung-02.txt",
+                  "timemodified": 1794603827
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Übungen",
+          "modules": [
             {
               "id": 3,
-              "cmid": 5,
-              "name": "Übungsblatt 3",
-              "duedate": 1794178740
+              "name": "Übungsblatt 1",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=3",
+              "uservisible": true,
+              "contents": []
             },
             {
               "id": 4,
-              "cmid": 6,
-              "name": "Übungsblatt 4",
-              "duedate": 1794783540
+              "name": "Übungsblatt 2",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=4",
+              "uservisible": true,
+              "contents": []
             },
             {
               "id": 5,
-              "cmid": 7,
-              "name": "Übungsblatt 5",
-              "duedate": 1795388340
+              "name": "Übungsblatt 3",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=5",
+              "uservisible": true,
+              "contents": []
             },
             {
               "id": 6,
-              "cmid": 8,
-              "name": "Übungsblatt 6",
-              "duedate": 1795993140
+              "name": "Übungsblatt 4",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=6",
+              "uservisible": true,
+              "contents": []
             },
             {
               "id": 7,
-              "cmid": 9,
-              "name": "Übungsblatt 7",
-              "duedate": 1796597940
+              "name": "Übungsblatt 5",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=7",
+              "uservisible": true,
+              "contents": []
             },
             {
               "id": 8,
-              "cmid": 10,
-              "name": "Übungsblatt 8",
-              "duedate": 1797202740
+              "name": "Übungsblatt 6",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=8",
+              "uservisible": true,
+              "contents": []
             },
             {
               "id": 9,
-              "cmid": 11,
-              "name": "Übungsblatt 9",
-              "duedate": 1797807540
+              "name": "Übungsblatt 7",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=9",
+              "uservisible": true,
+              "contents": []
             },
             {
               "id": 10,
-              "cmid": 12,
-              "name": "Übungsblatt 10",
-              "duedate": 1798412340
+              "name": "Übungsblatt 8",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=10",
+              "uservisible": true,
+              "contents": []
             },
             {
               "id": 11,
-              "cmid": 13,
-              "name": "Übungsblatt 11",
-              "duedate": 1799017140
+              "name": "Übungsblatt 9",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=11",
+              "uservisible": true,
+              "contents": []
             },
             {
               "id": 12,
-              "cmid": 14,
+              "name": "Übungsblatt 10",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=12",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 13,
+              "name": "Übungsblatt 11",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=13",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 14,
               "name": "Übungsblatt 12",
-              "duedate": 1799621940
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=14",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Klausurvorbereitung",
+          "modules": []
+        }
+      ],
+      "core_course_get_contents?courseid=3": [
+        {
+          "name": "General",
+          "modules": [
+            {
+              "id": 30,
+              "name": "Announcements",
+              "modname": "forum",
+              "url": "http://localhost:8080/mod/forum/view.php?id=30",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Vorlesung",
+          "modules": [
+            {
+              "id": 16,
+              "name": "Skript Datenmanagement",
+              "modname": "resource",
+              "url": "http://localhost:8080/mod/resource/view.php?id=16",
+              "uservisible": true,
+              "contents": [
+                {
+                  "type": "file",
+                  "filename": "dm-skript.txt",
+                  "timemodified": 1794603829
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Übungen",
+          "modules": [
+            {
+              "id": 18,
+              "name": "Übungsblatt 1",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=18",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 19,
+              "name": "Übungsblatt 2",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=19",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 20,
+              "name": "Übungsblatt 3",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=20",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 21,
+              "name": "Übungsblatt 4",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=21",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 22,
+              "name": "Übungsblatt 5",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=22",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 23,
+              "name": "Übungsblatt 6",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=23",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 24,
+              "name": "Übungsblatt 7",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=24",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 25,
+              "name": "Übungsblatt 8",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=25",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 26,
+              "name": "Übungsblatt 9",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=26",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 27,
+              "name": "Übungsblatt 10",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=27",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 28,
+              "name": "Übungsblatt 11",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=28",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 29,
+              "name": "Übungsblatt 12",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=29",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Klausurvorbereitung",
+          "modules": [
+            {
+              "id": 17,
+              "name": "Probeklausur",
+              "modname": "resource",
+              "url": "http://localhost:8080/mod/resource/view.php?id=17",
+              "uservisible": true,
+              "contents": [
+                {
+                  "type": "file",
+                  "filename": "dm-probeklausur.txt",
+                  "timemodified": 1794603829
+                }
+              ]
             }
           ]
         }
-      ]
+      ],
+      "gradereport_user_get_grade_items?courseid=4&userid=3": {
+        "usergrades": [
+          {
+            "gradeitems": [
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 25,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "course",
+                "itemmodule": null,
+                "iteminstance": 3,
+                "graderaw": null,
+                "grademax": 100
+              }
+            ]
+          }
+        ]
+      },
+      "gradereport_user_get_grade_items?courseid=6&userid=3": {
+        "usergrades": [
+          {
+            "gradeitems": [
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 36,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 37,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 38,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 39,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 40,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 41,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "course",
+                "itemmodule": null,
+                "iteminstance": 5,
+                "graderaw": null,
+                "grademax": 100
+              }
+            ]
+          }
+        ]
+      },
+      "gradereport_user_get_grade_items?courseid=5&userid=3": {
+        "usergrades": [
+          {
+            "gradeitems": [
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 26,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 27,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 28,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 29,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 30,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 31,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 32,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 33,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 34,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 35,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "course",
+                "itemmodule": null,
+                "iteminstance": 4,
+                "graderaw": null,
+                "grademax": 100
+              }
+            ]
+          }
+        ]
+      },
+      "gradereport_user_get_grade_items?courseid=3&userid=3": {
+        "usergrades": [
+          {
+            "gradeitems": [
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 13,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 14,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 15,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 16,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 17,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 18,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 19,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 20,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 21,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 22,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 23,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 24,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "course",
+                "itemmodule": null,
+                "iteminstance": 2,
+                "graderaw": null,
+                "grademax": 100
+              }
+            ]
+          }
+        ]
+      },
+      "gradereport_user_get_grade_items?courseid=2&userid=3": {
+        "usergrades": [
+          {
+            "gradeitems": [
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 1,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 2,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 3,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 4,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 5,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 6,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 7,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 8,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 9,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 10,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 11,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 12,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "course",
+                "itemmodule": null,
+                "iteminstance": 1,
+                "graderaw": null,
+                "grademax": 100
+              }
+            ]
+          }
+        ]
+      }
     },
-    "mod_forum_get_forum_discussions?forumid=3": {
-      "discussions": [
+    {
+      "core_webservice_get_site_info?": {
+        "sitename": "Hochschul-Sandbox (StudiCompass)",
+        "siteurl": "http://localhost:8080",
+        "userid": 3,
+        "fullname": "Niklas Brandt",
+        "release": "4.5.16 (Build: 20261112)",
+        "functions": []
+      },
+      "core_enrol_get_users_courses?userid=3": [
         {
-          "discussion": 3,
-          "name": "Feedback zur Pflichtübung",
-          "message": "Das Feedback zur Pflichtübung ist online.",
-          "userfullname": "Jana Hartwig",
-          "timemodified": 1794601540
-        }
-      ]
-    },
-    "mod_forum_get_forum_discussions?forumid=4": {
-      "discussions": [
+          "id": 6,
+          "shortname": "WI3-WS26",
+          "fullname": "Wirtschaftsinformatik 3",
+          "idnumber": "m-wi3"
+        },
         {
-          "discussion": 4,
-          "name": "Pflichtübung 5",
-          "message": "Pflichtübung 5 ist bis 31.01.2027 abzugeben.",
-          "userfullname": "Jana Hartwig",
-          "timemodified": 1794601543
-        }
-      ]
-    },
-    "mod_forum_get_forum_discussions?forumid=1": {
-      "discussions": [
+          "id": 5,
+          "shortname": "BWL2-WS26",
+          "fullname": "Betriebswirtschaftslehre 2",
+          "idnumber": "m-bwl2"
+        },
         {
-          "discussion": 1,
-          "name": "Klausurtermin Programmierung 2",
-          "message": "Die Klausur findet am 08.02.2027 um 09:00 Uhr statt. Abmeldungen sind bis 26.01.2027 im POS möglich.",
-          "userfullname": "Jana Hartwig",
-          "timemodified": 1794601538
-        }
-      ]
-    },
-    "mod_forum_get_forum_discussions?forumid=2": {
-      "discussions": [
+          "id": 4,
+          "shortname": "WEB-WS26",
+          "fullname": "Webbasierte Systeme",
+          "idnumber": "m-web"
+        },
         {
-          "discussion": 2,
-          "name": "Probeklausur verfügbar",
-          "message": "Die Probeklausur steht im Abschnitt Klausurvorbereitung bereit.",
-          "userfullname": "Jana Hartwig",
-          "timemodified": 1794601540
+          "id": 3,
+          "shortname": "DM-WS26",
+          "fullname": "Datenmanagement",
+          "idnumber": "m-dm"
+        },
+        {
+          "id": 2,
+          "shortname": "PR2-WS26",
+          "fullname": "Programmierung 2",
+          "idnumber": "m-pr2"
         }
-      ]
+      ],
+      "core_completion_get_activities_completion_status?courseid=6&userid=3": {
+        "statuses": [
+          {
+            "cmid": 46,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 47,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 48,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 49,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 50,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          },
+          {
+            "cmid": 51,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          }
+        ]
+      },
+      "core_completion_get_activities_completion_status?courseid=4&userid=3": {
+        "statuses": [
+          {
+            "cmid": 32,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          }
+        ]
+      },
+      "core_completion_get_activities_completion_status?courseid=3&userid=3": {
+        "statuses": [
+          {
+            "cmid": 18,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 19,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 20,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 21,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 22,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 23,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 24,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 25,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 26,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 27,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 28,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 29,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          }
+        ]
+      },
+      "core_completion_get_activities_completion_status?courseid=2&userid=3": {
+        "statuses": [
+          {
+            "cmid": 3,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 4,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 5,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 6,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 7,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 8,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          },
+          {
+            "cmid": 9,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          },
+          {
+            "cmid": 10,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          },
+          {
+            "cmid": 11,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          },
+          {
+            "cmid": 12,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          },
+          {
+            "cmid": 13,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          },
+          {
+            "cmid": 14,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          }
+        ]
+      },
+      "core_completion_get_activities_completion_status?courseid=5&userid=3": {
+        "statuses": [
+          {
+            "cmid": 35,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 36,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 37,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 38,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 39,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 40,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 41,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 42,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 43,
+            "modname": "assign",
+            "state": 1,
+            "hascompletion": true
+          },
+          {
+            "cmid": 44,
+            "modname": "assign",
+            "state": 0,
+            "hascompletion": true
+          }
+        ]
+      },
+      "mod_forum_get_forums_by_courses?courseids%5B0%5D=6&courseids%5B1%5D=5&courseids%5B2%5D=4&courseids%5B3%5D=3&courseids%5B4%5D=2": [
+        {
+          "id": 4,
+          "course": 6,
+          "type": "news"
+        },
+        {
+          "id": 3,
+          "course": 4,
+          "type": "news"
+        },
+        {
+          "id": 2,
+          "course": 3,
+          "type": "news"
+        },
+        {
+          "id": 1,
+          "course": 2,
+          "type": "news"
+        }
+      ],
+      "mod_assign_get_assignments?courseids%5B0%5D=6&courseids%5B1%5D=5&courseids%5B2%5D=4&courseids%5B3%5D=3&courseids%5B4%5D=2": {
+        "courses": [
+          {
+            "id": 6,
+            "assignments": [
+              {
+                "id": 36,
+                "cmid": 46,
+                "name": "Pflichtübung 1",
+                "duedate": 1794783540,
+                "timemodified": 1794603832
+              },
+              {
+                "id": 37,
+                "cmid": 47,
+                "name": "Pflichtübung 2",
+                "duedate": 1796425140,
+                "timemodified": 1794603832
+              },
+              {
+                "id": 38,
+                "cmid": 48,
+                "name": "Pflichtübung 3",
+                "duedate": 1798066740,
+                "timemodified": 1794603833
+              },
+              {
+                "id": 39,
+                "cmid": 49,
+                "name": "Pflichtübung 4",
+                "duedate": 1799708340,
+                "timemodified": 1794603833
+              },
+              {
+                "id": 40,
+                "cmid": 50,
+                "name": "Pflichtübung 5",
+                "duedate": 1801436340,
+                "timemodified": 1794603833
+              },
+              {
+                "id": 41,
+                "cmid": 51,
+                "name": "Pflichtübung 6",
+                "duedate": 1802991540,
+                "timemodified": 1794603833
+              }
+            ]
+          },
+          {
+            "id": 5,
+            "assignments": [
+              {
+                "id": 27,
+                "cmid": 36,
+                "name": "Übung 2",
+                "duedate": 1794178740,
+                "timemodified": 1794603831
+              },
+              {
+                "id": 26,
+                "cmid": 35,
+                "name": "Übung 1",
+                "duedate": 1793573940,
+                "timemodified": 1794603831
+              },
+              {
+                "id": 28,
+                "cmid": 37,
+                "name": "Übung 3",
+                "duedate": 1794783540,
+                "timemodified": 1794603831
+              },
+              {
+                "id": 29,
+                "cmid": 38,
+                "name": "Übung 4",
+                "duedate": 1795388340,
+                "timemodified": 1794603831
+              },
+              {
+                "id": 30,
+                "cmid": 39,
+                "name": "Übung 5",
+                "duedate": 1795993140,
+                "timemodified": 1794603831
+              },
+              {
+                "id": 31,
+                "cmid": 40,
+                "name": "Übung 6",
+                "duedate": 1796597940,
+                "timemodified": 1794603832
+              },
+              {
+                "id": 32,
+                "cmid": 41,
+                "name": "Übung 7",
+                "duedate": 1797202740,
+                "timemodified": 1794603832
+              },
+              {
+                "id": 33,
+                "cmid": 42,
+                "name": "Übung 8",
+                "duedate": 1797807540,
+                "timemodified": 1794603832
+              },
+              {
+                "id": 34,
+                "cmid": 43,
+                "name": "Übung 9",
+                "duedate": 1798412340,
+                "timemodified": 1794603832
+              },
+              {
+                "id": 35,
+                "cmid": 44,
+                "name": "Übung 10",
+                "duedate": 1799017140,
+                "timemodified": 1794603832
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "assignments": [
+              {
+                "id": 25,
+                "cmid": 32,
+                "name": "Pflichtübung",
+                "duedate": 1797807540,
+                "timemodified": 1794603831
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "assignments": [
+              {
+                "id": 23,
+                "cmid": 28,
+                "name": "Übungsblatt 11",
+                "duedate": 1799017140,
+                "timemodified": 1794603830
+              },
+              {
+                "id": 13,
+                "cmid": 18,
+                "name": "Übungsblatt 1",
+                "duedate": 1792969140,
+                "timemodified": 1794603829
+              },
+              {
+                "id": 14,
+                "cmid": 19,
+                "name": "Übungsblatt 2",
+                "duedate": 1793573940,
+                "timemodified": 1794603829
+              },
+              {
+                "id": 15,
+                "cmid": 20,
+                "name": "Übungsblatt 3",
+                "duedate": 1794178740,
+                "timemodified": 1794603829
+              },
+              {
+                "id": 16,
+                "cmid": 21,
+                "name": "Übungsblatt 4",
+                "duedate": 1794783540,
+                "timemodified": 1794603829
+              },
+              {
+                "id": 17,
+                "cmid": 22,
+                "name": "Übungsblatt 5",
+                "duedate": 1795388340,
+                "timemodified": 1794603829
+              },
+              {
+                "id": 18,
+                "cmid": 23,
+                "name": "Übungsblatt 6",
+                "duedate": 1795993140,
+                "timemodified": 1794603830
+              },
+              {
+                "id": 19,
+                "cmid": 24,
+                "name": "Übungsblatt 7",
+                "duedate": 1796597940,
+                "timemodified": 1794603830
+              },
+              {
+                "id": 20,
+                "cmid": 25,
+                "name": "Übungsblatt 8",
+                "duedate": 1797202740,
+                "timemodified": 1794603830
+              },
+              {
+                "id": 21,
+                "cmid": 26,
+                "name": "Übungsblatt 9",
+                "duedate": 1797807540,
+                "timemodified": 1794603830
+              },
+              {
+                "id": 22,
+                "cmid": 27,
+                "name": "Übungsblatt 10",
+                "duedate": 1798412340,
+                "timemodified": 1794603830
+              },
+              {
+                "id": 24,
+                "cmid": 29,
+                "name": "Übungsblatt 12",
+                "duedate": 1799621940,
+                "timemodified": 1794603830
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "assignments": [
+              {
+                "id": 1,
+                "cmid": 3,
+                "name": "Übungsblatt 1",
+                "duedate": 1792969140,
+                "timemodified": 1794603827
+              },
+              {
+                "id": 2,
+                "cmid": 4,
+                "name": "Übungsblatt 2",
+                "duedate": 1793573940,
+                "timemodified": 1794603828
+              },
+              {
+                "id": 3,
+                "cmid": 5,
+                "name": "Übungsblatt 3",
+                "duedate": 1794178740,
+                "timemodified": 1794603828
+              },
+              {
+                "id": 4,
+                "cmid": 6,
+                "name": "Übungsblatt 4",
+                "duedate": 1794783540,
+                "timemodified": 1794603828
+              },
+              {
+                "id": 5,
+                "cmid": 7,
+                "name": "Übungsblatt 5",
+                "duedate": 1795388340,
+                "timemodified": 1794603828
+              },
+              {
+                "id": 6,
+                "cmid": 8,
+                "name": "Übungsblatt 6",
+                "duedate": 1795993140,
+                "timemodified": 1794603828
+              },
+              {
+                "id": 7,
+                "cmid": 9,
+                "name": "Übungsblatt 7",
+                "duedate": 1796597940,
+                "timemodified": 1794603828
+              },
+              {
+                "id": 8,
+                "cmid": 10,
+                "name": "Übungsblatt 8",
+                "duedate": 1797202740,
+                "timemodified": 1794603828
+              },
+              {
+                "id": 9,
+                "cmid": 11,
+                "name": "Übungsblatt 9",
+                "duedate": 1797807540,
+                "timemodified": 1794603828
+              },
+              {
+                "id": 10,
+                "cmid": 12,
+                "name": "Übungsblatt 10",
+                "duedate": 1798412340,
+                "timemodified": 1794603829
+              },
+              {
+                "id": 11,
+                "cmid": 13,
+                "name": "Übungsblatt 11",
+                "duedate": 1799017140,
+                "timemodified": 1794603829
+              },
+              {
+                "id": 12,
+                "cmid": 14,
+                "name": "Übungsblatt 12",
+                "duedate": 1799621940,
+                "timemodified": 1794603829
+              }
+            ]
+          }
+        ]
+      },
+      "mod_forum_get_forum_discussions?forumid=4": {
+        "discussions": [
+          {
+            "discussion": 4,
+            "name": "Pflichtübung 5",
+            "message": "Pflichtübung 5 ist bis 31.01.2027 abzugeben.",
+            "userfullname": "Jana Hartwig",
+            "timemodified": 1794603833
+          }
+        ]
+      },
+      "mod_forum_get_forum_discussions?forumid=3": {
+        "discussions": [
+          {
+            "discussion": 3,
+            "name": "Feedback zur Pflichtübung",
+            "message": "Das Feedback zur Pflichtübung ist online.",
+            "userfullname": "Jana Hartwig",
+            "timemodified": 1794603831
+          }
+        ]
+      },
+      "mod_forum_get_forum_discussions?forumid=1": {
+        "discussions": [
+          {
+            "discussion": 1,
+            "name": "Klausurtermin Programmierung 2",
+            "message": "Die Klausur findet am 08.02.2027 um 09:00 Uhr statt. Abmeldungen sind bis 26.01.2027 im POS möglich.",
+            "userfullname": "Jana Hartwig",
+            "timemodified": 1794603829
+          }
+        ]
+      },
+      "mod_forum_get_forum_discussions?forumid=2": {
+        "discussions": [
+          {
+            "discussion": 5,
+            "name": "Zusatztermin zur Klausurvorbereitung",
+            "message": "Am Donnerstag, 28.01.2027, 16 Uhr gibt es einen Zusatztermin in Raum A 108. Wir besprechen die Probeklausur.",
+            "userfullname": "Jana Hartwig",
+            "timemodified": 1794603843
+          },
+          {
+            "discussion": 2,
+            "name": "Probeklausur verfügbar",
+            "message": "Die Probeklausur steht im Abschnitt Klausurvorbereitung bereit.",
+            "userfullname": "Jana Hartwig",
+            "timemodified": 1794603831
+          }
+        ]
+      },
+      "core_course_get_contents?courseid=4": [
+        {
+          "name": "General",
+          "modules": [
+            {
+              "id": 33,
+              "name": "Announcements",
+              "modname": "forum",
+              "url": "http://localhost:8080/mod/forum/view.php?id=33",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Vorlesung",
+          "modules": [
+            {
+              "id": 31,
+              "name": "Folien HTTP und REST",
+              "modname": "resource",
+              "url": "http://localhost:8080/mod/resource/view.php?id=31",
+              "uservisible": true,
+              "contents": [
+                {
+                  "type": "file",
+                  "filename": "web-folien-http.txt",
+                  "timemodified": 1794603831
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Übungen",
+          "modules": [
+            {
+              "id": 32,
+              "name": "Pflichtübung",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=32",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Klausurvorbereitung",
+          "modules": []
+        }
+      ],
+      "core_course_get_contents?courseid=5": [
+        {
+          "name": "General",
+          "modules": []
+        },
+        {
+          "name": "Vorlesung",
+          "modules": [
+            {
+              "id": 34,
+              "name": "Foliensatz Kostenrechnung",
+              "modname": "resource",
+              "url": "http://localhost:8080/mod/resource/view.php?id=34",
+              "uservisible": true,
+              "contents": [
+                {
+                  "type": "file",
+                  "filename": "bwl2-kostenrechnung.txt",
+                  "timemodified": 1794603831
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Übungen",
+          "modules": [
+            {
+              "id": 35,
+              "name": "Übung 1",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=35",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 36,
+              "name": "Übung 2",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=36",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 37,
+              "name": "Übung 3",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=37",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 38,
+              "name": "Übung 4",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=38",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 39,
+              "name": "Übung 5",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=39",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 40,
+              "name": "Übung 6",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=40",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 41,
+              "name": "Übung 7",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=41",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 42,
+              "name": "Übung 8",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=42",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 43,
+              "name": "Übung 9",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=43",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 44,
+              "name": "Übung 10",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=44",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Klausurvorbereitung",
+          "modules": []
+        }
+      ],
+      "core_course_get_contents?courseid=6": [
+        {
+          "name": "General",
+          "modules": [
+            {
+              "id": 52,
+              "name": "Announcements",
+              "modname": "forum",
+              "url": "http://localhost:8080/mod/forum/view.php?id=52",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Vorlesung",
+          "modules": [
+            {
+              "id": 45,
+              "name": "Foliensatz Geschäftsprozesse",
+              "modname": "resource",
+              "url": "http://localhost:8080/mod/resource/view.php?id=45",
+              "uservisible": true,
+              "contents": [
+                {
+                  "type": "file",
+                  "filename": "wi3-geschaeftsprozesse.txt",
+                  "timemodified": 1794603832
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Übungen",
+          "modules": [
+            {
+              "id": 46,
+              "name": "Pflichtübung 1",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=46",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 47,
+              "name": "Pflichtübung 2",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=47",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 48,
+              "name": "Pflichtübung 3",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=48",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 49,
+              "name": "Pflichtübung 4",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=49",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 50,
+              "name": "Pflichtübung 5",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=50",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 51,
+              "name": "Pflichtübung 6",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=51",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Klausurvorbereitung",
+          "modules": []
+        }
+      ],
+      "core_course_get_contents?courseid=3": [
+        {
+          "name": "General",
+          "modules": [
+            {
+              "id": 30,
+              "name": "Announcements",
+              "modname": "forum",
+              "url": "http://localhost:8080/mod/forum/view.php?id=30",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Vorlesung",
+          "modules": [
+            {
+              "id": 16,
+              "name": "Skript Datenmanagement",
+              "modname": "resource",
+              "url": "http://localhost:8080/mod/resource/view.php?id=16",
+              "uservisible": true,
+              "contents": [
+                {
+                  "type": "file",
+                  "filename": "dm-skript.txt",
+                  "timemodified": 1794603829
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Übungen",
+          "modules": [
+            {
+              "id": 18,
+              "name": "Übungsblatt 1",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=18",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 19,
+              "name": "Übungsblatt 2",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=19",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 20,
+              "name": "Übungsblatt 3",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=20",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 21,
+              "name": "Übungsblatt 4",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=21",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 22,
+              "name": "Übungsblatt 5",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=22",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 23,
+              "name": "Übungsblatt 6",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=23",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 24,
+              "name": "Übungsblatt 7",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=24",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 25,
+              "name": "Übungsblatt 8",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=25",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 26,
+              "name": "Übungsblatt 9",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=26",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 27,
+              "name": "Übungsblatt 10",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=27",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 28,
+              "name": "Übungsblatt 11",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=28",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 29,
+              "name": "Übungsblatt 12",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=29",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Klausurvorbereitung",
+          "modules": [
+            {
+              "id": 17,
+              "name": "Probeklausur",
+              "modname": "resource",
+              "url": "http://localhost:8080/mod/resource/view.php?id=17",
+              "uservisible": true,
+              "contents": [
+                {
+                  "type": "file",
+                  "filename": "dm-probeklausur.txt",
+                  "timemodified": 1794603829
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "core_course_get_contents?courseid=2": [
+        {
+          "name": "General",
+          "modules": [
+            {
+              "id": 15,
+              "name": "Announcements",
+              "modname": "forum",
+              "url": "http://localhost:8080/mod/forum/view.php?id=15",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Vorlesung",
+          "modules": [
+            {
+              "id": 1,
+              "name": "Vorlesung 01: Vererbung und Polymorphie",
+              "modname": "resource",
+              "url": "http://localhost:8080/mod/resource/view.php?id=1",
+              "uservisible": true,
+              "contents": [
+                {
+                  "type": "file",
+                  "filename": "pr2-vorlesung-01.txt",
+                  "timemodified": 1794603827
+                }
+              ]
+            },
+            {
+              "id": 2,
+              "name": "Vorlesung 02: Generics und Collections",
+              "modname": "resource",
+              "url": "http://localhost:8080/mod/resource/view.php?id=2",
+              "uservisible": true,
+              "contents": [
+                {
+                  "type": "file",
+                  "filename": "pr2-vorlesung-02.txt",
+                  "timemodified": 1794603827
+                }
+              ]
+            },
+            {
+              "id": 53,
+              "name": "Vorlesung 03: Ausnahmen und Ein-/Ausgabe",
+              "modname": "resource",
+              "url": "http://localhost:8080/mod/resource/view.php?id=53",
+              "uservisible": true,
+              "contents": [
+                {
+                  "type": "file",
+                  "filename": "pr2-vorlesung-03.txt",
+                  "timemodified": 1794603843
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Übungen",
+          "modules": [
+            {
+              "id": 3,
+              "name": "Übungsblatt 1",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=3",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 4,
+              "name": "Übungsblatt 2",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=4",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 5,
+              "name": "Übungsblatt 3",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=5",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 6,
+              "name": "Übungsblatt 4",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=6",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 7,
+              "name": "Übungsblatt 5",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=7",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 8,
+              "name": "Übungsblatt 6",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=8",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 9,
+              "name": "Übungsblatt 7",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=9",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 10,
+              "name": "Übungsblatt 8",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=10",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 11,
+              "name": "Übungsblatt 9",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=11",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 12,
+              "name": "Übungsblatt 10",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=12",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 13,
+              "name": "Übungsblatt 11",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=13",
+              "uservisible": true,
+              "contents": []
+            },
+            {
+              "id": 14,
+              "name": "Übungsblatt 12",
+              "modname": "assign",
+              "url": "http://localhost:8080/mod/assign/view.php?id=14",
+              "uservisible": true,
+              "contents": []
+            }
+          ]
+        },
+        {
+          "name": "Klausurvorbereitung",
+          "modules": []
+        }
+      ],
+      "gradereport_user_get_grade_items?courseid=4&userid=3": {
+        "usergrades": [
+          {
+            "gradeitems": [
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 25,
+                "graderaw": 8,
+                "grademax": 10
+              },
+              {
+                "itemtype": "course",
+                "itemmodule": null,
+                "iteminstance": 3,
+                "graderaw": 8,
+                "grademax": 10
+              }
+            ]
+          }
+        ]
+      },
+      "gradereport_user_get_grade_items?courseid=6&userid=3": {
+        "usergrades": [
+          {
+            "gradeitems": [
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 36,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 37,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 38,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 39,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 40,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 41,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "course",
+                "itemmodule": null,
+                "iteminstance": 5,
+                "graderaw": null,
+                "grademax": 100
+              }
+            ]
+          }
+        ]
+      },
+      "gradereport_user_get_grade_items?courseid=5&userid=3": {
+        "usergrades": [
+          {
+            "gradeitems": [
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 26,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 27,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 28,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 29,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 30,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 31,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 32,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 33,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 34,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 35,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "course",
+                "itemmodule": null,
+                "iteminstance": 4,
+                "graderaw": null,
+                "grademax": 100
+              }
+            ]
+          }
+        ]
+      },
+      "gradereport_user_get_grade_items?courseid=3&userid=3": {
+        "usergrades": [
+          {
+            "gradeitems": [
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 13,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 14,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 15,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 16,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 17,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 18,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 19,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 20,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 21,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 22,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 23,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 24,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "course",
+                "itemmodule": null,
+                "iteminstance": 2,
+                "graderaw": null,
+                "grademax": 100
+              }
+            ]
+          }
+        ]
+      },
+      "gradereport_user_get_grade_items?courseid=2&userid=3": {
+        "usergrades": [
+          {
+            "gradeitems": [
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 1,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 2,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 3,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 4,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 5,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 6,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 7,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 8,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 9,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 10,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 11,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "mod",
+                "itemmodule": "assign",
+                "iteminstance": 12,
+                "graderaw": null,
+                "grademax": 10
+              },
+              {
+                "itemtype": "course",
+                "itemmodule": null,
+                "iteminstance": 1,
+                "graderaw": null,
+                "grademax": 100
+              }
+            ]
+          }
+        ]
+      }
     }
-  }
+  ]
 }

@@ -78,7 +78,7 @@ it("shows why a connection failed and keeps the example data", async () => {
 
 it("names the connected site and disconnects again", async () => {
   const { default: recording } = await import("@/data/recordings/moodle.json");
-  const calls = recording.calls as Record<string, unknown>;
+  const calls = recording.phases[0] as Record<string, unknown>;
   vi.stubGlobal(
     "fetch",
     vi.fn((_url: string, init: { body: URLSearchParams }) => {

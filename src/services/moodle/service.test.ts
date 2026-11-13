@@ -3,13 +3,18 @@ import recording from "@/data/recordings/moodle.json";
 import { DEMO_NOW, DEMO_TIME_ZONE } from "@/config/demo";
 import { modules } from "@/data/modules";
 import type { MoodleClient } from "./client";
+import {
+  detectMoodleChanges,
+  knownMoodleItems,
+  moodleChangeText,
+} from "@/domain/moodle-changes";
 import { MoodleError } from "./errors";
 import { mapMoodle, plainText, toInstant } from "./mapping";
 import { createReplayClient } from "./replay";
 import { createMoodleService } from "./service";
 
 const options = { now: () => DEMO_NOW, timeZone: DEMO_TIME_ZONE };
-const replay = () => createReplayClient(recording);
+const replay = (phase = 0) => createReplayClient(recording, phase);
 
 describe("createMoodleService with the recording of the sandbox", () => {
   it("counts the submitted assignments per module", async () => {
@@ -111,6 +116,65 @@ describe("createMoodleService with the recording of the sandbox", () => {
   });
 });
 
+describe("course contents", () => {
+  it("lists files, assignments and announcements of a course", async () => {
+    const data = await createMoodleService(replay(), options).load();
+    const course = data.courses.find((item) => item.moduleId === "m-pr2");
+    expect(course).toMatchObject({
+      title: "Programmierung 2",
+      url: expect.stringMatching(/\/course\/view\.php\?id=\d+$/) as string,
+    });
+    const items = course?.items ?? [];
+    expect(
+      items.filter((item) => item.kind === "file").map((item) => item.title),
+    ).toEqual([
+      "Vorlesung 01: Vererbung und Polymorphie",
+      "Vorlesung 02: Generics und Collections",
+    ]);
+    expect(items.filter((item) => item.kind === "assignment")).toHaveLength(12);
+    expect(items.find((item) => item.title === "Übungsblatt 1")).toMatchObject({
+      kind: "assignment",
+      section: "Übungen",
+      submitted: true,
+      dueAt: "2026-10-25T23:59:00+01:00",
+    });
+    expect(
+      items
+        .filter((item) => item.kind === "announcement")
+        .map((item) => item.title),
+    ).toEqual(["Klausurtermin Programmierung 2"]);
+  });
+
+  it("finds exactly what the lecturer changed between the two recorded states", async () => {
+    const before = await createMoodleService(replay(0), options).load();
+    const after = await createMoodleService(replay(1), options).load();
+    const changes = detectMoodleChanges(
+      knownMoodleItems(before.courses),
+      after.courses,
+      "2027-01-25T19:30:00+01:00",
+    );
+    expect(
+      changes
+        .map((change) => `${change.moduleId}: ${moodleChangeText(change)}`)
+        .sort(),
+    ).toEqual([
+      "m-dm: Neue Ankündigung: Zusatztermin zur Klausurvorbereitung",
+      "m-pr2: Neue Datei: Vorlesung 03: Ausnahmen und Ein-/Ausgabe",
+      "m-web: Bewertung: Pflichtübung (8 von 10 Punkten)",
+    ]);
+    // Syncing the same state again reports nothing.
+    expect(
+      detectMoodleChanges(knownMoodleItems(after.courses), after.courses, ""),
+    ).toEqual([]);
+  });
+
+  it("stays on the last recorded state for later syncs", async () => {
+    const last = await createMoodleService(replay(1), options).load();
+    const beyond = await createMoodleService(replay(7), options).load();
+    expect(beyond).toEqual(last);
+  });
+});
+
 describe("mapMoodle", () => {
   const course = { id: 1, shortname: "X", fullname: "Kurs X", idnumber: "" };
 
@@ -120,8 +184,16 @@ describe("mapMoodle", () => {
         {
           course,
           assignments: [
-            { id: 7, cmid: 70, name: "Blatt 1", duedate: 1801000000 },
+            {
+              id: 7,
+              cmid: 70,
+              name: "Blatt 1",
+              duedate: 1801000000,
+              timemodified: 1,
+            },
           ],
+          sections: null,
+          grades: null,
           completion: [
             { cmid: 70, modname: "assign", state: 0, hascompletion: true },
           ],

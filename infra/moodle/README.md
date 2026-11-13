@@ -43,13 +43,13 @@ npm run test:moodle     # Adapter der App gegen die laufende Sandbox
 npm run moodle:record   # dasselbe und src/data/recordings/moodle.json neu schreiben
 ```
 
-Die Aufzeichnung gehört zum Beispielstand: Nach einer Änderung am Seed-Skript `npm run moodle:reset` und danach `npm run moodle:record` ausführen.
+`moodle:record` braucht den frisch befüllten Stand (`npm run moodle:reset`): Es zeichnet ihn auf, lässt dann `seed/advance.php` als Dozentin eine Datei, eine Ankündigung und eine Bewertung anlegen und zeichnet erneut auf. Danach ist die Sandbox im zweiten Zustand.
 
 In der App: Einstellungen → Moodle-Daten → „Eigenes Moodle“, Adresse `http://localhost:8080` und den Zugriffsschlüssel von oben eintragen.
 
 ## Eine Änderung auslösen
 
-Als Dozentin eine neue Datei in einen Kurs legen, ohne die Oberfläche von Moodle zu öffnen:
+In der App erscheint eine Änderung nach „Moodle abgleichen“ beim Modul unter „Neu in Moodle“. Als Dozentin eine neue Datei in einen Kurs legen, ohne die Oberfläche von Moodle zu öffnen:
 
 ```sh
 docker compose -f infra/moodle/docker-compose.yml exec -u www-data moodle \

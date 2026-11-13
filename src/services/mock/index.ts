@@ -51,6 +51,7 @@ export function createMockServices(options: MockOptions = {}): Services {
     }),
     moodle: service("moodle", {
       progress: moodleProgress,
+      courses: [],
       ...content("moodle"),
     }),
     mail: service("mail", content("mail")),

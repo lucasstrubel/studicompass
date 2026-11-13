@@ -3,13 +3,12 @@ import { describe, expect, it } from "vitest";
 import { DEMO_NOW, DEMO_TIME_ZONE } from "@/config/demo";
 import { createMoodleClient } from "./client";
 import { MoodleError } from "./errors";
-import { createRecordingClient, type MoodleRecording } from "./replay";
 import { createMoodleService, fetchSiteInfo } from "./service";
 
 /**
  * Runs against the Moodle sandbox (infra/moodle), not in `npm run check`:
  *   npm run moodle:up && npm run test:moodle
- * `npm run moodle:record` additionally writes src/data/recordings/moodle.json.
+ * The assertions hold before and after infra/moodle/seed/advance.php.
  */
 const baseUrl = process.env.MOODLE_URL ?? "http://localhost:8080";
 const token = process.env.MOODLE_TOKEN ?? "5c0de5a1dbeef0000000000000000001";
@@ -23,10 +22,10 @@ describe("Moodle sandbox", () => {
   });
 
   it("loads progress, deadlines and announcements of the seeded courses", async () => {
-    const recorder = createRecordingClient(
+    const data = await createMoodleService(
       createMoodleClient({ baseUrl, token }),
-    );
-    const data = await createMoodleService(recorder.client, options).load();
+      options,
+    ).load();
 
     expect(
       Object.fromEntries(
@@ -56,20 +55,6 @@ describe("Moodle sandbox", () => {
     expect(data.inbox.map((item) => item.subject)).toContain(
       "Klausurtermin Programmierung 2",
     );
-
-    if (process.env.MOODLE_RECORD) {
-      const site = await fetchSiteInfo(recorder.client);
-      const recording: MoodleRecording = {
-        recordedAt: new Date().toISOString(),
-        release: site.release ?? "",
-        calls: recorder.calls,
-      };
-      const { writeFile } = await import("node:fs/promises");
-      await writeFile(
-        new URL("../../data/recordings/moodle.json", import.meta.url),
-        `${JSON.stringify(recording, null, 2)}\n`,
-      );
-    }
   });
 
   it("reports an invalid access key", async () => {
