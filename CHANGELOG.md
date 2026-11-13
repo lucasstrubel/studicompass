@@ -8,6 +8,8 @@ Alle nennenswerten Änderungen an StudiCompass. Das Format folgt [Keep a Changel
 
 - Roadmap für die Weiterentwicklung als Portfolio-Projekt (`docs/ROADMAP.md`)
 - Architekturentscheidungen unter `docs/adr/`
+- Moodle-Sandbox unter `infra/moodle/` (Docker) mit Beispielkursen zu den Modulen des 3. Semesters
+- Befunde aus dem Moodle-Spike (`docs/adr/0004-moodle-spike.md`)
 
 ## [1.0.0] – 2026-11-13
 
