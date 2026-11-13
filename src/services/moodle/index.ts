@@ -2,6 +2,7 @@ import recording from "@/data/recordings/moodle.json";
 import type { MoodleService } from "@/services/types";
 import { createMoodleClient, type MoodleConnection } from "./client";
 import { createReplayClient } from "./replay";
+import { createMoodleStorage, type MoodleStorage } from "./storage";
 import {
   createMoodleService,
   fetchSiteInfo,
@@ -25,11 +26,16 @@ export function createRecordedMoodleService(
 export async function connectMoodle(
   connection: MoodleConnection,
   options: MoodleServiceOptions,
-): Promise<{ service: MoodleService; site: MoodleSite }> {
+): Promise<{
+  service: MoodleService;
+  site: MoodleSite;
+  storage: MoodleStorage;
+}> {
   const client = createMoodleClient(connection);
   const info = await fetchSiteInfo(client);
   return {
     service: createMoodleService(client, options),
+    storage: createMoodleStorage(connection, client, info.userid),
     site: { siteName: info.sitename, userName: info.fullname },
   };
 }

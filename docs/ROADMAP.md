@@ -13,7 +13,7 @@ Der Arbeitsstand steht in den [Meilensteinen auf GitHub](https://github.com/luca
 | 2     | Moodle-Spike: eigene Moodle-Instanz per Docker mit Beispielkursen, Zugriff aus dem Browser, Auswahl der Webservice-Funktionen                      | Befunde und Zuordnung Moodle → Fachmodell |
 | 3     | Moodle-Adapter, lesend: Service gegen die echte Schnittstelle, Datenmodi Demo, Aufzeichnung und Live, Verbinden per Zugriffsschlüssel, Fehlerfälle | erster Kanal ohne Mock                    |
 | 4     | Funktionen auf echten Daten: „Neu in Moodle“ je Modul, Fristen aus Moodle, Prüfungsvorleistungen planen und verfolgen                              | Version 1.2.0                             |
-| 5     | Moodle als Backend: eigene Daten der App in Moodle speichern, gleicher Stand auf mehreren Geräten                                                  | Abgleich ohne eigene Datenbank            |
+| 5     | Moodle als Backend: eigene Daten der App in Moodle speichern, gleicher Stand auf mehreren Geräten, über ausdrückliches Sichern und Laden           | Abgleich ohne eigene Datenbank            |
 | 6     | Qualität und Betrieb: Integrationstests gegen einen Moodle-Container in GitHub Actions, Sicherheit und Datenschutz dokumentiert                    | begleitend ab Phase 3                     |
 | 7     | Schaufenster: README, Architekturbild, Video, Prozessdokumentation                                                                                 | Version 2.0.0                             |
 
