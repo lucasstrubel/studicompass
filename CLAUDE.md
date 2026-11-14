@@ -48,7 +48,7 @@ src/
                 assistant-matching (+ Tests daneben)
   services/     Interfaces je Kanal und Regelwerk; mock/ mit Latenz und optionalem Fehler;
                 moodle/ = echter Adapter (client, schemas, mapping, service, replay), per import() nachgeladen;
-                mail/ = Adapter für das Postfach hinter der Brücke (client, schemas, mapping, service)
+                bridge/ = Aufruf der Brücke; mail/ und pos/ = Adapter dahinter (schemas, mapping, Fehlertexte)
   data/         Dummy-Daten; recordings/ = aufgezeichnete Moodle-Antworten (erzeugt, nicht von Hand ändern)
   store/        Zustand-Store, Selektoren
   config/       demo.ts (APP_NAME, DEMO_NOW, LATENCY_MS, FLAGS)
@@ -68,7 +68,7 @@ Abhängigkeiten nur in diese Richtung: UI → Store/Selektoren → Domain; Store
 - UI importiert **nie** direkt aus `src/data`; Daten kommen über Services in den Store.
 - Jeder Kanal (POS, Moodle, Mail, Website) und das Regelwerk haben ein eigenes Service-Interface. Mocks simulieren Latenz und optional Fehler (`FLAGS.simulateErrors`).
 - Moodle kennt drei Datenmodi (`moodleSource` im Store): `demo` (Mock), `recording` (Aufzeichnung durch den echten Adapter), `live` (verbundenes Moodle). Antworten werden mit den Schemas geprüft, bevor sie ins Fachmodell kommen; Fehler sind `MoodleError` mit deutschem Text. Der Zugriffsschlüssel liegt nur im Speicher, nie im State oder in `persist`. „Neu in Moodle“ entsteht aus dem Vergleich zweier Abgleiche (`domain/moodle-changes.ts`); die Aufzeichnung hat dafür zwei Zustände.
-- Mail kennt zwei Quellen: Beispiel-Mails oder das verbundene Postfach (`mailAccount` im Store, nie in `persist`). Die Brücke nimmt Zugangsdaten nur im Rumpf entgegen, speichert und protokolliert nichts, verbindet nur zu den festen Zielen aus `server/config.ts` und öffnet das Postfach schreibgeschützt; Fehler sind `MailError` mit deutschem Text. Das Passwort liegt wie der Moodle-Schlüssel nur im Speicher. Ohne Brücke (öffentliche Demo) zeigt die Oberfläche einen Hinweis statt des Formulars.
+- Mail kennt zwei Quellen: Beispiel-Mails oder das verbundene Postfach (`mailAccount` im Store, nie in `persist`). Die Brücke nimmt Zugangsdaten nur im Rumpf entgegen, speichert und protokolliert nichts, verbindet nur zu den festen Zielen aus `server/config.ts` und öffnet das Postfach schreibgeschützt; Fehler sind `MailError` mit deutschem Text. Das Passwort liegt wie der Moodle-Schlüssel nur im Speicher. Ohne Brücke (öffentliche Demo) zeigt die Oberfläche einen Hinweis statt des Formulars. Für POS steht das Gerüst (`posAccount`, `src/services/pos`); das Auslesen des Portals und der Abschnitt in den Einstellungen fehlen noch.
 - „Jetzt“ ist ausschließlich `DEMO_NOW` – nie `new Date()` oder `Date.now()` in Komponenten oder Domäne. Das gilt auch im Modus Live, solange POS simuliert ist; die Sandbox ist auf dieses Datum befüllt.
 - Simulierte Aktionen (z. B. Abmeldung) ändern nur den Store, speichern vorher einen Snapshot (Rückgängig) und sind im UI als Simulation erkennbar.
 - Persistenz über Zustand `persist` mit `version`. Ändern sich Dummy-Daten: Version erhöhen, damit alte Demo-Stände verworfen werden. „Demo zurücksetzen“ in den Einstellungen.

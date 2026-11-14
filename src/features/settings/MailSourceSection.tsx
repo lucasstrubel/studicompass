@@ -28,7 +28,7 @@ export function MailSourceSection() {
   const loading = useDemoStore(
     (state) => state.resources.mail.status === "loading",
   );
-  const checkMailBridge = useDemoStore((state) => state.checkMailBridge);
+  const checkBridge = useDemoStore((state) => state.checkBridge);
   const connectMail = useDemoStore((state) => state.connectMail);
   const disconnectMail = useDemoStore((state) => state.disconnectMail);
   const [choice, setChoice] = useState<MailChoice>(account ? "live" : "demo");
@@ -40,7 +40,7 @@ export function MailSourceSection() {
   const choose = (value: MailChoice) => {
     setChoice(value);
     setError(null);
-    if (value === "live" && bridge === "unknown") void checkMailBridge();
+    if (value === "live" && bridge === "unknown") void checkBridge();
     if (value === "demo" && account) void disconnectMail();
   };
   const submit = (event: FormEvent) => {
