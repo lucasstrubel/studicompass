@@ -8,7 +8,7 @@
 
 ![Übersicht: Studienstand mit 45 von 210 ECTS, Status „Knapp“, ECTS-Verlauf als Kurslinie und der Hinweis „Jetzt wichtig“ zur Abmeldefrist](docs/img/uebersicht.jpg)
 
-StudiCompass ist ein klickbarer Hi-Fi-Prototyp einer Website für Studierende der TH Mannheim. Er bündelt POS, Moodle, Hochschul-Mail und Website, zeigt den eigenen Studienstand und macht sichtbar, was eine Entscheidung wie eine Prüfungsabmeldung für die folgenden Semester bedeutet. Entstanden ist er im Modul Software Engineering 2 an der TH Mannheim (Wintersemester 2026/27); „StudiCompass“ ist ein Arbeitstitel.
+StudiCompass ist ein klickbarer Hi-Fi-Prototyp einer Website für Studierende der TH Mannheim, seit der Weiterentwicklung mit einer echten Anbindung an Moodle. Er bündelt POS, Moodle, Hochschul-Mail und Website, zeigt den eigenen Studienstand und macht sichtbar, was eine Entscheidung wie eine Prüfungsabmeldung für die folgenden Semester bedeutet. Entstanden ist er im Modul Software Engineering 2 an der TH Mannheim (Wintersemester 2026/27); „StudiCompass“ ist ein Arbeitstitel.
 
 ## Das Problem
 
@@ -25,6 +25,14 @@ In Interviews und einer Umfrage zeigte sich: Studierende verpassen kaum Fristen.
 **Assistent mit Quellen.** Fragen zur Prüfungsordnung bekommen eine kurze Antwort in Alltagssprache, eine Zeile „Für dich heißt das“ aus dem aktuellen Studienstand, die Quelle und die zuständige Stelle. Gibt es keine eindeutige Regel, sagt der Assistent das und bereitet eine Anfrage vor.
 
 ![Assistent: Antwort auf „Was passiert, wenn ich Programmierung 2 schiebe?“ mit persönlicher Zeile, zuständigen Stellen und Quellen](docs/img/assistent.jpg)
+
+**Moodle als echte Schnittstelle.** Die App liest Kurse, Abgaben, Bewertungen und Ankündigungen über die Web Services von Moodle, direkt aus dem Browser und ohne eigenen Server. Legt eine Lehrperson eine Datei in den Kurs, erscheint das nach dem nächsten Abgleich als „Neu in Moodle“ beim Modul, im Postfach und an der Glocke. Die öffentliche Demo spielt das mit einer Aufzeichnung nach: Einstellungen → Moodle-Daten → Aufzeichnung, dann beim Modul „Moodle abgleichen“.
+
+![Moduldetail Programmierung 2: unter „Neu in Moodle“ die neue Datei „Vorlesung 03“, darunter der Kursinhalt mit drei Dateien und zwölf Abgaben samt Abgabestatus](docs/img/neu-in-moodle.jpg)
+
+**Prüfungsvorleistungen planen.** Abgaben aus dem Moodle-Kurs lassen sich als Prüfungsvorleistung übernehmen, mit Teilschritten und geplantem Aufwand versehen und über das Semester verfolgen. Moodle kennt „eingereicht“, nicht „erbracht“: Die App schlägt den Stand vor, entschieden wird von Hand. Mit einem verbundenen Moodle liegen die eigenen Einträge auf Wunsch als Datei dort und stehen auf einem zweiten Gerät bereit.
+
+![Prüfungsvorleistungen in Wirtschaftsinformatik 3: vier von sechs erbracht, Zulassung offen, Pflichtübung 5 mit vier geplanten Stunden und zwei Teilschritten](docs/img/pruefungsvorleistungen.jpg)
 
 Dazu kommen der Studienverlauf mit Was-wäre-wenn (auch per Drag & Drop), Fristen als Liste und Kalender mit ICS-Export, ein gebündeltes Postfach, Module & Noten sowie ein Onboarding mit Produkt-Tour.
 
@@ -47,6 +55,23 @@ Es gibt kein Backend und keine Anmeldung. Eigene Rechenregeln der App tragen in 
 Vite · React · TypeScript (strict) · React Router · Tailwind CSS · shadcn/ui · Zustand · Recharts · Vitest und Testing Library · Playwright · Deployment auf Vercel.
 
 Die Fachlogik liegt als reines TypeScript in `src/domain/` und ist vollständig unit-getestet. Die Oberfläche liest nur über Store-Selektoren; jeder Kanal hat ein eigenes Service-Interface mit Mock. Mehr dazu in der [technischen Dokumentation](docs/TECHNIK.md).
+
+### Aufbau
+
+```mermaid
+flowchart LR
+  subgraph Browser
+    UI[Oberfläche<br/>React] --> Store[Store und Selektoren<br/>Zustand]
+    Store --> Domain[Fachlogik<br/>reines TypeScript]
+    Store --> Services[Services<br/>ein Interface je Kanal]
+    Services --> Mock[Mocks<br/>POS, Mail, Website, Regelwerk]
+    Services --> Adapter[Moodle-Adapter<br/>Client, Schemas, Zuordnung]
+    Adapter --> Replay[Aufzeichnung<br/>zwei Zustände der Sandbox]
+  end
+  Adapter -- "Web Services (REST), Zugriffsschlüssel" --> Moodle[(Moodle)]
+```
+
+Der Kanal Moodle hat drei Datenmodi: Beispieldaten, Aufzeichnung und ein verbundenes Moodle. Oberfläche, Store und Fachlogik sind in allen drei dieselben; nur der Service dahinter wechselt. Getestet wird der Adapter gegen ein echtes Moodle 4.5, das GitHub Actions dafür als Container baut.
 
 ### Starten
 
@@ -90,11 +115,20 @@ Die App läuft dann unter http://localhost:5173. Beim ersten Aufruf öffnet sich
 
 ## Stand
 
-Version [1.0.0](https://github.com/lucasstrubel/studicompass/releases/tag/v1.0.0) ist der Prototyp, wie er im November 2026 als Prüfungsleistung vorgestellt wurde. Getestet hat ihn bisher nur das Projektteam, und alle Hochschulsysteme sind simuliert. Seitdem wird er weiterentwickelt:
+Version [1.0.0](https://github.com/lucasstrubel/studicompass/releases/tag/v1.0.0) ist der Prototyp, wie er im November 2026 als Prüfungsleistung vorgestellt wurde. Seitdem wird er weiterentwickelt.
 
-- Usability-Test mit Studierenden, die den Prototyp nicht kennen, samt Messung
-- Moodle als erste echte Schnittstelle: Änderungen in den Kursen je Modul sehen, Prüfungsvorleistungen planen und verfolgen
+Umgesetzt:
+
+- Moodle als erste echte Schnittstelle: Kursinhalt, „Neu in Moodle“, Fristen und Bewertungen je Modul
+- Prüfungsvorleistungen planen, aus Moodle übernehmen und über das Semester verfolgen
+- eigene Einträge in Moodle sichern
+- Content-Security-Policy, automatischer Barrierefreiheits-Check, Dependabot und CodeQL
+
+Offen:
+
+- Usability-Test mit Studierenden, die den Prototyp nicht kennen, samt Messung. Getestet hat bisher nur das Projektteam.
 - Import der ICS-Dateien in echte Kalender-Apps prüfen
+- POS, Mail und Website sind weiterhin simuliert
 
 Phasen und Ideen stehen in der [Roadmap](docs/ROADMAP.md), die Entscheidungen dahinter unter [docs/adr/](docs/adr/), die Änderungen im [Changelog](CHANGELOG.md).
 

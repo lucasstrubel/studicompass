@@ -2,16 +2,17 @@
 
 StudiCompass ist im Wintersemester 2026/27 im Modul Software Engineering 2 an der TH Mannheim entstanden, als Projekt einer Vierergruppe. Diese Seite zeichnet den Weg nach: von der Frage, was Studierenden bei der Organisation ihres Studiums fehlt, bis zum klickbaren Prototyp und seinen Überarbeitungen.
 
-Der Aufbau folgt dem Double Diamond: Entdecken, Definieren, Lösen, Prototyping. Jede Phase beantwortet dieselben vier Punkte: die Frage, die Methode, das Ergebnis und die Entscheidung, die daraus folgte.
+Der Aufbau folgt dem Double Diamond: Entdecken, Definieren, Lösen, Prototyping. Ein fünftes Kapitel beschreibt die Weiterentwicklung nach der Prüfung: die Anbindung an Moodle. Jede Phase beantwortet dieselben vier Punkte: die Frage, die Methode, das Ergebnis und die Entscheidung, die daraus folgte.
 
 ## Auf einen Blick
 
-| Phase       | Frage                              | Entscheidung                                                                 |
-| ----------- | ---------------------------------- | ---------------------------------------------------------------------------- |
-| Entdecken   | Was fehlt Studierenden wirklich?   | Der Studienstand wird das zentrale Element, kein Kalender                    |
-| Definieren  | Für wen und für welches Problem?   | Eine Persona, ein Problem: Folgen werden erst sichtbar, wenn es zu spät ist  |
-| Lösen       | Wie lösen wir das Problem?         | Ein Flow im Zentrum: prüfen, bevor man entscheidet                           |
-| Prototyping | Trägt die Lösung, und wo hakt sie? | Drei Überarbeitungen nach Teamtest, Rückmeldung zur Gestaltung und Regelwerk |
+| Phase       | Frage                                             | Entscheidung                                                                       |
+| ----------- | ------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Entdecken   | Was fehlt Studierenden wirklich?                  | Der Studienstand wird das zentrale Element, kein Kalender                          |
+| Definieren  | Für wen und für welches Problem?                  | Eine Persona, ein Problem: Folgen werden erst sichtbar, wenn es zu spät ist        |
+| Lösen       | Wie lösen wir das Problem?                        | Ein Flow im Zentrum: prüfen, bevor man entscheidet                                 |
+| Prototyping | Trägt die Lösung, und wo hakt sie?                | Drei Überarbeitungen nach Teamtest, Rückmeldung zur Gestaltung und Regelwerk       |
+| Anbinden    | Trägt das Konzept mit einer echten Schnittstelle? | Moodle direkt aus dem Browser; die Demo bleibt ohne Server, über eine Aufzeichnung |
 
 ## 1 Entdecken
 
@@ -110,6 +111,23 @@ Bis dahin waren Prüfungsordnung und Module erfunden. Seitdem stammen die Regeln
 
 Kurz vor der Präsentation am 13.11. folgte noch eine Durchsicht der Gestaltung mit kleineren Korrekturen, unter anderem führt der Folgen-Check seitdem mit den Unterschieden zwischen den Optionen.
 
+## 5 Anbinden
+
+**Frage.** Die Rückmeldung nach der Präsentation: Trägt das Konzept auch mit einer echten Schnittstelle, und lässt sich Moodle als Backend nutzen?
+
+**Methode.** Erst ein Spike, dann Umsetzung in kleinen Schritten. Der Spike lief gegen ein eigenes Moodle mit Beispielkursen statt gegen das der Hochschule: Dort kann man auch die Rolle der Lehrperson spielen, automatisch testen, und es enthält keine Daten echter Personen. Die Entscheidungen stehen als kurze Seiten unter [`adr/`](adr/).
+
+**Ergebnis.**
+
+- Der Browser kann Moodle direkt aufrufen; ein eigener Server ist nicht nötig. Alles, was die App braucht, ist mit dem Zugriffsschlüssel eines Studenten lesbar.
+- Lädt die Dozentin eine Datei hoch, meldet Moodle genau diese Änderung. Daraus wurde „Neu in Moodle“: am Modul, im Postfach und an der Glocke.
+- Eigene Einstellungen lassen sich in Moodle nicht ablegen, private Dateien schon. Die eigenen Einträge der App liegen deshalb auf Wunsch als eine Datei dort.
+- Moodle weiß, ob eine Abgabe eingereicht ist, aber nicht, ob sie als Prüfungsvorleistung zählt. Die App schlägt deshalb nur vor; die Entscheidung bleibt beim Studierenden. Das passt zur Regel aus Phase 2: informieren, nicht lenken.
+
+**Entscheidung: echt, ohne die Demo zu verlieren.** Die öffentliche Demo sollte weiter ohne Server und ohne Kosten laufen. Der Kanal Moodle bekam deshalb drei Datenmodi: Beispieldaten, eine Aufzeichnung echter Antworten in zwei Zuständen (vor und nach den Änderungen der Dozentin) und ein verbundenes Moodle. Die Aufzeichnung läuft durch denselben Code wie die echte Verbindung, und GitHub Actions prüft diesen Code gegen ein echtes Moodle.
+
+Was die Tests dabei fanden, zeigt ihren Wert: Nach einem Neuladen zeigte die Aufzeichnung wieder den Anfangszustand, während die erkannten Änderungen stehen blieben. Und unter der Content-Security-Policy versuchte eine Bibliothek, Code zur Laufzeit zu erzeugen. Beides fiel erst im Browser-Test auf, nicht beim Lesen des Codes.
+
 ## Arbeitsweise
 
 - **KI-gestützte Entwicklung.** Den Code hat überwiegend Claude Code geschrieben, in frühen Phasen mit einem zweiten Modell als Gegenprüfung. Konzept, Entscheidungen und Abnahme lagen beim Menschen. Die Regeln, an die sich die Entwicklung hält, stehen offen in [CLAUDE.md](../CLAUDE.md).
@@ -119,9 +137,9 @@ Kurz vor der Präsentation am 13.11. folgte noch eine Durchsicht der Gestaltung 
 
 ## Grenzen
 
-- **Nur das Team hat getestet.** Wer ein System gebaut hat, stolpert anders als jemand aus der Zielgruppe. Ein Test mit unabhängigen Studierenden steht aus; die Aufgaben dafür liegen vor. Auch gemessen wurde nichts: Ob Aufgaben nach den Überarbeitungen schneller gelingen, ist nicht belegt.
+- **Nur das Team hat getestet.** Wer ein System gebaut hat, stolpert anders als jemand aus der Zielgruppe. Ein Test mit unabhängigen Studierenden steht aus, auch für die neuen Moodle-Funktionen; die Aufgaben dafür liegen vor. Automatisch geprüft ist nur, was eine Maschine prüfen kann: Barrierefreiheit nach WCAG 2.1 A und AA mit axe. Auch gemessen wurde nichts: Ob Aufgaben nach den Überarbeitungen schneller gelingen, ist nicht belegt.
 - **Kleine Stichprobe.** Fünf Interviews und acht Umfrage-Antworten zeigen Tendenzen, keine repräsentativen Ergebnisse.
-- **Keine echten Schnittstellen.** Ob und wie sich POS, Moodle und Mail anbinden lassen, ist technisch und rechtlich offen.
+- **Eine echte Schnittstelle von vier.** Moodle ist angebunden, geprüft gegen ein eigenes Moodle mit Beispielkursen. Ob das Moodle einer Hochschule den Zugriff freigibt, entscheidet die Hochschule; POS, Mail und Website sind weiter simuliert, und die rechtliche Seite eines Betriebs ist offen.
 - **Der Assistent ist kein Sprachmodell.** Er ordnet Fragen einem vorbereiteten Katalog zu.
 
 Wer tiefer einsteigen will: Die ausführlichen Arbeitsdokumente (Konzept, Testplan, Befundliste) liegen in der Git-History bis zum Commit [`c0447ef`](https://github.com/lucasstrubel/studicompass/commit/c0447ef), das [Präsentationskonzept](praesentation/konzept.md) im Repository.
