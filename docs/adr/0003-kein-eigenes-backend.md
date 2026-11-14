@@ -1,6 +1,6 @@
 # ADR 0003: Kein eigenes Backend
 
-Status: angenommen (13.11.2026), ein Punkt offen
+Status: angenommen (13.11.2026); der offene Punkt ist mit [ADR 0004](0004-moodle-spike.md) geklärt
 
 ## Kontext
 
@@ -8,7 +8,7 @@ Für die Anbindung an Moodle gäbe es zwei Wege: ein eigener Server zwischen Bro
 
 ## Entscheidung
 
-Der Browser ruft die Web Services von Moodle direkt auf. Es gibt keinen eigenen Server und keine eigene Datenbank. Eigene Daten der App (zum Beispiel Pläne für Prüfungsvorleistungen) werden später in Moodle selbst gespeichert, in den Einstellungen des Nutzers.
+Der Browser ruft die Web Services von Moodle direkt auf. Es gibt keinen eigenen Server und keine eigene Datenbank. Eigene Daten der App (zum Beispiel Pläne für Prüfungsvorleistungen) werden später in Moodle selbst gespeichert, in den privaten Dateien des Nutzers.
 
 Verbunden wird über die Adresse des Moodle und einen Zugriffsschlüssel, den Moodle dem Nutzer anzeigt. Die App fragt kein Passwort ab. Der Schlüssel bleibt nur für die Sitzung im Speicher und wird nicht dauerhaft abgelegt.
 

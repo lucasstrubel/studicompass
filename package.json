@@ -15,7 +15,10 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check": "npm run typecheck && npm run lint && npm run test && npm run build",
-    "e2e": "playwright test --project=hero --project=hero-mobile"
+    "e2e": "playwright test --project=hero --project=hero-mobile",
+    "moodle:up": "docker compose -f infra/moodle/docker-compose.yml up -d --build --wait",
+    "moodle:down": "docker compose -f infra/moodle/docker-compose.yml down",
+    "moodle:reset": "docker compose -f infra/moodle/docker-compose.yml down -v && npm run moodle:up"
   },
   "dependencies": {
     "@assistant-ui/react": "^0.15.32",
