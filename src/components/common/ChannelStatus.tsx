@@ -20,6 +20,7 @@ export function ChannelStatus() {
   const resources = useDemoStore((state) => state.resources);
   const connected = useDemoStore((state) => state.connectedChannels);
   const moodleSource = useDemoStore((state) => state.moodleSource);
+  const mailConnected = useDemoStore((state) => state.mailAccount !== null);
   return (
     <section
       aria-label="Sync-Status"
@@ -45,8 +46,9 @@ export function ChannelStatus() {
             {() => (
               <p>
                 {CHANNEL_LABELS[channel]}
-                {channel === "moodle" && SOURCE_NOTES[moodleSource]} · zuletzt
-                aktualisiert{" "}
+                {channel === "moodle" && SOURCE_NOTES[moodleSource]}
+                {channel === "mail" && mailConnected && SOURCE_NOTES.live} ·
+                zuletzt aktualisiert{" "}
                 {resources[channel].updatedAt
                   ? formatShortDateTime(new Date(resources[channel].updatedAt))
                   : "unbekannt"}
