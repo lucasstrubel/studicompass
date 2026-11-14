@@ -48,7 +48,17 @@ Mail ist der zweite Kanal mit echten Daten. Der Browser kann kein IMAP sprechen,
 - **Ohne Brücke.** Ein statischer Server beantwortet `/api/bridge/health` mit der Seite selbst. Der Client liest alles, was kein JSON ist, als „keine Brücke“; die Einstellungen zeigen dann einen Hinweis statt des Formulars.
 - **Fehler** sind `MailError` mit einem Text für die Oberfläche: keine Brücke, Brücke nicht erreichbar, Anmeldung abgelehnt, Mailserver nicht erreichbar, Zeitüberschreitung, zu viele Abrufe, unerwartete Antwort.
 - **Tests.** `npm run test:mail` prüft den Abruf gegen GreenMail, `e2e/mail.e2e.ts` den Weg durch die Oberfläche (mit `BRIDGE_MAIL_HOST=localhost`). `server/bridge.test.ts` prüft Grenzen der Brücke ohne Mailserver.
-- **POS** folgt über dieselbe Brücke, sobald das Portal untersucht ist.
+- **Gemeinsamer Transport.** `src/services/bridge/client.ts` ruft die Brücke auf und kennt die Fehlerarten; Mail und POS geben ihnen eigene Texte.
+
+## POS über die Brücke (Gerüst)
+
+Das Auslesen des Portals fehlt noch, weil es bei der Umsetzung nicht erreichbar war. Alles darum herum steht und ist getestet; das Auslesen wird in `server/` als `fetchTranscript` eingesetzt.
+
+- **Zwischenformat.** Die Brücke liefert eine „Leistungsübersicht“ in neutraler Form (`src/services/pos/schemas.ts`): Name und Matrikelnummer, dazu je Eintrag Titel, Semester, Status und, wenn vorhanden, Note, Versuch, Termin, Raum und Abmeldefrist. Ändert die Hochschule das Portal, betrifft das nur die Brücke.
+- **Zuordnung** (`src/services/pos/mapping.ts`): Ein Eintrag gehört zu dem Modul mit demselben Titel, unabhängig von Schreibweise und Zahlform („Programmierung II“ = „Programmierung 2“). Studiengang und Module bleiben die des Modulhandbuchs, weil das Portal Ergebnisse kennt, aber keinen Studienplan. Einträge ohne passendes Modul stehen in `PosData.unmatched` und fallen nicht still weg.
+- **Store.** `connectPos` ersetzt die Beispieldaten durch die Leistungsübersicht, `disconnectPos` kehrt zurück. Beim Wechsel enden simulierte Entscheidungen, weil sie Prüfungen der anderen Quelle nennen. `posAccount` wird nie gespeichert.
+- **Solange das Auslesen fehlt,** meldet die Brücke den Kanal als nicht verfügbar (`channels.pos: false`, `POST /pos` antwortet mit 501). Die Einstellungen zeigen deshalb noch keinen Abschnitt für das POS.
+- **Offen** bis zum Spike am Portal: Anmeldeverfahren, Aufbau der Seiten, ob angemeldete Prüfungen mit Termin und Abmeldefrist lesbar sind, und ob mit echtem POS die echte Uhr gilt.
 
 ## Ergänzende Funktionen
 
