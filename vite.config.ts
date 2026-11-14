@@ -13,9 +13,53 @@ function demoConfigInHtml(): Plugin {
   };
 }
 
+/**
+ * Content Security Policy of the production build (docs/SICHERHEIT.md). Scripts, fonts and styles
+ * come only from the app itself; inline styles stay allowed because Radix, Recharts and Motion set
+ * style attributes. Requests may go to any http(s) address, because the user chooses the Moodle to
+ * connect. Only the build gets it: the dev server needs inline scripts for hot reloading.
+ */
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  "script-src 'self'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  // Vite inlines the smallest font subsets as data URLs.
+  "font-src 'self' data:",
+  "connect-src 'self' http: https:",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join("; ");
+
+function contentSecurityPolicy(): Plugin {
+  return {
+    name: "content-security-policy",
+    apply: "build",
+    transformIndexHtml: (html) => ({
+      html,
+      tags: [
+        {
+          tag: "meta",
+          attrs: {
+            "http-equiv": "Content-Security-Policy",
+            content: CONTENT_SECURITY_POLICY,
+          },
+          injectTo: "head-prepend",
+        },
+      ],
+    }),
+  };
+}
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(), demoConfigInHtml()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    demoConfigInHtml(),
+    contentSecurityPolicy(),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "./src"),

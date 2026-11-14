@@ -19,6 +19,13 @@ Alle nennenswerten Änderungen an StudiCompass. Das Format folgt [Keep a Changel
 - Eigene Einträge in Moodle sichern und auf einem anderen Gerät laden (Datei in den privaten Dateien des verbundenen Moodle)
 - Abgaben aus Moodle als Prüfungsvorleistung übernehmen; den Stand aus Moodle schlägt die App vor, bestätigt wird von Hand
 
+### Sicherheit und Qualität
+
+- Content-Security-Policy im Produktions-Build und Sicherheits-Header für die Auslieferung
+- Automatischer Barrierefreiheits-Check (axe, WCAG 2.1 A und AA) aller Kernseiten in den End-to-End-Tests
+- Dependabot für npm, GitHub Actions und das Docker-Image der Sandbox; CodeQL bei jedem Pull Request
+- `docs/SICHERHEIT.md`: Datenflüsse, Umgang mit dem Zugriffsschlüssel, Bedrohungen und Grenzen
+
 ## [1.0.0] – 2026-11-13
 
 Der Stand, in dem der Prototyp im Modul Software Engineering 2 vorgestellt wurde.

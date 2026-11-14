@@ -84,6 +84,7 @@ Die App läuft dann unter http://localhost:5173. Beim ersten Aufruf öffnet sich
 - [Wie es entstanden ist](docs/PROZESS.md): von der Nutzerforschung über Konzept und Prototyp bis zu den Iterationen
 - [Technische Dokumentation](docs/TECHNIK.md): Daten und Berechnungen, Design-Tokens, App-Shell, Tests, Deployment
 - [Roadmap](docs/ROADMAP.md) und [Architekturentscheidungen](docs/adr/): wie es weitergeht und warum
+- [Sicherheit und Datenschutz](docs/SICHERHEIT.md): welche Daten wo liegen, was gesendet wird, Bedrohungen und Gegenmaßnahmen
 - [CLAUDE.md](CLAUDE.md): Architektur- und Gestaltungskonventionen, an die sich auch die KI-gestützte Entwicklung hält
 - [Präsentationskonzept](docs/praesentation/konzept.md) zu den [Folien](https://studicompass-six.vercel.app/praesentation/)
 

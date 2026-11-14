@@ -8,6 +8,8 @@ Details zu Daten, Architektur, Gestaltung und Tests. Den Einstieg gibt das [READ
 - Der Befehl baut die App (`npm run build`) und startet `vite preview` auf Port 4173. Läuft dort schon ein Server, wird er wiederverwendet.
 - `npm run e2e` prüft Übersicht → Folgen-Check → simulierte Abmeldung → Übersicht (Kritisch, SS 2028, SS 2029) → „Rückgängig“, dazu denselben Weg nur per Tastatur und horizontales Scrollen auf den Kernscreens.
 - Zusätzlich prüft `e2e` Onboarding und Tour per Tastatur, Postfach-Deep-Links und Gelesenstatus nach Neuladen, neun Assistentenfragen per Klick und Freitext, Fallback, ICS-Download, Profiländerungen, Kanalverbindungen und Demo-Reset. Kalender und Anlaufstellen gehören zu den ergänzenden Screens bei 360 bis 1920 px; der Kalender hat außerdem einen Touchtest bei 360 px. Der Hero-Flow-Test fragt den Assistenten im Fenster vom Folgen-Check aus.
+- `e2e/a11y.e2e.ts` prüft Onboarding, alle Kernseiten und die Moodle-Ansichten mit axe gegen WCAG 2.1 A und AA, auf dem Desktop und bei 390 px. Ausgenommen ist eine experimentelle Regel (sichtbarer Text im zugänglichen Namen), mit Begründung im Test.
+- `e2e/security.e2e.ts` prüft, dass die App unter ihrer Content-Security-Policy ohne Verstoß läuft und dass die Policy eingeschleuste Inline-Skripte stoppt. Die Policy setzt `vite.config.ts` nur im Build; Details in [SICHERHEIT.md](SICHERHEIT.md).
 - `npm run check` enthält die End-to-End-Tests nicht; Playwright-Dateien enden auf `.e2e.ts`, damit Vitest sie nicht aufgreift.
 
 ## Daten und Berechnungen
