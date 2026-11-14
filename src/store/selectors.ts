@@ -9,6 +9,7 @@ import type {
   ExamRecord,
   InboxItem,
   Module,
+  MoodleChange,
   MoodleProgress,
   PlanProjection,
   Rule,
@@ -26,8 +27,11 @@ import { gradeAverage } from "@/domain/grades";
 import { allowedMoveTerms, projectPlan } from "@/domain/projection";
 import { trafficLight } from "@/domain/rules";
 import { compare, next, semesterNumber } from "@/domain/terms";
+import { moodleChangeText } from "@/domain/moodle-changes";
+import { formatShortDateTime } from "@/lib/format";
 import { deadlineInstant } from "@/lib/zoned-time";
 import type { DemoState } from "./demo-store";
+import { moodleSourceKey } from "./moodle-source";
 
 function academicState(state: DemoState): AcademicState | null {
   const pos = state.resources.pos.data;
@@ -48,10 +52,43 @@ function academicState(state: DemoState): AcademicState | null {
   };
 }
 
+/** Changes found in the currently synced Moodle source, newest first. */
+function moodleChanges(state: DemoState): MoodleChange[] {
+  const source = moodleSourceKey(state);
+  return source && state.connectedChannels.moodle
+    ? state.moodleChanges.filter((change) => change.source === source)
+    : [];
+}
+
+/** New announcements arrive as inbox entries of their own; every other change gets one here. */
+function moodleChangeInbox(state: DemoState): InboxItem[] {
+  return moodleChanges(state)
+    .filter((change) => change.kind !== "announcement")
+    .map((change) => {
+      const text = moodleChangeText(change);
+      const due = change.dueAt
+        ? ` Abgabe bis ${formatShortDateTime(new Date(change.dueAt))}.`
+        : "";
+      return {
+        id: change.id,
+        channel: "moodle" as const,
+        sender: change.courseTitle,
+        subject: text,
+        preview: `Seit dem letzten Abgleich im Kurs ${change.courseTitle}.${due}`,
+        body: `${text}. Das hat sich seit dem letzten Abgleich im Kurs ${change.courseTitle} geändert.${due}`,
+        receivedAt: change.detectedAt,
+        read: false,
+        relevance: "normal" as const,
+        ...(change.moduleId ? { moduleId: change.moduleId } : {}),
+      };
+    });
+}
+
 function inbox(state: DemoState): InboxItem[] {
   const { pos, moodle, mail, website } = state.resources;
   return [pos, moodle, mail, website]
     .flatMap((resource) => resource.data?.inbox ?? [])
+    .concat(moodleChangeInbox(state))
     .map((item) => ({
       ...item,
       read: item.read || state.readInboxIds.includes(item.id),
@@ -86,23 +123,49 @@ function milestonesMoved(state: DemoState): boolean {
 function notifications(state: DemoState) {
   const exams = selectAcademicState(state)?.exams ?? [];
   const moved = milestonesMoved(state);
-  return (state.resources.website.data?.notifications ?? []).map((item) => {
-    const settled =
-      (item.type === "decision" &&
-        exams.some(
-          (exam) =>
-            item.href === `/entscheidung/${exam.id}` &&
-            exam.status === "withdrawn",
-        )) ||
-      (item.type === "milestone" && moved);
+  const fromMoodle = moodleChanges(state).map((change) => {
+    const message = `${change.courseTitle}: ${moodleChangeText(change)}`;
     return {
-      ...item,
-      read: item.read || state.readNotificationIds.includes(item.id),
-      message: (settled && item.simulatedText ? item.simulatedText : item.text)[
-        state.hintTone
-      ],
+      id: change.id,
+      createdAt: change.detectedAt,
+      type: "inbox" as const,
+      href:
+        change.kind === "announcement" && change.moduleId
+          ? `/module/${change.moduleId}`
+          : change.kind === "announcement"
+            ? "/postfach"
+            : `/postfach?eintrag=${encodeURIComponent(change.id)}`,
+      text: { neutral: message, direct: message },
+      read:
+        state.readNotificationIds.includes(change.id) ||
+        state.readInboxIds.includes(change.id),
+      ruleIds: [] as string[],
+      message,
+      /** Where the notification comes from, shown as its source. */
+      sourceDocument: "Moodle – Abgleich der Kurse",
     };
   });
+  const fromWebsite = (state.resources.website.data?.notifications ?? []).map(
+    (item) => {
+      const settled =
+        (item.type === "decision" &&
+          exams.some(
+            (exam) =>
+              item.href === `/entscheidung/${exam.id}` &&
+              exam.status === "withdrawn",
+          )) ||
+        (item.type === "milestone" && moved);
+      return {
+        ...item,
+        read: item.read || state.readNotificationIds.includes(item.id),
+        message: (settled && item.simulatedText
+          ? item.simulatedText
+          : item.text)[state.hintTone],
+        sourceDocument: undefined as string | undefined,
+      };
+    },
+  );
+  return [...fromMoodle, ...fromWebsite];
 }
 
 function progress(state: DemoState) {
@@ -346,6 +409,7 @@ export const selectProfileName = memoize((state: DemoState) => {
     : null;
 });
 export const selectInbox = memoize(inbox);
+export const selectMoodleChanges = memoize(moodleChanges);
 export const selectDeadlines = memoize(deadlines);
 /** Once withdrawn, the corresponding withdrawal deadline no longer requires an action. */
 export const selectActionableDeadlines = memoize((state: DemoState) => {

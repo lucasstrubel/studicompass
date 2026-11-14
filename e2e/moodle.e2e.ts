@@ -45,6 +45,60 @@ test("shows the recorded Moodle data on overview, deadlines and inbox and keeps 
   ).toHaveAttribute("aria-pressed", "true");
 });
 
+test("replays what the lecturer changed: new file at the module, in the inbox and at the bell", async ({
+  page,
+}) => {
+  const moodle = await openSettings(page);
+  await moodle.getByRole("button", { name: "Aufzeichnung" }).click();
+  await expect(page.getByText("Moodle (Aufzeichnung)")).toBeVisible();
+
+  await page.goto("/module/m-pr2");
+  const card = page.getByRole("region", { name: "Moodle", exact: true });
+  await expect(card).toContainText("Kursinhalt: 2 Dateien, 12 Abgaben");
+  await expect(card).toContainText("nichts geändert");
+  await card.getByRole("button", { name: "Moodle abgleichen" }).click();
+  await expect(
+    card.getByText("Neue Datei: Vorlesung 03: Ausnahmen und Ein-/Ausgabe"),
+  ).toBeVisible();
+  await expect(card).toContainText("Kursinhalt: 3 Dateien, 12 Abgaben");
+
+  await page.goto("/module/m-web");
+  await card.getByRole("button", { name: "Gesehen: Pflichtübung" }).click();
+  await expect(card.getByText("Neu in Moodle")).toHaveCount(0);
+  await expect(card).toContainText("eingereicht · 8 von 10 Punkten");
+
+  await page.getByRole("button", { name: /^Benachrichtigungen/ }).click();
+  const bell = page.getByRole("dialog");
+  await expect(bell).toContainText(
+    "Webbasierte Systeme: Bewertung: Pflichtübung (8 von 10 Punkten)",
+  );
+  await expect(bell).toContainText("Moodle – Abgleich der Kurse");
+  await page.keyboard.press("Escape");
+
+  await page.goto("/postfach");
+  await expect(
+    page
+      .getByText("Neue Datei: Vorlesung 03: Ausnahmen und Ein-/Ausgabe")
+      .first(),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Zusatztermin zur Klausurvorbereitung").first(),
+  ).toBeVisible();
+
+  // After a full reload the change is still new, until it is marked as seen.
+  await page.goto("/module/m-pr2");
+  await expect(card).toContainText("Kursinhalt: 3 Dateien, 12 Abgaben");
+  await card
+    .getByRole("button", {
+      name: "Gesehen: Vorlesung 03: Ausnahmen und Ein-/Ausgabe",
+    })
+    .click();
+  await expect(card.getByText("Neu in Moodle")).toHaveCount(0);
+  await page.reload();
+  await expect(card).toContainText("Kursinhalt: 3 Dateien, 12 Abgaben");
+  await expect(card.getByText("Neu in Moodle")).toHaveCount(0);
+});
+
 test("connects to the Moodle sandbox from the browser and forgets the key on reload", async ({
   page,
 }) => {

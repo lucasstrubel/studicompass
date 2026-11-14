@@ -7,6 +7,7 @@ import type {
   ExamRecord,
   InboxItem,
   Module,
+  MoodleCourse,
   MoodleProgress,
   Notification,
   Office,
@@ -27,6 +28,8 @@ export interface PosData extends ChannelContent {
 }
 export interface MoodleData extends ChannelContent {
   progress: MoodleProgress[];
+  /** Course contents; empty for the example data, which has none. */
+  courses: MoodleCourse[];
 }
 export type MailData = ChannelContent;
 export interface WebsiteData extends ChannelContent {

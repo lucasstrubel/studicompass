@@ -16,6 +16,9 @@ import type {
   Coursework,
   CourseworkStatus,
   HintTone,
+  MoodleChange,
+  MoodleCourse,
+  MoodleKnown,
   Notification,
   PersonalDeadline,
   PersonalDeadlineKind,
@@ -25,7 +28,9 @@ import type {
 import { parseWebUrl } from "@/lib/url";
 import { parseProfileName } from "@/lib/profile";
 import { projectPlan } from "@/domain/projection";
-import { selectAcademicState } from "./selectors";
+import { detectMoodleChanges, knownMoodleItems } from "@/domain/moodle-changes";
+import { toInstant } from "@/lib/instant";
+import { selectAcademicState, selectNotifications } from "./selectors";
 import { selectAssistantMatch } from "./assistant-selectors";
 import { createMockServices } from "@/services/mock";
 import {
@@ -36,18 +41,24 @@ import {
   type Services,
 } from "@/services/types";
 import { MoodleError } from "@/services/moodle/errors";
+import {
+  moodleSourceKey,
+  type MoodleSite,
+  type MoodleSource,
+} from "./moodle-source";
 
-/** Where the Moodle channel gets its data (ADR 0002): example data, a recording of the sandbox, or a connected site. */
-export type MoodleSource = "demo" | "recording" | "live";
-/** The connected Moodle site; the access key itself never enters the state. */
-export interface MoodleSite {
-  baseUrl: string;
-  siteName: string;
-  userName: string;
-}
+export type { MoodleSite, MoodleSource };
 /** The real Moodle adapter, loaded on demand so the demo ships without it. */
+/** A detected change together with the source it was seen in. */
+export type StoredMoodleChange = MoodleChange & { source: string };
+const MOODLE_CHANGES_MAX = 50;
+/** Upper bound for the stored value; the recording itself has fewer states and stays on its last one. */
+const MOODLE_RECORDING_PHASE_MAX = 9;
+const MOODLE_CHANGE_PREFIX = "moodle-change-";
+
 export interface MoodleSources {
-  recording: () => Promise<MoodleService>;
+  /** The recording has several states; each sync moves on to the next one. */
+  recording: (phase: number) => Promise<MoodleService>;
   live: (connection: { baseUrl: string; token: string }) => Promise<{
     service: MoodleService;
     site: { siteName: string; userName: string };
@@ -56,9 +67,10 @@ export interface MoodleSources {
 // The sandbox is seeded for the demo date and POS stays simulated, so every mode shares the demo clock.
 const moodleOptions = { now: () => DEMO_NOW, timeZone: DEMO_TIME_ZONE };
 const defaultMoodleSources: MoodleSources = {
-  recording: async () =>
+  recording: async (phase) =>
     (await import("@/services/moodle")).createRecordedMoodleService(
       moodleOptions,
+      phase,
     ),
   live: async (connection) =>
     (await import("@/services/moodle")).connectMoodle(
@@ -117,6 +129,12 @@ interface Preferences {
   personalDeadlines: PersonalDeadline[];
   /** "live" lasts for the session only: after a reload the channel is back on example data. */
   moodleSource: MoodleSource;
+  /** Per synced source: what the courses looked like at the last sync. */
+  moodleKnown: Record<string, MoodleKnown>;
+  /** Changes found by later syncs, newest first ("Neu in Moodle"). */
+  moodleChanges: StoredMoodleChange[];
+  /** Which recorded state the recording shows; each sync moves on, a reload stays where it was. */
+  moodleRecordingPhase: number;
 }
 
 /** Upper bounds for own entries, so the local demo state stays small. */
@@ -169,6 +187,8 @@ export interface DemoState extends Preferences {
     baseUrl: string,
     token: string,
   ) => Promise<{ ok: true } | { ok: false; error: string }>;
+  /** Syncs the Moodle channel again; changes since the last sync become "Neu in Moodle". */
+  refreshMoodle: () => Promise<void>;
   setNotificationType: (type: Notification["type"], enabled: boolean) => void;
   resources: Resources;
   snapshot: SimulationSnapshot | null;
@@ -250,6 +270,9 @@ function defaultPreferences(): Preferences {
     coursework: [],
     personalDeadlines: [],
     moodleSource: "demo",
+    moodleKnown: {},
+    moodleChanges: [],
+    moodleRecordingPhase: 0,
   };
 }
 function emptyResource<T>(): LoadState<T> {
@@ -353,8 +376,83 @@ function readPreferences(value: unknown): Preferences {
     assistantHintSeen: value.assistantHintSeen === true,
     plannerHideCompleted: value.plannerHideCompleted === true,
     moodleSource: value.moodleSource === "recording" ? "recording" : "demo",
+    moodleRecordingPhase:
+      typeof value.moodleRecordingPhase === "number" &&
+      Number.isInteger(value.moodleRecordingPhase) &&
+      value.moodleRecordingPhase >= 0 &&
+      value.moodleRecordingPhase <= MOODLE_RECORDING_PHASE_MAX
+        ? value.moodleRecordingPhase
+        : 0,
+    ...readMoodleMemory(value),
     ...readOwnEntries(value),
   };
+}
+
+const MOODLE_KINDS = ["file", "assignment", "announcement", "activity"];
+const MOODLE_CHANGE_TYPES = ["added", "updated", "graded"];
+function readGrade(value: unknown): MoodleChange["grade"] {
+  return isRecord(value) &&
+    typeof value.points === "number" &&
+    typeof value.max === "number"
+    ? { points: value.points, max: value.max }
+    : undefined;
+}
+/** What is remembered of earlier syncs; anything of another shape is dropped. */
+function readMoodleMemory(value: Record<string, unknown>) {
+  const moodleKnown: Record<string, MoodleKnown> = {};
+  if (isRecord(value.moodleKnown))
+    for (const [source, items] of Object.entries(value.moodleKnown)) {
+      if (!isRecord(items)) continue;
+      const known: MoodleKnown = {};
+      for (const [key, item] of Object.entries(items))
+        if (isRecord(item) && typeof item.signature === "string")
+          known[key] = {
+            signature: item.signature,
+            ...(typeof item.points === "number" ? { points: item.points } : {}),
+          };
+      moodleKnown[source] = known;
+    }
+  const moodleChanges = Array.isArray(value.moodleChanges)
+    ? value.moodleChanges
+        .flatMap((item: unknown): StoredMoodleChange[] => {
+          if (!isRecord(item)) return [];
+          const { id, source, courseId, courseTitle, kind, type, title } = item;
+          if (
+            typeof id !== "string" ||
+            typeof source !== "string" ||
+            typeof courseId !== "string" ||
+            typeof courseTitle !== "string" ||
+            typeof title !== "string" ||
+            typeof item.detectedAt !== "string" ||
+            !MOODLE_KINDS.includes(kind as string) ||
+            !MOODLE_CHANGE_TYPES.includes(type as string)
+          )
+            return [];
+          const grade = readGrade(item.grade);
+          const url =
+            typeof item.url === "string" ? parseWebUrl(item.url) : null;
+          return [
+            {
+              id,
+              source,
+              courseId,
+              courseTitle,
+              title,
+              kind: kind as MoodleChange["kind"],
+              type: type as MoodleChange["type"],
+              detectedAt: item.detectedAt,
+              ...(typeof item.moduleId === "string"
+                ? { moduleId: item.moduleId }
+                : {}),
+              ...(url ? { url } : {}),
+              ...(grade ? { grade } : {}),
+              ...(typeof item.dueAt === "string" ? { dueAt: item.dueAt } : {}),
+            },
+          ];
+        })
+        .slice(0, MOODLE_CHANGES_MAX)
+    : [];
+  return { moodleKnown, moodleChanges };
 }
 
 /** A course link as stored; anything else (old shapes, unsafe addresses) is dropped. */
@@ -504,7 +602,9 @@ export function createDemoStore(
                   const source = get().moodleSource;
                   if (source === "live" && liveMoodle) return liveMoodle.load();
                   if (source === "recording")
-                    return (await moodleSources.recording()).load();
+                    return (
+                      await moodleSources.recording(get().moodleRecordingPhase)
+                    ).load();
                   return services.moodle.load();
                 },
                 mail: () => services.mail.load(),
@@ -520,6 +620,8 @@ export function createDemoStore(
                 updatedAt: DEMO_NOW.toISOString(),
                 error: null,
               });
+              if (key === "moodle")
+                rememberMoodle((data as ServiceData["moodle"]).courses);
             } catch (error) {
               if (requests[key] === request)
                 update({
@@ -534,6 +636,31 @@ export function createDemoStore(
           })();
           pending.set(key, task);
           return task;
+        }
+        /** The first sync of a source is the baseline; later syncs report what changed against it. */
+        function rememberMoodle(courses: MoodleCourse[]) {
+          const source = moodleSourceKey(get());
+          if (!source) return;
+          const known = get().moodleKnown[source] as MoodleKnown | undefined;
+          const found = known
+            ? detectMoodleChanges(
+                known,
+                courses,
+                toInstant(DEMO_NOW, DEMO_TIME_ZONE),
+              ).map((change) => ({ ...change, source }))
+            : [];
+          set((state) => ({
+            moodleKnown: {
+              ...state.moodleKnown,
+              [source]: knownMoodleItems(courses),
+            },
+            moodleChanges: [
+              ...found,
+              ...state.moodleChanges.filter(
+                (old) => !found.some((change) => change.id === old.id),
+              ),
+            ].slice(0, MOODLE_CHANGES_MAX),
+          }));
         }
         const snapshot = (): SimulationSnapshot => ({
           withdrawnExamIds: [...get().withdrawnExamIds],
@@ -553,7 +680,34 @@ export function createDemoStore(
           moodleSite: null,
           async setMoodleSource(source) {
             liveMoodle = null;
-            set({ moodleSource: source, moodleSite: null });
+            // The recording starts over each time, so its story can be replayed.
+            const moodleKnown = { ...get().moodleKnown };
+            delete moodleKnown.recording;
+            set((state) => ({
+              moodleSource: source,
+              moodleSite: null,
+              moodleRecordingPhase: 0,
+              moodleKnown,
+              moodleChanges: state.moodleChanges.filter(
+                (change) => change.source !== "recording",
+              ),
+              readInboxIds: state.readInboxIds.filter(
+                (id) => !id.startsWith(MOODLE_CHANGE_PREFIX),
+              ),
+              readNotificationIds: state.readNotificationIds.filter(
+                (id) => !id.startsWith(MOODLE_CHANGE_PREFIX),
+              ),
+            }));
+            await load("moodle", true);
+          },
+          async refreshMoodle() {
+            if (get().moodleSource === "recording")
+              set((state) => ({
+                moodleRecordingPhase: Math.min(
+                  state.moodleRecordingPhase + 1,
+                  MOODLE_RECORDING_PHASE_MAX,
+                ),
+              }));
             await load("moodle", true);
           },
           async connectMoodle(baseUrl, token) {
@@ -633,10 +787,9 @@ export function createDemoStore(
             })),
           markAllNotificationsRead: () =>
             set({
-              readNotificationIds:
-                get().resources.website.data?.notifications.map(
-                  (item) => item.id,
-                ) ?? [],
+              readNotificationIds: selectNotifications(get()).map(
+                (item) => item.id,
+              ),
             }),
           withdrawExam(id) {
             const exam = get().resources.pos.data?.exams.find(

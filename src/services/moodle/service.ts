@@ -56,7 +56,7 @@ export function createMoodleService(
         userid: site.userid,
       });
       if (courses.length === 0)
-        return { progress: [], deadlines: [], inbox: [] };
+        return { progress: [], deadlines: [], inbox: [], courses: [] };
       const courseids = courses.map((course) => course.id);
 
       const [assignments, forums, completions] = await Promise.all([
@@ -94,6 +94,24 @@ export function createMoodleService(
         }),
       );
 
+      const pages = await Promise.all(
+        courses.map(async (course) => ({
+          sections: has("core_course_get_contents")
+            ? await callMoodle(client, "core_course_get_contents", {
+                courseid: course.id,
+              })
+            : null,
+          grades: has("gradereport_user_get_grade_items")
+            ? ((
+                await callMoodle(client, "gradereport_user_get_grade_items", {
+                  courseid: course.id,
+                  userid: site.userid,
+                })
+              ).usergrades[0]?.gradeitems ?? [])
+            : null,
+        })),
+      );
+
       const snapshots: MoodleCourseSnapshot[] = courses.map(
         (course, index) => ({
           course,
@@ -102,9 +120,15 @@ export function createMoodleService(
               ?.assignments ?? [],
           completion: completions[index],
           announcements: announcements[index],
+          ...pages[index],
         }),
       );
-      return mapMoodle(snapshots, options.now(), options.timeZone);
+      return mapMoodle(
+        snapshots,
+        options.now(),
+        options.timeZone,
+        site.siteurl,
+      );
     },
   };
 }

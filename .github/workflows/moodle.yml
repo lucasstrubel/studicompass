@@ -39,7 +39,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run moodle:up
-      - run: npm run test:moodle
+      # Integration tests plus the full story: record, let the lecturer act, record again, detect the changes.
+      - run: npm run moodle:record
       # Playwright uses the Google Chrome preinstalled on the runner (channel "chrome").
       - run: npx playwright test e2e/moodle.e2e.ts --project=hero
         env:

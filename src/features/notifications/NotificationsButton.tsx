@@ -141,11 +141,13 @@ export function NotificationsButton() {
                               ? citations
                               : [
                                   {
-                                    document: item.ruleIds.length
-                                      ? "StuPO und Modulhandbuch (Beispiel; Regelwerk gerade nicht verfügbar)"
-                                      : item.type === "inbox"
-                                        ? "Mail – Raumänderung Programmierung 2 (Demodaten)"
-                                        : "TH-Website – Rückmeldung (Demodaten)",
+                                    document: item.sourceDocument
+                                      ? item.sourceDocument
+                                      : item.ruleIds.length
+                                        ? "StuPO und Modulhandbuch (Beispiel; Regelwerk gerade nicht verfügbar)"
+                                        : item.type === "inbox"
+                                          ? "Mail – Raumänderung Programmierung 2 (Demodaten)"
+                                          : "TH-Website – Rückmeldung (Demodaten)",
                                     summary: item.message,
                                     verified: false,
                                   },

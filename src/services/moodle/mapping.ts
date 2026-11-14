@@ -1,10 +1,19 @@
-import type { Deadline, InboxItem, MoodleProgress } from "@/domain/types";
+import type {
+  Deadline,
+  InboxItem,
+  MoodleCourse as Course,
+  MoodleCourseItem,
+  MoodleProgress,
+} from "@/domain/types";
+import { toInstant as instant } from "@/lib/instant";
 import type { MoodleData } from "@/services/types";
 import type {
   MoodleAssignment,
   MoodleCompletionStatus,
   MoodleCourse,
   MoodleDiscussion,
+  MoodleGradeItem,
+  MoodleSection,
 } from "./schemas";
 
 /** Everything read from one course, already checked against the schemas. */
@@ -14,28 +23,16 @@ export interface MoodleCourseSnapshot {
   /** Null when the site does not report completion for the course. */
   completion: MoodleCompletionStatus[] | null;
   announcements: MoodleDiscussion[];
+  /** Null when the site does not offer the course page or the grades. */
+  sections: MoodleSection[] | null;
+  grades: MoodleGradeItem[] | null;
 }
 
 const PREVIEW_LENGTH = 120;
 
 /** Unix seconds as an instant with the offset of the given time zone, like the example data. */
 export function toInstant(seconds: number, timeZone: string): string {
-  const date = new Date(seconds * 1000);
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hourCycle: "h23",
-    timeZoneName: "longOffset",
-  }).formatToParts(date);
-  const part = (type: Intl.DateTimeFormatPartTypes) =>
-    parts.find((item) => item.type === type)?.value ?? "";
-  const offset = part("timeZoneName").replace("GMT", "") || "+00:00";
-  return `${part("year")}-${part("month")}-${part("day")}T${part("hour")}:${part("minute")}:${part("second")}${offset}`;
+  return instant(new Date(seconds * 1000), timeZone);
 }
 
 const ENTITIES: Record<string, string> = {
@@ -161,6 +158,89 @@ function inbox(snapshot: MoodleCourseSnapshot, timeZone: string): InboxItem[] {
   });
 }
 
+function assignmentItem(
+  snapshot: MoodleCourseSnapshot,
+  assignment: MoodleAssignment,
+  timeZone: string,
+  extra: Pick<MoodleCourseItem, "section" | "url">,
+): MoodleCourseItem {
+  const grade = snapshot.grades?.find(
+    (item) =>
+      item.itemmodule === "assign" &&
+      item.iteminstance === assignment.id &&
+      item.graderaw !== null,
+  );
+  return {
+    id: `cm${assignment.cmid}`,
+    kind: "assignment",
+    title: assignment.name,
+    signature: `${assignment.timemodified}:${assignment.duedate}`,
+    submitted: isSubmitted(assignment, snapshot.completion),
+    ...extra,
+    ...(assignment.duedate > 0
+      ? { dueAt: toInstant(assignment.duedate, timeZone) }
+      : {}),
+    ...(grade?.graderaw != null
+      ? { grade: { points: grade.graderaw, max: grade.grademax } }
+      : {}),
+  };
+}
+
+/** The course page as a flat list: files, assignments and other activities, then announcements. */
+function course(
+  snapshot: MoodleCourseSnapshot,
+  siteUrl: string,
+  timeZone: string,
+): Course {
+  const { assignments, announcements, sections } = snapshot;
+  const items: MoodleCourseItem[] = [];
+  const listed = new Set<number>();
+  for (const section of sections ?? [])
+    for (const module of section.modules) {
+      // The announcements forum is listed through its discussions below.
+      if (!module.uservisible || module.modname === "forum") continue;
+      const extra = {
+        section: section.name,
+        ...(module.url ? { url: module.url } : {}),
+      };
+      const assignment = assignments.find((item) => item.cmid === module.id);
+      if (assignment) {
+        listed.add(assignment.cmid);
+        items.push(assignmentItem(snapshot, assignment, timeZone, extra));
+        continue;
+      }
+      const files = module.contents.filter((item) => item.type === "file");
+      items.push({
+        id: `cm${module.id}`,
+        kind: files.length > 0 ? "file" : "activity",
+        title: module.name,
+        signature: files
+          .map((item) => `${item.filename}@${item.timemodified ?? 0}`)
+          .sort()
+          .join("|"),
+        ...extra,
+      });
+    }
+  // Without the course page the assignments are still known.
+  for (const assignment of assignments)
+    if (!listed.has(assignment.cmid))
+      items.push(assignmentItem(snapshot, assignment, timeZone, {}));
+  for (const item of announcements)
+    items.push({
+      id: `d${item.discussion}`,
+      kind: "announcement",
+      title: item.name,
+      signature: `${item.timemodified}`,
+    });
+  return {
+    id: `${snapshot.course.id}`,
+    title: snapshot.course.fullname,
+    url: `${siteUrl.replace(/\/+$/, "")}/course/view.php?id=${snapshot.course.id}`,
+    items,
+    ...(snapshot.course.idnumber ? { moduleId: snapshot.course.idnumber } : {}),
+  };
+}
+
 /**
  * Moodle → domain model. A course belongs to the module whose id is its `idnumber`; without one its
  * deadlines and announcements still appear, only without a module.
@@ -169,8 +249,10 @@ export function mapMoodle(
   snapshots: MoodleCourseSnapshot[],
   now: Date,
   timeZone: string,
+  siteUrl = "",
 ): MoodleData {
   return {
+    courses: snapshots.map((snapshot) => course(snapshot, siteUrl, timeZone)),
     progress: snapshots.flatMap(
       (snapshot) => progress(snapshot, now, timeZone) ?? [],
     ),

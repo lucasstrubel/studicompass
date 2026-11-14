@@ -258,6 +258,56 @@ export interface MoodleProgress {
   detail?: string;
 }
 
+export type MoodleItemKind =
+  "file" | "assignment" | "announcement" | "activity";
+/** One thing in a Moodle course: a file, an assignment, an announcement or another activity. */
+export interface MoodleCourseItem {
+  id: string;
+  kind: MoodleItemKind;
+  title: string;
+  /** Section of the course page ("Vorlesung"); announcements have none. */
+  section?: string;
+  url?: string;
+  /** Differs as soon as the item changes in Moodle (file replaced, due date moved). */
+  signature: string;
+  /** Assignments only. */
+  dueAt?: string;
+  submitted?: boolean;
+  grade?: { points: number; max: number };
+}
+export interface MoodleCourse {
+  id: string;
+  /** Module the course belongs to; missing when the course carries no module id. */
+  moduleId?: string;
+  title: string;
+  url: string;
+  items: MoodleCourseItem[];
+}
+
+/** What the app remembers of an item to notice changes on the next sync. */
+export interface MoodleKnownItem {
+  signature: string;
+  points?: number;
+}
+/** Keyed by `courseId/itemId`. */
+export type MoodleKnown = Record<string, MoodleKnownItem>;
+
+export type MoodleChangeType = "added" | "updated" | "graded";
+/** Something that changed in a Moodle course since the last sync ("Neu in Moodle"). */
+export interface MoodleChange {
+  id: string;
+  courseId: string;
+  moduleId?: string;
+  courseTitle: string;
+  kind: MoodleItemKind;
+  type: MoodleChangeType;
+  title: string;
+  url?: string;
+  grade?: { points: number; max: number };
+  dueAt?: string;
+  detectedAt: string;
+}
+
 /** Explicit input for pure calculations; no store, data or system-clock dependency. */
 export interface AcademicState {
   student: Student;

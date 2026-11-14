@@ -6,6 +6,7 @@ import { z } from "zod";
  */
 const siteInfo = z.object({
   sitename: z.string(),
+  siteurl: z.string().default(""),
   userid: z.number(),
   fullname: z.string(),
   release: z.string().optional(),
@@ -33,6 +34,8 @@ const assignments = z.object({
           name: z.string(),
           /** Unix seconds; 0 means no due date. */
           duedate: z.number(),
+          /** Unix seconds of the last change to the settings of the assignment. */
+          timemodified: z.number().default(0),
         }),
       ),
     }),
@@ -69,6 +72,49 @@ const discussions = z.object({
   ),
 });
 
+const contents = z.array(
+  z.object({
+    name: z.string(),
+    modules: z.array(
+      z.object({
+        /** Course module id (cmid). */
+        id: z.number(),
+        name: z.string(),
+        modname: z.string(),
+        url: z.string().optional(),
+        uservisible: z.boolean().default(true),
+        contents: z
+          .array(
+            z.object({
+              type: z.string(),
+              filename: z.string(),
+              /** Unix seconds; null for some external files. */
+              timemodified: z.number().nullable().default(null),
+            }),
+          )
+          .default([]),
+      }),
+    ),
+  }),
+);
+
+const grades = z.object({
+  usergrades: z.array(
+    z.object({
+      gradeitems: z.array(
+        z.object({
+          itemtype: z.string(),
+          itemmodule: z.string().nullable().default(null),
+          /** Id of the activity instance, e.g. the assignment id. */
+          iteminstance: z.number(),
+          graderaw: z.number().nullable().default(null),
+          grademax: z.number().default(0),
+        }),
+      ),
+    }),
+  ),
+});
+
 export const MOODLE_SCHEMAS = {
   core_webservice_get_site_info: siteInfo,
   core_enrol_get_users_courses: courses,
@@ -76,6 +122,8 @@ export const MOODLE_SCHEMAS = {
   core_completion_get_activities_completion_status: completion,
   mod_forum_get_forums_by_courses: forums,
   mod_forum_get_forum_discussions: discussions,
+  core_course_get_contents: contents,
+  gradereport_user_get_grade_items: grades,
 } as const;
 
 export type MoodleFunction = keyof typeof MOODLE_SCHEMAS;
@@ -89,5 +137,8 @@ export type MoodleAssignment =
   MoodleResult<"mod_assign_get_assignments">["courses"][number]["assignments"][number];
 export type MoodleCompletionStatus =
   MoodleResult<"core_completion_get_activities_completion_status">["statuses"][number];
+export type MoodleSection = MoodleResult<"core_course_get_contents">[number];
+export type MoodleGradeItem =
+  MoodleResult<"gradereport_user_get_grade_items">["usergrades"][number]["gradeitems"][number];
 export type MoodleDiscussion =
   MoodleResult<"mod_forum_get_forum_discussions">["discussions"][number];
