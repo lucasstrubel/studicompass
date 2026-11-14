@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { Module } from "@/domain/types";
-import { createMailClient, mailBridgeAvailable } from "./client";
+import { bridgeChannels } from "@/services/bridge/client";
+import { createMailClient } from "./client";
 import { MailError } from "./errors";
 import { mapMail, moduleOfMail } from "./mapping";
 import { createMailService } from "./service";
@@ -70,7 +71,10 @@ describe("mail client", () => {
     expect(
       await kindOf(createMailClient(credentials, { fetch }).fetchInbox()),
     ).toBe("unavailable");
-    expect(await mailBridgeAvailable({ fetch })).toBe(false);
+    expect(await bridgeChannels({ fetch })).toEqual({
+      mail: false,
+      pos: false,
+    });
   });
 
   it("tells a failed and a slow request apart", async () => {
@@ -107,19 +111,18 @@ describe("mail client", () => {
     );
   });
 
-  it("recognises a bridge that serves mail", async () => {
+  it("recognises which channels a bridge serves", async () => {
     expect(
-      await mailBridgeAvailable({
+      await bridgeChannels({
         fetch: () =>
           Promise.resolve(json({ ok: true, channels: { mail: true } })),
       }),
-    ).toBe(true);
+    ).toEqual({ mail: true, pos: false });
     expect(
-      await mailBridgeAvailable({
-        fetch: () =>
-          Promise.resolve(json({ ok: true, channels: { mail: false } })),
+      await bridgeChannels({
+        fetch: () => Promise.reject(new TypeError("Failed to fetch")),
       }),
-    ).toBe(false);
+    ).toEqual({ mail: false, pos: false });
   });
 });
 

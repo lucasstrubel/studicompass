@@ -1,11 +1,6 @@
-export type MailErrorKind =
-  | "unavailable"
-  | "network"
-  | "timeout"
-  | "auth"
-  | "unreachable"
-  | "tooMany"
-  | "unexpected";
+import type { BridgeFailureKind } from "@/services/bridge/client";
+
+export type MailErrorKind = BridgeFailureKind;
 
 const MESSAGES: Record<MailErrorKind, string> = {
   unavailable:

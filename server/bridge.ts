@@ -14,6 +14,11 @@ export interface BridgeOptions {
     target: MailTarget,
     credentials: MailCredentials,
   ) => Promise<BridgeMail[]>;
+  /**
+   * Reads the record of achievements from the POS. Missing until the portal has been examined
+   * (docs/adr/0005); the bridge then reports the channel as not available.
+   */
+  fetchTranscript?: (credentials: MailCredentials) => Promise<unknown>;
   /** Requests to the university per minute, so a loop in the app cannot lock the account. */
   maxPerMinute?: number;
   timeoutMs?: number;
@@ -119,13 +124,22 @@ export function createBridge(options: BridgeOptions = {}): BridgeHandler {
     const path = (request.url ?? "/").split("?")[0];
     if (!sameOrigin(request)) throw new BridgeError("badRequest");
     if (path === "/health" && request.method === "GET")
-      return { ok: true, channels: { mail: true, pos: false } };
+      return {
+        ok: true,
+        channels: { mail: true, pos: Boolean(options.fetchTranscript) },
+      };
     if (path === "/mail" && request.method === "POST") {
       const credentials = readCredentials(await readJson(request));
       throttle();
       return {
         messages: await withTimeout(fetchInbox(mail, credentials), timeoutMs),
       };
+    }
+    if (path === "/pos" && request.method === "POST") {
+      if (!options.fetchTranscript) throw new BridgeError("notAvailable");
+      const credentials = readCredentials(await readJson(request));
+      throttle();
+      return withTimeout(options.fetchTranscript(credentials), timeoutMs);
     }
     throw new BridgeError("notFound");
   }

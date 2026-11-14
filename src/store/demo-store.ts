@@ -45,6 +45,8 @@ import {
   isChannel,
   type MailService,
   type MoodleService,
+  type PosData,
+  type PosService,
   type ServiceData,
   type ServiceKey,
   type Services,
@@ -52,6 +54,7 @@ import {
 import { MoodleError } from "@/services/moodle/errors";
 import type { MoodleStorage } from "@/services/moodle/storage";
 import { MailError } from "@/services/mail/errors";
+import { PosError } from "@/services/pos/errors";
 import { MAIL_ID_PREFIX } from "@/services/mail/mapping";
 import {
   moodleSourceKey,
@@ -109,26 +112,33 @@ const defaultMoodleSources: MoodleSources = {
       moodleOptions,
     ),
 };
-/** The real mail adapter behind the bridge (docs/adr/0005), loaded on demand like the Moodle one. */
-export interface MailSources {
-  /** Whether the server the page comes from has a bridge. */
-  available: () => Promise<boolean>;
+/** The adapters behind the bridge (docs/adr/0005), loaded on demand like the Moodle one. */
+export interface BridgeSources {
+  /** Which channels the bridge of this server reads; none without a bridge. */
+  channels: () => Promise<{ mail: boolean; pos: boolean }>;
   /** Logs in and returns the service for that mailbox; rejects with a MailError. */
-  live: (
+  mail: (
     credentials: { user: string; password: string },
     modules: () => Module[],
   ) => Promise<{ service: MailService }>;
+  /** Logs in and returns the service for that POS account; rejects with a PosError. */
+  pos: (
+    credentials: { user: string; password: string },
+    base: () => Promise<PosData>,
+  ) => Promise<{ service: PosService }>;
 }
-const defaultMailSources: MailSources = {
-  available: async () =>
-    (await import("@/services/mail")).mailBridgeAvailable(),
-  live: async (credentials, modules) =>
+const defaultBridgeSources: BridgeSources = {
+  channels: async () =>
+    (await import("@/services/bridge/client")).bridgeChannels(),
+  mail: async (credentials, modules) =>
     (await import("@/services/mail")).connectMail(credentials, {
       modules,
       timeZone: DEMO_TIME_ZONE,
     }),
+  pos: async (credentials, base) =>
+    (await import("@/services/pos")).connectPos(credentials, { base }),
 };
-export type MailBridgeState = "unknown" | "available" | "unavailable";
+export type BridgeChannelState = "unknown" | "available" | "unavailable";
 const LOAD_ERROR =
   "Die Beispieldaten konnten nicht geladen werden. Versuch es erneut.";
 
@@ -285,8 +295,8 @@ export interface DemoState extends Preferences {
   /** The connected university mailbox, otherwise null (example mails); never persisted. */
   mailAccount: { userName: string } | null;
   /** Whether this server can reach a mailbox at all; the public demo cannot. */
-  mailBridge: MailBridgeState;
-  checkMailBridge: () => Promise<void>;
+  mailBridge: BridgeChannelState;
+  checkBridge: () => Promise<void>;
   /** Logs in at the mail server and shows that mailbox instead of the example mails. */
   connectMail: (
     user: string,
@@ -294,6 +304,17 @@ export interface DemoState extends Preferences {
   ) => Promise<{ ok: true } | { ok: false; error: string }>;
   /** Forgets the mailbox and returns to the example mails. */
   disconnectMail: () => Promise<void>;
+  /** The connected POS account, otherwise null (example data); never persisted. */
+  posAccount: { userName: string } | null;
+  /** Whether the bridge of this server can read the POS. */
+  posBridge: BridgeChannelState;
+  /** Logs in at the POS and shows that record of achievements instead of the example data. */
+  connectPos: (
+    user: string,
+    password: string,
+  ) => Promise<{ ok: true } | { ok: false; error: string }>;
+  /** Forgets the POS account and returns to the example data. */
+  disconnectPos: () => Promise<void>;
   /** Syncs the Moodle channel again; changes since the last sync become "Neu in Moodle". */
   refreshMoodle: () => Promise<void>;
   /**
@@ -398,6 +419,15 @@ function defaultPreferences(): Preferences {
 /** Read marks of real mails belong to one mailbox and go when it is connected or disconnected. */
 function withoutMailIds(ids: string[]): string[] {
   return ids.filter((id) => !id.startsWith(MAIL_ID_PREFIX));
+}
+/** Simulated decisions name exams of one data source; they end when the POS source changes. */
+function clearedSimulation() {
+  return {
+    withdrawnExamIds: [],
+    confirmedExamIds: [],
+    snapshot: null,
+    whatIf: [],
+  };
 }
 function emptyResource<T>(): LoadState<T> {
   return { status: "idle", data: null, updatedAt: null, error: null };
@@ -686,7 +716,7 @@ export function createDemoStore(
   services: Services = createMockServices(),
   storage: StateStorage = safeStorage,
   moodleSources: MoodleSources = defaultMoodleSources,
-  mailSources: MailSources = defaultMailSources,
+  bridgeSources: BridgeSources = defaultBridgeSources,
 ) {
   // A reset invalidates in-flight requests; a retry supersedes older requests for the same resource.
   const requests: Record<ServiceKey, number> = {
@@ -704,6 +734,7 @@ export function createDemoStore(
   let liveStorage: MoodleStorage | null = null;
   // Holds the password of the mailbox in its closure; like the access key it never enters the state.
   let liveMail: MailService | null = null;
+  let livePos: PosService | null = null;
   return createStore<DemoState>()(
     persist(
       (set, get) => {
@@ -726,7 +757,7 @@ export function createDemoStore(
               const loaders: {
                 [P in ServiceKey]: () => Promise<ServiceData[P]>;
               } = {
-                pos: () => services.pos.load(),
+                pos: () => (livePos ?? services.pos).load(),
                 moodle: async () => {
                   const source = get().moodleSource;
                   if (source === "live" && liveMoodle) return liveMoodle.load();
@@ -757,7 +788,9 @@ export function createDemoStore(
                   ...get().resources[key],
                   status: "error",
                   error:
-                    error instanceof MoodleError || error instanceof MailError
+                    error instanceof MoodleError ||
+                    error instanceof MailError ||
+                    error instanceof PosError
                       ? error.message
                       : LOAD_ERROR,
                 });
@@ -943,9 +976,14 @@ export function createDemoStore(
           },
           mailAccount: null,
           mailBridge: "unknown",
-          async checkMailBridge() {
-            const available = await mailSources.available().catch(() => false);
-            set({ mailBridge: available ? "available" : "unavailable" });
+          async checkBridge() {
+            const channels = await bridgeSources
+              .channels()
+              .catch(() => ({ mail: false, pos: false }));
+            set({
+              mailBridge: channels.mail ? "available" : "unavailable",
+              posBridge: channels.pos ? "available" : "unavailable",
+            });
           },
           async connectMail(user, password) {
             const userName = user.trim();
@@ -955,7 +993,7 @@ export function createDemoStore(
                 error: "Gib deine Benutzerkennung und dein Passwort an.",
               };
             try {
-              const { service } = await mailSources.live(
+              const { service } = await bridgeSources.mail(
                 { user: userName, password },
                 () => get().resources.pos.data?.modules ?? [],
               );
@@ -983,6 +1021,39 @@ export function createDemoStore(
               readInboxIds: withoutMailIds(state.readInboxIds),
             }));
             await load("mail", true);
+          },
+          posAccount: null,
+          posBridge: "unknown",
+          async connectPos(user, password) {
+            const userName = user.trim();
+            if (!userName || !password)
+              return {
+                ok: false,
+                error: "Gib deine Benutzerkennung und dein Passwort an.",
+              };
+            try {
+              const { service } = await bridgeSources.pos(
+                { user: userName, password },
+                () => services.pos.load(),
+              );
+              livePos = service;
+            } catch (error) {
+              return {
+                ok: false,
+                error:
+                  error instanceof PosError
+                    ? error.message
+                    : "Die Verbindung zum POS ist fehlgeschlagen. Versuch es erneut.",
+              };
+            }
+            set({ posAccount: { userName }, ...clearedSimulation() });
+            await load("pos", true);
+            return { ok: true };
+          },
+          async disconnectPos() {
+            livePos = null;
+            set({ posAccount: null, ...clearedSimulation() });
+            await load("pos", true);
           },
           async setChannelConnected(channel, connected) {
             if (!connected) {
@@ -1266,9 +1337,11 @@ export function createDemoStore(
             liveMoodle = null;
             liveStorage = null;
             liveMail = null;
+            livePos = null;
             set({
               ...defaultPreferences(),
               mailAccount: null,
+              posAccount: null,
               moodleSite: null,
               moodleBackupAt: null,
               resources: emptyResources(),

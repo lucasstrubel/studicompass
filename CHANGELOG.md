@@ -21,6 +21,7 @@ Alle nennenswerten Änderungen an StudiCompass. Das Format folgt [Keep a Changel
 - Brücke (`server/`): kleiner zustandsloser Server-Teil im lokalen Dev- und Preview-Server für Kanäle, die der Browser nicht erreicht (`docs/adr/0005-bruecke-fuer-pos-und-mail.md`)
 - Einstellungen → Hochschul-Mail: Beispieldaten oder das eigene Hochschul-Postfach (IMAP, nur lesend); in der öffentlichen Demo ohne Brücke ein Hinweis statt des Formulars
 - Mail-Sandbox unter `infra/mail/` (GreenMail), Integrationstests (`npm run test:mail`) und Workflow `mail.yml`
+- Gerüst für das POS über die Brücke: neutrales Format der Leistungsübersicht, Zuordnung zu den Modulen, Quelle im Store; das Auslesen des Portals folgt
 
 ### Sicherheit und Qualität
 

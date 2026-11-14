@@ -25,6 +25,8 @@ export interface PosData extends ChannelContent {
   student: Student;
   modules: Module[];
   exams: ExamRecord[];
+  /** Titles from a connected POS that match no module of the study plan; missing for the example data. */
+  unmatched?: string[];
 }
 export interface MoodleData extends ChannelContent {
   progress: MoodleProgress[];

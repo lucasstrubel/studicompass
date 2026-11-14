@@ -141,7 +141,30 @@ describe("bridge", () => {
   it("knows no other paths", async () => {
     const { url, post } = await start();
     expect((await fetch(`${url}/mail`)).status).toBe(404);
-    expect((await post("/pos", credentials)).status).toBe(404);
+    expect((await post("/calendar", credentials)).status).toBe(404);
+  });
+});
+
+describe("bridge to the POS", () => {
+  it("is not available until the portal can be read", async () => {
+    const { post } = await start();
+    const response = await post("/pos", credentials);
+    expect(response.status).toBe(501);
+    expect(await response.json()).toEqual({ error: "notAvailable" });
+  });
+
+  it("serves the record of achievements once a reader is plugged in", async () => {
+    const transcript = { student: { lastName: "Brandt" }, entries: [] };
+    const fetchTranscript = vi.fn(() => Promise.resolve(transcript));
+    const { url, post } = await start({ fetchTranscript });
+    expect(await (await fetch(`${url}/health`)).json()).toEqual({
+      ok: true,
+      channels: { mail: true, pos: true },
+    });
+    const response = await post("/pos", credentials);
+    expect(await response.json()).toEqual(transcript);
+    expect(fetchTranscript).toHaveBeenCalledWith(credentials);
+    expect((await post("/pos", { user: "2212345" })).status).toBe(400);
   });
 });
 

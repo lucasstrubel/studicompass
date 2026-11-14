@@ -3,7 +3,7 @@ import { DEMO_STORAGE_KEY } from "@/config/demo";
 import { createMockServices } from "@/services/mock";
 import { MailError } from "@/services/mail/errors";
 import type { MailData } from "@/services/types";
-import { createDemoStore, type MailSources } from "./demo-store";
+import { createDemoStore, type BridgeSources } from "./demo-store";
 import { selectInbox } from "./selectors";
 
 const liveData: MailData = {
@@ -22,8 +22,8 @@ const liveData: MailData = {
     },
   ],
 };
-function makeStore(sources: Partial<MailSources> = {}) {
-  const live = vi.fn<MailSources["live"]>(() =>
+function makeStore(sources: Partial<BridgeSources> = {}) {
+  const live = vi.fn<BridgeSources["mail"]>(() =>
     Promise.resolve({
       service: { load: () => Promise.resolve(structuredClone(liveData)) },
     }),
@@ -32,7 +32,12 @@ function makeStore(sources: Partial<MailSources> = {}) {
     createMockServices({ latencyMs: 0 }),
     undefined,
     undefined,
-    { available: () => Promise.resolve(true), live, ...sources },
+    {
+      channels: () => Promise.resolve({ mail: true, pos: false }),
+      mail: live,
+      pos: () => Promise.reject(new Error("unused")),
+      ...sources,
+    },
   );
   return { store, live };
 }
@@ -96,7 +101,7 @@ describe("mail source (ADR 0005)", () => {
 
   it("reports a refused login and stays on the example mails", async () => {
     const { store } = makeStore({
-      live: () => Promise.reject(new MailError("auth")),
+      mail: () => Promise.reject(new MailError("auth")),
     });
     await store.getState().hydrate();
     const result = await store.getState().connectMail("2212345", "falsch");
@@ -127,7 +132,7 @@ describe("mail source (ADR 0005)", () => {
   it("shows the reason when the mailbox fails later and keeps the mails", async () => {
     let fail = false;
     const { store } = makeStore({
-      live: () =>
+      mail: () =>
         Promise.resolve({
           service: {
             load: () =>
@@ -173,13 +178,13 @@ describe("mail source (ADR 0005)", () => {
   it("finds out whether this server has a bridge", async () => {
     const { store } = makeStore();
     expect(store.getState().mailBridge).toBe("unknown");
-    await store.getState().checkMailBridge();
+    await store.getState().checkBridge();
     expect(store.getState().mailBridge).toBe("available");
 
     const without = makeStore({
-      available: () => Promise.reject(new Error("offline")),
+      channels: () => Promise.reject(new Error("offline")),
     }).store;
-    await without.getState().checkMailBridge();
+    await without.getState().checkBridge();
     expect(without.getState().mailBridge).toBe("unavailable");
   });
 });
