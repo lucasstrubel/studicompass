@@ -48,6 +48,7 @@ import {
   type Services,
 } from "@/services/types";
 import { MoodleError } from "@/services/moodle/errors";
+import type { MoodleStorage } from "@/services/moodle/storage";
 import {
   moodleSourceKey,
   type MoodleSite,
@@ -56,6 +57,23 @@ import {
 
 export type { MoodleSite, MoodleSource };
 /** The real Moodle adapter, loaded on demand so the demo ships without it. */
+export type MoodleResult = { ok: true } | { ok: false; error: string };
+const NOT_CONNECTED: MoodleResult = {
+  ok: false,
+  error: "Verbinde zuerst ein eigenes Moodle.",
+};
+function moodleFailure(error: unknown): MoodleResult {
+  return {
+    ok: false,
+    error:
+      error instanceof MoodleError
+        ? error.message
+        : "Das hat nicht geklappt. Versuch es erneut.",
+  };
+}
+/** Format of the backup file; raise when the shape of the own entries changes incompatibly. */
+const BACKUP_FORMAT = 1;
+
 /** A detected change together with the source it was seen in. */
 export type StoredMoodleChange = MoodleChange & { source: string };
 const MOODLE_CHANGES_MAX = 50;
@@ -69,6 +87,8 @@ export interface MoodleSources {
   live: (connection: { baseUrl: string; token: string }) => Promise<{
     service: MoodleService;
     site: { siteName: string; userName: string };
+    /** Missing in tests that do not exercise the backup. */
+    storage?: MoodleStorage;
   }>;
 }
 // The sandbox is seeded for the demo date and POS stays simulated, so every mode shares the demo clock.
@@ -240,6 +260,17 @@ export interface DemoState extends Preferences {
   ) => Promise<{ ok: true } | { ok: false; error: string }>;
   /** Syncs the Moodle channel again; changes since the last sync become "Neu in Moodle". */
   refreshMoodle: () => Promise<void>;
+  /**
+   * What is known about the backup of the own entries in the connected Moodle: when it was last
+   * written (ISO instant, by Moodle's clock), "none" when there is no file, null when not looked up yet.
+   */
+  moodleBackupAt: string | null;
+  /** Looks up whether the connected Moodle holds a backup. */
+  checkMoodleBackup: () => Promise<MoodleResult>;
+  /** Writes the own entries (Prüfungsvorleistungen, notes, links, dates) into the private files in Moodle. */
+  saveToMoodle: () => Promise<MoodleResult>;
+  /** Replaces the own entries with the backup from Moodle. */
+  restoreFromMoodle: () => Promise<MoodleResult>;
   setNotificationType: (type: Notification["type"], enabled: boolean) => void;
   resources: Resources;
   snapshot: SimulationSnapshot | null;
@@ -629,6 +660,7 @@ export function createDemoStore(
   let assistantTimer: ReturnType<typeof setTimeout> | undefined;
   // Held outside the state so the access key is never persisted or exposed to the UI.
   let liveMoodle: MoodleService | null = null;
+  let liveStorage: MoodleStorage | null = null;
   return createStore<DemoState>()(
     persist(
       (set, get) => {
@@ -734,12 +766,14 @@ export function createDemoStore(
           moodleSite: null,
           async setMoodleSource(source) {
             liveMoodle = null;
+            liveStorage = null;
             // The recording starts over each time, so its story can be replayed.
             const moodleKnown = { ...get().moodleKnown };
             delete moodleKnown.recording;
             set((state) => ({
               moodleSource: source,
               moodleSite: null,
+              moodleBackupAt: null,
               moodleRecordingPhase: 0,
               moodleKnown,
               moodleChanges: state.moodleChanges.filter(
@@ -753,6 +787,72 @@ export function createDemoStore(
               ),
             }));
             await load("moodle", true);
+          },
+          moodleBackupAt: null,
+          async checkMoodleBackup() {
+            if (!liveStorage) return NOT_CONNECTED;
+            try {
+              const backup = await liveStorage.load();
+              set({
+                moodleBackupAt: backup ? (backup.savedAt ?? "none") : "none",
+              });
+              return { ok: true };
+            } catch (error) {
+              return moodleFailure(error);
+            }
+          },
+          async saveToMoodle() {
+            if (!liveStorage) return NOT_CONNECTED;
+            try {
+              const savedAt = await liveStorage.save(
+                JSON.stringify({
+                  app: "studicompass",
+                  format: BACKUP_FORMAT,
+                  ...readOwnEntries({ ...get() }),
+                }),
+              );
+              set({ moodleBackupAt: savedAt ?? "none" });
+              return { ok: true };
+            } catch (error) {
+              return moodleFailure(error);
+            }
+          },
+          async restoreFromMoodle() {
+            if (!liveStorage) return NOT_CONNECTED;
+            try {
+              const backup = await liveStorage.load();
+              if (!backup) {
+                set({ moodleBackupAt: "none" });
+                return {
+                  ok: false,
+                  error: "In diesem Moodle liegt noch keine Sicherung.",
+                };
+              }
+              let parsed: unknown = null;
+              try {
+                parsed = JSON.parse(backup.text);
+              } catch {
+                /* handled below */
+              }
+              if (
+                !isRecord(parsed) ||
+                parsed.app !== "studicompass" ||
+                parsed.format !== BACKUP_FORMAT
+              )
+                return {
+                  ok: false,
+                  error:
+                    "Die Sicherung in Moodle lässt sich nicht lesen. Deine Einträge hier bleiben unverändert.",
+                };
+              // The same reader as for the browser storage: anything of another shape is dropped.
+              set({
+                ...readOwnEntries(parsed),
+                moodleBackupAt: backup.savedAt ?? "none",
+              });
+              return { ok: true };
+            } catch (error) {
+              return moodleFailure(error);
+            }
           },
           async refreshMoodle() {
             if (get().moodleSource === "recording")
@@ -773,12 +873,14 @@ export function createDemoStore(
                   "Gib die Adresse deines Moodle und den Zugriffsschlüssel an.",
               };
             try {
-              const { service, site } = await moodleSources.live({
+              const { service, site, storage } = await moodleSources.live({
                 baseUrl: address,
                 token: token.trim(),
               });
               liveMoodle = service;
+              liveStorage = storage ?? null;
               set({
+                moodleBackupAt: null,
                 moodleSource: "live",
                 moodleSite: { baseUrl: address, ...site },
               });
@@ -1074,9 +1176,11 @@ export function createDemoStore(
             pending.clear();
             clearTimeout(assistantTimer);
             liveMoodle = null;
+            liveStorage = null;
             set({
               ...defaultPreferences(),
               moodleSite: null,
+              moodleBackupAt: null,
               resources: emptyResources(),
               snapshot: null,
               whatIf: [],

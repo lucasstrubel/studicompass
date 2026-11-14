@@ -174,6 +174,64 @@ test("connects to the Moodle sandbox from the browser and forgets the key on rel
   ).not.toContain("5c0de5a1dbeef");
 });
 
+test("backs the own entries up in Moodle and loads them in a fresh browser", async ({
+  page,
+  browser,
+}) => {
+  const url = process.env.MOODLE_URL;
+  test.skip(!url, "needs the Moodle sandbox (npm run moodle:up)");
+  const token = process.env.MOODLE_TOKEN ?? "5c0de5a1dbeef0000000000000000001";
+  // Both projects would write the same file of the same Moodle user at the same time.
+  test.skip(test.info().project.name !== "hero", "one writer at a time");
+  const note = `Altklausuren rechnen ${Date.now()}`;
+
+  // Expects the settings page of a started demo.
+  async function connect(target: Page) {
+    const moodle = target.getByRole("region", { name: "Moodle-Daten" });
+    await moodle.getByRole("button", { name: "Eigenes Moodle" }).click();
+    await moodle.getByLabel("Adresse des Moodle").fill(url ?? "");
+    await moodle.getByLabel("Zugriffsschlüssel").fill(token);
+    await moodle.getByRole("button", { name: "Mit Moodle verbinden" }).click();
+    await expect(moodle.getByRole("status").first()).toContainText(
+      "Verbunden mit",
+    );
+    return moodle;
+  }
+
+  await openSettings(page);
+  await page.goto("/module/m-pr2");
+  await page.getByLabel("Notizen zum Modul").fill(note);
+  await page.goto("/einstellungen");
+  const first = await connect(page);
+  await first.getByRole("button", { name: "In Moodle sichern" }).click();
+  await expect(
+    first.getByText("Deine Einträge sind in Moodle gesichert."),
+  ).toBeVisible();
+  await expect(first).toContainText("Letzte Sicherung in Moodle:");
+
+  // Another browser profile: nothing local, everything comes from Moodle.
+  const context = await browser.newContext({
+    baseURL: test.info().project.use.baseURL,
+    locale: "de-DE",
+    timezoneId: "Europe/Berlin",
+  });
+  const other = await context.newPage();
+  await openSettings(other);
+  const second = await connect(other);
+  await expect(second).toContainText("Letzte Sicherung in Moodle:");
+  await second.getByRole("button", { name: "Aus Moodle laden" }).click();
+  await other.getByRole("button", { name: "Laden", exact: true }).click();
+  await expect(
+    second.getByText("Die Einträge aus Moodle sind geladen."),
+  ).toBeVisible();
+  const menu = other.getByRole("button", { name: "Navigation öffnen" });
+  if (await menu.isVisible()) await menu.click();
+  await other.getByRole("link", { name: "Module & Noten" }).first().click();
+  await other.getByRole("link", { name: "Programmierung 2" }).first().click();
+  await expect(other.getByLabel("Notizen zum Modul")).toHaveValue(note);
+  await context.close();
+});
+
 test("explains a wrong access key", async ({ page }) => {
   const url = process.env.MOODLE_URL;
   test.skip(!url, "needs the Moodle sandbox (npm run moodle:up)");

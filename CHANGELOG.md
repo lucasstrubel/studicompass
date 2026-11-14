@@ -16,6 +16,7 @@ Alle nennenswerten Änderungen an StudiCompass. Das Format folgt [Keep a Changel
 - „Neu in Moodle“: Änderungen in den Kursen seit dem letzten Abgleich am Modul, im Postfach und an der Glocke
 - Kursinhalt je Modul mit Dateien, Abgaben, Abgabestatus und Bewertung
 - Prüfungsvorleistungen planen: Teilschritte und geplanter Aufwand je Eintrag, Übersicht über das Semester
+- Eigene Einträge in Moodle sichern und auf einem anderen Gerät laden (Datei in den privaten Dateien des verbundenen Moodle)
 - Abgaben aus Moodle als Prüfungsvorleistung übernehmen; den Stand aus Moodle schlägt die App vor, bestätigt wird von Hand
 
 ## [1.0.0] – 2026-11-13

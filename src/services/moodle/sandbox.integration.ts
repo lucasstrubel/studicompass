@@ -4,6 +4,7 @@ import { DEMO_NOW, DEMO_TIME_ZONE } from "@/config/demo";
 import { createMoodleClient } from "./client";
 import { MoodleError } from "./errors";
 import { createMoodleService, fetchSiteInfo } from "./service";
+import { createMoodleStorage } from "./storage";
 
 /**
  * Runs against the Moodle sandbox (infra/moodle), not in `npm run check`:
@@ -55,6 +56,23 @@ describe("Moodle sandbox", () => {
     expect(data.inbox.map((item) => item.subject)).toContain(
       "Klausurtermin Programmierung 2",
     );
+  });
+
+  it("stores a file in the private files, replaces it and reads it back", async () => {
+    const connection = { baseUrl, token };
+    const client = createMoodleClient(connection);
+    const site = await fetchSiteInfo(client);
+    const storage = createMoodleStorage(connection, client, site.userid);
+    const first = JSON.stringify({ app: "studicompass", n: Math.random() });
+    const second = JSON.stringify({ app: "studicompass", n: Math.random() });
+
+    await storage.save(first);
+    expect((await storage.load())?.text).toBe(first);
+    const savedAt = await storage.save(second);
+    const loaded = await storage.load();
+    expect(loaded?.text).toBe(second);
+    expect(loaded?.savedAt).toBe(savedAt);
+    expect(Date.parse(savedAt ?? "")).toBeGreaterThan(Date.parse("2026-01-01"));
   });
 
   it("reports an invalid access key", async () => {
