@@ -1,0 +1,54 @@
+name: Moodle
+
+# Tests the Moodle adapter against a real Moodle: builds the sandbox from infra/moodle, runs the
+# integration tests and connects the app to it in a browser.
+on:
+  pull_request:
+    paths: &paths
+      - "src/services/moodle/**"
+      - "src/data/recordings/**"
+      - "infra/moodle/**"
+      - "e2e/moodle.e2e.ts"
+      - "vitest.moodle.config.ts"
+      - ".github/workflows/moodle.yml"
+  push:
+    branches: [main]
+    paths: *paths
+  schedule:
+    # Mondays 04:00 UTC: notices when a new Moodle patch release changes a response.
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: moodle-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  integration:
+    name: integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run moodle:up
+      - run: npm run test:moodle
+      # Playwright uses the Google Chrome preinstalled on the runner (channel "chrome").
+      - run: npx playwright test e2e/moodle.e2e.ts --project=hero
+        env:
+          MOODLE_URL: http://localhost:8080
+      - if: failure()
+        run: docker compose -f infra/moodle/docker-compose.yml logs --tail 200
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: moodle-test-results
+          path: test-results/
+          retention-days: 7

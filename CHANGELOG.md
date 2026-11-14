@@ -10,6 +10,9 @@ Alle nennenswerten Änderungen an StudiCompass. Das Format folgt [Keep a Changel
 - Architekturentscheidungen unter `docs/adr/`
 - Moodle-Sandbox unter `infra/moodle/` (Docker) mit Beispielkursen zu den Modulen des 3. Semesters
 - Befunde aus dem Moodle-Spike (`docs/adr/0004-moodle-spike.md`)
+- Moodle-Adapter gegen die echten Web Services: Fortschritt, Fristen und Ankündigungen je Modul
+- Einstellungen → Moodle-Daten: Beispieldaten, Aufzeichnung oder ein eigenes Moodle per Zugriffsschlüssel
+- Integrationstests gegen die Sandbox (`npm run test:moodle`) und Workflow `moodle.yml`
 
 ## [1.0.0] – 2026-11-13
 

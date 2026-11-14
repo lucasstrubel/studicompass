@@ -5,6 +5,13 @@ import { useDemoStore } from "@/store/use-demo-store";
 import { formatShortDateTime } from "@/lib/format";
 import { CHANNELS } from "@/services/types";
 
+/** Says where the Moodle data comes from once it is not the example data (ADR 0002). */
+const SOURCE_NOTES = {
+  demo: "",
+  recording: " (Aufzeichnung)",
+  live: " (verbunden)",
+} as const;
+
 /**
  * One quiet line while everything is fine; errors and disconnects take the room they need. Individual boundaries
  * keep healthy channels usable when another one fails.
@@ -12,6 +19,7 @@ import { CHANNELS } from "@/services/types";
 export function ChannelStatus() {
   const resources = useDemoStore((state) => state.resources);
   const connected = useDemoStore((state) => state.connectedChannels);
+  const moodleSource = useDemoStore((state) => state.moodleSource);
   return (
     <section
       aria-label="Sync-Status"
@@ -36,7 +44,9 @@ export function ChannelStatus() {
           >
             {() => (
               <p>
-                {CHANNEL_LABELS[channel]} · zuletzt aktualisiert{" "}
+                {CHANNEL_LABELS[channel]}
+                {channel === "moodle" && SOURCE_NOTES[moodleSource]} · zuletzt
+                aktualisiert{" "}
                 {resources[channel].updatedAt
                   ? formatShortDateTime(new Date(resources[channel].updatedAt))
                   : "unbekannt"}

@@ -32,12 +32,15 @@ Dazu kommen der Studienverlauf mit Was-wäre-wenn (auch per Drag & Drop), Friste
 
 | Echt                                                                                        | Simuliert oder erfunden                                        |
 | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Regeln aus der StuPO Bachelor der TH Mannheim (Fassung ab 01.09.2026), jeweils mit Paragraf | Anbindung an POS, Moodle, Mail und Website (Mock-Services)     |
+| Regeln aus der StuPO Bachelor der TH Mannheim (Fassung ab 01.09.2026), jeweils mit Paragraf | Anbindung an POS, Mail und Website (Mock-Services)             |
 | Module aus dem [Modulhandbuch UIB](https://module.informatik.th-mannheim.de/UIB)            | Noten, Termine, Mails, Kontaktdaten und die Person Niklas      |
 | Berechnung von ECTS, Status, Prognose und Folgen (reine Fachlogik, unit-getestet)           | Der Assistent: vorbereiteter Antwortkatalog, kein Sprachmodell |
+| Anbindung an Moodle über dessen Web Services, getestet gegen ein Moodle mit Beispielkursen  | Die Moodle-Daten der Demo, solange du nichts umstellst         |
 |                                                                                             | Die Abmeldung: ändert nur den lokalen Zustand, sendet nichts   |
 
-Es gibt kein Backend, keine Anmeldung und keine Requests an fremde Server. Eigene Rechenregeln der App tragen in der Oberfläche das Label „Beispiel“.
+Es gibt kein Backend und keine Anmeldung. Eigene Rechenregeln der App tragen in der Oberfläche das Label „Beispiel“.
+
+**Moodle ausprobieren.** Unter Einstellungen → Moodle-Daten lässt sich der Kanal umstellen: „Aufzeichnung“ zeigt echte Antworten eines Moodle mit Beispielkursen, ohne dass etwas abgerufen wird. „Eigenes Moodle“ verbindet die App direkt mit einem Moodle; dafür gibt es eine [Sandbox für Docker](infra/moodle/README.md). Nur in diesem Modus sendet die App Requests, und nur an dieses Moodle.
 
 ## Technik
 
@@ -71,6 +74,8 @@ Die App läuft dann unter http://localhost:5173. Beim ersten Aufruf öffnet sich
 | `npm run format:check` | Prettier prüft die Formatierung                                          |
 | `npm run check`        | Prüf-Gate: typecheck, lint, test und build – muss vor jedem PR grün sein |
 | `npm run e2e`          | Playwright: Hero-Flow (Desktop und 390 px) gegen den Produktions-Build   |
+| `npm run moodle:up`    | Moodle-Sandbox starten (Docker); dazu `moodle:down` und `moodle:reset`   |
+| `npm run test:moodle`  | Integrationstests des Moodle-Adapters gegen die Sandbox                  |
 
 `npm run e2e` braucht ein lokal installiertes Google Chrome. GitHub Actions führt `check` und `e2e` bei jedem Pull Request aus.
 
