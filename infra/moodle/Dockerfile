@@ -1,4 +1,4 @@
-FROM moodlehq/moodle-php-apache:8.3
+FROM moodlehq/moodle-php-apache:8.4
 
 ARG MOODLE_BRANCH=MOODLE_405_STABLE
 
