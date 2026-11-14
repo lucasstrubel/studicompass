@@ -45,7 +45,7 @@ jobs:
       - run: npx playwright test e2e/mail.e2e.ts --project=hero
       - if: failure()
         run: docker compose -f infra/mail/docker-compose.yml logs --tail 200
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: mail-test-results
