@@ -21,6 +21,7 @@ import type { Notification } from "@/domain/types";
 import { CHANNELS } from "@/services/types";
 import { ProfileSection } from "@/features/profile/ProfileSection";
 import { MoodleSourceSection } from "./MoodleSourceSection";
+import { MailSourceSection } from "./MailSourceSection";
 
 const TYPES: { type: Notification["type"]; label: string }[] = [
   { type: "decision", label: "Entscheidungen" },
@@ -149,6 +150,7 @@ export function SettingsPage() {
         </div>
       </section>
       <MoodleSourceSection />
+      <MailSourceSection />
       <section className="space-y-3 p-5" aria-labelledby="demo-settings">
         <h2 id="demo-settings" className="text-section-title">
           Demo

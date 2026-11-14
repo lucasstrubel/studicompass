@@ -20,7 +20,10 @@
     "moodle:down": "docker compose -f infra/moodle/docker-compose.yml down",
     "moodle:reset": "docker compose -f infra/moodle/docker-compose.yml down -v && npm run moodle:up",
     "test:moodle": "vitest run --config vitest.moodle.config.ts",
-    "moodle:record": "node scripts/moodle-record.mjs"
+    "moodle:record": "node scripts/moodle-record.mjs",
+    "mail:up": "docker compose -f infra/mail/docker-compose.yml up -d --wait && node infra/mail/seed.ts",
+    "mail:down": "docker compose -f infra/mail/docker-compose.yml down",
+    "test:mail": "vitest run --config vitest.mail.config.ts"
   },
   "dependencies": {
     "@assistant-ui/react": "^0.15.32",
@@ -61,7 +64,9 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.7",
     "globals": "^17.13.0",
+    "imapflow": "^2.11.0",
     "jsdom": "^30.1.3",
+    "postal-mime": "^4.2.1",
     "prettier": "^3.9.10",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.71.2",

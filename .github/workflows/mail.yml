@@ -1,0 +1,53 @@
+name: Mail
+
+# Tests the bridge against a real IMAP server: starts the mail sandbox from infra/mail, runs the
+# integration tests and connects the app to the mailbox in a browser.
+on:
+  pull_request:
+    paths: &paths
+      - "server/**"
+      - "src/services/mail/**"
+      - "infra/mail/**"
+      - "e2e/mail.e2e.ts"
+      - "vitest.mail.config.ts"
+      - ".github/workflows/mail.yml"
+  push:
+    branches: [main]
+    paths: *paths
+  workflow_dispatch:
+
+concurrency:
+  group: mail-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  integration:
+    name: integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # The preview server started by Playwright reads these and points the bridge to the sandbox.
+      BRIDGE_MAIL_HOST: localhost
+      BRIDGE_MAIL_PORT: 3143
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run mail:up
+      - run: npm run test:mail
+      # Playwright uses the Google Chrome preinstalled on the runner (channel "chrome").
+      - run: npx playwright test e2e/mail.e2e.ts --project=hero
+      - if: failure()
+        run: docker compose -f infra/mail/docker-compose.yml logs --tail 200
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: mail-test-results
+          path: test-results/
+          retention-days: 7
