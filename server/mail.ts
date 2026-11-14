@@ -51,13 +51,23 @@ function codePoint(value: number, fallback: string): string {
     : fallback;
 }
 
+/** Replaces until nothing changes, so removing one tag cannot assemble another ("<scr<b>ipt>"). */
+function replaceAll(text: string, pattern: RegExp, replacement: string) {
+  let before: string;
+  do {
+    before = text;
+    text = text.replace(pattern, replacement);
+  } while (text !== before);
+  return text;
+}
+
 /** Mails without a text part: reduce the HTML to its text, the app never renders markup. */
 export function htmlToText(html: string): string {
-  return html
-    .replace(/<(style|script|head)\b[\s\S]*?<\/\1>/gi, " ")
-    .replace(/<!--[\s\S]*?-->/g, " ")
-    .replace(/<(br|\/p|\/div|\/li|\/tr|\/h[1-6])\s*\/?>/gi, "\n")
-    .replace(/<[^>]*>/g, "")
+  let text = replaceAll(html, /<(style|script|head)\b[\s\S]*?<\/\1\s*>/gi, " ");
+  text = replaceAll(text, /<!--[\s\S]*?-->/g, " ");
+  text = text.replace(/<(br|\/p|\/div|\/li|\/tr|\/h[1-6])\s*\/?>/gi, "\n");
+  text = replaceAll(text, /<[^>]*>/g, "");
+  return text
     .replace(/&#x([0-9a-f]+);/gi, (entity, code: string) =>
       codePoint(Number.parseInt(code, 16), entity),
     )

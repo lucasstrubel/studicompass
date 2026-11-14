@@ -171,6 +171,12 @@ describe("mail target", () => {
 });
 
 describe("htmlToText", () => {
+  it("leaves no tag behind that only forms once another is removed", () => {
+    const text = htmlToText("<scr<b>ipt>alert(1)</scr</b>ipt>Hallo<<i>b>");
+    expect(text).not.toMatch(/<\/?[a-z]/i);
+    expect(text).toContain("Hallo");
+  });
+
   it("drops markup, styles and scripts and decodes entities", () => {
     expect(
       htmlToText(
