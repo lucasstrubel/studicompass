@@ -46,7 +46,9 @@ Dazu kommen der Studienverlauf mit Was-wäre-wenn (auch per Drag & Drop), Friste
 | Anbindung an Moodle über dessen Web Services, getestet gegen ein Moodle mit Beispielkursen  | Die Moodle-Daten der Demo, solange du nichts umstellst         |
 |                                                                                             | Die Abmeldung: ändert nur den lokalen Zustand, sendet nichts   |
 
-Es gibt kein Backend und keine Anmeldung. Eigene Rechenregeln der App tragen in der Oberfläche das Label „Beispiel“.
+Die öffentliche Demo hat kein Backend und keine Anmeldung. Eigene Rechenregeln der App tragen in der Oberfläche das Label „Beispiel“.
+
+**Hochschul-Mail (nur lokal).** Lokal gestartet kann die App das eigene Hochschul-Postfach lesen: Einstellungen → Hochschul-Mail → „Eigenes Postfach“. Dafür läuft im Dev-Server ein kleiner Server-Teil, die Brücke, weil ein Browser kein IMAP spricht. Sie speichert nichts, liest nur und kennt als Ziel allein den Mailserver der Hochschule ([ADR 0005](docs/adr/0005-bruecke-fuer-pos-und-mail.md), [Sicherheit](docs/SICHERHEIT.md)). Zum Ausprobieren ohne echtes Konto gibt es eine [Mail-Sandbox](infra/mail/README.md).
 
 **Moodle ausprobieren.** Unter Einstellungen → Moodle-Daten lässt sich der Kanal umstellen: „Aufzeichnung“ zeigt echte Antworten eines Moodle mit Beispielkursen, ohne dass etwas abgerufen wird. „Eigenes Moodle“ verbindet die App direkt mit einem Moodle; dafür gibt es eine [Sandbox für Docker](infra/moodle/README.md). Nur in diesem Modus sendet die App Requests, und nur an dieses Moodle.
 
@@ -101,6 +103,8 @@ Die App läuft dann unter http://localhost:5173. Beim ersten Aufruf öffnet sich
 | `npm run e2e`          | Playwright: Hero-Flow (Desktop und 390 px) gegen den Produktions-Build   |
 | `npm run moodle:up`    | Moodle-Sandbox starten (Docker); dazu `moodle:down` und `moodle:reset`   |
 | `npm run test:moodle`  | Integrationstests des Moodle-Adapters gegen die Sandbox                  |
+| `npm run mail:up`      | Mail-Sandbox starten und füllen (Docker); dazu `mail:down`               |
+| `npm run test:mail`    | Integrationstests der Brücke gegen die Mail-Sandbox                      |
 
 `npm run e2e` braucht ein lokal installiertes Google Chrome. GitHub Actions führt `check` und `e2e` bei jedem Pull Request aus.
 

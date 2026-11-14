@@ -1,6 +1,6 @@
 # ADR 0003: Kein eigenes Backend
 
-Status: angenommen (13.11.2026); der offene Punkt ist mit [ADR 0004](0004-moodle-spike.md) geklärt
+Status: angenommen (13.11.2026); der offene Punkt ist mit [ADR 0004](0004-moodle-spike.md) geklärt. Gilt weiter für Moodle; für POS und Mail fasst [ADR 0005](0005-bruecke-fuer-pos-und-mail.md) sie neu.
 
 ## Kontext
 

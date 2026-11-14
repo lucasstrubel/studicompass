@@ -61,6 +61,20 @@ test("the core screens have no automatically detectable accessibility violations
   expect(found).toEqual({});
 });
 
+test("the form for the university mailbox has no automatically detectable accessibility violations", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Demo ohne Einrichtung starten" })
+    .click();
+  await page.goto("/einstellungen");
+  const mail = page.getByRole("region", { name: "Hochschul-Mail" });
+  await mail.getByRole("button", { name: "Eigenes Postfach" }).click();
+  await expect(mail.getByLabel("Passwort")).toBeVisible();
+  expect(await violations(page)).toEqual([]);
+});
+
 test("the Moodle views of the recording have no automatically detectable accessibility violations", async ({
   page,
 }) => {

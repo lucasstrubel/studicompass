@@ -18,6 +18,9 @@ Alle nennenswerten Änderungen an StudiCompass. Das Format folgt [Keep a Changel
 - Prüfungsvorleistungen planen: Teilschritte und geplanter Aufwand je Eintrag, Übersicht über das Semester
 - Eigene Einträge in Moodle sichern und auf einem anderen Gerät laden (Datei in den privaten Dateien des verbundenen Moodle)
 - Abgaben aus Moodle als Prüfungsvorleistung übernehmen; den Stand aus Moodle schlägt die App vor, bestätigt wird von Hand
+- Brücke (`server/`): kleiner zustandsloser Server-Teil im lokalen Dev- und Preview-Server für Kanäle, die der Browser nicht erreicht (`docs/adr/0005-bruecke-fuer-pos-und-mail.md`)
+- Einstellungen → Hochschul-Mail: Beispieldaten oder das eigene Hochschul-Postfach (IMAP, nur lesend); in der öffentlichen Demo ohne Brücke ein Hinweis statt des Formulars
+- Mail-Sandbox unter `infra/mail/` (GreenMail), Integrationstests (`npm run test:mail`) und Workflow `mail.yml`
 
 ### Sicherheit und Qualität
 

@@ -4,7 +4,7 @@ Arbeitstitel „StudiCompass“ – der Name steht nur in `src/config/demo.ts` (
 
 ## Worum es geht
 Web-App, die Studierenden der TH Mannheim hilft, ihren Studienstand zu überblicken und Entscheidungen mit Folgen (z. B. eine Prüfungsabmeldung) informiert zu treffen. Sie bündelt POS, Moodle, Hochschul-Mail und Website und beantwortet Fragen zur Prüfungsordnung mit Quellenangabe.
-Selbsterklärender Hi-Fi-Prototyp, kein Produktivsystem. POS, Mail und Website sind **Dummy-Daten**; Moodle hat zusätzlich eine echte Anbindung (Datenmodi Demo, Aufzeichnung, Live – `docs/adr/`). Wie es weitergeht: `docs/ROADMAP.md`.
+Selbsterklärender Hi-Fi-Prototyp, kein Produktivsystem. POS und Website sind **Dummy-Daten**; Moodle hat zusätzlich eine echte Anbindung (Datenmodi Demo, Aufzeichnung, Live), Mail zusätzlich das echte Hochschul-Postfach über die Brücke (nur lokal) – `docs/adr/`. Wie es weitergeht: `docs/ROADMAP.md`.
 Primäre Persona: **Niklas Brandt**, 20, Unternehmens- und Wirtschaftsinformatik (UIB), 3. Semester, Nebenjob 15 Std./Woche.
 Regeln stammen aus der StuPO Bachelor (Fassung ab 01.09.2026, § 56 für UIB), Module aus dem Modulhandbuch UIB (module.informatik.th-mannheim.de). Noten, Termine, Mails und Kontaktdaten bleiben erfunden.
 
@@ -12,7 +12,7 @@ Regeln stammen aus der StuPO Bachelor (Fassung ab 01.09.2026, § 56 für UIB), M
 
 ## Stack
 Vite · React · TypeScript (strict) · React Router · Tailwind CSS · shadcn/ui (Radix) · lucide-react · Motion · assistant-ui (Runtime und Eingabe des Chats) · Zustand (persist) · Recharts (über shadcn `chart`) · date-fns (Locale `de`) · @dnd-kit/core · zod (nur im Moodle-Adapter) · Vitest + Testing Library · Playwright · Fontsource (Bricolage Grotesque, Hanken Grotesk, lokal) · Deployment: Vercel (statisch, SPA-Rewrite).
-Kein Backend, keine Datenbank, keine Authentifizierung. Requests gehen nur an ein Moodle, das der Nutzer in den Einstellungen selbst verbindet (Modus Live); sonst an keinen fremden Server.
+Keine Datenbank, keine eigene Authentifizierung. Einziger Server-Teil ist die **Brücke** (`server/`, ADR 0005): zustandslos, feste Ziele, nur lesend, läuft nur im lokalen Dev- und Preview-Server und wird nicht deployt (kein Ordner `api/`). Server-Abhängigkeiten: imapflow, postal-mime. Requests gehen nur an ein Moodle, das der Nutzer in den Einstellungen selbst verbindet (Modus Live), und an die Brücke derselben Herkunft; sonst an keinen fremden Server.
 - Peer-Dependency-Konflikte nicht mit `--force` oder `--legacy-peer-deps` überdecken: stoppen und Konflikt samt Optionen an Lucas melden.
 
 ## Befehle
@@ -28,6 +28,8 @@ npm run e2e        # Playwright gegen den Produktions-Build (installiertes Chrom
 npm run moodle:up  # Moodle-Sandbox starten (Docker, infra/moodle); moodle:down, moodle:reset
 npm run test:moodle    # Integrationstests gegen die Sandbox (nicht Teil von check)
 npm run moodle:record  # dasselbe und Aufzeichnung nach src/data/recordings/ schreiben
+npm run mail:up    # Mail-Sandbox starten und füllen (Docker, infra/mail); mail:down
+npm run test:mail  # Integrationstests der Brücke gegen die Mail-Sandbox (nicht Teil von check)
 ```
 
 ## Ordnerstruktur
@@ -45,7 +47,8 @@ src/
   domain/       reines TypeScript: types, terms, progress, rules, projection, decision, grades,
                 assistant-matching (+ Tests daneben)
   services/     Interfaces je Kanal und Regelwerk; mock/ mit Latenz und optionalem Fehler;
-                moodle/ = echter Adapter (client, schemas, mapping, service, replay), per import() nachgeladen
+                moodle/ = echter Adapter (client, schemas, mapping, service, replay), per import() nachgeladen;
+                mail/ = Adapter für das Postfach hinter der Brücke (client, schemas, mapping, service)
   data/         Dummy-Daten; recordings/ = aufgezeichnete Moodle-Antworten (erzeugt, nicht von Hand ändern)
   store/        Zustand-Store, Selektoren
   config/       demo.ts (APP_NAME, DEMO_NOW, LATENCY_MS, FLAGS)
@@ -53,8 +56,10 @@ src/
   styles/       globals.css (Tailwind, Design-Tokens)
 public/praesentation/   reveal.js-Folien für SE2 (statisch, nicht von Vite gebaut); Quelle: docs/praesentation/konzept.md
 docs/                   PROZESS.md (Entstehung, für Besucher des Repos), TECHNIK.md (technische Details), ROADMAP.md, SICHERHEIT.md, adr/ (Architekturentscheidungen), img/ (Screenshots fürs README)
+server/                 Brücke (Node, eigenes Stück neben src/): bridge.ts (Router), mail.ts (IMAP), config.ts (feste Ziele), vite-plugin.ts
 infra/moodle/           Moodle-Sandbox (Docker Compose, Seed-Skript); nur lokal und in der CI
-.github/workflows/      check.yml: `npm run check` und `npm run e2e` bei jedem PR und auf main; moodle.yml: Adapter gegen die Sandbox
+infra/mail/             Mail-Sandbox (GreenMail, Seed-Skript); nur lokal und in der CI
+.github/workflows/      check.yml: `npm run check` und `npm run e2e` bei jedem PR und auf main; moodle.yml, mail.yml: Adapter gegen die Sandboxen
 ```
 
 ## Architektur
@@ -63,6 +68,7 @@ Abhängigkeiten nur in diese Richtung: UI → Store/Selektoren → Domain; Store
 - UI importiert **nie** direkt aus `src/data`; Daten kommen über Services in den Store.
 - Jeder Kanal (POS, Moodle, Mail, Website) und das Regelwerk haben ein eigenes Service-Interface. Mocks simulieren Latenz und optional Fehler (`FLAGS.simulateErrors`).
 - Moodle kennt drei Datenmodi (`moodleSource` im Store): `demo` (Mock), `recording` (Aufzeichnung durch den echten Adapter), `live` (verbundenes Moodle). Antworten werden mit den Schemas geprüft, bevor sie ins Fachmodell kommen; Fehler sind `MoodleError` mit deutschem Text. Der Zugriffsschlüssel liegt nur im Speicher, nie im State oder in `persist`. „Neu in Moodle“ entsteht aus dem Vergleich zweier Abgleiche (`domain/moodle-changes.ts`); die Aufzeichnung hat dafür zwei Zustände.
+- Mail kennt zwei Quellen: Beispiel-Mails oder das verbundene Postfach (`mailAccount` im Store, nie in `persist`). Die Brücke nimmt Zugangsdaten nur im Rumpf entgegen, speichert und protokolliert nichts, verbindet nur zu den festen Zielen aus `server/config.ts` und öffnet das Postfach schreibgeschützt; Fehler sind `MailError` mit deutschem Text. Das Passwort liegt wie der Moodle-Schlüssel nur im Speicher. Ohne Brücke (öffentliche Demo) zeigt die Oberfläche einen Hinweis statt des Formulars.
 - „Jetzt“ ist ausschließlich `DEMO_NOW` – nie `new Date()` oder `Date.now()` in Komponenten oder Domäne. Das gilt auch im Modus Live, solange POS simuliert ist; die Sandbox ist auf dieses Datum befüllt.
 - Simulierte Aktionen (z. B. Abmeldung) ändern nur den Store, speichern vorher einen Snapshot (Rückgängig) und sind im UI als Simulation erkennbar.
 - Persistenz über Zustand `persist` mit `version`. Ändern sich Dummy-Daten: Version erhöhen, damit alte Demo-Stände verworfen werden. „Demo zurücksetzen“ in den Einstellungen.
@@ -87,7 +93,7 @@ Abhängigkeiten nur in diese Richtung: UI → Store/Selektoren → Domain; Store
 - Der Produktions-Build trägt eine Content-Security-Policy (`vite.config.ts`): keine Inline-Skripte, kein `eval`, keine fremden Quellen. Neue Bibliotheken müssen darunter laufen (`e2e/security.e2e.ts`).
 - Fokusring zentral aus `globals.css` (`:focus-visible`, 2 px `--ring` = `--accent-strong`, 2 px Abstand): Komponenten zeichnen keinen eigenen Ring und schalten ihn nicht mit `outline-none` ab (Ausnahme: nicht bedienbare Sprungziele mit `tabIndex={-1}`). Auf `.surface-hero` wird `--ring` lokal zur hellen Akzentfarbe. Schneidet ein Elternteil mit `overflow-hidden` ihn ab: `focus-visible:-outline-offset-2`.
 - Bewegung: Kurve `--ease-strong`, nur `transform`, `opacity` und `clip-path`, kein `transition-all`, Ausgänge schneller als Eingänge. CSS ist der Normalfall; Motion nur für Unterbrechbares (Nadel, Navigations-Indikator). Eine geplante Geste: Die Kurslinie zeichnet sich einmal je Sitzung und nach einer Entscheidung. Keine Seitenübergänge, keine hochzählenden Zahlen. `AnimatePresence` nicht um Radix-Flächen, weil es Knoten in Tests hält.
-- Keine Login- oder Passwortfelder. Einzige Eingabe eines Geheimnisses ist der Moodle-Zugriffsschlüssel in den Einstellungen. Keine Nachbildung echter POS- oder Moodle-Oberflächen; Übergaben an Originalsysteme nur als neutraler Hinweis („Im echten Betrieb …“).
+- Keine Login-Seite. Geheimnisse werden nur in den Einstellungen eingegeben: der Moodle-Zugriffsschlüssel und, wo eine Brücke läuft, der Hochschul-Zugang (einziges Passwortfeld, mit Hinweis, wohin das Passwort geht). Keine Nachbildung echter POS- oder Moodle-Oberflächen; Übergaben an Originalsysteme nur als neutraler Hinweis („Im echten Betrieb …“).
 - Beim Folgen-Check sind „Ich trete an“ und „Abmeldung vornehmen“ visuell gleich gewichtet – die App informiert, sie lenkt nicht.
 
 ## Git

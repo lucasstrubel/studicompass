@@ -17,6 +17,7 @@ import type {
   CourseworkStatus,
   CourseworkStep,
   HintTone,
+  Module,
   MoodleChange,
   MoodleCourse,
   MoodleKnown,
@@ -42,6 +43,7 @@ import { selectAssistantMatch } from "./assistant-selectors";
 import { createMockServices } from "@/services/mock";
 import {
   isChannel,
+  type MailService,
   type MoodleService,
   type ServiceData,
   type ServiceKey,
@@ -49,6 +51,8 @@ import {
 } from "@/services/types";
 import { MoodleError } from "@/services/moodle/errors";
 import type { MoodleStorage } from "@/services/moodle/storage";
+import { MailError } from "@/services/mail/errors";
+import { MAIL_ID_PREFIX } from "@/services/mail/mapping";
 import {
   moodleSourceKey,
   type MoodleSite,
@@ -105,6 +109,26 @@ const defaultMoodleSources: MoodleSources = {
       moodleOptions,
     ),
 };
+/** The real mail adapter behind the bridge (docs/adr/0005), loaded on demand like the Moodle one. */
+export interface MailSources {
+  /** Whether the server the page comes from has a bridge. */
+  available: () => Promise<boolean>;
+  /** Logs in and returns the service for that mailbox; rejects with a MailError. */
+  live: (
+    credentials: { user: string; password: string },
+    modules: () => Module[],
+  ) => Promise<{ service: MailService }>;
+}
+const defaultMailSources: MailSources = {
+  available: async () =>
+    (await import("@/services/mail")).mailBridgeAvailable(),
+  live: async (credentials, modules) =>
+    (await import("@/services/mail")).connectMail(credentials, {
+      modules,
+      timeZone: DEMO_TIME_ZONE,
+    }),
+};
+export type MailBridgeState = "unknown" | "available" | "unavailable";
 const LOAD_ERROR =
   "Die Beispieldaten konnten nicht geladen werden. Versuch es erneut.";
 
@@ -258,6 +282,18 @@ export interface DemoState extends Preferences {
     baseUrl: string,
     token: string,
   ) => Promise<{ ok: true } | { ok: false; error: string }>;
+  /** The connected university mailbox, otherwise null (example mails); never persisted. */
+  mailAccount: { userName: string } | null;
+  /** Whether this server can reach a mailbox at all; the public demo cannot. */
+  mailBridge: MailBridgeState;
+  checkMailBridge: () => Promise<void>;
+  /** Logs in at the mail server and shows that mailbox instead of the example mails. */
+  connectMail: (
+    user: string,
+    password: string,
+  ) => Promise<{ ok: true } | { ok: false; error: string }>;
+  /** Forgets the mailbox and returns to the example mails. */
+  disconnectMail: () => Promise<void>;
   /** Syncs the Moodle channel again; changes since the last sync become "Neu in Moodle". */
   refreshMoodle: () => Promise<void>;
   /**
@@ -358,6 +394,10 @@ function defaultPreferences(): Preferences {
     moodleChanges: [],
     moodleRecordingPhase: 0,
   };
+}
+/** Read marks of real mails belong to one mailbox and go when it is connected or disconnected. */
+function withoutMailIds(ids: string[]): string[] {
+  return ids.filter((id) => !id.startsWith(MAIL_ID_PREFIX));
 }
 function emptyResource<T>(): LoadState<T> {
   return { status: "idle", data: null, updatedAt: null, error: null };
@@ -646,6 +686,7 @@ export function createDemoStore(
   services: Services = createMockServices(),
   storage: StateStorage = safeStorage,
   moodleSources: MoodleSources = defaultMoodleSources,
+  mailSources: MailSources = defaultMailSources,
 ) {
   // A reset invalidates in-flight requests; a retry supersedes older requests for the same resource.
   const requests: Record<ServiceKey, number> = {
@@ -661,6 +702,8 @@ export function createDemoStore(
   // Held outside the state so the access key is never persisted or exposed to the UI.
   let liveMoodle: MoodleService | null = null;
   let liveStorage: MoodleStorage | null = null;
+  // Holds the password of the mailbox in its closure; like the access key it never enters the state.
+  let liveMail: MailService | null = null;
   return createStore<DemoState>()(
     persist(
       (set, get) => {
@@ -693,7 +736,7 @@ export function createDemoStore(
                     ).load();
                   return services.moodle.load();
                 },
-                mail: () => services.mail.load(),
+                mail: () => (liveMail ?? services.mail).load(),
                 website: () => services.website.load(),
                 rules: () => services.rules.load(),
                 assistant: () => services.assistant.load(),
@@ -714,7 +757,9 @@ export function createDemoStore(
                   ...get().resources[key],
                   status: "error",
                   error:
-                    error instanceof MoodleError ? error.message : LOAD_ERROR,
+                    error instanceof MoodleError || error instanceof MailError
+                      ? error.message
+                      : LOAD_ERROR,
                 });
             } finally {
               if (requests[key] === request) pending.delete(key);
@@ -895,6 +940,49 @@ export function createDemoStore(
             }
             await load("moodle", true);
             return { ok: true };
+          },
+          mailAccount: null,
+          mailBridge: "unknown",
+          async checkMailBridge() {
+            const available = await mailSources.available().catch(() => false);
+            set({ mailBridge: available ? "available" : "unavailable" });
+          },
+          async connectMail(user, password) {
+            const userName = user.trim();
+            if (!userName || !password)
+              return {
+                ok: false,
+                error: "Gib deine Benutzerkennung und dein Passwort an.",
+              };
+            try {
+              const { service } = await mailSources.live(
+                { user: userName, password },
+                () => get().resources.pos.data?.modules ?? [],
+              );
+              liveMail = service;
+            } catch (error) {
+              return {
+                ok: false,
+                error:
+                  error instanceof MailError
+                    ? error.message
+                    : "Die Verbindung zum Postfach ist fehlgeschlagen. Versuch es erneut.",
+              };
+            }
+            set((state) => ({
+              mailAccount: { userName },
+              readInboxIds: withoutMailIds(state.readInboxIds),
+            }));
+            await load("mail", true);
+            return { ok: true };
+          },
+          async disconnectMail() {
+            liveMail = null;
+            set((state) => ({
+              mailAccount: null,
+              readInboxIds: withoutMailIds(state.readInboxIds),
+            }));
+            await load("mail", true);
           },
           async setChannelConnected(channel, connected) {
             if (!connected) {
@@ -1177,8 +1265,10 @@ export function createDemoStore(
             clearTimeout(assistantTimer);
             liveMoodle = null;
             liveStorage = null;
+            liveMail = null;
             set({
               ...defaultPreferences(),
+              mailAccount: null,
               moodleSite: null,
               moodleBackupAt: null,
               resources: emptyResources(),

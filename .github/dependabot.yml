@@ -27,3 +27,10 @@ updates:
       interval: monthly
     commit-message:
       prefix: chore
+
+  - package-ecosystem: docker-compose
+    directory: /infra/mail
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: chore

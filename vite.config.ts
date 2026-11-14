@@ -3,6 +3,7 @@ import path from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig, type Plugin } from "vite";
+import { bridge } from "./server/vite-plugin.ts";
 import { APP_NAME } from "./src/config/demo.ts";
 
 // Fills %APP_NAME% in index.html, so the name is defined only in src/config/demo.ts.
@@ -59,6 +60,7 @@ export default defineConfig({
     tailwindcss(),
     demoConfigInHtml(),
     contentSecurityPolicy(),
+    bridge(),
   ],
   resolve: {
     alias: {
