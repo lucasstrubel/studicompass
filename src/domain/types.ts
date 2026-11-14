@@ -211,6 +211,17 @@ export interface Coursework {
   /** Date only ("2027-01-29"); optional. */
   dueAt?: string;
   status: CourseworkStatus;
+  /** Own plan: what to do before it is achieved. */
+  steps?: CourseworkStep[];
+  /** Planned effort in hours. */
+  effortHours?: number;
+  /** The Moodle assignment the entry was taken from (`courseId/itemId`). */
+  moodleRef?: string;
+}
+export interface CourseworkStep {
+  id: string;
+  title: string;
+  done: boolean;
 }
 /** Whether the exam may be taken (DR-13); "none" when no Prüfungsvorleistung is entered. */
 export type ExamAdmission = "none" | "open" | "admitted" | "notAdmitted";

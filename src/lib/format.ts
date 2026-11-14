@@ -103,3 +103,8 @@ export function greeting(date: Date): string {
   if (hour < 18) return "Guten Tag";
   return "Guten Abend";
 }
+
+/** "4 Std." / "2,5 Std." for planned effort and weekly hours. */
+export function formatHours(value: number): string {
+  return `${value.toLocaleString("de-DE", { maximumFractionDigits: 1 })} Std.`;
+}
