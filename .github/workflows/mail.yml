@@ -33,7 +33,7 @@ jobs:
       BRIDGE_MAIL_HOST: localhost
       BRIDGE_MAIL_PORT: 3143
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version: 24
