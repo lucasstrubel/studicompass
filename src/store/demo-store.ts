@@ -15,6 +15,7 @@ import type {
   CourseLink,
   Coursework,
   CourseworkStatus,
+  CourseworkStep,
   HintTone,
   MoodleChange,
   MoodleCourse,
@@ -28,6 +29,12 @@ import type {
 import { parseWebUrl } from "@/lib/url";
 import { parseProfileName } from "@/lib/profile";
 import { projectPlan } from "@/domain/projection";
+import {
+  COURSEWORK_EFFORT_MAX,
+  COURSEWORK_STEPS_MAX,
+  courseworkFromMoodle,
+  unlinkedAssignments,
+} from "@/domain/coursework";
 import { detectMoodleChanges, knownMoodleItems } from "@/domain/moodle-changes";
 import { toInstant } from "@/lib/instant";
 import { selectAcademicState, selectNotifications } from "./selectors";
@@ -167,6 +174,50 @@ function validDueAt(value: unknown, dateOnly = false): value is string {
   );
 }
 
+function validEffort(value: unknown): value is number {
+  return (
+    typeof value === "number" &&
+    Number.isFinite(value) &&
+    value > 0 &&
+    value <= COURSEWORK_EFFORT_MAX
+  );
+}
+/** The steps of an own plan as stored; entries of another shape are dropped. */
+function readSteps(value: unknown): CourseworkStep[] {
+  return Array.isArray(value)
+    ? value
+        .flatMap((step: unknown): CourseworkStep[] =>
+          isRecord(step) &&
+          typeof step.id === "string" &&
+          validTitle(step.title)
+            ? [
+                {
+                  id: step.id,
+                  title: step.title.trim(),
+                  done: step.done === true,
+                },
+              ]
+            : [],
+        )
+        .slice(0, COURSEWORK_STEPS_MAX)
+    : [];
+}
+/** Plan and Moodle reference of a Prüfungsvorleistung; empty parts are left out. */
+function courseworkExtras(item: {
+  steps?: unknown;
+  effortHours?: unknown;
+  moodleRef?: unknown;
+}): Pick<Coursework, "steps" | "effortHours" | "moodleRef"> {
+  const steps = readSteps(item.steps);
+  return {
+    ...(steps.length > 0 ? { steps } : {}),
+    ...(validEffort(item.effortHours) ? { effortHours: item.effortHours } : {}),
+    ...(typeof item.moodleRef === "string" && item.moodleRef
+      ? { moodleRef: item.moodleRef }
+      : {}),
+  };
+}
+
 /** Typing indicator of the assistant (0.6–1.2 s). */
 export const ASSISTANT_DELAY_MS = 800;
 
@@ -223,6 +274,8 @@ export interface DemoState extends Preferences {
   /** Adds or updates a Prüfungsvorleistung; false for an invalid title or date. */
   saveCoursework: (item: Omit<Coursework, "id"> & { id?: string }) => boolean;
   removeCoursework: (id: string) => void;
+  /** Takes assignments of the module's Moodle course over as Prüfungsvorleistungen; returns how many were added. */
+  importMoodleCoursework: (moduleId: string, itemIds: string[]) => number;
   /** Adds or updates an own date; false for an invalid title or date (the form checks the demo time). */
   savePersonalDeadline: (
     entry: Omit<PersonalDeadline, "id"> & { id?: string },
@@ -504,6 +557,7 @@ function readOwnEntries(value: Record<string, unknown>) {
             title: title.trim(),
             status: status as CourseworkStatus,
             ...(dueAt ? { dueAt } : {}),
+            ...courseworkExtras(item),
           },
         ];
       })
@@ -904,6 +958,7 @@ export function createDemoStore(
               title: item.title.trim(),
               status: item.status,
               ...(item.dueAt ? { dueAt: item.dueAt } : {}),
+              ...courseworkExtras(item),
             };
             // An unknown id (e.g. undo after deleting) adds the entry again.
             const list = get().coursework;
@@ -918,6 +973,26 @@ export function createDemoStore(
             set({
               coursework: get().coursework.filter((item) => item.id !== id),
             }),
+          importMoodleCoursework(moduleId, itemIds) {
+            const course = get().resources.moodle.data?.courses.find(
+              (item) => item.moduleId === moduleId,
+            );
+            if (!course) return 0;
+            const existing = get().coursework;
+            const added = unlinkedAssignments(
+              existing.filter((item) => item.moduleId === moduleId),
+              course,
+            )
+              .filter((item) => itemIds.includes(item.id))
+              .map((item) => ({
+                id: crypto.randomUUID(),
+                ...courseworkFromMoodle(moduleId, course, item),
+                title: item.title.trim().slice(0, ENTRY_TITLE_MAX_LENGTH),
+              }))
+              .filter((item) => validTitle(item.title));
+            set({ coursework: [...existing, ...added] });
+            return added.length;
+          },
           savePersonalDeadline(entry) {
             if (!validTitle(entry.title) || !validDueAt(entry.dueAt))
               return false;

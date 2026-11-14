@@ -99,6 +99,46 @@ test("replays what the lecturer changed: new file at the module, in the inbox an
   await expect(card.getByText("Neu in Moodle")).toHaveCount(0);
 });
 
+test("takes Moodle assignments over as Prüfungsvorleistungen and plans the open one", async ({
+  page,
+}) => {
+  const moodle = await openSettings(page);
+  await moodle.getByRole("button", { name: "Aufzeichnung" }).click();
+  await expect(page.getByText("Moodle (Aufzeichnung)")).toBeVisible();
+
+  await page.goto("/module/m-wi3");
+  const card = page.getByRole("region", { name: "Prüfungsvorleistung" });
+  await card.getByRole("button", { name: "Aus Moodle übernehmen" }).click();
+  await card.getByRole("button", { name: "6 Abgaben übernehmen" }).click();
+  await expect(card).toContainText("4 von 6 erbracht");
+  await expect(card).toContainText("Zulassung offen");
+
+  await card.getByRole("button", { name: "Pflichtübung 5 bearbeiten" }).click();
+  await card.getByLabel("Geplanter Aufwand in Stunden (optional)").fill("4");
+  await card.getByRole("button", { name: "Speichern" }).click();
+  await card.getByText("Teilschritte planen").first().click();
+  const step = card.getByLabel("Neuer Teilschritt für Pflichtübung 5");
+  await step.fill("Prozessmodell zeichnen");
+  await step.press("Enter");
+  await card.getByRole("checkbox", { name: "Prozessmodell zeichnen" }).check();
+  await expect(card).toContainText("Teilschritte 1/1");
+
+  await page.goto("/module");
+  const overview = page.getByRole("region", {
+    name: "Prüfungsvorleistungen im Semester",
+  });
+  await expect(overview).toContainText("Wirtschaftsinformatik 3");
+  await expect(overview).toContainText(
+    "4 von 6 erbracht · 4 Std. für offene geplant · nächste Frist So, 31.01.2027",
+  );
+  await expect(overview).toContainText("neben 15 Std. Nebenjob in der Woche");
+
+  await page.goto("/fristen");
+  await expect(
+    page.getByText("Prüfungsvorleistung: Pflichtübung 5").first(),
+  ).toBeVisible();
+});
+
 test("connects to the Moodle sandbox from the browser and forgets the key on reload", async ({
   page,
 }) => {
