@@ -32,7 +32,7 @@ Alles, was nach Version 1.0.0 entstand, ist zusammen als Version 1.1.0 veröffen
 - **Test mit Studierenden.** Die Aufgaben T1 bis T5 liegen vor; getestet hat nur das Projektteam. Ob der Folgen-Check Außenstehenden hilft, ist damit nicht belegt.
 - **ICS-Import.** Die Dateien entstehen nach dem Standard, der Import in Google Kalender, Apple Kalender und Outlook wurde nicht geprüft.
 - **POS.** Das Portal war bei der Umsetzung nicht erreichbar; der Spike zu Anmeldung und Seitenaufbau fand nicht statt. Datenformat, Zuordnung zu den Modulen und Store stehen und sind getestet, in der Oberfläche ist davon nichts zu sehen.
-- **Größe des Haupt-Chunks.** Der Build meldet 512 kB (gzip 146 kB) und damit eine Warnung von Vite. Es ist ein Hinweis, kein Fehler.
+- **Größe des Haupt-Chunks.** Der Build meldet 547 kB (gzip 155 kB) und damit eine Warnung von Vite. Es ist ein Hinweis, kein Fehler.
 
 ## Nicht umgesetzte Ideen
 
