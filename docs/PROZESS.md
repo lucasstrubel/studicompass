@@ -128,6 +128,8 @@ Kurz vor der Präsentation am 13.11. folgte noch eine Durchsicht der Gestaltung 
 
 Was die Tests dabei fanden, zeigt ihren Wert: Nach einem Neuladen zeigte die Aufzeichnung wieder den Anfangszustand, während die erkannten Änderungen stehen blieben. Und unter der Content-Security-Policy versuchte eine Bibliothek, Code zur Laufzeit zu erzeugen. Beides fiel erst im Browser-Test auf, nicht beim Lesen des Codes.
 
+**Entscheidung: eine Brücke, wo der Browser nicht hinkommt.** Für Moodle reichte der Browser. Für das Hochschul-Postfach nicht: Ein Browser spricht kein IMAP. Dafür entstand ein kleiner Server-Teil, die Brücke. Sie speichert nichts, liest nur und kennt als Ziel allein den Mailserver der Hochschule ([ADR 0005](adr/0005-bruecke-fuer-pos-und-mail.md)). Weil sie das Hochschul-Passwort entgegennimmt, läuft sie nur auf dem eigenen Rechner und nicht in der öffentlichen Demo. Das POS sollte denselben Weg gehen. Dazu kam es nicht mehr: Das Portal war bei der Umsetzung nicht erreichbar, vorbereitet ist nur, was sich ohne das Portal bauen ließ.
+
 ## Arbeitsweise
 
 - **KI-gestützte Entwicklung.** Den Code hat überwiegend Claude Code geschrieben, in frühen Phasen mit einem zweiten Modell als Gegenprüfung. Konzept, Entscheidungen und Abnahme lagen beim Menschen. Die Regeln, an die sich die Entwicklung hält, stehen offen in [CLAUDE.md](../CLAUDE.md).
@@ -137,9 +139,13 @@ Was die Tests dabei fanden, zeigt ihren Wert: Nach einem Neuladen zeigte die Auf
 
 ## Grenzen
 
-- **Nur das Team hat getestet.** Wer ein System gebaut hat, stolpert anders als jemand aus der Zielgruppe. Ein Test mit unabhängigen Studierenden steht aus, auch für die neuen Moodle-Funktionen; die Aufgaben dafür liegen vor. Automatisch geprüft ist nur, was eine Maschine prüfen kann: Barrierefreiheit nach WCAG 2.1 A und AA mit axe. Auch gemessen wurde nichts: Ob Aufgaben nach den Überarbeitungen schneller gelingen, ist nicht belegt.
+- **Nur das Team hat getestet.** Wer ein System gebaut hat, stolpert anders als jemand aus der Zielgruppe. Ein Test mit unabhängigen Studierenden hat nicht mehr stattgefunden, auch nicht für die Moodle-Funktionen; die Aufgaben dafür liegen vor. Automatisch geprüft ist nur, was eine Maschine prüfen kann: Barrierefreiheit nach WCAG 2.1 A und AA mit axe. Auch gemessen wurde nichts: Ob Aufgaben nach den Überarbeitungen schneller gelingen, ist nicht belegt.
 - **Kleine Stichprobe.** Fünf Interviews und acht Umfrage-Antworten zeigen Tendenzen, keine repräsentativen Ergebnisse.
-- **Eine echte Schnittstelle von vier.** Moodle ist angebunden, geprüft gegen ein eigenes Moodle mit Beispielkursen. Ob das Moodle einer Hochschule den Zugriff freigibt, entscheidet die Hochschule; POS, Mail und Website sind weiter simuliert, und die rechtliche Seite eines Betriebs ist offen.
+- **Zwei echte Schnittstellen von vier, eine davon nur lokal.** Moodle ist angebunden, geprüft gegen ein eigenes Moodle mit Beispielkursen. Ob das Moodle einer Hochschule den Zugriff freigibt, entscheidet die Hochschule. Das Hochschul-Postfach liest die App nur lokal gestartet, geprüft gegen einen Mailserver mit Beispiel-Mails. POS und Website sind simuliert, und die rechtliche Seite eines Betriebs ist offen.
 - **Der Assistent ist kein Sprachmodell.** Er ordnet Fragen einem vorbereiteten Katalog zu.
+
+## Abschluss
+
+Die Entwicklung endete im November 2026 mit Version 1.1.0. Beantwortet ist die Frage aus der Präsentation: Das Konzept trägt mit einer echten Schnittstelle, und Moodle taugt als Ablage für die eigenen Daten. Offen bleibt die Frage, die nur Außenstehende beantworten können: ob Studierende, die den Prototyp nicht kennen, mit dem Folgen-Check zu einer besseren Entscheidung kommen. Was geplant war und was daraus wurde, steht in der [Roadmap](ROADMAP.md).
 
 Wer tiefer einsteigen will: Die ausführlichen Arbeitsdokumente (Konzept, Testplan, Befundliste) liegen in der Git-History bis zum Commit [`c0447ef`](https://github.com/lucasstrubel/studicompass/commit/c0447ef), das [Präsentationskonzept](praesentation/konzept.md) im Repository.

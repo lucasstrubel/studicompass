@@ -233,4 +233,10 @@ describe("plainText", () => {
       plainText('<p>Folien &amp; Skript<br>sind <a href="x">online</a>.</p>'),
     ).toBe("Folien & Skript sind online.");
   });
+
+  it("leaves no tag behind that only forms once another is removed", () => {
+    const text = plainText("<scr<b>ipt>alert(1)</scr</b>ipt>Hallo<<i>b>");
+    expect(text).not.toMatch(/<\/?[a-z]/i);
+    expect(text).toContain("Hallo");
+  });
 });

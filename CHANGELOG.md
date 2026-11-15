@@ -2,7 +2,9 @@
 
 Alle nennenswerten Änderungen an StudiCompass. Das Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/), die Versionen folgen [Semantic Versioning](https://semver.org/lang/de/).
 
-## [Unveröffentlicht]
+## [1.1.0] – 2026-11-15
+
+Der Abschlussstand. Die Entwicklung endet mit dieser Version; was offen bleibt, steht in der [Roadmap](docs/ROADMAP.md).
 
 ### Hinzugefügt
 
@@ -27,8 +29,19 @@ Alle nennenswerten Änderungen an StudiCompass. Das Format folgt [Keep a Changel
 
 - Content-Security-Policy im Produktions-Build und Sicherheits-Header für die Auslieferung
 - Automatischer Barrierefreiheits-Check (axe, WCAG 2.1 A und AA) aller Kernseiten in den End-to-End-Tests
-- Dependabot für npm, GitHub Actions und das Docker-Image der Sandbox; CodeQL bei jedem Pull Request
+- CodeQL bei jedem Pull Request
 - `docs/SICHERHEIT.md`: Datenflüsse, Umgang mit dem Zugriffsschlüssel, Bedrohungen und Grenzen
+
+### Behoben
+
+- Der Browser-Test der Moodle-Verbindung fand seit dem Abschnitt „Hochschul-Mail“ zwei Schaltflächen „Beispieldaten“ und schlug fehl; er sucht jetzt nur im Abschnitt „Moodle-Daten“. Die Workflows `moodle.yml` und `mail.yml` laufen auch bei Änderungen an den Einstellungen.
+- Ankündigungen aus Moodle: Markup wird entfernt, bis keines mehr übrig ist (Befund von CodeQL).
+
+### Zum Abschluss
+
+- Abhängigkeiten und GitHub Actions auf dem Stand vom November 2026
+- Keine automatischen Aktualisierungen und keine zeitgesteuerten Workflows mehr, weil niemand auf ihre Befunde reagieren würde; Sicherheitsmeldungen von GitHub bleiben aktiv
+- CodeQL prüft das mitgelieferte reveal.js der Folien nicht mehr
 
 ## [1.0.0] – 2026-11-13
 
@@ -45,5 +58,5 @@ Der Stand, in dem der Prototyp im Modul Software Engineering 2 vorgestellt wurde
 - Regeln aus der StuPO Bachelor der TH Mannheim, Module aus dem Modulhandbuch UIB
 - Prüf-Gate und End-to-End-Tests in GitHub Actions
 
-[Unveröffentlicht]: https://github.com/lucasstrubel/studicompass/compare/v1.0.0...HEAD
+[1.1.0]: https://github.com/lucasstrubel/studicompass/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/lucasstrubel/studicompass/releases/tag/v1.0.0

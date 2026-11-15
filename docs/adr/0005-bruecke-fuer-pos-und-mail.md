@@ -1,6 +1,6 @@
 # ADR 0005: Eine Brücke für POS und Mail
 
-Status: angenommen (14.11.2026); fasst [ADR 0003](0003-kein-eigenes-backend.md) für die Kanäle POS und Mail neu
+Status: angenommen (14.11.2026); fasst [ADR 0003](0003-kein-eigenes-backend.md) für die Kanäle POS und Mail neu. Umgesetzt für Mail; für das POS nur vorbereitet (Nachtrag am Ende).
 
 ## Kontext
 
@@ -41,3 +41,7 @@ Die Brücke folgt fünf Regeln:
 - Aus Mailtexten werden keine Fristen abgeleitet; der Kanal liefert nur Nachrichten.
 - **POS ist offen.** Das Portal war bei der Entscheidung nicht erreichbar; Anmeldeverfahren und Aufbau der Seiten sind ungeprüft. Ein Spike klärt, ob die Anmeldung automatisierbar ist (zweiter Faktor, Captcha) und was sich lesen lässt. Scheitert er, bleibt der Notenspiegel-PDF-Import.
 - Das Auslesen eines Portals bricht, sobald die Hochschule die Seiten ändert, und lässt sich in der CI nicht gegen das Original prüfen. Ob die Nutzungsbedingungen des Benutzerkontos einen automatischen Abruf decken, ist vor einem Einsatz über den eigenen Zugang hinaus zu klären.
+
+## Nachtrag (15.11.2026)
+
+Die Entwicklung endete, bevor der Spike am Portal stattfand. Für das POS stehen das neutrale Datenformat, die Zuordnung zu den Modulen und die Quelle im Store, jeweils mit Tests; das Auslesen selbst und der Abschnitt in den Einstellungen fehlen. Die Brücke meldet den Kanal deshalb als nicht verfügbar. Ob sich die Anmeldung am Portal automatisieren lässt, ist ungeklärt geblieben.

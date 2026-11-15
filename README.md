@@ -8,7 +8,7 @@
 
 ![Übersicht: Studienstand mit 45 von 210 ECTS, Status „Knapp“, ECTS-Verlauf als Kurslinie und der Hinweis „Jetzt wichtig“ zur Abmeldefrist](docs/img/uebersicht.jpg)
 
-StudiCompass ist ein klickbarer Hi-Fi-Prototyp einer Website für Studierende der TH Mannheim, seit der Weiterentwicklung mit einer echten Anbindung an Moodle. Er bündelt POS, Moodle, Hochschul-Mail und Website, zeigt den eigenen Studienstand und macht sichtbar, was eine Entscheidung wie eine Prüfungsabmeldung für die folgenden Semester bedeutet. Entstanden ist er im Modul Software Engineering 2 an der TH Mannheim (Wintersemester 2026/27); „StudiCompass“ ist ein Arbeitstitel.
+StudiCompass ist ein klickbarer Hi-Fi-Prototyp einer Website für Studierende der TH Mannheim, mit einer echten Anbindung an Moodle. Er bündelt POS, Moodle, Hochschul-Mail und Website, zeigt den eigenen Studienstand und macht sichtbar, was eine Entscheidung wie eine Prüfungsabmeldung für die folgenden Semester bedeutet. Entstanden ist er im Modul Software Engineering 2 an der TH Mannheim (Wintersemester 2026/27); „StudiCompass“ ist ein Arbeitstitel. Die Entwicklung ist seit November 2026 abgeschlossen, die Demo bleibt online.
 
 ## Das Problem
 
@@ -40,10 +40,11 @@ Dazu kommen der Studienverlauf mit Was-wäre-wenn (auch per Drag & Drop), Friste
 
 | Echt                                                                                        | Simuliert oder erfunden                                        |
 | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Regeln aus der StuPO Bachelor der TH Mannheim (Fassung ab 01.09.2026), jeweils mit Paragraf | Anbindung an POS, Mail und Website (Mock-Services)             |
+| Regeln aus der StuPO Bachelor der TH Mannheim (Fassung ab 01.09.2026), jeweils mit Paragraf | Anbindung an POS und Website (Mock-Services)                   |
 | Module aus dem [Modulhandbuch UIB](https://module.informatik.th-mannheim.de/UIB)            | Noten, Termine, Mails, Kontaktdaten und die Person Niklas      |
 | Berechnung von ECTS, Status, Prognose und Folgen (reine Fachlogik, unit-getestet)           | Der Assistent: vorbereiteter Antwortkatalog, kein Sprachmodell |
 | Anbindung an Moodle über dessen Web Services, getestet gegen ein Moodle mit Beispielkursen  | Die Moodle-Daten der Demo, solange du nichts umstellst         |
+| Hochschul-Postfach per IMAP, nur lokal gestartet (siehe unten)                              | Die Mails der öffentlichen Demo                                |
 |                                                                                             | Die Abmeldung: ändert nur den lokalen Zustand, sendet nichts   |
 
 Die öffentliche Demo hat kein Backend und keine Anmeldung. Eigene Rechenregeln der App tragen in der Oberfläche das Label „Beispiel“.
@@ -68,12 +69,15 @@ flowchart LR
     Store --> Services[Services<br/>ein Interface je Kanal]
     Services --> Mock[Mocks<br/>POS, Mail, Website, Regelwerk]
     Services --> Adapter[Moodle-Adapter<br/>Client, Schemas, Zuordnung]
+    Services --> MailAdapter[Mail-Adapter<br/>Client, Schemas, Zuordnung]
     Adapter --> Replay[Aufzeichnung<br/>zwei Zustände der Sandbox]
   end
   Adapter -- "Web Services (REST), Zugriffsschlüssel" --> Moodle[(Moodle)]
+  MailAdapter -- "nur lokal" --> Bridge[Brücke<br/>im Dev-Server, zustandslos]
+  Bridge -- "IMAP, nur lesend" --> Mail[(Mailserver<br/>der Hochschule)]
 ```
 
-Der Kanal Moodle hat drei Datenmodi: Beispieldaten, Aufzeichnung und ein verbundenes Moodle. Oberfläche, Store und Fachlogik sind in allen drei dieselben; nur der Service dahinter wechselt. Getestet wird der Adapter gegen ein echtes Moodle 4.5, das GitHub Actions dafür als Container baut.
+Der Kanal Moodle hat drei Datenmodi: Beispieldaten, Aufzeichnung und ein verbundenes Moodle. Oberfläche, Store und Fachlogik sind in allen drei dieselben; nur der Service dahinter wechselt. Getestet wird der Adapter gegen ein echtes Moodle 4.5, das GitHub Actions dafür als Container baut. Die Brücke gibt es nur im lokalen Dev- und Preview-Server; die öffentliche Demo liefert sie nicht aus.
 
 ### Starten
 
@@ -112,27 +116,28 @@ Die App läuft dann unter http://localhost:5173. Beim ersten Aufruf öffnet sich
 
 - [Wie es entstanden ist](docs/PROZESS.md): von der Nutzerforschung über Konzept und Prototyp bis zu den Iterationen
 - [Technische Dokumentation](docs/TECHNIK.md): Daten und Berechnungen, Design-Tokens, App-Shell, Tests, Deployment
-- [Roadmap](docs/ROADMAP.md) und [Architekturentscheidungen](docs/adr/): wie es weitergeht und warum
+- [Roadmap](docs/ROADMAP.md) und [Architekturentscheidungen](docs/adr/): was geplant war, was daraus wurde und warum
 - [Sicherheit und Datenschutz](docs/SICHERHEIT.md): welche Daten wo liegen, was gesendet wird, Bedrohungen und Gegenmaßnahmen
 - [CLAUDE.md](CLAUDE.md): Architektur- und Gestaltungskonventionen, an die sich auch die KI-gestützte Entwicklung hält
 - [Präsentationskonzept](docs/praesentation/konzept.md) zu den [Folien](https://studicompass-six.vercel.app/praesentation/)
 
 ## Stand
 
-Version [1.0.0](https://github.com/lucasstrubel/studicompass/releases/tag/v1.0.0) ist der Prototyp, wie er im November 2026 als Prüfungsleistung vorgestellt wurde. Seitdem wird er weiterentwickelt.
+Die Entwicklung ist abgeschlossen. Version [1.1.0](https://github.com/lucasstrubel/studicompass/releases/tag/v1.1.0) vom November 2026 ist der letzte Stand; das Repository bleibt als Portfolio-Projekt bestehen und wird nicht weiter gepflegt.
 
-Umgesetzt:
+Version [1.0.0](https://github.com/lucasstrubel/studicompass/releases/tag/v1.0.0) ist der Prototyp, wie er als Prüfungsleistung vorgestellt wurde. Danach kam dazu:
 
 - Moodle als erste echte Schnittstelle: Kursinhalt, „Neu in Moodle“, Fristen und Bewertungen je Modul
 - Prüfungsvorleistungen planen, aus Moodle übernehmen und über das Semester verfolgen
 - eigene Einträge in Moodle sichern
-- Content-Security-Policy, automatischer Barrierefreiheits-Check, Dependabot und CodeQL
+- das Hochschul-Postfach über eine lokale Brücke lesen
+- Content-Security-Policy, automatischer Barrierefreiheits-Check und CodeQL
 
-Offen:
+Nicht mehr umgesetzt:
 
-- Usability-Test mit Studierenden, die den Prototyp nicht kennen, samt Messung. Getestet hat bisher nur das Projektteam.
+- Usability-Test mit Studierenden, die den Prototyp nicht kennen, samt Messung. Getestet hat nur das Projektteam.
 - Import der ICS-Dateien in echte Kalender-Apps prüfen
-- POS, Mail und Website sind weiterhin simuliert
+- Das POS auslesen: Datenformat, Zuordnung und Store sind vorbereitet, das Auslesen des Portals fehlt. POS und Website bleiben simuliert.
 
 Phasen und Ideen stehen in der [Roadmap](docs/ROADMAP.md), die Entscheidungen dahinter unter [docs/adr/](docs/adr/), die Änderungen im [Changelog](CHANGELOG.md).
 

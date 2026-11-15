@@ -44,11 +44,19 @@ const ENTITIES: Record<string, string> = {
   "&nbsp;": " ",
 };
 
+/** Removes tags until nothing changes, so removing one cannot assemble another ("<scr<b>ipt>"). */
+function stripTags(text: string): string {
+  let before: string;
+  do {
+    before = text;
+    text = text.replace(/<[^>]*>/g, "");
+  } while (text !== before);
+  return text;
+}
+
 /** Moodle delivers forum posts as HTML; the app shows plain text only and never renders the markup. */
 export function plainText(html: string): string {
-  return html
-    .replace(/<(br|\/p|\/div|\/li)\s*\/?>/gi, " ")
-    .replace(/<[^>]*>/g, "")
+  return stripTags(html.replace(/<(br|\/p|\/div|\/li)\s*\/?>/gi, " "))
     .replace(/&(amp|lt|gt|quot|#39|nbsp);/g, (entity) => ENTITIES[entity])
     .replace(/\s+/g, " ")
     .trim();

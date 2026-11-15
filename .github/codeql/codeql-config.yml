@@ -1,0 +1,5 @@
+name: StudiCompass
+
+# reveal.js ships with the slides as vendored third-party code; its findings are not ours to fix.
+paths-ignore:
+  - public/praesentation/vendor

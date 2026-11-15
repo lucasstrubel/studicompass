@@ -52,20 +52,20 @@ Mail ist der zweite Kanal mit echten Daten. Der Browser kann kein IMAP sprechen,
 
 ## POS über die Brücke (Gerüst)
 
-Das Auslesen des Portals fehlt noch, weil es bei der Umsetzung nicht erreichbar war. Alles darum herum steht und ist getestet; das Auslesen wird in `server/` als `fetchTranscript` eingesetzt.
+Das Auslesen des Portals ist nicht umgesetzt: Das Portal war bei der Umsetzung nicht erreichbar, und die Entwicklung endete davor. Alles darum herum steht und ist getestet; das Auslesen wäre in `server/` als `fetchTranscript` einzusetzen. In der Oberfläche ist vom POS-Kanal über die Brücke nichts zu sehen.
 
 - **Zwischenformat.** Die Brücke liefert eine „Leistungsübersicht“ in neutraler Form (`src/services/pos/schemas.ts`): Name und Matrikelnummer, dazu je Eintrag Titel, Semester, Status und, wenn vorhanden, Note, Versuch, Termin, Raum und Abmeldefrist. Ändert die Hochschule das Portal, betrifft das nur die Brücke.
 - **Zuordnung** (`src/services/pos/mapping.ts`): Ein Eintrag gehört zu dem Modul mit demselben Titel, unabhängig von Schreibweise und Zahlform („Programmierung II“ = „Programmierung 2“). Studiengang und Module bleiben die des Modulhandbuchs, weil das Portal Ergebnisse kennt, aber keinen Studienplan. Einträge ohne passendes Modul stehen in `PosData.unmatched` und fallen nicht still weg.
 - **Store.** `connectPos` ersetzt die Beispieldaten durch die Leistungsübersicht, `disconnectPos` kehrt zurück. Beim Wechsel enden simulierte Entscheidungen, weil sie Prüfungen der anderen Quelle nennen. `posAccount` wird nie gespeichert.
-- **Solange das Auslesen fehlt,** meldet die Brücke den Kanal als nicht verfügbar (`channels.pos: false`, `POST /pos` antwortet mit 501). Die Einstellungen zeigen deshalb noch keinen Abschnitt für das POS.
-- **Offen** bis zum Spike am Portal: Anmeldeverfahren, Aufbau der Seiten, ob angemeldete Prüfungen mit Termin und Abmeldefrist lesbar sind, und ob mit echtem POS die echte Uhr gilt.
+- **Ohne das Auslesen** meldet die Brücke den Kanal als nicht verfügbar (`channels.pos: false`, `POST /pos` antwortet mit 501). Die Einstellungen zeigen deshalb keinen Abschnitt für das POS.
+- **Ungeklärt geblieben,** weil der Spike am Portal nicht stattfand: Anmeldeverfahren, Aufbau der Seiten, ob angemeldete Prüfungen mit Termin und Abmeldefrist lesbar sind, und ob mit echtem POS die echte Uhr gilt.
 
 ## Ergänzende Funktionen
 
 - Der Assistent ordnet Fragen lokal einem vorbereiteten Antwortkatalog zu. Persönliche Zeilen stammen aus dem aktuellen Studienstand; bei Sonderfällen wird ein kopierbarer Anfrageentwurf vorbereitet. Es wird nichts gesendet.
 - Das Postfach bündelt die vier Kanäle mit Filtern, Wichtigkeitsbegründungen und gespeicherten Gelesenmarkierungen. Beispiel: `/postfach?eintrag=i-02`.
 - Module & Noten zeigt Kennzahlen und Moduldetails. Von dort öffnen sich der passende Folgen-Check oder der Assistent mit Modulkontext.
-- Fristen lassen sich einzeln oder gemeinsam als ICS herunterladen. Der Import in eine echte Kalender-App steht als externe Prüfung noch aus.
+- Fristen lassen sich einzeln oder gemeinsam als ICS herunterladen. Der Import in eine echte Kalender-App wurde nicht geprüft.
 - Die Fristen haben eine Kalenderansicht (`/fristen?ansicht=kalender`) mit deutschen Kalendertagen, Fristen, eigenen Terminen, Prüfungsvorleistungen und Prüfungsterminen. Liste und Kalender teilen Quellen und Aktionen.
 - Anlaufstellen (ohne eigenen Navigationseintrag, erreichbar über den Assistenten und das Profilmenü) zeigt Zuständigkeiten, Kontakt und Sprechzeiten mit Beispielquellen. Passende Fragen führen in den Assistenten; seine zuständigen Stellen verlinken zurück zur jeweiligen Karte.
 - Einstellungen steuern Hinweis-Stil und Benachrichtigungstypen. Getrennte Kanäle behalten geladene Daten in der Sitzung; nach Neuladen lädt ein getrennter Kanal erst beim Wiederverbinden.
