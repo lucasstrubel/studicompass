@@ -41,7 +41,7 @@ test("shows the recorded Moodle data on overview, deadlines and inbox and keeps 
   ).toBeVisible();
   await page.goto("/einstellungen");
   await expect(
-    page.getByRole("button", { name: "Aufzeichnung" }),
+    moodle.getByRole("button", { name: "Aufzeichnung" }),
   ).toHaveAttribute("aria-pressed", "true");
 });
 
@@ -166,8 +166,9 @@ test("connects to the Moodle sandbox from the browser and forgets the key on rel
 
   await page.reload();
   await page.goto("/einstellungen");
+  // The mail section has a button of the same name, so the lookup stays inside the Moodle section.
   await expect(
-    page.getByRole("button", { name: "Beispieldaten" }),
+    moodle.getByRole("button", { name: "Beispieldaten" }),
   ).toHaveAttribute("aria-pressed", "true");
   expect(
     await page.evaluate(() => JSON.stringify({ ...localStorage })),

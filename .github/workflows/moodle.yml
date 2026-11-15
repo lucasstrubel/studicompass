@@ -6,6 +6,8 @@ on:
   pull_request:
     paths: &paths
       - "src/services/moodle/**"
+      # The browser test drives the settings page, which other channels share.
+      - "src/features/settings/**"
       - "src/data/recordings/**"
       - "infra/moodle/**"
       - "e2e/moodle.e2e.ts"
@@ -14,9 +16,7 @@ on:
   push:
     branches: [main]
     paths: *paths
-  schedule:
-    # Mondays 04:00 UTC: notices when a new Moodle patch release changes a response.
-    - cron: "0 4 * * 1"
+  # No schedule: development has ended. Start it by hand to test against a newer Moodle patch release.
   workflow_dispatch:
 
 concurrency:
@@ -32,8 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
@@ -47,7 +47,7 @@ jobs:
           MOODLE_URL: http://localhost:8080
       - if: failure()
         run: docker compose -f infra/moodle/docker-compose.yml logs --tail 200
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: moodle-test-results
